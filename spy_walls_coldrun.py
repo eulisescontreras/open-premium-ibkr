@@ -179,6 +179,25 @@ before = dict(app.prev_gamma)
 app.compute_walls()
 check(app.prev_gamma == before, "3a llamada: gammas identicos -> prev_gamma sin cambios (staleness detectable)")
 
+# ================================================================ TEST C: Gamma Ladder (ladder_rows)
+print("== TEST C: ladder_rows (datos para la vista) ==")
+lr = app.ladder_rows()
+check(isinstance(lr, dict) and lr["rows"], f"ladder_rows devuelve filas -> {len(lr['rows'])}")
+check(lr["rows"] == sorted(lr["rows"], key=lambda r: -r[0]),
+      "filas ordenadas por strike descendente (mayor arriba, como MarketSnack)")
+# cada fila: (strike, prem, side, tag) ; side call si strike>=precio, put si <
+sides_ok = all((r[2] == "call") == (r[0] >= app.spy_price) for r in lr["rows"])
+check(sides_ok, "color/lado correcto: call>=precio, put<precio")
+# el strike con mayor premium debe ser el 780C (le inyectamos 100k*1.2*100 de volumen)
+row_780 = next((r for r in lr["rows"] if r[0] == 780), None)
+check(row_780 is not None and row_780[1] > 0, f"strike 780 tiene premium>0 -> {row_780[1] if row_780 else None}")
+check(lr["max_prem"] >= (row_780[1] if row_780 else 0), "max_prem es el maximo de la banda")
+# tags CW/PW presentes (CW=775, PW=765 del TEST B)
+tags = {r[0]: r[3] for r in lr["rows"]}
+check(tags.get(775) == "CW", f"tag CW en 775 -> {tags.get(775)}")
+check(tags.get(765) == "PW", f"tag PW en 765 -> {tags.get(765)}")
+check(lr["state"] in ("-", "UP", "DOWN"), f"state presente -> {lr['state']}")
+
 # ================================================================ resultado
 print()
 if FAILS:

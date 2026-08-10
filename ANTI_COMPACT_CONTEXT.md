@@ -125,8 +125,16 @@ Diseño final (aprobado por el usuario; plan en `~/.claude/plans/structured-pond
   Falta LUNES en vivo: `probe_oi_gamma.py` (OI+gamma tick "100,101,106" snapshot ATM±5) + validar panel.
 - **Gaps (R14):** límite de líneas IBKR (~100) con la banda + señal/ejec/baseline → si excede, bajar
   `WALLS_BAND`. Greeks NaN fuera de RTH. Escala GEX en miles de millones (panel muestra /1e9 "Bn").
-- **Fuera de alcance (ahora):** comparador visual "Δ overnight" (default cierre vs apertura) y uso
-  ACCIONABLE (veto/target) — solo tras validar datos y convención de signo con días reales.
+- **Gamma Ladder VISUAL (2026-08-09, estilo MarketSnack, SOLO lectura):** Canvas Tkinter con barras
+  de **premium $ por strike** de la banda (verde si strike≥precio, rojo si <), etiquetas CW/PW, línea
+  de precio + señal UP/DOWN, línea de Gamma Flip. Método `ladder_rows()` (testeable, cold run VERDE).
+  Sin botones/interacción (el usuario solo quiere ver cómo se mueve). También **línea "Contrato
+  comprado"** que aparece SOLO si hay posición real en IBKR (`self.pos`≠FLAT) y desaparece al vender
+  (`self.entry_price` se setea en `_on_filled`). NO se pudo ver poblada hoy (mercado cerrado, banda
+  vacía en --demo); se ve el LUNES con datos reales. NO se replicó el "tape" institucional (IBKR no
+  da ese feed) ni el chart temporal — fuera de alcance por decisión del usuario.
+- **Fuera de alcance (ahora):** comparador visual "Δ overnight" (default cierre vs apertura), uso
+  ACCIONABLE (veto/target), el "tape" institucional y el chart temporal — no ahora.
 
 ## 10. IDEAS FUTURAS (dichas por el usuario, no comprometidas)
 - Usar TA como filtro/veto ligero (no driver) SI los datos minuto a minuto lo respaldan.

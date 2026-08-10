@@ -98,6 +98,19 @@ def _fmt(x):
     return f"{x:.2f}" if isinstance(x, (int, float)) else "-"
 
 
+def _money(v):
+    """Formato compacto de dinero: 1.2M / 34k / 120."""
+    try:
+        v = float(v)
+    except (TypeError, ValueError):
+        return "-"
+    if v >= 1e6:
+        return f"{v / 1e6:.1f}M"
+    if v >= 1e3:
+        return f"{v / 1e3:.0f}k"
+    return f"{v:.0f}"
+
+
 def _max_pain(call_oi, put_oi):
     """Strike de Max Pain (minimiza el pago total) a partir del OI. Funcion pura.
     call_oi/put_oi: dict strike->OI. Devuelve el strike o None. NO usa el spot."""
@@ -337,6 +350,7 @@ class SpyDirection:
         self.open_deadline = 0.0         # limite de tiempo para llenar una COMPRA (BUY)
         self.min_tick = {}               # conId -> minTick
         self.trade_msg = "trading OFF"   # ultima accion (para la pantalla)
+        self.entry_price = None          # precio de entrada del contrato comprado (para la linea)
         self.eod_flat = False            # ya se aplano hoy
         self.reconciled = False
         # --- TA de 1 min + registro por minuto ---
@@ -751,6 +765,29 @@ class SpyDirection:
             out.append((exp, ch, cp, ph, pp))
         return out
 
+    def ladder_rows(self):
+        """Datos para la Gamma Ladder (SOLO lectura, estilo MarketSnack). Barras = premium $ por
+        strike de la banda (call+put), coloreadas por lado del precio. Marca CW/PW/precio/flip.
+        Devuelve dict {rows:[(strike,prem,side,tag)], price, flip, magnet, state, max_prem}."""
+        strikes = sorted({c.strike for c in self.band_contracts}, reverse=True)
+        w = self.walls or {}
+        cw = w.get("call_wall"); pw = w.get("put_wall")
+        flip = (self.gex or {}).get("gamma_flip")
+        price = self.spy_price
+        rows = []
+        max_prem = 0.0
+        for s in strikes:
+            prem = (self.today_prem.get((self.expiry, s, "C"), 0.0)
+                    + self.today_prem.get((self.expiry, s, "P"), 0.0))
+            side = "call" if (price is None or math.isnan(price) or s >= price) else "put"
+            tag = "CW" if (cw is not None and s == cw) else ("PW" if (pw is not None and s == pw) else "")
+            rows.append((s, prem, side, tag))
+            if prem > max_prem:
+                max_prem = prem
+        return {"rows": rows, "price": price, "flip": flip,
+                "magnet": w.get("max_pain_dyn") if w.get("max_pain_dyn") is not None else w.get("max_pain_static"),
+                "state": self.state, "max_prem": max_prem}
+
     # ---------------- procesamiento de trades ----------------
     def _on_ticks(self, tickers):
         signal_ids = {c.conId for c in (self.call, self.put) if c is not None}
@@ -979,6 +1016,7 @@ class SpyDirection:
         except Exception:
             px = 0.0
         self.pos = side if act == "BUY" else "FLAT"
+        self.entry_price = px if act == "BUY" else None
         self.trade_msg = f"{act} {side} LLENADO @ {px:.2f}"
         ACT.info("FILL %s %s @ %.2f -> pos=%s", act, side, px, self.pos)
         self.order = None
@@ -1108,12 +1146,75 @@ class SpyDirection:
 import tkinter as tk
 
 
+def _draw_ladder(canvas, app):
+    """Dibuja la Gamma Ladder (solo lectura) en el Canvas. Estilo MarketSnack simplificado."""
+    canvas.delete("all")
+    W = int(canvas["width"]); H = int(canvas["height"])
+    data = app.ladder_rows()
+    rows = data["rows"]
+    if not rows:
+        canvas.create_text(W // 2, H // 2, text="Gamma Ladder: (esperando OI/premium en vivo...)",
+                           fill="#67e8f9", font=("Consolas", 10))
+        return
+    n = len(rows)
+    top = 4
+    row_h = max(11, min(20, (H - 8) // n))
+    x_bar0 = 92                 # inicio de las barras
+    bar_max = W - x_bar0 - 62   # ancho maximo de barra (deja espacio al valor)
+    max_prem = data["max_prem"] or 1.0
+
+    def y_at(i):
+        return top + i * row_h + row_h // 2
+
+    def y_of_level(level):
+        if level is None:
+            return None
+        for i in range(len(rows) - 1):
+            s0 = rows[i][0]; s1 = rows[i + 1][0]     # s0 > s1 (orden desc)
+            if s0 >= level >= s1 and s0 != s1:
+                frac = (s0 - level) / (s0 - s1)
+                return y_at(i) + frac * (y_at(i + 1) - y_at(i))
+        return None
+
+    for i, (s, prem, side, tag) in enumerate(rows):
+        y = y_at(i)
+        lbl = f"{s:g}"
+        col_lbl = "#cbd5e1"
+        if tag == "CW":
+            lbl += " CW"; col_lbl = "#22c55e"
+        elif tag == "PW":
+            lbl += " PW"; col_lbl = "#ef4444"
+        canvas.create_text(x_bar0 - 4, y, text=lbl, fill=col_lbl, font=("Consolas", 8), anchor="e")
+        ln = int(bar_max * (prem / max_prem)) if max_prem > 0 else 0
+        col = "#16a34a" if side == "call" else "#dc2626"
+        if ln > 0:
+            canvas.create_rectangle(x_bar0, y - row_h // 2 + 2, x_bar0 + ln, y + row_h // 2 - 2,
+                                    fill=col, outline="")
+        canvas.create_text(x_bar0 + ln + 4, y, text=_money(prem), fill="#94a3b8",
+                           font=("Consolas", 7), anchor="w")
+
+    price = data["price"]
+    yp = y_of_level(price) if (price is not None and not math.isnan(price)) else None
+    if yp is not None:
+        canvas.create_line(x_bar0, yp, W - 2, yp, fill="#f8fafc", width=1)
+        st = data["state"]
+        stcol = {"UP": "#22c55e", "DOWN": "#ef4444"}.get(st, "#e5e7eb")
+        canvas.create_text(x_bar0 + 3, yp - 6,
+                           text=f"PRECIO {price:.2f}  {st if st in ('UP', 'DOWN') else ''}".strip(),
+                           fill=stcol, font=("Consolas", 8, "bold"), anchor="w")
+    yf = y_of_level(data["flip"])
+    if yf is not None:
+        canvas.create_line(x_bar0, yf, W - 2, yf, fill="#f59e0b", width=1, dash=(3, 2))
+        canvas.create_text(W - 4, yf + 6, text=f"Gamma Flip {data['flip']:.2f}",
+                           fill="#f59e0b", font=("Consolas", 7), anchor="e")
+
+
 def run_gui(app):
     root = tk.Tk()
     root.title("SPY Direction")
     root.report_callback_exception = lambda *a: LOG.error("Error en GUI", exc_info=a)
     root.configure(bg="#111111")
-    root.geometry("500x745")
+    root.geometry("560x1020")
 
     big = tk.Label(root, text="-", font=("Segoe UI", 110, "bold"),
                    fg="#888888", bg="#111111")
@@ -1142,6 +1243,10 @@ def run_gui(app):
     trade_msg_lbl = tk.Label(root, text="", font=("Consolas", 9), fg="#f59e0b", bg="#111111")
     trade_msg_lbl.pack()
 
+    # Contrato comprado (solo aparece si hay posicion real en IBKR; al vender desaparece)
+    contract_lbl = tk.Label(root, text="", font=("Consolas", 10, "bold"), fg="#fbbf24", bg="#111111")
+    contract_lbl.pack()
+
     alert = tk.Label(root, text="", font=("Segoe UI", 15, "bold"),
                      fg="#111111", bg="#111111", pady=6)
     alert.pack(fill="x", padx=10, pady=(6, 0))
@@ -1155,18 +1260,24 @@ def run_gui(app):
     ta_lbl.pack(pady=(0, 2))
 
     walls_lbl = tk.Label(root, text="Walls/GEX: (esperando OI/greeks...)", font=("Consolas", 9),
-                         fg="#67e8f9", bg="#111111", wraplength=480, justify="center")
+                         fg="#67e8f9", bg="#111111", wraplength=520, justify="center")
     walls_lbl.pack(pady=(0, 2))
+
+    # Gamma Ladder (solo lectura, estilo MarketSnack): premium $ por strike
+    tk.Label(root, text="Gamma Ladder - premium $ por strike (verde>precio / rojo<precio):",
+             font=("Consolas", 8, "bold"), fg="#67e8f9", bg="#111111").pack()
+    ladder = tk.Canvas(root, width=540, height=380, bg="#0b0b0b", highlightthickness=0)
+    ladder.pack(pady=(2, 6))
 
     tk.Label(root, text="Linea base (fechas posteriores) - hoy vs dia previo:",
              font=("Consolas", 9, "bold"), fg="#f59e0b", bg="#111111").pack()
-    basebox = tk.Text(root, height=5, width=56, bg="#0b0b0b", fg="#e5e7eb",
+    basebox = tk.Text(root, height=3, width=56, bg="#0b0b0b", fg="#e5e7eb",
                       font=("Consolas", 9), bd=0)
     basebox.pack(pady=(2, 6))
 
     tk.Label(root, text="Historial de giros (SQLite):",
              font=("Consolas", 9, "bold"), fg="#8ab4f8", bg="#111111").pack()
-    logbox = tk.Text(root, height=7, width=56, bg="#0b0b0b", fg="#aaaaaa",
+    logbox = tk.Text(root, height=4, width=56, bg="#0b0b0b", fg="#aaaaaa",
                      font=("Consolas", 9), bd=0)
     logbox.pack(pady=(2, 8))
 
@@ -1238,6 +1349,23 @@ def run_gui(app):
                 f"Mag {_fmt(w.get('max_pain_static'))}/{_fmt(w.get('max_pain_dyn'))}  "
                 f"peso {_fmt(w.get('prem_center'))}\n"
                 f"GEX {gtxt} {gg.get('regime', '-')}  Flip {_fmt(gg.get('gamma_flip'))}"))
+
+        # contrato comprado (SOLO si hay posicion real en IBKR; al vender/FLAT desaparece)
+        if app.pos == "CALL" and app.buy_call is not None:
+            ep = f" @ {app.entry_price:.2f}" if app.entry_price else ""
+            contract_lbl.config(text=f"Contrato comprado: SPY {app.buy_call.strike:g}C {app.expiry or ''}{ep}")
+        elif app.pos == "PUT" and app.buy_put is not None:
+            ep = f" @ {app.entry_price:.2f}" if app.entry_price else ""
+            contract_lbl.config(text=f"Contrato comprado: SPY {app.buy_put.strike:g}P {app.expiry or ''}{ep}")
+        else:
+            contract_lbl.config(text="")
+
+        # Gamma Ladder (solo lectura, estilo MarketSnack)
+        if WALLS_ENABLED:
+            try:
+                _draw_ladder(ladder, app)
+            except Exception:
+                LOG.exception("Error dibujando Gamma Ladder")
 
         if app.pending_sound is not None:
             if HAVE_SOUND:

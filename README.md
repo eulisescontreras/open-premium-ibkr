@@ -51,6 +51,10 @@ Para la **expiración cercana**, cada 3 min desde tickers en **streaming** (no s
 - **prem_center**: centro de peso del dinero por strike (premium).
 - **GEX** (Σ 100·spot²·(+γc·OIc −γp·OIp)) → régimen **LONG** (>0, mean-reverting) / **SHORT** (<0,
   tendencial); y **Gamma Flip** (nivel donde el GEX neto cruza cero; proxy por acumulada).
+- **Gamma Ladder VISUAL (solo lectura, estilo MarketSnack):** Canvas con barras de **premium $ por
+  strike** (verde≥precio / rojo<precio), CW/PW, línea de precio + señal UP/DOWN y Gamma Flip. Más una
+  línea **"Contrato comprado"** que solo aparece si hay posición real en IBKR (desaparece al vender).
+  Sin botones. NO incluye el "tape" institucional (IBKR no da ese feed) ni chart temporal.
 - **NO toca la señal ni la ejecución.** Se registra todo por minuto/3 min en SQLite (`walls_snapshot`,
   `premium_minute` con net_prem/OI/gamma) + logs, para **cruzarlo contra la gráfica** y decidir con
   datos cómo usarlo (mejorar la precisión de los cambios de dirección).
