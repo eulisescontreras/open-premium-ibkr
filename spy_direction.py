@@ -353,6 +353,7 @@ class SpyDirection:
         self.order_aggr = 0              # (sin uso) compatibilidad
         self.open_deadline = 0.0         # limite de tiempo para llenar una COMPRA (BUY)
         self.min_tick = {}               # conId -> minTick
+        self._mkt_subs = set()           # conIds con market data ya pedido (evita re-suscribir)
         self.trade_msg = "trading OFF"   # ultima accion (para la pantalla)
         self.entry_price = None          # precio de entrada del contrato comprado (para la linea)
         self.contract_price = None       # precio ACTUAL del contrato comprado (tiempo real, P&L)
@@ -1101,12 +1102,12 @@ class SpyDirection:
                 # El contrato a VENDER debe ser el que se POSEE, no el que recalculo
                 # setup_contracts: si el precio se movio, el strike nuevo seria otro y
                 # venderiamos algo que no tenemos (corto descubierto).
-                if self.pos == "CALL":
-                    self.buy_call = p.contract
-                else:
-                    self.buy_put = p.contract
-                ACT.info("Reconcile: posicion real %s %s -> contrato de salida reapuntado",
-                         self.pos, getattr(p.contract, "localSymbol", "?"))
+                # _adoptar_posicion ademas le asegura market data (sin ella _mid()=None y
+                # la VENTA nunca se colocaria) y recupera la entrada desde avgCost.
+                self.pos_qty = float(p.position)
+                self._adoptar_posicion(p, self.pos)
+                ACT.info("Reconcile: posicion real %s %s x%g -> contrato de salida reapuntado",
+                         self.pos, getattr(p.contract, "localSymbol", "?"), self.pos_qty)
             elif len(opts) > 1:
                 self.pos = "CALL" if opts[0].contract.right == "C" else "PUT"
                 self.target = "FLAT"              # >1 posicion: aplanar todo al MID
@@ -1126,6 +1127,50 @@ class SpyDirection:
         except Exception:
             return []
 
+    def _ensure_mkt(self, contract):
+        """Asegura bid/ask para un contrato en cartera.
+        CRITICO: los contratos que devuelve ib.positions() vienen SIN market data (la
+        suscripcion la tienen los creados en setup_contracts). Sin ticker, _mid() devuelve
+        None -> no hay precio ni P&L en pantalla Y ADEMAS _place() no coloca la VENTA,
+        con lo que la posicion se queda atrapada."""
+        try:
+            cid = getattr(contract, "conId", None)
+            if not cid or cid in self._mkt_subs:
+                return
+            # ib.positions() devuelve el contrato SIN exchange y reqMktData lo exige:
+            # IBKR responde 321 "Please enter exchange" y la suscripcion nunca llega.
+            if not getattr(contract, "exchange", ""):
+                contract.exchange = "SMART"
+            self.ib.reqMktData(contract, "", False, False)
+            self._mkt_subs.add(cid)
+            ACT.info("Market data suscrito para el contrato en cartera %s",
+                     getattr(contract, "localSymbol", cid))
+        except Exception:
+            LOG.exception("Error suscribiendo market data del contrato en cartera")
+
+    def _adoptar_posicion(self, p, lado):
+        """Toma el contrato REAL en cartera como contrato de salida: lo reapunta solo si
+        cambia (no churn de objetos, o se pierde el ticker), le asegura cotizacion y
+        recupera el precio de entrada desde avgCost si la app no lo sabe (tras reiniciar)."""
+        con = p.contract
+        actual = self.buy_call if lado == "CALL" else self.buy_put
+        if actual is None or getattr(actual, "conId", None) != getattr(con, "conId", None):
+            if lado == "CALL":
+                self.buy_call = con
+            else:
+                self.buy_put = con
+        self._ensure_mkt(self.buy_call if lado == "CALL" else self.buy_put)
+        # avgCost de opciones viene por contrato con multiplicador 100 (95.05 -> 0.9505)
+        if not self.entry_price:
+            try:
+                ac = float(getattr(p, "avgCost", 0) or 0)
+                if ac > 0:
+                    self.entry_price = ac / 100.0
+                    ACT.info("Entrada recuperada de IBKR (avgCost=%.2f) -> %.4f",
+                             ac, self.entry_price)
+            except Exception:
+                pass
+
     def _sync_pos(self):
         """RED DE SEGURIDAD: la posicion REAL de IBKR manda sobre self.pos.
         self.pos es una variable en memoria y puede DIVERGIR de la realidad (una orden
@@ -1134,21 +1179,18 @@ class SpyDirection:
             opts = [p for p in self.ib.positions()
                     if p.contract.symbol == SYMBOL and p.contract.secType == "OPT"
                     and p.position and p.position > 0]
-            real, qty, con = "FLAT", 0.0, None
+            real, qty, pos_obj = "FLAT", 0.0, None
             if opts:
                 p = opts[0]
                 real = "CALL" if p.contract.right == "C" else "PUT"
                 qty = float(p.position)
-                con = p.contract
+                pos_obj = p
             if real != self.pos or qty != self.pos_qty:
                 ACT.info("SYNC posicion REAL de IBKR=%s x%g | la app creia %s x%g -> corregido",
                          real, qty, self.pos, self.pos_qty)
-            if con is not None:
-                # vender SIEMPRE el contrato que se POSEE, no el recalculado por setup_contracts
-                if real == "CALL":
-                    self.buy_call = con
-                else:
-                    self.buy_put = con
+            if pos_obj is not None:
+                # vender SIEMPRE el contrato que se POSEE, con cotizacion asegurada
+                self._adoptar_posicion(pos_obj, real)
             self.pos = real
             self.pos_qty = qty
             if real == "FLAT":
