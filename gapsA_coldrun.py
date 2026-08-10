@@ -176,13 +176,22 @@ app._place(c, "SELL", "CALL", qty=1)
 px_mid = app.ib.ordenes[0][1].lmtPrice
 check(px_mid == 1.20, "15:46 -> vende al MID 1.20 (regla dura intacta) -> %s" % px_mid)
 
-# --- pasadas las 15:50: CRUZA el spread (va al BID) ---
+# --- 15:51: TODAVIA al MID. Actualizado 2026-08-10: el cruce se movio de 15:50 a 15:55
+#     (CROSS_HHMM) porque ir al BID regala el spread; ahora se insiste al MID 10 minutos. ---
 S.now_et = lambda: FakeET("15:51")
 app.ib.ordenes = []
 app._place(c, "SELL", "CALL", qty=1)
+check(app.ib.ordenes[0][1].lmtPrice == 1.20,
+      "15:51 -> SIGUE al MID 1.20, ya no cruza (el cruce es a las %s) -> %s"
+      % (S.CROSS_HHMM, app.ib.ordenes[0][1].lmtPrice))
+
+# --- 15:56: ultimos 5 min, AHORA si cruza al BID ---
+S.now_et = lambda: FakeET("15:56")
+app.ib.ordenes = []
+app._place(c, "SELL", "CALL", qty=1)
 px_cruce = app.ib.ordenes[0][1].lmtPrice
-check(px_cruce == 1.00, "15:51 -> CRUZA y vende al BID 1.00 -> %s" % px_cruce)
-check(px_cruce < px_mid, "el precio de cruce es peor que el MID: se prioriza SALIR")
+check(px_cruce == 1.00, "15:56 -> CRUZA y vende al BID 1.00 -> %s" % px_cruce)
+check(px_cruce < px_mid, "el precio de cruce es peor que el MID: ultimo recurso para SALIR")
 
 # --- una COMPRA nunca cruza, ni a esa hora ---
 app.pos = "FLAT"
@@ -191,7 +200,7 @@ app.buys_pend = 0
 app.ib.ordenes = []
 app._place(c, "BUY", "CALL")
 check(len(app.ib.ordenes) == 0 or app.ib.ordenes[0][1].lmtPrice == 1.20,
-      "una COMPRA a las 15:51 no cruza el spread (o ni se coloca)")
+      "una COMPRA a las 15:56 no cruza el spread (o ni se coloca)")
 
 # --- end_session con posicion abierta deja constancia y cierra el trade ---
 app = nueva_app()
@@ -215,6 +224,7 @@ print("== GAP 5: momentum por TIEMPO, no por numero de eventos ==")
 app = nueva_app()
 app.call = FakeContract(773, "C", 3001)
 app.put = FakeContract(773, "P", 3002)
+app._intradia_ok = True      # GAP 18: sin esto _update_signal ni evalua (ver test del GAP 18)
 
 # RAFAGA: muchos eventos en el mismo instante. Antes (MOMENTUM_WIN=8 muestras) la ventana se
 # llenaba en milisegundos y el momentum salia enorme. Ahora no hay 30 s de historia -> 0.
@@ -227,6 +237,7 @@ check(app.last_momentum == 0.0,
 
 # con historia REAL de mas de MOMENTUM_SECS, mide el cambio del diff en esa ventana
 app = nueva_app()
+app._intradia_ok = True      # GAP 18
 ahora = time.monotonic()
 app.flow_hist = [(ahora - 40.0, 1000.0, 500.0)]     # hace 40 s: diff = 500
 app.net_call, app.net_put = 3000.0, 700.0            # ahora: diff = 2300
@@ -464,6 +475,114 @@ try:
 except Exception:
     ok_no_revienta = False
 check(ok_no_revienta, "si falla la escritura NO propaga excepcion (no bloquea setup_contracts)")
+
+# ================================================================ EOD: MID insistente
+print("== EOD: MID recotizando rapido; BID solo en los ultimos 5 min ==")
+_real_now = S.now_et
+app = nueva_app()
+c = FakeContract(773, "C", 1001)
+app.ib._tk[1001] = FakeTicker(bid=0.54, ask=0.58, contract=c)   # mid = 0.56
+app.min_tick[1001] = 0.01
+app.trading = True
+app.pos = "CALL"
+app.pos_qty = 1
+
+# --- fuera del EOD: deadline normal ---
+S.now_et = lambda: FakeET("14:30")
+app.ib.ordenes = []
+app.order = None
+t0 = time.monotonic()
+app._place(c, "SELL", "CALL", qty=1)
+d_normal = app.order_deadline - t0
+check(abs(d_normal - S.REPRICE_SECS) < 0.3,
+      "fuera del EOD el deadline es REPRICE_SECS=%.1fs -> %.1fs" % (S.REPRICE_SECS, d_normal))
+
+# --- 15:46 (EOD): al MID y recotizando RAPIDO ---
+S.now_et = lambda: FakeET("15:46")
+app.ib.ordenes = []
+app.order = None
+t0 = time.monotonic()
+app._place(c, "SELL", "CALL", qty=1)
+px = app.ib.ordenes[0][1].lmtPrice
+d_eod = app.order_deadline - t0
+check(px == 0.56, "15:46 -> vende al MID 0.56 (NO al bid 0.54) -> %s" % px)
+check(abs(d_eod - S.EOD_REPRICE_SECS) < 0.3,
+      "15:46 -> recotiza cada EOD_REPRICE_SECS=%.1fs -> %.1fs" % (S.EOD_REPRICE_SECS, d_eod))
+check(d_eod < d_normal, "en el EOD recotiza MAS RAPIDO que fuera de el")
+
+# --- 15:46 con spread ANCHO: sigue al MID, no se rinde antes de tiempo ---
+app.ib._tk[1001] = FakeTicker(bid=0.40, ask=0.80, contract=c)   # mid = 0.60
+app.ib.ordenes = []
+app.order = None
+app._place(c, "SELL", "CALL", qty=1)
+check(app.ib.ordenes[0][1].lmtPrice == 0.60,
+      "spread ANCHO a las 15:46 -> sigue al MID 0.60, NO cruza -> %s"
+      % app.ib.ordenes[0][1].lmtPrice)
+
+# --- 15:56 (ultimos 5 min): AHORA si cruza al BID ---
+S.now_et = lambda: FakeET("15:56")
+app.ib.ordenes = []
+app.order = None
+app._place(c, "SELL", "CALL", qty=1)
+check(app.ib.ordenes[0][1].lmtPrice == 0.40,
+      "15:56 -> ULTIMO RECURSO: cruza al BID 0.40 -> %s" % app.ib.ordenes[0][1].lmtPrice)
+
+# --- 15:54 todavia NO cruza (el limite es 15:55) ---
+S.now_et = lambda: FakeET("15:54")
+app.ib.ordenes = []
+app.order = None
+app._place(c, "SELL", "CALL", qty=1)
+check(app.ib.ordenes[0][1].lmtPrice == 0.60,
+      "15:54 -> aun al MID (el cruce empieza a las %s) -> %s"
+      % (S.CROSS_HHMM, app.ib.ordenes[0][1].lmtPrice))
+
+# --- una COMPRA nunca usa el reloj del EOD ---
+S.now_et = lambda: FakeET("15:46")
+app.pos = "FLAT"
+app.pos_qty = 0
+app.buys_pend = 0
+app.ib.ordenes = []
+app.order = None
+t0 = time.monotonic()
+app._place(c, "BUY", "CALL")
+if app.ib.ordenes:
+    check(abs((app.order_deadline - t0) - S.REPRICE_SECS) < 0.3,
+          "una COMPRA en el EOD conserva el deadline normal")
+else:
+    check(True, "la COMPRA ni se coloca en el EOD (mejor aun)")
+S.now_et = _real_now
+
+
+# ================================================================ GAP 18
+print("== GAP 18: sin restaurar el estado NO se evalua la senal ==")
+app = nueva_app()
+app.call = FakeContract(773, "C", 5001)
+app.put = FakeContract(773, "P", 5002)
+app._intradia_ok = False              # como en los ~4 s del arranque
+app.state = "UP"
+app.net_call, app.net_put = -10640.0, 0.0     # el caso REAL del 14:52:29
+app._update_signal()
+check(app.state == "UP", "con _intradia_ok=False el estado NO cambia -> %s" % app.state)
+n_tr = app.db.execute("SELECT COUNT(*) FROM transitions").fetchone()[0]
+check(n_tr == 0, "y NO escribe filas falsas en transitions -> %d" % n_tr)
+check(app.flow_hist == [], "tampoco contamina la historia de flujo")
+
+# tras restaurar, la senal funciona con normalidad (no se rompio nada)
+app._intradia_ok = True
+app.net_call, app.net_put = -10640.0, 0.0
+app._update_signal()
+check(app.state == "DOWN",
+      "con _intradia_ok=True la senal gira normalmente -> %s" % app.state)
+n_tr = app.db.execute("SELECT COUNT(*) FROM transitions").fetchone()[0]
+check(n_tr >= 1, "y ahora si registra el giro -> %d" % n_tr)
+
+# _load_intradia deja la bandera en True aunque no haya nada que restaurar
+app2 = nueva_app()
+check(app2._intradia_ok is False, "arranca en False")
+app2._load_intradia()
+check(app2._intradia_ok is True,
+      "_load_intradia la pone en True aunque la BD este vacia (no bloquea la senal para siempre)")
+
 
 print()
 if FAILS:

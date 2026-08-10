@@ -88,11 +88,15 @@ REPRICE_SECS = 4.0          # re-precia al mid si no llena en este tiempo
 MAX_FILL_SECS = 60.0        # tiempo maximo intentando llenar una entrada
 FLATTEN_HHMM = "15:45"      # ET: cerrar cualquier opcion abierta
 STOP_NEW_HHMM = "15:40"     # ET: no abrir nuevas cerca del cierre
-CROSS_HHMM = "15:50"        # GAP 4: a partir de esta hora las VENTAS CRUZAN el spread (van al
-                            # BID en vez del MID). Rompe a proposito la regla dura "siempre al
-                            # MID" -autorizado por el usuario- porque a las 16:00 end_session
-                            # cancela y desconecta: una 0DTE que no llego a venderse EXPIRA y
-                            # vale 0. Perder medio spread es infinitamente mejor que perderlo todo.
+CROSS_HHMM = "15:55"        # GAP 4: ULTIMO RECURSO. Solo en los ultimos 5 minutos las VENTAS
+                            # cruzan el spread (van al BID). Antes de esa hora se insiste al MID
+                            # recotizando rapido: ir al BID es regalar el spread y el usuario NO
+                            # lo quiere salvo cuando ya no queda tiempo. A las 16:00 end_session
+                            # cancela y desconecta: una 0DTE sin vender EXPIRA valiendo 0.
+EOD_REPRICE_SECS = 1.5      # de FLATTEN_HHMM en adelante se recotiza MUCHO mas rapido que
+                            # REPRICE_SECS: colocar al MID, si no llena cancelar y volver a
+                            # colocar, una y otra vez. En el EOD el riesgo no es pagar de mas
+                            # por recotizar, es quedarse dentro.
 RECONNECT_SECS = 15.0       # espera entre reintentos si se cae el socket (no saturar el Gateway)
 SYNC_POS_SECS = 20.0        # cada cuanto re-sincronizar la posicion CONTRA IBKR (la realidad manda)
 STRIKE_REFRESH_SECS = 20.0  # cada cuanto re-centrar senal/ejecucion/banda al precio actual
@@ -1680,6 +1684,19 @@ class SpyDirection:
         return self.net_call - base[1], self.net_put - base[2]
 
     def _update_signal(self):
+        # GAP 18: NO evaluar la senal hasta haber intentado restaurar el estado del dia.
+        # setup_contracts suscribe el market data de la senal ANTES de _load_intradia, asi que
+        # durante ~4 s net_call/net_put valen 0 y el umbral cae al piso (5.000): cualquier
+        # flujo minimo dispara un GIRO ESPURIO. Medido el 2026-08-10 a las 14:52:29
+        # (`GIRO -> DOWN net_call=-10640 thr=5000`, corregido 4 s despues al restaurar), y con
+        # dano real por la manana: 4 giros en 34 s tras el reinicio de las 11:50, cerrando una
+        # posicion que la senal real habria mantenido. Ademas ensuciaba `transitions`.
+        # Se reutiliza _intradia_ok, que _load_intradia pone a True JUSTO ANTES de restaurar
+        # (misma bandera que ya usa _persist_accum para no escribir ceros sobre el estado bueno).
+        # En DEMO no hay estado que restaurar (no se toca la BD real): el guard no aplica, o la
+        # simulacion se quedaria congelada sin girar nunca.
+        if not self._intradia_ok and not self.demo:
+            return
         diff = self.net_call - self.net_put
         hhmmss = datetime.now().strftime("%H:%M:%S")
         # historia con SELLO DE TIEMPO: alimenta el momentum (GAP 5) y las ventanas moviles.
@@ -2316,7 +2333,8 @@ class SpyDirection:
                 mt = self._minTick(contract)
                 px_cruce = round(round(_bid / mt) * mt, 2)
                 ACT.info("EOD CRUCE DE SPREAD (%s>=%s): %s %s al BID %.2f en vez del MID %s "
-                         "-> se prioriza SALIR sobre el precio (0DTE expira a las 16:00)",
+                         "-> ULTIMO RECURSO tras 10 min insistiendo al MID; quedan <5 min y la "
+                         "0DTE expira a las 16:00",
                          now_et().strftime("%H:%M"), CROSS_HHMM, action, side, px_cruce,
                          ("%.2f" % px) if px is not None else "sin MID")
                 px = px_cruce
@@ -2347,7 +2365,12 @@ class SpyDirection:
             self.order_action = action
             self.order_side = side
             self.order_contract = contract
-            self.order_deadline = time.monotonic() + REPRICE_SECS
+            # EOD: recotizar MUCHO mas rapido. Colocar al MID, si no llena cancelar y volver a
+            # colocar, una y otra vez, hasta que entre. Ir al BID regala el spread, asi que se
+            # insiste al MID los primeros 10 min y el cruce queda como ultimo recurso (15:55).
+            _eod = (action == "SELL" and now_et().weekday() < 5
+                    and now_et().strftime("%H:%M") >= FLATTEN_HHMM)
+            self.order_deadline = time.monotonic() + (EOD_REPRICE_SECS if _eod else REPRICE_SECS)
             if action == "BUY":
                 self.buys_pend += q          # cupo ocupado hasta que se resuelva
                 self.last_buy_ts = time.monotonic()
