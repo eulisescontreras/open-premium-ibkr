@@ -1382,9 +1382,15 @@ class SpyDirection:
                  self.net_call, self.net_put, self.state))
             for (exp, strike, right), cp in self.accum.items():
                 dp = self.today_prem.get((exp, strike, right), 0.0)
+                # NO usar INSERT OR REPLACE: esta fila puede haberla escrito _persist_walls
+                # con 10 columnas (incluidos open_interest/gamma/net_prem de la banda) y el
+                # REPLACE las dejaria en NULL. ON CONFLICT ... DO UPDATE solo pisa lo que
+                # nombra y preserva el resto (mismo idioma que _persist_accum).
                 self.db.execute(
-                    "INSERT OR REPLACE INTO premium_minute(fecha,hora,expiry,strike,right,"
-                    "cum_prem,day_prem) VALUES(?,?,?,?,?,?,?)",
+                    "INSERT INTO premium_minute(fecha,hora,expiry,strike,right,"
+                    "cum_prem,day_prem) VALUES(?,?,?,?,?,?,?) "
+                    "ON CONFLICT(fecha,hora,expiry,strike,right) "
+                    "DO UPDATE SET cum_prem=excluded.cum_prem, day_prem=excluded.day_prem",
                     (fecha, hora, exp, strike, right, cp, dp))
             self.db.commit()
             # --- LOG EXHAUSTIVO POR MINUTO (respaldo completo del dia por si la BD falla) ---
