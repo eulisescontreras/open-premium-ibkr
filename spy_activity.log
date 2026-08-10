@@ -1,0 +1,55 @@
+2026-08-09 18:00:35,571 INFO Conectado a IB Gateway 127.0.0.1:4002 (clientId=7)
+2026-08-09 18:00:46,324 INFO SETUP OK  SPY=773.37  cercano=20260810  CALL 773C / PUT 774P  | baseline exps=3  [FROZEN]
+2026-08-09 18:00:58,550 INFO MIN 18:00 SPY=773.12 TA=NEUTRAL rsi=59 macdh=+0.049 | netC=0 netP=0 state=- pos=FLAT
+2026-08-09 20:47:40,684 INFO ORDEN BUY CALL x1 LIMIT MID @ 1.05
+2026-08-09 20:47:40,685 INFO ORDEN BUY CALL x1 LIMIT MID @ 1.05
+2026-08-09 20:47:40,685 INFO FILL BUY CALL @ 1.05 -> pos=CALL
+2026-08-09 20:47:40,685 INFO ORDEN SELL CALL x1 LIMIT MID @ 1.05
+2026-08-09 20:47:40,686 INFO ORDEN SELL CALL x1 LIMIT MID @ 1.05
+2026-08-09 20:47:40,686 INFO ORDEN SELL CALL x1 LIMIT MID @ 1.05
+2026-08-09 20:47:40,686 INFO ORDEN SELL CALL x1 LIMIT MID @ 1.05
+2026-08-09 20:47:40,687 INFO FILL SELL CALL @ 1.05 -> pos=FLAT
+2026-08-09 20:47:40,687 INFO ORDEN BUY PUT x1 LIMIT MID @ 2.05
+2026-08-09 20:47:40,687 INFO Cancelada orden huerfana 8944
+2026-08-09 20:48:16,328 INFO Conectado a IB Gateway 127.0.0.1:4002 (clientId=7)
+2026-08-09 20:48:24,925 INFO SETUP OK  SPY=772.45  cercano=20260810  CALL 772C / PUT 773P  | baseline exps=3  [LIVE]
+2026-08-09 20:58:26,664 INFO ORDEN BUY CALL x1 LIMIT MID @ 1.05
+2026-08-09 20:58:26,665 INFO ORDEN BUY CALL x1 LIMIT MID @ 1.05
+2026-08-09 20:58:26,665 INFO FILL BUY CALL @ 1.05 -> pos=CALL
+2026-08-09 20:58:26,666 INFO ORDEN SELL CALL x1 LIMIT MID @ 1.05
+2026-08-09 20:58:26,666 INFO FILL SELL CALL @ 0.00 -> pos=FLAT
+2026-08-09 20:58:26,666 INFO ORDEN BUY PUT x1 LIMIT MID @ 2.05
+2026-08-09 20:58:53,088 INFO Conectado a IB Gateway 127.0.0.1:4002 (clientId=7)
+2026-08-09 20:59:25,359 INFO Conectado a IB Gateway 127.0.0.1:4002 (clientId=7)
+2026-08-09 21:00:00,481 INFO Conectado a IB Gateway 127.0.0.1:4002 (clientId=7)
+2026-08-09 22:02:27,645 INFO WALLS spot=772.00 PW=765.00 CW=775.00 magneto est=770.00/din=770.00 peso=- | GEX=-0.656Bn regime=SHORT flip=- | faltan OI=0 greeks=0 de 6 | frescura: gamma cambiaron=6/6 ult_tick=2026-08-11 10:00:00
+2026-08-09 22:02:27,645 INFO WALLS detalle por strike: 770C:OI=100.00,g=0.05,net=+0 | 775C:OI=500.00,g=0.04,net=+0 | 780C:OI=200.00,g=0.03,net=+0 | 760P:OI=100.00,g=0.03,net=+0 | 765P:OI=600.00,g=0.04,net=+0 | 770P:OI=300.00,g=0.05,net=+0
+2026-08-09 22:02:27,646 INFO WALLS spot=772.00 PW=765.00 CW=775.00 magneto est=770.00/din=770.00 peso=780.00 | GEX=-0.656Bn regime=SHORT flip=- | faltan OI=0 greeks=0 de 6 | frescura: gamma cambiaron=0/6 ult_tick=2026-08-11 10:00:00
+2026-08-09 22:02:27,646 INFO WALLS AVISO: ningun gamma cambio desde el ultimo recalculo -> posible dato ESTANCADO/viejo (revisar suscripcion OPRA o fuera de RTH)
+2026-08-09 22:02:27,646 INFO WALLS detalle por strike: 770C:OI=100.00,g=0.05,net=+0 | 775C:OI=500.00,g=0.04,net=+0 | 780C:OI=200.00,g=0.03,net=+12000000 | 760P:OI=100.00,g=0.03,net=+0 | 765P:OI=600.00,g=0.04,net=+0 | 770P:OI=300.00,g=0.05,net=+0
+2026-08-09 22:03:00,269 INFO WALLS spot=772.00 PW=765.00 CW=775.00 magneto est=770.00/din=770.00 peso=- | GEX=-0.656Bn regime=SHORT flip=- | faltan OI=0 greeks=0 de 6 | frescura: gamma cambiaron=6/6 ult_tick=2026-08-11 10:00:00
+2026-08-09 22:03:00,269 INFO WALLS detalle por strike: 770C:OI=100.00,g=0.05,net=+0 | 775C:OI=500.00,g=0.04,net=+0 | 780C:OI=200.00,g=0.03,net=+0 | 760P:OI=100.00,g=0.03,net=+0 | 765P:OI=600.00,g=0.04,net=+0 | 770P:OI=300.00,g=0.05,net=+0
+2026-08-09 22:03:00,269 INFO WALLS spot=772.00 PW=765.00 CW=775.00 magneto est=770.00/din=770.00 peso=780.00 | GEX=-0.656Bn regime=SHORT flip=- | faltan OI=0 greeks=0 de 6 | frescura: gamma cambiaron=0/6 ult_tick=2026-08-11 10:00:00
+2026-08-09 22:03:00,270 INFO WALLS AVISO: ningun gamma cambio desde el ultimo recalculo -> posible dato ESTANCADO/viejo (revisar suscripcion OPRA o fuera de RTH)
+2026-08-09 22:03:00,270 INFO WALLS detalle por strike: 770C:OI=100.00,g=0.05,net=+0 | 775C:OI=500.00,g=0.04,net=+0 | 780C:OI=200.00,g=0.03,net=+12000000 | 760P:OI=100.00,g=0.03,net=+0 | 765P:OI=600.00,g=0.04,net=+0 | 770P:OI=300.00,g=0.05,net=+0
+2026-08-09 22:03:29,070 INFO WALLS spot=772.00 PW=765.00 CW=775.00 magneto est=770.00/din=770.00 peso=- | GEX=-0.656Bn regime=SHORT flip=- | faltan OI=0 greeks=0 de 6 | frescura: gamma cambiaron=6/6 ult_tick=2026-08-11 10:00:00
+2026-08-09 22:03:29,070 INFO WALLS detalle por strike: 770C:OI=100.00,g=0.05,net=+0 | 775C:OI=500.00,g=0.04,net=+0 | 780C:OI=200.00,g=0.03,net=+0 | 760P:OI=100.00,g=0.03,net=+0 | 765P:OI=600.00,g=0.04,net=+0 | 770P:OI=300.00,g=0.05,net=+0
+2026-08-09 22:03:29,071 INFO WALLS spot=772.00 PW=765.00 CW=775.00 magneto est=770.00/din=770.00 peso=780.00 | GEX=-0.656Bn regime=SHORT flip=- | faltan OI=0 greeks=0 de 6 | frescura: gamma cambiaron=0/6 ult_tick=2026-08-11 10:00:00
+2026-08-09 22:03:29,071 INFO WALLS AVISO: ningun gamma cambio desde el ultimo recalculo -> posible dato ESTANCADO/viejo (revisar suscripcion OPRA o fuera de RTH)
+2026-08-09 22:03:29,071 INFO WALLS detalle por strike: 770C:OI=100.00,g=0.05,net=+0 | 775C:OI=500.00,g=0.04,net=+0 | 780C:OI=200.00,g=0.03,net=+12000000 | 760P:OI=100.00,g=0.03,net=+0 | 765P:OI=600.00,g=0.04,net=+0 | 770P:OI=300.00,g=0.05,net=+0
+2026-08-09 22:04:13,083 INFO WALLS spot=772.00 PW=765.00 CW=775.00 magneto est=770.00/din=770.00 peso=- | GEX=-0.656Bn regime=SHORT flip=- | faltan OI=0 greeks=0 de 6 | frescura: gamma cambiaron=6/6 ult_tick=2026-08-11 10:00:00
+2026-08-09 22:04:13,083 INFO WALLS detalle por strike: 770C:OI=100.00,g=0.05,net=+0 | 775C:OI=500.00,g=0.04,net=+0 | 780C:OI=200.00,g=0.03,net=+0 | 760P:OI=100.00,g=0.03,net=+0 | 765P:OI=600.00,g=0.04,net=+0 | 770P:OI=300.00,g=0.05,net=+0
+2026-08-09 22:04:13,084 INFO WALLS spot=772.00 PW=765.00 CW=775.00 magneto est=770.00/din=770.00 peso=780.00 | GEX=-0.656Bn regime=SHORT flip=- | faltan OI=0 greeks=0 de 6 | frescura: gamma cambiaron=0/6 ult_tick=2026-08-11 10:00:00
+2026-08-09 22:04:13,084 INFO WALLS AVISO: ningun gamma cambio desde el ultimo recalculo -> posible dato ESTANCADO/viejo (revisar suscripcion OPRA o fuera de RTH)
+2026-08-09 22:04:13,084 INFO WALLS detalle por strike: 770C:OI=100.00,g=0.05,net=+0 | 775C:OI=500.00,g=0.04,net=+0 | 780C:OI=200.00,g=0.03,net=+12000000 | 760P:OI=100.00,g=0.03,net=+0 | 765P:OI=600.00,g=0.04,net=+0 | 770P:OI=300.00,g=0.05,net=+0
+2026-08-09 22:04:13,086 INFO WALLS spot=772.00 PW=765.00 CW=775.00 magneto est=770.00/din=770.00 peso=780.00 | GEX=-0.656Bn regime=SHORT flip=- | faltan OI=0 greeks=0 de 6 | frescura: gamma cambiaron=0/6 ult_tick=2026-08-11 10:00:00
+2026-08-09 22:04:13,087 INFO WALLS AVISO: ningun gamma cambio desde el ultimo recalculo -> posible dato ESTANCADO/viejo (revisar suscripcion OPRA o fuera de RTH)
+2026-08-09 22:04:13,087 INFO WALLS detalle por strike: 770C:OI=100.00,g=0.05,net=+0 | 775C:OI=500.00,g=0.04,net=+0 | 780C:OI=200.00,g=0.03,net=+12000000 | 760P:OI=100.00,g=0.03,net=+0 | 765P:OI=600.00,g=0.04,net=+0 | 770P:OI=300.00,g=0.05,net=+0
+2026-08-09 22:05:53,121 INFO WALLS spot=772.00 PW=765.00 CW=775.00 magneto est=770.00/din=770.00 peso=- | GEX=-0.656Bn regime=SHORT flip=- | faltan OI=0 greeks=0 de 6 | frescura: gamma cambiaron=6/6 ult_tick=2026-08-11 10:00:00
+2026-08-09 22:05:53,121 INFO WALLS detalle por strike: 770C:OI=100.00,g=0.05,net=+0 | 775C:OI=500.00,g=0.04,net=+0 | 780C:OI=200.00,g=0.03,net=+0 | 760P:OI=100.00,g=0.03,net=+0 | 765P:OI=600.00,g=0.04,net=+0 | 770P:OI=300.00,g=0.05,net=+0
+2026-08-09 22:05:53,124 INFO WALLS spot=772.00 PW=765.00 CW=775.00 magneto est=770.00/din=770.00 peso=780.00 | GEX=-0.656Bn regime=SHORT flip=- | faltan OI=0 greeks=0 de 6 | frescura: gamma cambiaron=0/6 ult_tick=2026-08-11 10:00:00
+2026-08-09 22:05:53,125 INFO WALLS AVISO: ningun gamma cambio desde el ultimo recalculo -> posible dato ESTANCADO/viejo (revisar suscripcion OPRA o fuera de RTH)
+2026-08-09 22:05:53,125 INFO WALLS detalle por strike: 770C:OI=100.00,g=0.05,net=+0 | 775C:OI=500.00,g=0.04,net=+0 | 780C:OI=200.00,g=0.03,net=+12000000 | 760P:OI=100.00,g=0.03,net=+0 | 765P:OI=600.00,g=0.04,net=+0 | 770P:OI=300.00,g=0.05,net=+0
+2026-08-09 22:05:53,125 INFO WALLS spot=772.00 PW=765.00 CW=775.00 magneto est=770.00/din=770.00 peso=780.00 | GEX=-0.656Bn regime=SHORT flip=- | faltan OI=0 greeks=0 de 6 | frescura: gamma cambiaron=0/6 ult_tick=2026-08-11 10:00:00
+2026-08-09 22:05:53,126 INFO WALLS AVISO: ningun gamma cambio desde el ultimo recalculo -> posible dato ESTANCADO/viejo (revisar suscripcion OPRA o fuera de RTH)
+2026-08-09 22:05:53,126 INFO WALLS detalle por strike: 770C:OI=100.00,g=0.05,net=+0 | 775C:OI=500.00,g=0.04,net=+0 | 780C:OI=200.00,g=0.03,net=+12000000 | 760P:OI=100.00,g=0.03,net=+0 | 765P:OI=600.00,g=0.04,net=+0 | 770P:OI=300.00,g=0.05,net=+0

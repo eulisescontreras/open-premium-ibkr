@@ -1,0 +1,1330 @@
+# -*- coding: utf-8 -*-
+"""
+SPY Direction — Open-Premium casero via IBKR (proyecto INDEPENDIENTE, no toca el bot)
+------------------------------------------------------------------------------------
+Para SCALPING de SPY. Dos partes:
+
+1) SEÑAL EN VIVO (pantalla UP/DOWN): usa el vencimiento MAS CERCANO (el proximo a
+   expirar; puede ser 0DTE o a pocos dias) y los strikes ATM/ITM (call<=precio,
+   put>=precio, nunca OTM). Mide el NETO de premium call vs put desde la apertura.
+
+2) LINEA BASE (fechas posteriores): acumula el premium ATM/ITM de VARIAS
+   expiraciones FUTURAS, guardando un ACUMULADO en la BD desde el primer dia de uso.
+   Sirve para, al abrir el dia siguiente, ver si ese valor cambia fuerte (señal temprana).
+
+Persistencia en SQLite (viaja con la app). Requiere IB Gateway abierto+logueado con
+API habilitada (puerto 4002 paper). El flujo por-trade real necesita datos de
+opciones OPRA en tiempo real; si solo hay 'delayed', la app lo indica.
+"""
+
+import math
+import os
+import sys
+import time
+import sqlite3
+import subprocess
+import logging
+from logging.handlers import RotatingFileHandler
+from datetime import datetime, timezone, timedelta
+
+try:
+    import pandas as pd
+    HAVE_PD = True
+except Exception:
+    HAVE_PD = False
+
+try:
+    import winsound
+    HAVE_SOUND = True
+except Exception:
+    HAVE_SOUND = False
+
+try:
+    from zoneinfo import ZoneInfo
+    _ET = ZoneInfo("America/New_York")
+except Exception:
+    _ET = None  # fallback: EDT (UTC-4) mas abajo
+
+from ib_insync import IB, Stock, Option, LimitOrder, util
+
+
+def now_et():
+    """Hora actual en ET. Usa zoneinfo; si no hay tzdata, cae a EDT (UTC-4)."""
+    if _ET is not None:
+        return datetime.now(_ET)
+    return datetime.now(timezone.utc) + timedelta(hours=-4)
+
+# ----------------------- CONFIG (editable) -----------------------
+HOST = "127.0.0.1"
+PORT = 4002          # IB Gateway paper. Live=4001. TWS: 7497 paper / 7496 live.
+CLIENT_ID = 7
+SYMBOL = "SPY"
+SIGNAL_THRESHOLD = 5000.0   # US$ de premium neto para cambiar de estado (anti-parpadeo)
+REFRESH_SECS = 1.0
+# Aviso anticipado de "posible giro" (heuristica de momentum):
+WARN_BAND_FRAC = 0.6
+MOMENTUM_WIN = 8
+MOMENTUM_MIN = 3000.0
+ENABLE_SOUND = False        # SOLO banner visual (sin sonido)
+ENABLE_TOAST = True         # notificacion nativa de Windows (esquina inferior derecha)
+# Linea base (fechas posteriores):
+ITM_DEPTH = 3               # ademas del ATM, cuantos strikes ITM por lado
+BASELINE_EXPIRIES = 3       # cuantas expiraciones FUTURAS seguir (posteriores a la cercana)
+SNAPSHOT_SECS = 120         # cada cuanto persistir el acumulado en la BD
+OPEN_JUMP_FACTOR = 1.5      # si hoy supera prev*este factor -> marca "cambio fuerte"
+# --- Umbrales ADAPTATIVOS (auto-ajuste a la magnitud real) ---
+ADAPTIVE = True
+ADAPT_FRAC = 0.15           # umbral = ADAPT_FRAC * (|net_call|+|net_put|)
+MOM_FRAC = 0.6             # momentum minimo = MOM_FRAC * umbral
+# --- EJECUCION AUTOMATICA (rotar 1 opcion) ---
+TRADING_ENABLED = False     # ARRANCA APAGADO. Se ARMA con el boton en pantalla.
+QTY = 1                     # contratos por señal (cuenta pequeña)
+REPRICE_SECS = 4.0          # re-precia al mid si no llena en este tiempo
+MAX_FILL_SECS = 60.0        # tiempo maximo intentando llenar una entrada
+FLATTEN_HHMM = "15:45"      # ET: cerrar cualquier opcion abierta
+STOP_NEW_HHMM = "15:40"     # ET: no abrir nuevas cerca del cierre
+# --- Walls / GEX / Gamma Flip (informativo, "como el TA": se guarda y se analiza vs la grafica) ---
+WALLS_ENABLED = True        # calcular walls/GEX/flip. NO toca la senal UP/DOWN ni la ejecucion.
+WALLS_BAND = 10             # strikes a CADA lado del precio a escanear (banda). Bajo por limite de lineas IBKR.
+WALLS_RECALC_SECS = 180.0   # cada 3 min: snapshot de la banda (no satura el gateway; MarketSnack usa 5 min)
+# Convencion de signo del GEX (dealers +gamma calls / -gamma puts). HIPOTESIS estandar: validar vs precio real.
+GEX_CALL_SIGN = 1.0
+GEX_PUT_SIGN = -1.0
+# ----------------------------------------------------------------
+
+
+def _fmt(x):
+    """Formato None-safe para logs/pantalla."""
+    return f"{x:.2f}" if isinstance(x, (int, float)) else "-"
+
+
+def _max_pain(call_oi, put_oi):
+    """Strike de Max Pain (minimiza el pago total) a partir del OI. Funcion pura.
+    call_oi/put_oi: dict strike->OI. Devuelve el strike o None. NO usa el spot."""
+    strikes = sorted(set(call_oi) | set(put_oi))
+    if not strikes:
+        return None
+    best_k, best_pay = None, None
+    for K in strikes:
+        pay = (sum(call_oi.get(s, 0) * max(0.0, K - s) for s in strikes)
+               + sum(put_oi.get(s, 0) * max(0.0, s - K) for s in strikes))
+        if best_pay is None or pay < best_pay:
+            best_pay, best_k = pay, K
+    return best_k
+
+
+def compute_walls_from_oi(call_oi, put_oi, spot):
+    """Funcion pura y testeable. call_oi/put_oi: dict strike->OI. Devuelve walls + max pain."""
+    strikes = sorted(set(call_oi) | set(put_oi))
+    if not strikes:
+        return None
+    put_wall = max(put_oi, key=lambda k: put_oi.get(k, 0)) if put_oi else None
+    call_wall = max(call_oi, key=lambda k: call_oi.get(k, 0)) if call_oi else None
+    return {"put_wall": put_wall, "call_wall": call_wall,
+            "max_pain": _max_pain(call_oi, put_oi), "spot": spot}
+
+
+def compute_prem_center(weight_by_strike):
+    """Centro de masa (strike) ponderado por la MAGNITUD de dinero por strike = 'hacia donde
+    hay mas peso'. weight_by_strike: dict strike->$ (se usa |valor|). Funcion pura."""
+    num = den = 0.0
+    for K, w in weight_by_strike.items():
+        a = abs(w)
+        num += K * a
+        den += a
+    return (num / den) if den > 0 else None
+
+
+def compute_gex_from_greeks(call_oi, put_oi, call_gamma, put_gamma, spot,
+                            call_sign=1.0, put_sign=-1.0):
+    """GEX (Gamma Exposure) neto y Gamma Flip. Funcion pura y testeable.
+    - GEX por strike = 100 * spot^2 * (call_sign*gamma_c*OI_c + put_sign*gamma_p*OI_p)
+    - gex_total>0 -> dealers LONG gamma (mean-reverting) ; <0 -> SHORT gamma (tendencial)
+    - gamma_flip (PROXY): strike donde la suma ACUMULADA por strike del GEX neto cruza cero
+      (interpolado). Aprox: no repreciamos gamma por cada S (no hay BS aqui). Documentado.
+    Devuelve dict o None si no hay datos."""
+    strikes = sorted(set(call_oi) | set(put_oi) | set(call_gamma) | set(put_gamma))
+    if not strikes:
+        return None
+    factor = 100.0 * spot * spot
+    per = {}
+    gex_total = 0.0
+    for K in strikes:
+        g = 0.0
+        cg = call_gamma.get(K)
+        pg = put_gamma.get(K)
+        if cg is not None and not math.isnan(cg):
+            g += call_sign * cg * call_oi.get(K, 0)
+        if pg is not None and not math.isnan(pg):
+            g += put_sign * pg * put_oi.get(K, 0)
+        per[K] = g * factor
+        gex_total += per[K]
+    regime = "LONG" if gex_total > 0 else ("SHORT" if gex_total < 0 else "FLAT")
+    # gamma flip (proxy): cruce por cero de la acumulada por strike
+    flip = None
+    cum = 0.0
+    cum_vals = []
+    for K in strikes:
+        cum += per[K]
+        cum_vals.append((K, cum))
+    for i in range(1, len(cum_vals)):
+        k0, c0 = cum_vals[i - 1]
+        k1, c1 = cum_vals[i]
+        if (c0 <= 0.0 <= c1) or (c0 >= 0.0 >= c1):
+            flip = k0 + (0.0 - c0) / (c1 - c0) * (k1 - k0) if c1 != c0 else k1
+            break
+    return {"gex_total": gex_total, "regime": regime, "gamma_flip": flip,
+            "spot": spot, "gex_by_strike": per}
+
+
+def _app_dir():
+    if getattr(sys, "frozen", False):
+        return os.path.dirname(sys.executable)
+    return os.path.dirname(os.path.abspath(__file__))
+
+
+def _make_logger(name, filename):
+    lg = logging.getLogger(name)
+    if lg.handlers:
+        return lg
+    lg.setLevel(logging.INFO)
+    lg.propagate = False
+    try:
+        h = RotatingFileHandler(os.path.join(_app_dir(), filename),
+                                maxBytes=3_000_000, backupCount=5, encoding="utf-8")
+    except Exception:
+        h = logging.StreamHandler()
+    h.setFormatter(logging.Formatter("%(asctime)s %(levelname)s %(message)s"))
+    lg.addHandler(h)
+    return lg
+
+
+# LOG = errores/excepciones ; ACT = actividad exhaustiva del dia (que hizo el sistema)
+LOG = _make_logger("spyd", "spy_direction.log")
+ACT = _make_logger("spyd.act", "spy_activity.log")
+
+
+def _excepthook(exctype, value, tb):
+    LOG.error("EXCEPCION NO CAPTURADA", exc_info=(exctype, value, tb))
+
+
+sys.excepthook = _excepthook
+
+
+class TAEngine:
+    """Replica del TA del bot (src/ta/indicators.py) aplicado a barras de 1 min:
+    RSI(14), EMA(8/21/50), MACD(12/26/9), Bollinger(20,2), ATR(14), VWAP aprox, OBV."""
+
+    def compute(self, df):
+        if not HAVE_PD or df is None or len(df) < 26:
+            return None
+        close, high, low, vol = df["close"], df["high"], df["low"], df["volume"]
+        delta = close.diff()
+        gain = delta.where(delta > 0, 0.0).rolling(14).mean()
+        loss = (-delta.where(delta < 0, 0.0)).rolling(14).mean()
+        rs = gain / loss.replace(0, 1e-9)
+        rsi = float((100.0 - 100.0 / (1.0 + rs)).iloc[-1])
+        ema8 = float(close.ewm(span=8, adjust=False).mean().iloc[-1])
+        ema21 = float(close.ewm(span=21, adjust=False).mean().iloc[-1])
+        ema50 = float(close.ewm(span=50, adjust=False).mean().iloc[-1])
+        e12 = close.ewm(span=12, adjust=False).mean()
+        e26 = close.ewm(span=26, adjust=False).mean()
+        macd_line = e12 - e26
+        macd_sig = macd_line.ewm(span=9, adjust=False).mean()
+        ml = float(macd_line.iloc[-1]); ms = float(macd_sig.iloc[-1]); mh = ml - ms
+        sma = close.rolling(20).mean(); sd = close.rolling(20).std()
+        bb_up = float((sma + 2 * sd).iloc[-1]); bb_mid = float(sma.iloc[-1])
+        bb_low = float((sma - 2 * sd).iloc[-1])
+        tr = pd.concat([high - low, (high - close.shift()).abs(),
+                        (low - close.shift()).abs()], axis=1).max(axis=1)
+        atr = float(tr.rolling(14).mean().iloc[-1])
+        price = float(close.iloc[-1])
+        atr_pct = (atr / price) * 100.0 if price else 0.0
+        vwap = float(((high + low + close) / 3.0).rolling(5).mean().iloc[-1])
+        obv = [0.0]
+        cl = close.values; vv = vol.values
+        for i in range(1, len(cl)):
+            if cl[i] > cl[i - 1]:
+                obv.append(obv[-1] + vv[i])
+            elif cl[i] < cl[i - 1]:
+                obv.append(obv[-1] - vv[i])
+            else:
+                obv.append(obv[-1])
+        obv_s = pd.Series(obv)
+        ma_obv = float(obv_s.rolling(20).mean().iloc[-1]); cur = float(obv_s.iloc[-1])
+        if ma_obv and cur > ma_obv * 1.05:
+            obv_trend = "bullish"
+        elif ma_obv and cur < ma_obv * 0.95:
+            obv_trend = "bearish"
+        else:
+            obv_trend = "neutral"
+        # scores (identicos al bot)
+        r = rsi
+        s_rsi = 3 if r < 25 else 2 if r < 35 else 1 if r < 45 else 0 if r <= 55 else -1 if r <= 65 else -2 if r <= 75 else -3
+        rng = bb_up - bb_low
+        s_bb = 2 if (rng > 0 and price <= bb_low + rng * 0.2) else (-2 if (rng > 0 and price >= bb_up - rng * 0.2) else 0)
+        sc = {
+            "rsi": s_rsi,
+            "ema": 2 if ema8 > ema21 else -2,
+            "macd": 2 if mh > 0 else -2,
+            "bb": s_bb,
+            "atr": 1 if atr_pct > 1.0 else (-1 if atr_pct < 0.3 else 0),
+            "vwap": 1 if price > vwap else -1,
+            "obv": 1 if obv_trend == "bullish" else (-1 if obv_trend == "bearish" else 0),
+        }
+        total = sum(sc.values())
+        bull = sum(1 for v in sc.values() if v > 0)
+        bear = sum(1 for v in sc.values() if v < 0)
+        dirn = "BULL" if total > 0 else ("BEAR" if total < 0 else "NEUTRAL")
+        return {"close": price, "rsi": rsi, "ema8": ema8, "ema21": ema21, "ema50": ema50,
+                "macd_line": ml, "macd_signal": ms, "macd_hist": mh,
+                "bb_up": bb_up, "bb_mid": bb_mid, "bb_low": bb_low,
+                "atr": atr, "atr_pct": atr_pct, "vwap": vwap, "obv_trend": obv_trend,
+                "score": total, "dir": dirn, "bull": bull, "bear": bear}
+
+
+class SpyDirection:
+    def __init__(self, demo=False):
+        self.ib = IB()
+        self.demo = demo
+        self.demo_i = 0
+        self.mode = "DEMO" if demo else "?"
+        self.spy_price = float("nan")
+        self.expiry = None            # vencimiento mas cercano (para la señal)
+        self.call = None              # ATM/ITM call (señal)
+        self.put = None               # ATM/ITM put (señal)
+        self.net_call = 0.0
+        self.net_put = 0.0
+        self.prev_vol = {}            # conId -> volumen acumulado previo (delta)
+        self.state = "-"
+        self.transitions = []
+        self.status = "Iniciando..."
+        # alertas
+        self.diff_hist = []
+        self.alert_text = ""
+        self.alert_kind = ""
+        self.alert_until = 0.0
+        self.pending_sound = None
+        self.last_warn_side = None
+        # --- linea base (fechas posteriores) ---
+        self.info_base = {}           # conId -> (expiry, strike, right)
+        self.accum = {}               # (expiry,strike,right) -> premium acumulado (persistente, desde dia 1)
+        self.today_prem = {}          # (expiry,strike,right) -> premium de HOY
+        self.base_prev = {}           # (expiry,strike,right) -> premium del dia previo
+        self.base_expiries = []       # lista de expiraciones futuras seguidas
+        self.last_snapshot = 0.0
+        # --- Walls / GEX / Gamma Flip (informativo, "como el TA": se guarda por 3 min y se analiza) ---
+        self.band_contracts = []      # contratos de la banda (expiracion CERCANA) para snapshot
+        self.band_prev_vol = {}       # conId -> volumen previo (delta entre lecturas de 3 min)
+        self.prev_gamma = {}          # conId -> gamma previo (detectar dato estancado/viejo)
+        self.today_vol = {}           # (expiry,strike,right) -> volumen del dia (banda)
+        self.net_prem = {}            # (expiry,strike,right) -> premium neto firmado ('peso' de dinero)
+        self.walls = None             # dict: put_wall/call_wall/max_pain_static/max_pain_dyn/prem_center
+        self.gex = None               # dict: gex_total/regime/gamma_flip
+        self.last_walls_calc = 0.0
+        # --- ejecucion automatica (rotar 1 opcion) ---
+        self.trading = TRADING_ENABLED   # ON/OFF (boton en la GUI)
+        self.buy_call = None             # contrato de EJECUCION call (ATM lado OTM: strike > precio)
+        self.buy_put = None              # contrato de EJECUCION put  (ATM lado OTM: strike < precio)
+        self.pos = "FLAT"                # FLAT / CALL / PUT (lo que tenemos)
+        self.target = "FLAT"             # lado deseado segun ultima señal
+        self.order = None                # Trade activo (ib_insync)
+        self.order_action = None         # BUY / SELL
+        self.order_side = None           # CALL / PUT
+        self.order_deadline = 0.0        # monotonic: re-precia al vencer
+        self.order_giveup = 0.0          # (sin uso) compatibilidad
+        self.order_aggr = 0              # (sin uso) compatibilidad
+        self.open_deadline = 0.0         # limite de tiempo para llenar una COMPRA (BUY)
+        self.min_tick = {}               # conId -> minTick
+        self.trade_msg = "trading OFF"   # ultima accion (para la pantalla)
+        self.eod_flat = False            # ya se aplano hoy
+        self.reconciled = False
+        # --- TA de 1 min + registro por minuto ---
+        self.ta = TAEngine()
+        self.bars = None                 # BarDataList (reqHistoricalData keepUpToDate)
+        self.ta_vals = None              # dict con ultimos indicadores
+        self.last_bar_time = None        # detectar cierre de minuto
+        # --- SQLite ---
+        self.db = sqlite3.connect(
+            os.path.join(_app_dir(), "spy_history_demo.db" if demo else "spy_history.db"))
+        self._init_db()
+
+    def _init_db(self):
+        c = self.db
+        c.execute("CREATE TABLE IF NOT EXISTS transitions ("
+                  "id INTEGER PRIMARY KEY AUTOINCREMENT, fecha TEXT, hora TEXT, "
+                  "estado TEXT, tipo TEXT, spy REAL, net_call REAL, net_put REAL, modo TEXT)")
+        # Acumulado persistente (desde el primer dia de uso)
+        c.execute("CREATE TABLE IF NOT EXISTS strike_accum ("
+                  "expiry TEXT, strike REAL, right TEXT, cum_prem REAL, updated TEXT, "
+                  "PRIMARY KEY(expiry,strike,right))")
+        # Premium por dia (para comparar apertura vs dia previo)
+        c.execute("CREATE TABLE IF NOT EXISTS strike_daily ("
+                  "fecha TEXT, expiry TEXT, strike REAL, right TEXT, day_prem REAL, "
+                  "PRIMARY KEY(fecha,expiry,strike,right))")
+        # Registro POR MINUTO: TA del SPY + precio + estado de premium
+        c.execute("CREATE TABLE IF NOT EXISTS ta_minute ("
+                  "fecha TEXT, hora TEXT, spy REAL, rsi REAL, ema8 REAL, ema21 REAL, ema50 REAL, "
+                  "macd_line REAL, macd_signal REAL, macd_hist REAL, bb_up REAL, bb_mid REAL, "
+                  "bb_low REAL, atr REAL, atr_pct REAL, vwap REAL, obv_trend TEXT, "
+                  "ta_score REAL, ta_dir TEXT, net_call REAL, net_put REAL, prem_state TEXT, "
+                  "PRIMARY KEY(fecha,hora))")
+        # Registro POR MINUTO: premium call/put por strike seguido
+        # (+ net_prem/open_interest/gamma por strike de la banda de walls, cada 3 min)
+        c.execute("CREATE TABLE IF NOT EXISTS premium_minute ("
+                  "fecha TEXT, hora TEXT, expiry TEXT, strike REAL, right TEXT, "
+                  "cum_prem REAL, day_prem REAL, net_prem REAL, open_interest REAL, gamma REAL, "
+                  "PRIMARY KEY(fecha,hora,expiry,strike,right))")
+        # migracion para BD existentes: agregar columnas nuevas si faltan
+        for col in ("net_prem REAL", "open_interest REAL", "gamma REAL"):
+            try:
+                c.execute("ALTER TABLE premium_minute ADD COLUMN " + col)
+            except Exception:
+                pass  # ya existe
+        # Registro cada 3 min: walls/GEX/flip agregados (para analizar vs la grafica del precio)
+        c.execute("CREATE TABLE IF NOT EXISTS walls_snapshot ("
+                  "fecha TEXT, hora TEXT, expiry TEXT, spot REAL, "
+                  "put_wall REAL, call_wall REAL, "
+                  "max_pain_static REAL, max_pain_dyn REAL, prem_center REAL, "
+                  "gex_total REAL, regime TEXT, gamma_flip REAL, "
+                  "PRIMARY KEY(fecha,hora,expiry))")
+        c.commit()
+
+    # ---------------- historial de giros ----------------
+    def _save(self, estado, tipo):
+        try:
+            now = datetime.now()
+            self.db.execute(
+                "INSERT INTO transitions(fecha,hora,estado,tipo,spy,net_call,net_put,modo)"
+                " VALUES(?,?,?,?,?,?,?,?)",
+                (now.strftime("%Y-%m-%d"), now.strftime("%H:%M:%S"), estado, tipo,
+                 self.spy_price, self.net_call, self.net_put, self.mode))
+            self.db.commit()
+        except Exception:
+            pass
+
+    def recent(self, n=10):
+        try:
+            return self.db.execute(
+                "SELECT fecha,hora,estado,tipo,spy FROM transitions "
+                "ORDER BY id DESC LIMIT ?", (n,)).fetchall()
+        except Exception:
+            return []
+
+    # ---------------- conexion ----------------
+    def connect(self):
+        self.ib.connect(HOST, PORT, clientId=CLIENT_ID, timeout=8)
+        self.ib.reqMarketDataType(1)
+        self.ib.errorEvent += self._on_error
+        self.ib.pendingTickersEvent += self._on_ticks
+        ACT.info("Conectado a IB Gateway %s:%s (clientId=%s)", HOST, PORT, CLIENT_ID)
+
+    def _on_error(self, reqId, code, msg, contract):
+        if code in (354, 10167, 10168, 10197, 10089, 10091):
+            if self.mode not in ("DELAYED", "DEMO"):
+                self.mode = "DELAYED"
+                self.status = "Datos DELAYED (sin OPRA live) - sin flujo por-trade real"
+                try:
+                    self.ib.reqMarketDataType(3)
+                except Exception:
+                    pass
+
+    # ---------------- seleccion de contratos ----------------
+    def _read_price(self, spy):
+        price = float("nan")
+        for mdt, label in [(1, "LIVE"), (2, "FROZEN"), (3, "DELAYED"), (4, "DELAYED")]:
+            self.ib.reqMarketDataType(mdt)
+            t = self.ib.reqMktData(spy, "", False, False)
+            self.ib.sleep(2.5)
+            p = t.marketPrice()
+            if p is None or math.isnan(p):
+                p = t.last if (t.last and not math.isnan(t.last)) else t.close
+            self.ib.cancelMktData(spy)
+            if p and not math.isnan(p):
+                self.mode = label
+                return float(p)
+        return price
+
+    def _band(self, strikes, price):
+        """Devuelve (call_strikes, put_strikes) ATM+ITM (nunca OTM)."""
+        below = [s for s in strikes if s <= price]
+        above = [s for s in strikes if s >= price]
+        call_strikes = below[-(1 + ITM_DEPTH):] if below else []
+        put_strikes = above[:(1 + ITM_DEPTH)] if above else []
+        return call_strikes, put_strikes
+
+    def setup_contracts(self):
+        spy = Stock(SYMBOL, "SMART", "USD")
+        self.ib.qualifyContracts(spy)
+        price = self._read_price(spy)
+        if math.isnan(price):
+            self.status = "No pude leer precio de SPY (revisa suscripcion de datos)"
+            return False
+        self.spy_price = price
+
+        chains = self.ib.reqSecDefOptParams(spy.symbol, "", spy.secType, spy.conId)
+        chain = next((c for c in chains
+                      if c.exchange == "SMART" and c.tradingClass == SYMBOL), None) \
+            or next((c for c in chains if c.exchange == "SMART"), None)
+        if chain is None or not chain.strikes or not chain.expirations:
+            self.status = "No obtuve la cadena de opciones de SPY"
+            return False
+
+        today = datetime.now().strftime("%Y%m%d")
+        exps = sorted(chain.expirations)
+        self.expiry = next((e for e in exps if e >= today), exps[0])  # mas cercano
+        strikes = sorted(chain.strikes)
+
+        # --- señal: ATM call/put del vencimiento mas cercano ---
+        below = [s for s in strikes if s <= self.spy_price]
+        above = [s for s in strikes if s >= self.spy_price]
+        if not below or not above:
+            self.status = "No hay strikes ATM/ITM alrededor del precio"
+            return False
+        call_strike, put_strike = max(below), min(above)
+        self.call = Option(SYMBOL, self.expiry, call_strike, "C", "SMART", tradingClass=SYMBOL)
+        self.put = Option(SYMBOL, self.expiry, put_strike, "P", "SMART", tradingClass=SYMBOL)
+        self.ib.qualifyContracts(self.call, self.put)
+        self.ib.reqMktData(self.call, "233", False, False)
+        self.ib.reqMktData(self.put, "233", False, False)
+
+        # --- EJECUCION: ATM del lado OTM (call strike > precio, put strike < precio) ---
+        above_otm = [s for s in strikes if s > self.spy_price]
+        below_otm = [s for s in strikes if s < self.spy_price]
+        bc = min(above_otm) if above_otm else call_strike
+        bp = max(below_otm) if below_otm else put_strike
+        self.buy_call = Option(SYMBOL, self.expiry, bc, "C", "SMART", tradingClass=SYMBOL)
+        self.buy_put = Option(SYMBOL, self.expiry, bp, "P", "SMART", tradingClass=SYMBOL)
+        self.ib.qualifyContracts(self.buy_call, self.buy_put)
+        self.ib.reqMktData(self.buy_call, "", False, False)   # bid/ask para el MID
+        self.ib.reqMktData(self.buy_put, "", False, False)
+
+        # --- linea base: ATM/ITM de las siguientes expiraciones FUTURAS ---
+        self.base_expiries = [e for e in exps if e > self.expiry][:BASELINE_EXPIRIES]
+        base_contracts = []
+        for exp in self.base_expiries:
+            cs, ps = self._band(strikes, self.spy_price)
+            for s in cs:
+                base_contracts.append(Option(SYMBOL, exp, s, "C", "SMART", tradingClass=SYMBOL))
+            for s in ps:
+                base_contracts.append(Option(SYMBOL, exp, s, "P", "SMART", tradingClass=SYMBOL))
+        if base_contracts:
+            self.ib.qualifyContracts(*base_contracts)
+            for c in base_contracts:
+                if not c.conId:
+                    continue
+                self.info_base[c.conId] = (c.lastTradeDateOrContractMonth, c.strike, c.right)
+                self.ib.reqMktData(c, "233", False, False)
+
+        # --- WALLS/GEX: contratos de la banda (expiracion CERCANA). Se piden por SNAPSHOT cada 3 min ---
+        self.band_contracts = []
+        if WALLS_ENABLED:
+            below = [s for s in strikes if s <= self.spy_price][-WALLS_BAND:]
+            above = [s for s in strikes if s > self.spy_price][:WALLS_BAND]
+            wc = []
+            for s in (below + above):
+                wc.append(Option(SYMBOL, self.expiry, s, "C", "SMART", tradingClass=SYMBOL))
+                wc.append(Option(SYMBOL, self.expiry, s, "P", "SMART", tradingClass=SYMBOL))
+            try:
+                self.ib.qualifyContracts(*wc)
+                self.band_contracts = [c for c in wc if c.conId]
+                # STREAMING persistente: una suscripcion por contrato (NO repite requests -> no satura).
+                # OI(101)+volumen(100)+greeks(106/modelGreeks). Se RECALCULA/guarda cada 3 min.
+                for c in self.band_contracts:
+                    self.ib.reqMktData(c, "100,101,106", False, False)
+                ACT.info("WALLS banda lista (streaming): %d contratos (%d strikes, +-%d por lado)",
+                         len(self.band_contracts), len(below + above), WALLS_BAND)
+            except Exception:
+                LOG.exception("Error suscribiendo banda de walls")
+
+        self._load_accum()
+
+        # barras de 1 min en vivo (fuente del TA)
+        try:
+            self.bars = self.ib.reqHistoricalData(
+                spy, "", "1 D", "1 min", "TRADES", useRTH=True, keepUpToDate=True)
+        except Exception:
+            self.bars = None
+
+        self.status = (f"OK  SPY={self.spy_price:.2f}  cercano={self.expiry}  "
+                       f"senal C{call_strike:g}/P{put_strike:g} (ATM/ITM)  "
+                       f"opera C{bc:g}/P{bp:g} (OTM)  "
+                       f"| baseline exps={len(self.base_expiries)}  [{self.mode}]")
+        print(self.status)
+        ACT.info("SETUP %s", self.status)
+        return True
+
+    # ---------------- acumulado persistente ----------------
+    def _load_accum(self):
+        """Carga el acumulado historico y el premium del dia previo desde la BD."""
+        try:
+            for exp, strike, right, cp in self.db.execute(
+                    "SELECT expiry,strike,right,cum_prem FROM strike_accum").fetchall():
+                self.accum[(exp, strike, right)] = cp
+            hoy = datetime.now().strftime("%Y-%m-%d")
+            rows = self.db.execute(
+                "SELECT expiry,strike,right,day_prem FROM strike_daily WHERE fecha=("
+                "SELECT MAX(fecha) FROM strike_daily WHERE fecha < ?)", (hoy,)).fetchall()
+            for exp, strike, right, dp in rows:
+                self.base_prev[(exp, strike, right)] = dp
+        except Exception:
+            pass
+
+    def _persist_accum(self):
+        """Guarda el acumulado (persistente) y el premium de HOY en la BD."""
+        try:
+            now = datetime.now()
+            hoy = now.strftime("%Y-%m-%d")
+            ts = now.strftime("%H:%M:%S")
+            for key, cp in self.accum.items():
+                exp, strike, right = key
+                self.db.execute(
+                    "INSERT INTO strike_accum(expiry,strike,right,cum_prem,updated) "
+                    "VALUES(?,?,?,?,?) ON CONFLICT(expiry,strike,right) "
+                    "DO UPDATE SET cum_prem=excluded.cum_prem, updated=excluded.updated",
+                    (exp, strike, right, cp, ts))
+            for key, dp in self.today_prem.items():
+                exp, strike, right = key
+                self.db.execute(
+                    "INSERT INTO strike_daily(fecha,expiry,strike,right,day_prem) "
+                    "VALUES(?,?,?,?,?) ON CONFLICT(fecha,expiry,strike,right) "
+                    "DO UPDATE SET day_prem=excluded.day_prem",
+                    (hoy, exp, strike, right, dp))
+            self.db.commit()
+        except Exception:
+            pass
+
+    # ---------------- Walls / GEX / Gamma Flip (informativo) ----------------
+    def compute_walls(self):
+        """Snapshot de la banda (cada WALLS_RECALC_SECS, no satura el gateway) -> walls/GEX/flip.
+        INFORMATIVO: NO toca la senal UP/DOWN ni la ejecucion. Guarda TODO en la BD
+        (walls_snapshot agregado + premium_minute por strike) y en el log, para acumular datos
+        y luego analizar la precision de los cambios de direccion vs la grafica del precio."""
+        if not WALLS_ENABLED or not self.band_contracts or not self.ib.isConnected():
+            return
+        # Leer los tickers YA vivos (streaming persistente). NO se piden snapshots.
+        # IBKR actualiza cada campo a SU ritmo (OI=EOD; gamma/vol/precio=en vivo); detectamos
+        # 'staleness' comparando gamma con el recalculo anterior + hora del ultimo tick.
+        tks = [self.ib.ticker(c) for c in self.band_contracts]
+
+        call_oi = {}; put_oi = {}; call_g = {}; put_g = {}
+        oi_est_c = {}; oi_est_p = {}; gross = {}
+        miss_oi = miss_g = 0
+        g_changed = 0
+        last_tick_time = None
+        detail = []
+        for c, tk in zip(self.band_contracts, tks):
+            s = c.strike; right = c.right
+            key = (self.expiry, s, right)
+            oi = tk.callOpenInterest if right == "C" else tk.putOpenInterest
+            g = tk.modelGreeks.gamma if tk.modelGreeks else None
+            oi = None if (oi is None or (isinstance(oi, float) and math.isnan(oi))) else float(oi)
+            g = None if (g is None or (isinstance(g, float) and math.isnan(g))) else float(g)
+            if oi is None:
+                miss_oi += 1
+            if g is None:
+                miss_g += 1
+            # staleness: contar cuantos gamma cambiaron vs el recalculo anterior + hora del ult. tick
+            if g is not None:
+                if self.prev_gamma.get(c.conId) != g:
+                    g_changed += 1
+                self.prev_gamma[c.conId] = g
+            tt = getattr(tk, "time", None)
+            if tt is not None and (last_tick_time is None or tt > last_tick_time):
+                last_tick_time = tt
+            # delta de volumen entre lecturas (3 min) -> premium neto firmado por strike ('peso')
+            vol = tk.volume; last = tk.last
+            if (vol is not None and not math.isnan(vol)
+                    and last is not None and not math.isnan(last)):
+                prev = self.band_prev_vol.get(c.conId)
+                self.band_prev_vol[c.conId] = vol
+                if prev is not None and vol - prev > 0:
+                    dvol = vol - prev
+                    prem = float(last) * dvol * 100.0
+                    self.today_vol[key] = self.today_vol.get(key, 0.0) + dvol
+                    self.today_prem[key] = self.today_prem.get(key, 0.0) + prem
+                    bid = tk.bid if (tk.bid and not math.isnan(tk.bid)) else None
+                    ask = tk.ask if (tk.ask and not math.isnan(tk.ask)) else None
+                    signed = 0.0
+                    if ask is not None and last >= ask:
+                        signed = prem
+                    elif bid is not None and last <= bid:
+                        signed = -prem
+                    self.net_prem[key] = self.net_prem.get(key, 0.0) + signed
+            gv = self.today_vol.get(key, 0.0)
+            if right == "C":
+                if oi is not None:
+                    call_oi[s] = oi
+                if g is not None:
+                    call_g[s] = g
+                oi_est_c[s] = (oi or 0.0) + gv
+            else:
+                if oi is not None:
+                    put_oi[s] = oi
+                if g is not None:
+                    put_g[s] = g
+                oi_est_p[s] = (oi or 0.0) + gv
+            gross[s] = gross.get(s, 0.0) + self.today_prem.get(key, 0.0)
+            detail.append(f"{s:g}{right}:OI={_fmt(oi)},g={_fmt(g)},"
+                          f"net={self.net_prem.get(key, 0.0):+.0f}")
+
+        spot = self.spy_price
+        w = compute_walls_from_oi(call_oi, put_oi, spot)
+        self.walls = {
+            "put_wall": w["put_wall"] if w else None,
+            "call_wall": w["call_wall"] if w else None,
+            "max_pain_static": w["max_pain"] if w else None,
+            "max_pain_dyn": _max_pain(oi_est_c, oi_est_p),
+            "prem_center": compute_prem_center(gross),
+            "spot": spot,
+        }
+        self.gex = compute_gex_from_greeks(call_oi, put_oi, call_g, put_g, spot,
+                                           GEX_CALL_SIGN, GEX_PUT_SIGN)
+        self._persist_walls(call_oi, put_oi, call_g, put_g)
+        g = self.gex or {}
+        gxt = g.get("gex_total")
+        n_g = len(self.band_contracts) - miss_g   # cuantos strikes trajeron gamma
+        ACT.info("WALLS spot=%.2f PW=%s CW=%s magneto est=%s/din=%s peso=%s | "
+                 "GEX=%s regime=%s flip=%s | faltan OI=%d greeks=%d de %d | "
+                 "frescura: gamma cambiaron=%d/%d ult_tick=%s",
+                 spot, _fmt(self.walls["put_wall"]), _fmt(self.walls["call_wall"]),
+                 _fmt(self.walls["max_pain_static"]), _fmt(self.walls["max_pain_dyn"]),
+                 _fmt(self.walls["prem_center"]),
+                 (f"{gxt/1e9:+.3f}Bn" if isinstance(gxt, (int, float)) else "-"),
+                 g.get("regime", "-"), _fmt(g.get("gamma_flip")),
+                 miss_oi, miss_g, len(self.band_contracts),
+                 g_changed, n_g, (str(last_tick_time) if last_tick_time else "-"))
+        if n_g > 0 and g_changed == 0:
+            ACT.info("WALLS AVISO: ningun gamma cambio desde el ultimo recalculo -> posible dato "
+                     "ESTANCADO/viejo (revisar suscripcion OPRA o fuera de RTH)")
+        ACT.info("WALLS detalle por strike: %s", " | ".join(detail))
+
+    def _persist_walls(self, call_oi, put_oi, call_g, put_g):
+        """Guarda walls_snapshot (agregado) + premium_minute por strike de la banda."""
+        try:
+            now = datetime.now()
+            fecha = now.strftime("%Y-%m-%d"); hora = now.strftime("%H:%M")
+            g = self.gex or {}
+            self.db.execute(
+                "INSERT OR REPLACE INTO walls_snapshot(fecha,hora,expiry,spot,put_wall,call_wall,"
+                "max_pain_static,max_pain_dyn,prem_center,gex_total,regime,gamma_flip) "
+                "VALUES(?,?,?,?,?,?,?,?,?,?,?,?)",
+                (fecha, hora, self.expiry, self.walls.get("spot"),
+                 self.walls.get("put_wall"), self.walls.get("call_wall"),
+                 self.walls.get("max_pain_static"), self.walls.get("max_pain_dyn"),
+                 self.walls.get("prem_center"), g.get("gex_total"), g.get("regime"),
+                 g.get("gamma_flip")))
+            strikes = sorted(set(call_oi) | set(put_oi) | set(call_g) | set(put_g))
+            for s in strikes:
+                for right, oimap, gmap in (("C", call_oi, call_g), ("P", put_oi, put_g)):
+                    key = (self.expiry, s, right)
+                    self.db.execute(
+                        "INSERT OR REPLACE INTO premium_minute(fecha,hora,expiry,strike,right,"
+                        "cum_prem,day_prem,net_prem,open_interest,gamma) "
+                        "VALUES(?,?,?,?,?,?,?,?,?,?)",
+                        (fecha, hora, self.expiry, s, right,
+                         self.accum.get(key, 0.0), self.today_prem.get(key, 0.0),
+                         self.net_prem.get(key, 0.0), oimap.get(s), gmap.get(s)))
+            self.db.commit()
+        except Exception:
+            LOG.exception("Error guardando walls_snapshot/premium_minute (banda)")
+
+    def baseline_summary(self):
+        """Por cada expiracion futura: (exp, call_hoy, call_prev, put_hoy, put_prev)."""
+        out = []
+        for exp in self.base_expiries:
+            ch = cp = ph = pp = 0.0
+            for (e, s, r), v in self.today_prem.items():
+                if e != exp:
+                    continue
+                if r == "C":
+                    ch += v
+                else:
+                    ph += v
+            for (e, s, r), v in self.base_prev.items():
+                if e != exp:
+                    continue
+                if r == "C":
+                    cp += v
+                else:
+                    pp += v
+            out.append((exp, ch, cp, ph, pp))
+        return out
+
+    # ---------------- procesamiento de trades ----------------
+    def _on_ticks(self, tickers):
+        signal_ids = {c.conId for c in (self.call, self.put) if c is not None}
+        for tk in tickers:
+            c = tk.contract
+            is_signal = c.conId in signal_ids
+            is_base = c.conId in self.info_base
+            if not (is_signal or is_base):
+                continue
+            vol = tk.volume
+            last = tk.last
+            if vol is None or math.isnan(vol) or last is None or math.isnan(last):
+                continue
+            prev = self.prev_vol.get(c.conId)
+            self.prev_vol[c.conId] = vol
+            if prev is None:
+                continue
+            dvol = vol - prev
+            if dvol <= 0:
+                continue
+            premium = float(last) * float(dvol) * 100.0
+            # premium BRUTO por strike (señal + baseline) para historial/estadisticas
+            key = (c.lastTradeDateOrContractMonth, c.strike, c.right)
+            self.accum[key] = self.accum.get(key, 0.0) + premium
+            self.today_prem[key] = self.today_prem.get(key, 0.0) + premium
+            if is_signal:
+                bid = tk.bid if (tk.bid and not math.isnan(tk.bid)) else None
+                ask = tk.ask if (tk.ask and not math.isnan(tk.ask)) else None
+                signed = 0.0
+                if ask is not None and last >= ask:
+                    signed = premium
+                elif bid is not None and last <= bid:
+                    signed = -premium
+                if c.right == "C":
+                    self.net_call += signed
+                else:
+                    self.net_put += signed
+        self._update_signal()
+
+    def _update_signal(self):
+        diff = self.net_call - self.net_put
+        hhmmss = datetime.now().strftime("%H:%M:%S")
+        self.diff_hist.append(diff)
+        self.diff_hist[:] = self.diff_hist[-max(MOMENTUM_WIN, 2):]
+        momentum = self.diff_hist[-1] - self.diff_hist[0]
+
+        # umbral ADAPTATIVO: escala con la magnitud real del flujo (miles->millones)
+        if ADAPTIVE:
+            thr = max(SIGNAL_THRESHOLD, ADAPT_FRAC * (abs(self.net_call) + abs(self.net_put)))
+        else:
+            thr = SIGNAL_THRESHOLD
+        mom_min = MOM_FRAC * thr
+
+        band = thr * WARN_BAND_FRAC
+        if self.state == "UP" and diff < band and momentum <= -mom_min:
+            if self.last_warn_side != "DOWN":
+                self._raise_alert("WARN", f"posible GIRO a DOWN ({hhmmss})", "warn")
+                self._save("DOWN", "WARN")
+                self.last_warn_side = "DOWN"
+        elif self.state == "DOWN" and diff > -band and momentum >= mom_min:
+            if self.last_warn_side != "UP":
+                self._raise_alert("WARN", f"posible GIRO a UP ({hhmmss})", "warn")
+                self._save("UP", "WARN")
+                self.last_warn_side = "UP"
+
+        new = self.state
+        if diff > thr:
+            new = "UP"
+        elif diff < -thr:
+            new = "DOWN"
+        if new != self.state and new in ("UP", "DOWN"):
+            self.state = new
+            self.transitions.append((hhmmss, new))
+            self.transitions[:] = self.transitions[-8:]
+            self.last_warn_side = None
+            self._raise_alert("FLIP", f"CAMBIO -> {new}  ({hhmmss})", "flip")
+            self._save(new, "FLIP")
+            # objetivo de posicion segun la nueva direccion
+            self.target = "CALL" if new == "UP" else "PUT"
+            ACT.info("GIRO -> %s (net_call=%.0f net_put=%.0f thr=%.0f)",
+                     new, self.net_call, self.net_put, thr)
+
+    def _raise_alert(self, kind, text, sound):
+        self.alert_kind = kind
+        self.alert_text = text
+        self.alert_until = time.monotonic() + 6.0
+        ACT.info("ALERTA %s: %s", kind, text)
+        if ENABLE_SOUND:
+            self.pending_sound = sound
+        if ENABLE_TOAST and kind == "FLIP":
+            self._toast("SPY: CAMBIO DE DIRECCION", text)
+
+    def _toast(self, title, msg):
+        title = str(title).replace("'", " ").replace('"', " ")
+        msg = str(msg).replace("'", " ").replace('"', " ")
+        ps = (
+            "$ErrorActionPreference='SilentlyContinue';"
+            "[void][Windows.UI.Notifications.ToastNotificationManager,"
+            "Windows.UI.Notifications,ContentType=WindowsRuntime];"
+            "$t=[Windows.UI.Notifications.ToastNotificationManager]::GetTemplateContent("
+            "[Windows.UI.Notifications.ToastTemplateType]::ToastText02);"
+            "$x=$t.GetElementsByTagName('text');"
+            f"[void]$x.Item(0).AppendChild($t.CreateTextNode('{title}'));"
+            f"[void]$x.Item(1).AppendChild($t.CreateTextNode('{msg}'));"
+            "$toast=[Windows.UI.Notifications.ToastNotification]::new($t);"
+            "$n=[Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier('SPY Direction');"
+            "$n.Show($toast)")
+        try:
+            subprocess.Popen(
+                ["powershell", "-NoProfile", "-WindowStyle", "Hidden", "-Command", ps],
+                creationflags=0x08000000,
+                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        except Exception:
+            pass
+
+    def simulate_step(self):
+        t = self.demo_i
+        self.demo_i += 1
+        diff = 12000.0 * math.sin(t / 6.0)
+        self.net_call = 2000.0 + max(0.0, diff) + t * 8
+        self.net_put = 2000.0 + max(0.0, -diff) + t * 4
+        self.spy_price = 773.0 + math.sin(t / 6.0) * 0.8
+        self.status = "MODO DEMO - entradas simuladas (no es dato real)"
+        self._update_signal()
+
+    # ================= EJECUCION AUTOMATICA (rotar 1 opcion) =================
+    def _minTick(self, contract):
+        if contract.conId in self.min_tick:
+            return self.min_tick[contract.conId]
+        mt = 0.01
+        try:
+            cds = self.ib.reqContractDetails(contract)
+            if cds and cds[0].minTick:
+                mt = cds[0].minTick
+        except Exception:
+            pass
+        self.min_tick[contract.conId] = mt
+        return mt
+
+    def _mid(self, contract):
+        """SIEMPRE el MID (bid+ask)/2 redondeado al minTick. NUNCA bid/ask/market.
+        Devuelve None si no hay bid/ask (entonces NO se coloca; se espera cotizacion)."""
+        tk = self.ib.ticker(contract)
+        bid = tk.bid if (tk and tk.bid and not math.isnan(tk.bid) and tk.bid > 0) else None
+        ask = tk.ask if (tk and tk.ask and not math.isnan(tk.ask) and tk.ask > 0) else None
+        if bid is None or ask is None or ask < bid:
+            return None
+        mt = self._minTick(contract)
+        mid = (bid + ask) / 2.0
+        return round(round(mid / mt) * mt, 2)
+
+    def _can_afford(self, price):
+        try:
+            avail = None
+            for r in self.ib.accountSummary():
+                if r.tag in ("AvailableFunds", "BuyingPower"):
+                    try:
+                        v = float(r.value)
+                    except Exception:
+                        continue
+                    if r.tag == "AvailableFunds":
+                        avail = v
+                        break
+                    if avail is None:
+                        avail = v
+            if avail is None:
+                return True  # si no se pudo leer, no bloquear (se vera en paper)
+            return avail >= price * 100 * QTY
+        except Exception:
+            return True
+
+    def _cancel_working(self):
+        """Cancela CUALQUIER orden de opciones SPY viva (evita limits huerfanas)."""
+        try:
+            for tr in self.ib.openTrades():
+                c = tr.contract
+                if (c.symbol == SYMBOL and c.secType == "OPT"
+                        and tr.orderStatus.status in ("PreSubmitted", "Submitted", "PendingSubmit")):
+                    self.ib.cancelOrder(tr.order)
+                    ACT.info("Cancelada orden huerfana %s", getattr(tr.order, "orderId", "?"))
+        except Exception:
+            LOG.exception("Error cancelando ordenes huerfanas")
+
+    def _reconcile(self):
+        self.reconciled = True
+        try:
+            self._cancel_working()   # limpiar limits colgadas de una corrida previa
+            opts = [p for p in self.ib.positions()
+                    if p.contract.symbol == SYMBOL and p.contract.secType == "OPT"
+                    and p.position and p.position > 0]
+            if len(opts) == 1:
+                self.pos = "CALL" if opts[0].contract.right == "C" else "PUT"
+                self.target = self.pos            # mantener hasta el proximo flip
+            elif len(opts) > 1:
+                self.pos = "CALL" if opts[0].contract.right == "C" else "PUT"
+                self.target = "FLAT"              # >1 posicion: aplanar todo al MID
+                ACT.info("Reconcile: %d posiciones SPY -> aplanar", len(opts))
+            else:
+                self.pos = "FLAT"; self.target = "FLAT"
+        except Exception:
+            LOG.exception("Error en reconcile")
+
+    def _place(self, contract, action, side):
+        """Coloca SIEMPRE una LimitOrder al MID. Si no hay MID, NO coloca (espera)."""
+        px = self._mid(contract)
+        if px is None:
+            self.trade_msg = f"esperando MID para {action} {side} (sin bid/ask)"
+            return
+        try:
+            self.order = self.ib.placeOrder(contract, LimitOrder(action, QTY, px))
+            self.order_action = action
+            self.order_side = side
+            self.order_contract = contract
+            self.order_deadline = time.monotonic() + REPRICE_SECS
+            self.trade_msg = f"{action} {side} LIMIT MID @ {px:.2f}"
+            ACT.info("ORDEN %s %s x%d LIMIT MID @ %.2f", action, side, QTY, px)
+        except Exception as e:
+            self.trade_msg = f"error orden: {e}"
+            self.order = None
+            LOG.exception("Error colocando orden %s %s", action, side)
+
+    def _on_filled(self):
+        act, side = self.order_action, self.order_side
+        try:
+            px = self.order.orderStatus.avgFillPrice
+        except Exception:
+            px = 0.0
+        self.pos = side if act == "BUY" else "FLAT"
+        self.trade_msg = f"{act} {side} LLENADO @ {px:.2f}"
+        ACT.info("FILL %s %s @ %.2f -> pos=%s", act, side, px, self.pos)
+        self.order = None
+        self.open_deadline = 0.0
+
+    def trade_poll(self):
+        """Motor de ejecucion, se llama en cada tick (no bloquea la GUI)."""
+        if self.demo or not self.trading or not self.ib.isConnected():
+            return
+        if self.buy_call is None or self.buy_put is None:
+            return
+        if not self.reconciled:
+            self._reconcile()
+
+        et = now_et()
+        hhmm = et.strftime("%H:%M")
+        weekday = et.weekday() < 5
+        in_session = weekday and ("09:30" <= hhmm <= "16:00")
+        if weekday and hhmm >= FLATTEN_HHMM:      # EOD: aplanar
+            self.target = "FLAT"
+        stop_new = (not in_session) or (weekday and hhmm >= STOP_NEW_HHMM)
+
+        now = time.monotonic()
+        # ---- orden activa: gestionar fill / re-precio ----
+        if self.order is not None:
+            st = self.order.orderStatus.status
+            if st == "Filled":
+                self._on_filled()
+                return
+            if st in ("Cancelled", "ApiCancelled", "Inactive"):
+                self.order = None
+            elif now >= self.order_deadline:
+                # No lleno al MID: SOLO cancelar. La recotizacion al MID nuevo ocurre cuando
+                # el cancel se confirme (order=None) -> jamas 2 limits vivas (no short).
+                try:
+                    self.ib.cancelOrder(self.order.order)
+                except Exception:
+                    pass
+            return
+
+        # ---- sin orden viva: mover posicion al objetivo (SIEMPRE LimitOrder al MID) ----
+        if self.pos != self.target:
+            if self.pos in ("CALL", "PUT"):
+                # CERRAR: vender al MID, RELENTLESS (reintenta hasta llenar)
+                contract = self.buy_call if self.pos == "CALL" else self.buy_put
+                self._place(contract, "SELL", self.pos)
+            elif self.target in ("CALL", "PUT") and not stop_new:
+                # ABRIR: comprar al MID, con limite de tiempo (si no llena, abandona -> FLAT)
+                if not self.open_deadline:
+                    self.open_deadline = now + MAX_FILL_SECS
+                if now >= self.open_deadline:
+                    self.trade_msg = f"BUY {self.target} no lleno al MID - abandonado"
+                    self.target = "FLAT"
+                    self.open_deadline = 0.0
+                else:
+                    contract = self.buy_call if self.target == "CALL" else self.buy_put
+                    px = self._mid(contract)
+                    if px is None:
+                        self.trade_msg = "esperando MID (sin bid/ask)"
+                    elif self._can_afford(px):
+                        self._place(contract, "BUY", self.target)
+                    else:
+                        self.trade_msg = f"sin buying power para {self.target}"
+
+    def toggle_trading(self):
+        self.trading = not self.trading
+        self.trade_msg = "TRADING ARMADO" if self.trading else "TRADING OFF (desarmado)"
+        ACT.info("TRADING %s por el usuario", "ARMADO" if self.trading else "DESARMADO")
+        return self.trading
+
+    # ================= TA 1 min + registro por minuto =================
+    def ta_poll(self):
+        if self.demo or self.bars is None or not HAVE_PD:
+            return
+        try:
+            rows = [{"high": b.high, "low": b.low, "close": b.close,
+                     "volume": b.volume, "date": b.date} for b in self.bars]
+        except Exception:
+            return
+        if len(rows) < 26:
+            return
+        df = pd.DataFrame(rows)
+        self.ta_vals = self.ta.compute(df)          # en vivo (para la pantalla)
+        last_time = rows[-1]["date"]
+        if self.last_bar_time is None:
+            self.last_bar_time = last_time
+            return
+        if last_time != self.last_bar_time:
+            # se cerro un minuto -> registrar la barra ya cerrada (sin la ultima en formacion)
+            closed = self.ta.compute(df.iloc[:-1]) if len(df) > 27 else self.ta_vals
+            self._log_minute(closed, rows[-2]["date"] if len(rows) >= 2 else last_time)
+            self.last_bar_time = last_time
+
+    def _log_minute(self, vals, bar_dt):
+        if not vals:
+            return
+        try:
+            if hasattr(bar_dt, "strftime"):
+                fecha = bar_dt.strftime("%Y-%m-%d"); hora = bar_dt.strftime("%H:%M")
+            else:
+                s = str(bar_dt); fecha, hora = s[:10], s[11:16]
+            self.db.execute(
+                "INSERT OR REPLACE INTO ta_minute(fecha,hora,spy,rsi,ema8,ema21,ema50,"
+                "macd_line,macd_signal,macd_hist,bb_up,bb_mid,bb_low,atr,atr_pct,vwap,"
+                "obv_trend,ta_score,ta_dir,net_call,net_put,prem_state) "
+                "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                (fecha, hora, vals["close"], vals["rsi"], vals["ema8"], vals["ema21"],
+                 vals["ema50"], vals["macd_line"], vals["macd_signal"], vals["macd_hist"],
+                 vals["bb_up"], vals["bb_mid"], vals["bb_low"], vals["atr"], vals["atr_pct"],
+                 vals["vwap"], vals["obv_trend"], vals["score"], vals["dir"],
+                 self.net_call, self.net_put, self.state))
+            for (exp, strike, right), cp in self.accum.items():
+                dp = self.today_prem.get((exp, strike, right), 0.0)
+                self.db.execute(
+                    "INSERT OR REPLACE INTO premium_minute(fecha,hora,expiry,strike,right,"
+                    "cum_prem,day_prem) VALUES(?,?,?,?,?,?,?)",
+                    (fecha, hora, exp, strike, right, cp, dp))
+            self.db.commit()
+            ACT.info("MIN %s SPY=%.2f TA=%s rsi=%.0f macdh=%+.3f | netC=%.0f netP=%.0f "
+                     "state=%s pos=%s", hora, vals["close"], vals["dir"], vals["rsi"],
+                     vals["macd_hist"], self.net_call, self.net_put, self.state, self.pos)
+        except Exception:
+            LOG.exception("Error guardando registro por minuto")
+
+
+# ----------------------- GUI Tkinter -----------------------
+import tkinter as tk
+
+
+def run_gui(app):
+    root = tk.Tk()
+    root.title("SPY Direction")
+    root.report_callback_exception = lambda *a: LOG.error("Error en GUI", exc_info=a)
+    root.configure(bg="#111111")
+    root.geometry("500x745")
+
+    big = tk.Label(root, text="-", font=("Segoe UI", 110, "bold"),
+                   fg="#888888", bg="#111111")
+    big.pack(pady=(14, 0))
+
+    sub = tk.Label(root, text="", font=("Segoe UI", 12), fg="#dddddd", bg="#111111")
+    sub.pack()
+
+    # --- fila de TRADING: indicador + posicion + boton ARMAR ---
+    trow = tk.Frame(root, bg="#111111")
+    trow.pack(pady=(6, 0))
+    trade_ind = tk.Label(trow, text="TRADING OFF", font=("Segoe UI", 11, "bold"),
+                         fg="#111111", bg="#ef4444", padx=8, pady=2)
+    trade_ind.grid(row=0, column=0, padx=4)
+    pos_lbl = tk.Label(trow, text="POSICION: FLAT", font=("Segoe UI", 11, "bold"),
+                       fg="#e5e7eb", bg="#111111")
+    pos_lbl.grid(row=0, column=1, padx=8)
+
+    def _toggle():
+        on = app.toggle_trading()
+        btn.config(text="DESARMAR" if on else "ARMAR")
+    btn = tk.Button(trow, text="ARMAR", font=("Segoe UI", 10, "bold"),
+                    command=_toggle, bg="#1f2937", fg="#ffffff", activebackground="#374151")
+    btn.grid(row=0, column=2, padx=4)
+
+    trade_msg_lbl = tk.Label(root, text="", font=("Consolas", 9), fg="#f59e0b", bg="#111111")
+    trade_msg_lbl.pack()
+
+    alert = tk.Label(root, text="", font=("Segoe UI", 15, "bold"),
+                     fg="#111111", bg="#111111", pady=6)
+    alert.pack(fill="x", padx=10, pady=(6, 0))
+
+    status = tk.Label(root, text="", font=("Consolas", 9), fg="#8ab4f8",
+                      bg="#111111", wraplength=480, justify="center")
+    status.pack(pady=(6, 2))
+
+    ta_lbl = tk.Label(root, text="TA 1m: (esperando barras...)", font=("Consolas", 9),
+                      fg="#c4b5fd", bg="#111111")
+    ta_lbl.pack(pady=(0, 2))
+
+    walls_lbl = tk.Label(root, text="Walls/GEX: (esperando OI/greeks...)", font=("Consolas", 9),
+                         fg="#67e8f9", bg="#111111", wraplength=480, justify="center")
+    walls_lbl.pack(pady=(0, 2))
+
+    tk.Label(root, text="Linea base (fechas posteriores) - hoy vs dia previo:",
+             font=("Consolas", 9, "bold"), fg="#f59e0b", bg="#111111").pack()
+    basebox = tk.Text(root, height=5, width=56, bg="#0b0b0b", fg="#e5e7eb",
+                      font=("Consolas", 9), bd=0)
+    basebox.pack(pady=(2, 6))
+
+    tk.Label(root, text="Historial de giros (SQLite):",
+             font=("Consolas", 9, "bold"), fg="#8ab4f8", bg="#111111").pack()
+    logbox = tk.Text(root, height=7, width=56, bg="#0b0b0b", fg="#aaaaaa",
+                     font=("Consolas", 9), bd=0)
+    logbox.pack(pady=(2, 8))
+
+    colors = {"UP": "#22c55e", "DOWN": "#ef4444", "-": "#888888"}
+    connected = {"ok": False}
+
+    def try_connect():
+        try:
+            app.connect()
+            if app.setup_contracts():
+                connected["ok"] = True
+        except Exception as e:
+            app.status = f"SIN CONEXION a IB Gateway ({e}). Reintentando..."
+            LOG.exception("Fallo al conectar/setup")
+
+    def tick():
+        if app.demo:
+            app.simulate_step()
+        else:
+            if not connected["ok"] and not app.ib.isConnected():
+                try_connect()
+            try:
+                if app.ib.isConnected():
+                    app.ib.sleep(REFRESH_SECS)
+                    if time.monotonic() - app.last_snapshot > SNAPSHOT_SECS:
+                        app._persist_accum()
+                        app.last_snapshot = time.monotonic()
+                    app.trade_poll()
+                    app.ta_poll()
+                    if (WALLS_ENABLED
+                            and time.monotonic() - app.last_walls_calc > WALLS_RECALC_SECS):
+                        app.compute_walls()   # informativo: recalcula/guarda cada 3 min
+                        app.last_walls_calc = time.monotonic()
+            except Exception:
+                LOG.exception("Error en el ciclo principal (tick)")
+
+        big.config(text=app.state, fg=colors.get(app.state, "#888888"))
+        sub.config(text=(f"SPY {app.spy_price:.2f}    "
+                         f"CALL net ${app.net_call:,.0f}   PUT net ${app.net_put:,.0f}"))
+        status.config(text=f"[{app.mode}] {app.status}")
+
+        # --- estado de trading ---
+        if app.pos == "CALL" and app.call is not None:
+            pos_txt = f"LONG CALL {app.buy_call.strike:g}" if app.buy_call else "LONG CALL"
+        elif app.pos == "PUT" and app.put is not None:
+            pos_txt = f"LONG PUT {app.buy_put.strike:g}" if app.buy_put else "LONG PUT"
+        else:
+            pos_txt = "FLAT"
+        pos_lbl.config(text=f"POSICION: {pos_txt}")
+        if app.trading:
+            trade_ind.config(text="TRADING ON", bg="#22c55e")
+        else:
+            trade_ind.config(text="TRADING OFF", bg="#ef4444")
+        trade_msg_lbl.config(text=app.trade_msg)
+
+        v = app.ta_vals
+        if v:
+            ta_lbl.config(text=(f"TA 1m: {v['dir']}  RSI {v['rsi']:.0f}  "
+                                f"MACDh {v['macd_hist']:+.2f}  EMA8/21 {v['ema8']:.2f}/{v['ema21']:.2f}"
+                                f"  score {v['score']:+d}"))
+
+        if WALLS_ENABLED and app.walls:
+            w = app.walls
+            gg = app.gex or {}
+            gxt = gg.get("gex_total")
+            gtxt = f"{gxt/1e9:+.2f}Bn" if isinstance(gxt, (int, float)) else "-"
+            walls_lbl.config(text=(
+                f"PW {_fmt(w.get('put_wall'))}  CW {_fmt(w.get('call_wall'))}  "
+                f"Mag {_fmt(w.get('max_pain_static'))}/{_fmt(w.get('max_pain_dyn'))}  "
+                f"peso {_fmt(w.get('prem_center'))}\n"
+                f"GEX {gtxt} {gg.get('regime', '-')}  Flip {_fmt(gg.get('gamma_flip'))}"))
+
+        if app.pending_sound is not None:
+            if HAVE_SOUND:
+                try:
+                    if app.pending_sound == "flip":
+                        winsound.Beep(880, 300); winsound.Beep(1175, 300)
+                    else:
+                        winsound.Beep(660, 200)
+                except Exception:
+                    pass
+            app.pending_sound = None
+        if app.alert_text and time.monotonic() < app.alert_until:
+            bg = "#ef4444" if app.alert_kind == "FLIP" else "#f59e0b"
+            alert.config(text="  " + app.alert_text + "  ", bg=bg, fg="#111111")
+            try:
+                root.attributes("-topmost", True); root.lift()
+                root.after(1200, lambda: root.attributes("-topmost", False))
+            except Exception:
+                pass
+        else:
+            alert.config(text="", bg="#111111")
+
+        # baseline (fechas posteriores)
+        basebox.delete("1.0", tk.END)
+        for exp, ch, cp, ph, pp in app.baseline_summary():
+            cflag = " STRONG" if (cp > 0 and ch > cp * OPEN_JUMP_FACTOR) else ""
+            pflag = " STRONG" if (pp > 0 and ph > pp * OPEN_JUMP_FACTOR) else ""
+            basebox.insert(tk.END,
+                           f"{exp}  C hoy ${ch:,.0f}/prev ${cp:,.0f}{cflag}\n"
+                           f"          P hoy ${ph:,.0f}/prev ${pp:,.0f}{pflag}\n")
+        if not app.base_expiries:
+            basebox.insert(tk.END, "(sin datos aun / conectando...)\n")
+
+        logbox.delete("1.0", tk.END)
+        for fecha, hora, estado, tipo, spy in app.recent(8):
+            sp = f"{spy:.2f}" if spy else "-"
+            logbox.insert(tk.END, f"  {fecha} {hora}  {tipo:4}  {estado:4}  SPY {sp}\n")
+
+        root.after(int(REFRESH_SECS * 1000), tick)
+
+    root.after(200, tick)
+    root.mainloop()
+
+    try:
+        app._persist_accum()
+    except Exception:
+        pass
+    try:
+        if not app.demo and app.ib.isConnected():
+            app._cancel_working()   # no dejar limits huerfanas al cerrar
+    except Exception:
+        pass
+    try:
+        app.ib.disconnect()
+    except Exception:
+        pass
+    try:
+        app.db.close()
+    except Exception:
+        pass
+
+
+def selftest():
+    app = SpyDirection()
+    try:
+        app.connect()
+        print(f"Conexion IB Gateway OK ({HOST}:{PORT})")
+    except Exception as e:
+        print(f"SIN CONEXION: {e}")
+        return
+    ok = app.setup_contracts()
+    print("Resultado setup:", app.status)
+    if ok:
+        print(f"  Modo datos : {app.mode}")
+        print(f"  SPY        : {app.spy_price:.2f}")
+        print(f"  Cercano    : {app.expiry}")
+        print(f"  CALL/PUT   : {app.call.strike:g}C / {app.put.strike:g}P")
+        print(f"  Baseline exps futuras: {app.base_expiries}")
+        print(f"  Contratos baseline seguidos: {len(app.info_base)}")
+    app.ib.disconnect()
+
+
+if __name__ == "__main__":
+    util.patchAsyncio()
+    if "--selftest" in sys.argv:
+        selftest()
+    elif "--demo" in sys.argv:
+        run_gui(SpyDirection(demo=True))
+    else:
+        run_gui(SpyDirection())
