@@ -448,6 +448,17 @@ class SpyDirection:
                 c.execute("ALTER TABLE premium_minute ADD COLUMN " + col)
             except Exception:
                 pass  # ya existe
+        # SELLO DE CONFIGURACION: que version del codigo y que parametros generaron los datos.
+        # Sin esto, filas creadas con criterios distintos (p.ej. walls por OI vs por gamma,
+        # o strikes OTM vs ATM) se mezclan en la misma tabla y el analisis saca conclusiones
+        # falsas creyendo que la serie es homogenea.
+        c.execute("CREATE TABLE IF NOT EXISTS sesion_config ("
+                  "fecha TEXT, hora TEXT, arranque TEXT, qty INTEGER, "
+                  "signal_threshold REAL, adapt_frac REAL, mom_frac REAL, momentum_win INTEGER, "
+                  "reprice_secs REAL, max_fill_secs REAL, walls_band INTEGER, "
+                  "walls_recalc_secs REAL, itm_depth INTEGER, baseline_expiries INTEGER, "
+                  "strike_exec TEXT, walls_criterio TEXT, trading INTEGER, notas TEXT, "
+                  "PRIMARY KEY(fecha,arranque))")
         # Registro cada 3 min: walls/GEX/flip agregados (para analizar vs la grafica del precio)
         c.execute("CREATE TABLE IF NOT EXISTS walls_snapshot ("
                   "fecha TEXT, hora TEXT, expiry TEXT, spot REAL, "
