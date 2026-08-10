@@ -202,6 +202,57 @@ que `_load_intradia` restaure → ~4 s con el umbral en el piso de 5.000 → **g
 **`trades` y `posicion_minuto` siguen en 0 filas**: la única posición del día se compró con el
 código viejo. La primera operación registrada será la próxima compra.
 
+### POST-CIERRE 2026-08-10 — CUENTA PAPER RESETEADA A ~$400
+
+El usuario reseteó la cuenta paper de IBKR y la repuso a **$400** (la app y el Gateway ya cerrados).
+
+- **VERIFICADO (código):** el saldo del panel (`Cuenta $X   disp $Y`) sale de
+  `_read_account()` → `self.ib.accountSummary()` → tags `NetLiquidation` y `AvailableFunds`.
+  **La fuente es IBKR, no un cálculo interno.** El bucle lo relee cada 10 s (`spy_direction.py:3032`)
+  y SOLO dentro de `if app.ib.isConnected()` (`:3005`).
+- **VERIFICADO (ib_insync `ib.py:1869-1896`):** `accountSummary()` es una **suscripción**
+  (`reqAccountSummary`, nunca cancelada); la app lee un caché que **actualiza IBKR** cuando quiere.
+  Los 10 s son la cadencia de LECTURA, no la de refresco del dato.
+- **⚠️ VERIFICADO (BD):** `estado_intradia` de hoy tiene `acct_net_open = 297.04`. Si se relanza
+  la app **el mismo 2026-08-10**, `_load_intradia` (`:1171`) restaura esa base y el panel mostraría
+  **`DIA +102.96 (+34.6%)`** — que es el DEPÓSITO, no ganancia. Con fecha nueva (11-ago) no hay fila:
+  `acct_net_open` queda None y la base del día será la 1ª lectura (400) → correcto.
+- **NO VERIFICADO:** si el reset de cuenta paper corta/invalida la sesión del Gateway. Irrelevante
+  hoy (todo cerrado), pero si algún día se resetea con la app viva, hay que confirmarlo.
+- Efecto en `_can_afford` (`:2045`): con ~$400 el techo vuelve a ser ~**$4,00 por contrato**.
+
+### POST-CIERRE 2026-08-10 — ANÁLISIS vs MARKETSNACK → `HIPOTESIS_2026-08-10.md`
+
+Se cruzó nuestra BD contra MarketSnack (Gamma Exposure + Flow Feed del SPY). **Todo el detalle está
+en `HIPOTESIS_2026-08-10.md` — leerlo antes de proponer nada sobre entradas/salidas.** Resumen:
+
+- **VERIFICADO — el flip a horizonte fijo es una moneda:** 43,2 % a favor a 1 min · 48,6 % a 5 min ·
+  52,2 % a 15 min. **54 % de los giros nunca estuvieron a favor ni un centavo.** 2 de 26 episodios
+  (10:50 y 12:20) se llevan todo el recorrido. No es un problema de salida: se entra 24 veces de más.
+- **VERIFICADO — theta medido:** ≈ −0,002 de prima/min. Con delta ~0,45 el SPY debe moverse
+  ~0,0044/min solo para empatar; la mediana real a 5 min es −0,08, **en contra**.
+- **VERIFICADO — el día en tramos:** UP 53 min · DOWN 83 min · **LATERAL 109 min**.
+- **4 HIPÓTESIS (NO concluyentes, n=2):** H1 el régimen lo marca el **ancho CW−PW** (15→0 durante el
+  día) · H2 la decisión debe usar **flujo nuevo** (`net_*_5m/15m`, ya guardado y sin usar) y no el
+  acumulado (por la tarde +7 M constante con mercado lateral) · H3 el "evento" es **acumulación
+  sostenida en un strike** (774P: OI 2.288 → vol 74.139 = **32×**), no un print gigante · H4 lo
+  único operable es el **filtro negativo: no entrar en lateral**.
+- **MarketSnack, lo NO replicable** (verificado en `:1601-1646`): prints individuales (`dvol` agrega
+  varios trades), multi-leg vs single-leg, y Buy/Sell explícito (nosotros lo *inferimos*). Su
+  **Mid 9,7 %** sirve de control de nuestra inferencia de agresor. Su Net GEX +$10,3 B vs nuestro
+  +$334 B con selector `Per 1% move` → **NO VERIFICADO** de dónde sale el factor.
+
+**🚫 DESCARTES DE HOY — no volver a proponerlos sin datos nuevos:**
+1. **Salto de wall como predictor:** 5 min 28 % vs 14 %, 10 min 44 % vs 39 %, **15 min 56 % vs 59 %
+   (peor que nada)**. 20 de los 22 saltos son de ±1 strike = ruido. El único grande (10:50) es n=1.
+2. **`obv` / `dist_vwap` / `spy−ema8`:** contaminados — el 63 % de los movimientos grandes del día
+   fueron bajistas. `obv` da separación **−1,00 perfecta**, que es una alarma, no un hallazgo.
+3. **Take-profit fijo:** ya descartado; ningún objetivo de +0,10 a +1,00 mejora esperar al flip.
+
+**LECCIÓN:** cada hipótesis se veía bien mirando primero los 2 casos buenos; todas se cayeron al
+contrastarlas contra los 100+ restantes. **Ninguna variable entra en producción sin su tasa de
+falsos positivos delante.**
+
 ### DECISIONES YA TOMADAS — no volver a proponerlas
 
 - **Botón de venta manual en la GUI: RECHAZADO por el usuario** (2026-08-10).

@@ -1,7 +1,14 @@
 # ESTADO 2026-08-10 — LEER PRIMERO (traspaso completo)
 
 Proyecto: `C:\Users\eulis\proyectos\open-premium-ibkr` (rama `main`, push autorizado).
-Orden de lectura: **este** → `ANALISIS_ENTRADA_SALIDA.md` → `ANTI_COMPACT_CONTEXT.md` → `MEJORAS.md`.
+Orden de lectura: **este** → `ANALISIS_ENTRADA_SALIDA.md` → **`HIPOTESIS_2026-08-10.md`** →
+`ANTI_COMPACT_CONTEXT.md` → `MEJORAS.md`.
+
+> **📌 `HIPOTESIS_2026-08-10.md` (añadido tras el cierre):** análisis cruzado contra MarketSnack.
+> Contiene las 4 hipótesis de trabajo (ancho del corredor · flujo nuevo vs acumulado · acumulación
+> por strike · filtro de lateral), **3 descartes** (salto de wall, variables contaminadas por el
+> sesgo, take-profit fijo) y las condiciones para que la sesión de mañana sirva. **Nada de eso está
+> confirmado: n = 2 y un solo día sucio.**
 
 Hoy fue la **primera corrida en vivo real**. Se cerraron 16 gaps por la mañana y 7 más por la
 tarde, se construyó toda la instrumentación de operaciones, y se analizaron los datos a fondo.
