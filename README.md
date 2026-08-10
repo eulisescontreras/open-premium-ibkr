@@ -86,6 +86,49 @@ Logs: `spy_activity.log` (actividad exhaustiva) y `spy_direction.log` (errores).
 - Revisar `spy_direction.log` (0 errores) y el aviso de **staleness** en `spy_activity.log`.
 - Con TRADING ON: verificar 1 sola posición, sin órdenes huérfanas, aplanado 15:45.
 
+## 8-bis. Estado REAL de la API de IBKR (evidencia de logs, NO memoria)
+Todas las funciones de la API de IBKR que usa el sistema (18, extraídas del código) y si dieron data
+en corridas reales según `spy_activity.log`/`spy_direction.log`:
+
+| # | Función IBKR | Para qué | ¿Dio data en corrida REAL? (evidencia log) |
+|---|---|---|---|
+| 1 | `ib.connect` | Conectar (clientId 7) | ✅ SÍ — "Conectado a IB Gateway 127.0.0.1:4002" (18:00, 20:48…) |
+| 2 | `ib.reqMarketDataType` | Modo 1 LIVE / 3 DELAYED | ✅ SÍ (ejecutado; cayó a FROZEN/LIVE) |
+| 3 | `ib.reqMktData` (precio SPY `""`) | Precio del subyacente | ✅ SÍ — `SPY=773.37 [FROZEN]`, luego `SPY=772.45 [LIVE]` |
+| 4 | `ib.reqSecDefOptParams` | Cadena de opciones | ✅ SÍ — `cercano=20260810` + strikes |
+| 5 | `ib.qualifyContracts` | Calificar contratos | ✅ SÍ — creó `CALL 772C / PUT 773P` |
+| 6 | `ib.reqHistoricalData` | Barras 1 min (TA) | ✅ SÍ — `MIN 18:00 … rsi=59 macdh=+0.049` |
+| 7 | `ib.reqContractDetails` | minTick para el MID | ✅ SÍ (órdenes al MID 1.05/2.05) |
+| 8 | `ib.accountSummary` | Buying power | ✅ SÍ (corrida previa: $397.13; hubo BUY) |
+| 9 | `ib.placeOrder` | Colocar LimitOrder MID | ✅ SÍ (paper) — `ORDEN BUY CALL @1.05` |
+| 10-11 | `ib.openTrades` / `ib.positions` | Reconcile / huérfanas | ✅ SÍ — "Cancelada orden huerfana 8944" |
+| 12 | `ib.cancelOrder` | Cancelar orden | ✅ SÍ |
+| 13-14 | `ib.isConnected` / `ib.sleep` | Control de loop | ✅ SÍ |
+| 15 | `errorEvent` (evento) | Capturar errores IBKR | ✅ SÍ (activo) |
+| 16 | `pendingTickersEvent` (evento) | Ticks de opciones (flujo) | ⚠️ ejecutó pero SIN data → `netC=0 netP=0` |
+| 17 | `ib.reqMktData` (opciones `"233"`) | Flujo de premium por trade | ⚠️ 0 trades (fin de semana, sin OPRA live) |
+| 18 | `ib.reqMktData` (banda `"100,101,106"`) + `ib.ticker` | **OI + gamma (Walls/GEX)** | ❌ NUNCA probado en vivo — solo cold run con FakeIB |
+| — | `ib.cancelMktData` | Liberar sub de precio | ✅ SÍ |
+
+**Resumen honesto de qué DA data hoy:**
+- ✅ **Funciona con IBKR real:** conexión, precio SPY, cadena de opciones, barras 1 min (TA), órdenes
+  en paper (placeOrder/cancel/reconcile), lectura de cuenta.
+- ⚠️ **Ejecuta pero llega vacío (por finde):** el **flujo de premium de opciones** (`net_call/net_put=0`)
+  — el corazón de la señal. Necesita mercado abierto con trades reales.
+- ❌ **NO probado contra IBKR nunca:** **OI y gamma de la banda** → todo el módulo Walls/GEX/Flip está
+  verificado SOLO headless con **datos falsos (FakeIB)**. Que IBKR entregue OI+gamma reales es
+  **HIPÓTESIS** hasta correr `probe_oi_gamma.py` el lunes.
+- ⚠️ **OJO:** las líneas `WALLS …` en `spy_activity.log` son del **cold run (FakeIB)**, NO de IBKR.
+
+**Dos observaciones de los logs a vigilar el lunes:**
+1. Hubo un `FILL SELL CALL @ 0.00` (20:58) — precio de fill en cero, probable artefacto de paper/dato
+   ausente. Confirmar que los fills reales traen precio.
+2. `[LIVE]` apareció una vez (20:48) pero el flujo siguió en 0 → sin trades reales la señal no se
+   alimenta. Con mercado abierto se resuelve.
+
+**Conclusión:** de las 18 llamadas, ~14 ya dieron data real, 2 ejecutan pero vacías (flujo de opciones,
+por finde) y las 2 clave de Walls (OI+gamma) están sin probar en vivo. El probe del lunes mide eso.
+
 ## 9. Reglas de trabajo (del usuario — OBLIGATORIAS)
 - **Honestidad total.** Marcar siempre **VERIFICADO / NO VERIFICADO / HIPÓTESIS**.
 - **No implementar sin probar.** Cold run del **código real** (no scripts que reimplementen la lógica).
