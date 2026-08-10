@@ -172,6 +172,36 @@ que `_load_intradia` restaure → ~4 s con el umbral en el piso de 5.000 → **g
 - **Líneas de market data: 68 de ~100** (2 señal + 2 ejecución + 24 baseline + 40 banda),
   0 errores de límite en toda la sesión.
 
+### TARDE-3 (15:30-16:15) — cierre del día, 3 arreglos más
+
+- ✅ **GAP 18 ARREGLADO** (guard `_intradia_ok` en `_update_signal`, excluye demo). Verificado
+  en vivo: el arranque de las 15:23 y el de las 15:57 ya **no** dispararon giro espurio.
+- 🔴 **GAP 19 — NUEVO, detectado en vivo y ARREGLADO.** En el aplanado de las 15:45, con el
+  `EOD_REPRICE_SECS=1.5` que se introdujo esa tarde:
+  ```
+  15:45:01 SELL @0.32 (1955) · 15:45:06 code=10148 PendingCancel
+  15:45:09/13/17/21 (1956-1959) -> las 4 RECHAZADAS por margen (15.493 USD)
+  15:45:22 la ORIGINAL 1955 se llena igual
+  ```
+  **Causa (verificada en ib_insync):** IBKR reportó `Cancelled` —estado FINAL, en `DoneStates`—
+  así que salió de `openTrades()`, `_live_orders()` la dio por muerta y se colocó encima.
+  **No había ningún estado que consultar que lo evitara: la única defensa es el tiempo.**
+  Arreglo: `CANCEL_SETTLE_SECS=10` + `EOD_REPRICE_SECS` 1,5 → **12 s** + traza de estados.
+  *Mi error: el dato (latencia mediana 1 s, cola 25 s) ya estaba en M1 y no lo apliqué.*
+- ✅ **GAP 17-bis**: `_subscribe_bars` limpiaba `bars_stale` al **pedir** el stream, no al ver el
+  dato avanzar → `spot_stale=0` con el spot congelado en 773.07. Ahora la limpia solo
+  `_chequear_barras` cuando `bars[-1].date` avanza de verdad.
+- ⚠️ **`CLOSE_HHMM=16:15`** (era 16:00): se recolecta 15 min más, **sin operar** (verificado en
+  cold run: a las 16:05, 0 órdenes y `target=FLAT`). Medido: +52.000 vol y ~1,6 M de premium que
+  antes se tiraban, **pero con 0/40 griegas moviéndose** → es reporte TARDÍO del cierre, no
+  negociación nueva. Queda fechado 16:00-16:15: **trampa nº7** del análisis.
+
+**Cierre verificado:** `16:15:01 MERCADO CERRADO` con `_persist_accum` final · 0 órdenes ·
+0 huérfanas · 0 `ALERTA EOD` · cuenta plana · `integrity_check: ok` · 3 sesiones selladas.
+**BD final:** ta=323 · premium=18.732 · walls=139 · giros=95 · strike_accum=47.
+**`trades` y `posicion_minuto` siguen en 0 filas**: la única posición del día se compró con el
+código viejo. La primera operación registrada será la próxima compra.
+
 ## 1. QUÉ ES / OBJETIVO
 App de **1 archivo** (`spy_direction.py`, ~1000+ líneas) para **scalping de SPY** vía flujo de
 opciones. Se conecta a **IB Gateway (paper, puerto 4002, clientId 7)** con `ib_insync`.

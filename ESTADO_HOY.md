@@ -53,7 +53,19 @@ Descartados: 6 (medición) y 10 (el TA solo esperaba 26 barras).
 | **M12** | `tif='DAY'` explícito → se acaban los 54 avisos `10349` |
 | **Panel** | Decía `trading OFF` **estando armado** (el texto inicial nunca se refrescaba) |
 
-### 🔴 GAP 18 — DETECTADO HOY, **SIN ARREGLAR**
+### Cierre del día — 3 arreglos más (tarde-3)
+
+| # | Qué | Estado |
+|---|---|---|
+| **GAP 18** | Giro espurio en los ~4 s del arranque (umbral en el piso de 5.000) | ✅ **ARREGLADO** y verificado en vivo: guard con `_intradia_ok` en `_update_signal` (excluye demo) |
+| **GAP 19** | **Recolocar sobre una orden que IBKR aún no ha cancelado.** A las 15:45 se colocaron 4 ventas encima de una orden que IBKR reportó `Cancelled` y **se ejecutó 16 s después**. Las 4 rechazadas por margen: solo IBKR lo frenó, no el código | ✅ **ARREGLADO**: `CANCEL_SETTLE_SECS=10` (no colocar tras cancelar aunque digan que está cancelada) + `EOD_REPRICE_SECS` 1,5 → **12 s** + traza de estados de orden |
+| **GAP 17-bis** | `_subscribe_bars` limpiaba `bars_stale` al **pedir** el stream, no al ver el dato avanzar → `spot_stale=0` con el spot congelado | ✅ **ARREGLADO**: la bandera la limpia solo `_chequear_barras` |
+| **`CLOSE_HHMM=16:15`** | Se recolecta 15 min más (NO se opera: verificado en cold run). Medido: +52.000 vol y ~1,6 M premium que antes se tiraban, pero con **0/40 griegas moviéndose** → es reporte tardío del cierre | ⚠️ **PRUEBA**: si no aporta, volver a 16:00 |
+
+**Salida EOD ahora:** 15:45-15:55 al **MID** recotizando cada 12 s · **15:55** cruce al BID como
+último recurso · 16:00 `STOP_NEW` ya activo desde las 15:40 · 16:15 `end_session`.
+
+### 🔴 GAP 18 — cómo era antes de arreglarlo
 Al arrancar, `setup_contracts` suscribe la señal **antes** de que `_load_intradia` restaure los
 acumuladores. En esa ventana (~4 s) `net_call/net_put` valen 0 y el umbral cae al piso de 5.000
 → **giro espurio**. Ocurrió a las 14:52:29 (`GIRO -> DOWN, thr=5000`) y se corrigió solo 4 s
