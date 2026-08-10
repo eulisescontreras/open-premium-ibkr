@@ -10,7 +10,7 @@
 
 | Punto | Estado |
 |---|---|
-| **M2** P&L descuadrado | ✅ **RESUELTO** — se lee `RealizedPnL` de IBKR; si el interno se desvía >1 $ se avisa |
+| **M2** P&L descuadrado | ⚠️ **PARCIAL — ver nota** |
 | **M5** momentum por eventos (=GAP 5) | ✅ **RESUELTO** — mide `MOMENTUM_SECS=30` s reales. `diff_hist` eliminado |
 | **M9** falta sello de configuración | ✅ **RESUELTO** — `sesion_config` **no tenía escritor** (0 `INSERT` en todo el archivo, un `CREATE TABLE` huérfano). Ahora se sella cada arranque |
 | **M12** ruido `10349` | ✅ **RESUELTO** — `tif='DAY'` explícito |
@@ -26,6 +26,26 @@
 | **M8** el cuello de botella es la dirección | ✅ confirmado con más datos: TA 50,2% vs premium 49,6% |
 | **M11** greeks incompletos tras reconectar | ⏳ abierto — no necesita datos |
 | **GAP 18** giro espurio en el arranque | 🔴 **NUEVO, SIN ARREGLAR** — ver abajo |
+
+### ⚠️ M2 — por qué está PARCIAL (VERIFICADO en vivo el 2026-08-10)
+
+Se implementó leer `RealizedPnL`/`UnrealizedPnL` de `accountSummary()`. **IBKR no los devuelve
+por esa vía** en este Gateway:
+
+```
+14:28:40  PNL: IBKR no expone RealizedPnL en accountSummary -> el panel sigue usando
+          el calculo interno (puede desviarse, ver M2)
+```
+
+**Lo que SÍ quedó resuelto:** el sistema detecta la ausencia, avisa en el log, marca el panel
+como `(interno)` y, si algún día llega el dato de IBKR y difiere en más de 1 $, lo reporta.
+Ya no se puede confundir un número interno con uno del broker.
+
+**Lo que NO:** el P&L mostrado sigue siendo el cálculo interno — el mismo que el 2026-08-10
+marcaba −98,11 cuando la cuenta real decía −54.
+
+**Arreglo pendiente:** usar `ib.reqPnL(account)` (stream de PnL) en vez de `accountSummary`.
+Requiere suscripción explícita y su propio cold run. **NO implementado.**
 
 ### 🔴 GAP 18 — giro espurio en el arranque (VERIFICADO, sin arreglar)
 

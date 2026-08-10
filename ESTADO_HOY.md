@@ -49,7 +49,7 @@ Descartados: 6 (medición) y 10 (el TA solo esperaba 26 barras).
 | **GAP 2** | El premium de los 2 strikes de señal se contaba DOS veces (`_on_ticks` + `compute_walls`). Manda `_on_ticks` (mide por tick) |
 | **GAP 4** | Pasadas las **15:50** las ventas **cruzan el spread** (van al BID). Antes una 0DTE que no llenara al MID expiraba valiendo 0 |
 | **GAP 5** | El momentum medía **eventos**; ahora mide **30 s reales**. `diff_hist` eliminado (quedaba huérfano) |
-| **M2** | El P&L realizado se lee de **IBKR**; si el interno se desvía >1 $ se avisa en log y panel |
+| **M2** | ⚠️ **PARCIAL.** Se lee `RealizedPnL` de `accountSummary`… pero **IBKR no lo devuelve** por esa vía (verificado en vivo). El fallback avisa y marca el panel como `(interno)`, así que ya no se confunde el origen del dato — pero el P&L sigue siendo el cálculo interno. Arreglo pendiente: `ib.reqPnL()` |
 | **M12** | `tif='DAY'` explícito → se acaban los 54 avisos `10349` |
 | **Panel** | Decía `trading OFF` **estando armado** (el texto inicial nunca se refrescaba) |
 
