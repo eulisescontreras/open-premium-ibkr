@@ -354,6 +354,15 @@ class SpyDirection:
         self.open_deadline = 0.0         # limite de tiempo para llenar una COMPRA (BUY)
         self.min_tick = {}               # conId -> minTick
         self._mkt_subs = set()           # conIds con market data ya pedido (evita re-suscribir)
+        self._eventos_ok = False         # handlers de IBKR suscritos (una sola vez por proceso)
+        # --- estado de CUENTA y P&L acumulado (para la vista) ---
+        self.acct_net = None             # NetLiquidation actual (IBKR manda)
+        self.acct_avail = None           # AvailableFunds actual
+        self.acct_net_open = None        # NetLiquidation de la 1a lectura del dia (base)
+        self.last_acct = 0.0             # ultimo refresco de cuenta
+        self.pnl_realizado = 0.0         # suma de profits de las VENTAS llenadas hoy
+        self.n_trades = 0                # operaciones cerradas hoy
+        self.n_wins = 0                  # de esas, cuantas en positivo
         self.trade_msg = "trading OFF"   # ultima accion (para la pantalla)
         self.entry_price = None          # precio de entrada del contrato comprado (para la linea)
         self.contract_price = None       # precio ACTUAL del contrato comprado (tiempo real, P&L)
@@ -439,9 +448,33 @@ class SpyDirection:
     def connect(self):
         self.ib.connect(HOST, PORT, clientId=CLIENT_ID, timeout=8)
         self.ib.reqMarketDataType(1)
-        self.ib.errorEvent += self._on_error
-        self.ib.pendingTickersEvent += self._on_ticks
+        # Suscribir los handlers UNA sola vez: con la reconexion automatica, connect()
+        # se llama varias veces por sesion y los handlers se acumularian (logs duplicados
+        # y _update_signal corriendo dos veces por evento).
+        if not self._eventos_ok:
+            self.ib.errorEvent += self._on_error
+            self.ib.pendingTickersEvent += self._on_ticks
+            self.ib.execDetailsEvent += self._on_exec
+            self._eventos_ok = True
         ACT.info("Conectado a IB Gateway %s:%s (clientId=%s)", HOST, PORT, CLIENT_ID)
+
+    def _on_exec(self, trade, fill):
+        """EVENTO REAL de ejecucion de IBKR. Llega SIEMPRE que hay un fill, aunque
+        self.order ya no apunte a esa orden. El sondeo de estado de trade_poll puede
+        PERDERSE un fill: el 2026-08-10 la SELL CALL (reqId 450) se lleno, la app no se
+        entero y siguio colocando ventas que habrian sido SHORTS DESCUBIERTOS; solo el
+        control de margen de IBKR las freno. Aqui se deja constancia y se fuerza la
+        re-sincronizacion inmediata contra la posicion real."""
+        try:
+            ex = fill.execution
+            c = fill.contract
+            ACT.info("EXEC REAL %s %s x%g @ %.2f (orderId=%s)",
+                     getattr(ex, "side", "?"), getattr(c, "localSymbol", "?"),
+                     getattr(ex, "shares", 0), getattr(ex, "price", 0.0),
+                     getattr(trade.order, "orderId", "?"))
+            self.last_sync = 0.0   # la posicion real acaba de cambiar -> resync ya
+        except Exception:
+            LOG.exception("Error en _on_exec")
 
     def _on_error(self, reqId, code, msg, contract):
         sym = getattr(contract, "localSymbol", "") or getattr(contract, "symbol", "") if contract else ""
@@ -467,6 +500,9 @@ class SpyDirection:
         self.prev_vol = {}; self.band_prev_vol = {}; self.prev_gamma = {}
         self.diff_hist = []; self.transitions = []; self.state = "-"
         self.entry_price = None; self.contract_price = None
+        # contadores de cuenta/P&L del dia (la base se recaptura en la 1a lectura)
+        self.acct_net_open = None
+        self.pnl_realizado = 0.0; self.n_trades = 0; self.n_wins = 0
         ACT.info("NUEVO DIA - acumuladores intradia reiniciados (senal en 0)")
 
     def end_session(self):
@@ -1056,6 +1092,40 @@ class SpyDirection:
         mid = (bid + ask) / 2.0
         return round(round(mid / mt) * mt, 2)
 
+    def _read_account(self):
+        """Lee el estado de la cuenta de IBKR (la fuente de verdad) para la vista.
+        Reutiliza accountSummary, que ib_insync ya mantiene cacheado tras la 1a llamada."""
+        try:
+            net = avail = None
+            for r in self.ib.accountSummary():
+                if r.tag == "NetLiquidation":
+                    net = float(r.value)
+                elif r.tag == "AvailableFunds":
+                    avail = float(r.value)
+            if net is not None:
+                self.acct_net = net
+                if self.acct_net_open is None:
+                    self.acct_net_open = net     # base del dia: 1a lectura
+                    ACT.info("CUENTA base del dia: NetLiquidation=%.2f", net)
+            if avail is not None:
+                self.acct_avail = avail
+        except Exception:
+            LOG.exception("Error leyendo el estado de la cuenta")
+
+    def resumen_cuenta(self):
+        """Texto para la vista: cuanto hay, cuanto se ha movido hoy y que se lleva acumulado."""
+        if self.acct_net is None:
+            return "Cuenta: (leyendo de IBKR...)"
+        dia = (self.acct_net - self.acct_net_open) if self.acct_net_open else 0.0
+        pct = (dia / self.acct_net_open * 100.0) if self.acct_net_open else 0.0
+        txt = (f"Cuenta ${self.acct_net:,.2f}   disp ${self.acct_avail or 0:,.2f}   "
+               f"|   DIA {dia:+,.2f} ({pct:+.1f}%)   "
+               f"|   realizado {self.pnl_realizado:+,.2f}   "
+               f"ops {self.n_trades}")
+        if self.n_trades:
+            txt += f" ({self.n_wins} ganadoras, {100.0 * self.n_wins / self.n_trades:.0f}%)"
+        return txt
+
     def _can_afford(self, price):
         try:
             avail = None
@@ -1244,6 +1314,11 @@ class SpyDirection:
         if act == "SELL" and self.entry_price:
             profit = (px - self.entry_price) * 100.0 * nq
             pct = (px / self.entry_price - 1.0) * 100.0
+            # acumulado del dia (para la vista y el registro por minuto)
+            self.pnl_realizado += profit
+            self.n_trades += 1
+            if profit > 0:
+                self.n_wins += 1
         rl = "C" if side == "CALL" else "P"
         c = getattr(self, "order_contract", None)
         strike = f"{c.strike:g}{rl}" if c is not None else side
@@ -1334,6 +1409,15 @@ class SpyDirection:
         # ---- sin orden viva: mover posicion al objetivo (SIEMPRE LimitOrder al MID) ----
         if self.pos != self.target:
             if self.pos in ("CALL", "PUT"):
+                # GUARDA DURA ANTES DE VENDER: confirmar contra IBKR que la posicion SIGUE
+                # existiendo. Si una venta anterior se lleno y el sondeo de estado no lo
+                # detecto, volver a vender seria un SHORT DESCUBIERTO (2026-08-10: 4 intentos
+                # seguidos; solo el control de margen de IBKR los freno, no el codigo).
+                self._sync_pos()
+                self.last_sync = time.monotonic()
+                if self.pos not in ("CALL", "PUT") or self.pos_qty <= 0:
+                    self.trade_msg = "sin posicion real en IBKR - NO se vende (evita descubierto)"
+                    return
                 # CERRAR: vender al MID, RELENTLESS (reintenta hasta llenar).
                 # Se vende la cantidad REAL en cartera (si quedaron 3 lotes, se cierran los 3;
                 # vender QTY=1 dejaria 2 huerfanos que nadie cerraria).
@@ -1446,6 +1530,7 @@ class SpyDirection:
             ACT.info("MIN %s | SENAL netC=%.0f netP=%.0f diff=%.0f thr=%.0f mom=%.0f -> estado=%s pos=%s",
                      hora, self.net_call, self.net_put, self.last_diff, self.last_thr,
                      self.last_momentum, self.state, self.pos)
+            ACT.info("MIN %s | %s", hora, self.resumen_cuenta())
             if self.pos in ("CALL", "PUT"):
                 en = self.entry_price or 0.0
                 pr = self.contract_price
@@ -1601,6 +1686,11 @@ def run_gui(app):
     contract_lbl = tk.Label(root, text="", font=("Consolas", 10, "bold"), fg="#fbbf24", bg="#111111")
     contract_lbl.pack()
 
+    # Estado de CUENTA: cuanto hay, cuanto se movio hoy y que se lleva acumulado
+    acct_lbl = tk.Label(root, text="Cuenta: (leyendo de IBKR...)", font=("Consolas", 9, "bold"),
+                        fg="#e5e7eb", bg="#111111")
+    acct_lbl.pack()
+
     alert = tk.Label(root, text="", font=("Segoe UI", 15, "bold"),
                      fg="#111111", bg="#111111", pady=6)
     alert.pack(fill="x", padx=10, pady=(6, 0))
@@ -1679,6 +1769,9 @@ def run_gui(app):
                         app.last_snapshot = time.monotonic()
                     app.trade_poll()
                     app.ta_poll()
+                    if time.monotonic() - app.last_acct > 10.0:
+                        app._read_account()      # estado de cuenta para la vista
+                        app.last_acct = time.monotonic()
                     if (WALLS_ENABLED
                             and time.monotonic() - app.last_walls_calc > WALLS_RECALC_SECS):
                         app.compute_walls()   # informativo: recalcula/guarda cada 3 min
@@ -1720,6 +1813,13 @@ def run_gui(app):
         else:
             trade_ind.config(text="TRADING OFF", bg="#ef4444")
         trade_msg_lbl.config(text=app.trade_msg)
+
+        # --- cuenta / acumulado del dia (verde si gana, rojo si pierde) ---
+        _acol = "#e5e7eb"
+        if app.acct_net is not None and app.acct_net_open:
+            _d = app.acct_net - app.acct_net_open
+            _acol = "#22c55e" if _d > 0 else ("#ef4444" if _d < 0 else "#e5e7eb")
+        acct_lbl.config(text=app.resumen_cuenta(), fg=_acol)
 
         v = app.ta_vals
         if v:
