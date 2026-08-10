@@ -388,7 +388,11 @@ check(ok is True and app.ib.bars_pedidas == 1, "_subscribe_bars repidio el strea
 check(app.ib.cancels == 1, "cancelo la suscripcion vieja antes de repedir (evita pacing)")
 check(app.last_bar_time == antes,
       "last_bar_time NO se toca al reponer (si no, se perderia un minuto entero)")
-check(app.bars_stale is False, "tras reponer, deja de estar stale")
+# ACTUALIZADO 2026-08-10 (GAP 17-bis): antes se exigia que reponer limpiara la bandera. Eso
+# hacia que fuera de RTH se repidiera "con exito", se limpiara stale y walls escribiera
+# spot_stale=0 sobre un spot CONGELADO. Ahora la limpia solo _chequear_barras al ver avanzar.
+check(app.bars_stale is True,
+      "tras reponer SIGUE stale: pedir el stream no prueba que llegue nada")
 
 # la deteccion por EVENTO (10182) tambien marca
 app.bars_stale = False
@@ -412,6 +416,33 @@ app.bars_stale = False
 app._persist_walls({}, {}, {}, {})
 r = app.db.execute("SELECT spot_stale FROM walls_snapshot ORDER BY rowid DESC LIMIT 1").fetchone()
 check(r[0] == 0, "y spot_stale=0 cuando el dato es bueno")
+
+# --- GAP 17-bis: repedir el stream NO significa tenerlo ---
+# Caso REAL del 2026-08-10 16:01-16:03: fuera de RTH se repidio "con exito", la bandera se
+# limpio, IBKR no mando ni una barra y walls escribio spot_stale=0 sobre un spot CONGELADO.
+app.bars_stale = True
+app.spy_stock = FakeContract(0, "C", 9999)
+app.bars = ["BAR-VIEJA"]
+ok = app._subscribe_bars()
+check(ok is True, "el stream se repide sin error")
+check(app.bars_stale is True,
+      "GAP 17-bis: repedir NO limpia bars_stale (la limpia la EVIDENCIA, no la intencion)")
+app.walls = {"spot": 773.07, "put_wall": 772, "call_wall": 773,
+             "max_pain_static": 771, "max_pain_dyn": 773, "prem_center": 773.2}
+app.gex = {"gex_total": 1.0, "regime": "LONG", "gamma_flip": 772.4}
+app._persist_walls({}, {}, {}, {})
+r = app.db.execute("SELECT spot,spot_stale FROM walls_snapshot ORDER BY rowid DESC LIMIT 1").fetchone()
+check(r[1] == 1,
+      "tras repedir con el dato SIN avanzar, walls sigue marcado stale=1 -> %s" % (r,))
+
+# y solo cuando la barra AVANZA de verdad se limpia
+app.is_market_open = lambda: True
+app._chequear_barras([{"date": "2026-08-10 16:20:00"}])
+check(app.bars_stale is False,
+      "cuando bars[-1].date AVANZA, entonces si se limpia la bandera")
+app._persist_walls({}, {}, {}, {})
+r = app.db.execute("SELECT spot_stale FROM walls_snapshot ORDER BY rowid DESC LIMIT 1").fetchone()
+check(r[0] == 0, "y el siguiente snapshot ya sale con spot_stale=0")
 
 
 # ================================================================ TEST G: reinicio

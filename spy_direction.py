@@ -861,8 +861,13 @@ class SpyDirection:
         # OJO: NO se toca self.last_bar_time. El objeto bars es nuevo, pero la continuidad del
         # registro depende de esa variable: ponerla a None haria que ta_poll se saltara un
         # minuto entero (hace `return` la primera vez que la ve vacia).
-        self.bars_last_advance = time.monotonic()
-        self.bars_stale = False
+        self.bars_last_advance = time.monotonic()   # reloj del backoff, NO bandera de fiabilidad
+        # GAP 17-bis: AQUI NO se limpia bars_stale. Pedir el stream no es lo mismo que tenerlo:
+        # el 2026-08-10 a las 16:01 se repidio "con exito" fuera de RTH, la bandera se limpio,
+        # IBKR no mando ni una barra, y walls_snapshot escribio spot_stale=0 sobre un spot
+        # CONGELADO en 773.07 - justo lo que esa columna existe para evitar.
+        # La bandera la limpia LA EVIDENCIA (_chequear_barras, cuando ve avanzar bars[-1].date),
+        # nunca la INTENCION de haber pedido el stream.
         return True
 
     def setup_contracts(self):
@@ -3012,8 +3017,11 @@ def run_gui(app):
                         app.bars_retries += 1
                         _sin = time.monotonic() - (app.bars_last_advance or time.monotonic())
                         if app._subscribe_bars():
-                            ACT.info("BARRAS repuestas automaticamente (intento %d, %.0fs sin "
-                                     "avanzar)", app.bars_retries, _sin)
+                            # OJO con el texto: se ha REPEDIDO, no se ha confirmado que llegue
+                            # nada. Quien confirma es _chequear_barras al ver avanzar la barra.
+                            ACT.info("BARRAS: stream repedido (intento %d, %.0fs sin avanzar). "
+                                     "Sigue marcado STALE hasta que la barra avance de verdad",
+                                     app.bars_retries, _sin)
                         else:
                             ACT.info("BARRAS: fallo el intento %d de reponer el stream",
                                      app.bars_retries)

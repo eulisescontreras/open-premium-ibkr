@@ -240,6 +240,19 @@ concluyó *"ningún objetivo mejora al flip"*. Falso para opciones: el PUT hizo 
 6. **Excluir tramos sucios:** `walls_snapshot` con `spot=773.03` (13:26-14:00, GAP 17) y el
    premium de los strikes de señal anterior a las 14:28 (GAP 2). A partir de ahora,
    `sesion_config` sella cada arranque.
+7. **⚠️ El pico artificial de las 16:00-16:15.** Desde el 2026-08-10 se recolecta hasta
+   `CLOSE_HHMM=16:15`. Medido ese mismo día:
+   ```
+   15:57 -> 16:00   +29.697 vol   +1.245.376 prem
+   16:00 -> 16:03   +17.465 vol     +275.497 prem
+   16:03 -> 16:06    +5.129 vol     +118.815 prem
+   gamma cambiaron:  40/40  ->  11/40  ->  0/40
+   ```
+   Con **0 de 40 griegas moviéndose a las 16:06**, las opciones ya no cotizan: eso es
+   **reporte tardío de los trades del cierre**, no negociación nueva. Los datos son reales y
+   valen (antes se tiraban ~52.000 de volumen y ~1,6 M de premium), pero quedan **fechados
+   16:00-16:15**. Cualquier análisis por hora del día verá un pico al cierre que en realidad
+   pertenece a los minutos anteriores. **Agrupar esa ventana con el último tramo de la sesión.**
 
 ---
 
