@@ -126,13 +126,19 @@ Diseño final (aprobado por el usuario; plan en `~/.claude/plans/structured-pond
 - **Gaps (R14):** límite de líneas IBKR (~100) con la banda + señal/ejec/baseline → si excede, bajar
   `WALLS_BAND`. Greeks NaN fuera de RTH. Escala GEX en miles de millones (panel muestra /1e9 "Bn").
 - **Gamma Ladder VISUAL (2026-08-09, estilo MarketSnack, SOLO lectura):** Canvas Tkinter con barras
-  de **premium $ por strike** de la banda (verde si strike≥precio, rojo si <), etiquetas CW/PW, línea
-  de precio + señal UP/DOWN, línea de Gamma Flip. Método `ladder_rows()` (testeable, cold run VERDE).
-  Sin botones/interacción (el usuario solo quiere ver cómo se mueve). También **línea "Contrato
-  comprado"** que aparece SOLO si hay posición real en IBKR (`self.pos`≠FLAT) y desaparece al vender
-  (`self.entry_price` se setea en `_on_filled`). NO se pudo ver poblada hoy (mercado cerrado, banda
-  vacía en --demo); se ve el LUNES con datos reales. NO se replicó el "tape" institucional (IBKR no
-  da ese feed) ni el chart temporal — fuera de alcance por decisión del usuario.
+  de **premium $ por strike** de la banda (verde si strike≥precio, rojo si <), etiquetas **CW/PW/MAG**
+  (magneto en morado), y en un **carril izquierdo propio** (no encima de las barras) las rayas de
+  **precio+UP/DOWN**, **Gamma Flip** y **contrato comprado**. Método `ladder_rows()` + `_draw_ladder()`
+  (cold run VERDE, dibujo Tk verificado headless). Sin botones. El **precio del contrato se actualiza
+  en vivo** (`_mid`) y la raya se pone **verde/rojo** según suba/baje desde la entrada; aparece solo si
+  `self.pos`≠FLAT y desaparece al vender. **Notificaciones (toast):** en cada giro y en el **FILL real**
+  (`_on_filled`) de compra/venta; al vender el toast trae el **profit $/%**. `--demo` puebla datos
+  sintéticos (`_demo_walls`) para previsualizar; el PnL del demo es decorativo (senos desacoplados).
+  NO se replicó tape institucional ni chart temporal (fuera de alcance).
+- **🔑 DECISIÓN DE COMPRA/VENTA = SOLO PREMIUM (VERIFICADO por grep):** `_update_signal` usa
+  `diff = net_call − net_put` + umbral adaptativo + momentum → `self.target` (CALL si UP, PUT si DOWN);
+  `trade_poll` ejecuta ese target. **TA, GEX, Walls y la Ladder son informativos: NO tocan la
+  ejecución.** (Idea futura del usuario: quizá accionarlos, pero solo tras validar con datos reales.)
 - **Fuera de alcance (ahora):** comparador visual "Δ overnight" (default cierre vs apertura), uso
   ACCIONABLE (veto/target), el "tape" institucional y el chart temporal — no ahora.
 

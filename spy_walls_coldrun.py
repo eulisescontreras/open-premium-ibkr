@@ -19,6 +19,8 @@ except Exception:
 
 import spy_direction as S
 
+S.ENABLE_TOAST = False   # NO lanzar toasts de Windows durante el cold run (evita spam)
+
 FAILS = []
 
 
@@ -197,6 +199,10 @@ tags = {r[0]: r[3] for r in lr["rows"]}
 check(tags.get(775) == "CW", f"tag CW en 775 -> {tags.get(775)}")
 check(tags.get(765) == "PW", f"tag PW en 765 -> {tags.get(765)}")
 check(lr["state"] in ("-", "UP", "DOWN"), f"state presente -> {lr['state']}")
+check(lr.get("contract") is None, "ladder_rows: sin posicion real -> contract None (no se dibuja raya)")
+tags_all = {r[0]: r[3] for r in lr["rows"]}
+check(any("M" in v for v in tags_all.values()),
+      f"magneto marcado en la ladder (tag M) -> {[k for k, v in tags_all.items() if 'M' in v]}")
 
 # ================================================================ TEST D: flujo --demo (datos de prueba)
 print("== TEST D: modo demo (simulate_step puebla ladder + contrato) ==")
@@ -225,6 +231,30 @@ check(dapp.walls is not None and dapp.gex is not None, "demo puebla walls y gex"
 check(saw_call and saw_put and saw_flat,
       f"contrato rota y desaparece: CALL={saw_call} PUT={saw_put} FLAT={saw_flat}")
 check(dapp.gex["regime"] in ("LONG", "SHORT", "FLAT"), f"regime demo -> {dapp.gex['regime']}")
+# contrato en ladder_rows refleja la posicion real (para la raya en la grafica)
+lrd = dapp.ladder_rows()
+if dapp.pos in ("CALL", "PUT"):
+    check(lrd.get("contract") and lrd["contract"]["side"] == dapp.pos,
+          f"ladder_rows.contract refleja pos {dapp.pos} -> {lrd.get('contract')}")
+    check(lrd["contract"].get("price") is not None,
+          f"demo: precio del contrato en vivo -> {lrd['contract'].get('price')}")
+else:
+    check(lrd.get("contract") is None, "ladder_rows.contract None en FLAT")
+
+# ================================================================ TEST E: profit al vender (_on_filled)
+print("== TEST E: profit al llenarse la VENTA (_on_filled) ==")
+eapp = S.SpyDirection(demo=True); eapp.db.close(); eapp.db = sqlite3.connect(":memory:"); eapp._init_db()
+eapp.entry_price = 1.00
+eapp.order_action = "SELL"; eapp.order_side = "CALL"
+eapp.order_contract = S.Option(S.SYMBOL, "DEMO", 773, "C", "SMART", tradingClass=S.SYMBOL)
+class _St: avgFillPrice = 1.30
+class _Ord: orderStatus = _St()
+eapp.order = _Ord()
+eapp._on_filled()
+check("Profit" in eapp.trade_msg and "+30.00" in eapp.trade_msg,
+      f"profit +30.00 calculado al vender -> {eapp.trade_msg}")
+check(eapp.pos == "FLAT" and eapp.entry_price is None and eapp.contract_price is None,
+      "tras vender: pos FLAT, entry/contract_price limpiados")
 
 # ================================================================ resultado
 print()

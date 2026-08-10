@@ -351,6 +351,7 @@ class SpyDirection:
         self.min_tick = {}               # conId -> minTick
         self.trade_msg = "trading OFF"   # ultima accion (para la pantalla)
         self.entry_price = None          # precio de entrada del contrato comprado (para la linea)
+        self.contract_price = None       # precio ACTUAL del contrato comprado (tiempo real, P&L)
         self.eod_flat = False            # ya se aplano hoy
         self.reconciled = False
         # --- TA de 1 min + registro por minuto ---
@@ -772,6 +773,7 @@ class SpyDirection:
         strikes = sorted({c.strike for c in self.band_contracts}, reverse=True)
         w = self.walls or {}
         cw = w.get("call_wall"); pw = w.get("put_wall")
+        magnet = w.get("max_pain_dyn") if w.get("max_pain_dyn") is not None else w.get("max_pain_static")
         flip = (self.gex or {}).get("gamma_flip")
         price = self.spy_price
         rows = []
@@ -781,12 +783,21 @@ class SpyDirection:
                     + self.today_prem.get((self.expiry, s, "P"), 0.0))
             side = "call" if (price is None or math.isnan(price) or s >= price) else "put"
             tag = "CW" if (cw is not None and s == cw) else ("PW" if (pw is not None and s == pw) else "")
+            if magnet is not None and s == magnet:      # magneto como marca, estilo PW/CW
+                tag = (tag + "M") if tag else "MAG"
             rows.append((s, prem, side, tag))
             if prem > max_prem:
                 max_prem = prem
-        return {"rows": rows, "price": price, "flip": flip,
-                "magnet": w.get("max_pain_dyn") if w.get("max_pain_dyn") is not None else w.get("max_pain_static"),
-                "state": self.state, "max_prem": max_prem}
+        # contrato comprado (solo si hay posicion real): strike + entrada + precio ACTUAL (P&L)
+        contract = None
+        if self.pos == "CALL" and self.buy_call is not None:
+            contract = {"strike": self.buy_call.strike, "side": "CALL",
+                        "entry": self.entry_price, "price": self.contract_price}
+        elif self.pos == "PUT" and self.buy_put is not None:
+            contract = {"strike": self.buy_put.strike, "side": "PUT",
+                        "entry": self.entry_price, "price": self.contract_price}
+        return {"rows": rows, "price": price, "flip": flip, "magnet": magnet,
+                "state": self.state, "max_prem": max_prem, "contract": contract}
 
     # ---------------- procesamiento de trades ----------------
     def _on_ticks(self, tickers):
@@ -951,16 +962,31 @@ class SpyDirection:
         }
         # contrato comprado SIMULADO: sigue la señal; cada ~18 ticks queda FLAT 3 ticks (para ver
         # que la linea DESAPARECE al vender y reaparece al recomprar)
+        prev_pos = self.pos
+        prev_entry = self.entry_price
+        prev_price = self.contract_price
         if (t % 18) < 3:
-            self.pos = "FLAT"; self.entry_price = None
+            self.pos = "FLAT"; self.entry_price = None; self.contract_price = None
         elif self.state == "UP":
             self.pos = "CALL"
             self.buy_call = Option(SYMBOL, self.expiry, center + 1, "C", "SMART", tradingClass=SYMBOL)
             self.entry_price = 1.05
+            self.contract_price = round(1.05 + 0.45 * math.sin(t / 4.0), 2)   # precio en vivo (oscila)
         elif self.state == "DOWN":
             self.pos = "PUT"
             self.buy_put = Option(SYMBOL, self.expiry, center - 1, "P", "SMART", tradingClass=SYMBOL)
             self.entry_price = 2.05
+            self.contract_price = round(2.05 + 0.55 * math.sin(t / 4.0), 2)
+        # notificacion DEMO de compra/venta al cambiar la posicion (con profit al vender)
+        if ENABLE_TOAST and self.pos != prev_pos:
+            if prev_pos in ("CALL", "PUT"):
+                prof = ((prev_price if prev_price is not None else prev_entry or 0.0)
+                        - (prev_entry or 0.0)) * 100.0 * QTY
+                self._toast("SPY: VENTA (demo) LLENADA", f"SPY {prev_pos} vendida  Profit {prof:+.0f}$")
+            if self.pos in ("CALL", "PUT"):
+                bc = self.buy_call if self.pos == "CALL" else self.buy_put
+                rl = "C" if self.pos == "CALL" else "P"
+                self._toast("SPY: COMPRA (demo) LLENADA", f"SPY {bc.strike:g}{rl} @ {self.entry_price:.2f}")
 
     # ================= EJECUCION AUTOMATICA (rotar 1 opcion) =================
     def _minTick(self, contract):
@@ -1064,10 +1090,33 @@ class SpyDirection:
             px = self.order.orderStatus.avgFillPrice
         except Exception:
             px = 0.0
+        # profit al VENDER (usa el precio de entrada ANTES de limpiarlo)
+        profit = pct = None
+        if act == "SELL" and self.entry_price:
+            profit = (px - self.entry_price) * 100.0 * QTY
+            pct = (px / self.entry_price - 1.0) * 100.0
+        rl = "C" if side == "CALL" else "P"
+        c = getattr(self, "order_contract", None)
+        strike = f"{c.strike:g}{rl}" if c is not None else side
+        self.trade_msg = (f"{act} {side} LLENADO @ {px:.2f}"
+                          + (f"  Profit {profit:+.2f} ({pct:+.1f}%)" if profit is not None else ""))
+        ACT.info("FILL %s %s @ %.2f -> pos=%s%s", act, side, px,
+                 "FLAT" if act != "BUY" else side,
+                 (f" | PROFIT {profit:+.2f} ({pct:+.1f}%)" if profit is not None else ""))
+        # NOTIFICACION en el FILL REAL (cuando la orden se llena, NO al enviarla)
+        if ENABLE_TOAST:
+            if act == "BUY":
+                self._toast(f"SPY: COMPRA {side} LLENADA", f"SPY {strike} @ {px:.2f}")
+            else:
+                body = f"SPY {strike} @ {px:.2f}"
+                if profit is not None:
+                    body += f"  |  Profit {profit:+.2f} ({pct:+.1f}%)"
+                self._toast(f"SPY: VENTA {side} LLENADA", body)
+        # actualizar posicion/entrada DESPUES de calcular el profit
         self.pos = side if act == "BUY" else "FLAT"
         self.entry_price = px if act == "BUY" else None
-        self.trade_msg = f"{act} {side} LLENADO @ {px:.2f}"
-        ACT.info("FILL %s %s @ %.2f -> pos=%s", act, side, px, self.pos)
+        if act != "BUY":
+            self.contract_price = None
         self.order = None
         self.open_deadline = 0.0
 
@@ -1196,7 +1245,8 @@ import tkinter as tk
 
 
 def _draw_ladder(canvas, app):
-    """Dibuja la Gamma Ladder (solo lectura) en el Canvas. Estilo MarketSnack simplificado."""
+    """Dibuja la Gamma Ladder (solo lectura). El PRECIO y el CONTRATO comprado tienen su propio
+    carril de etiqueta a la izquierda (NO encima de las barras) y una raya horizontal a su nivel."""
     canvas.delete("all")
     W = int(canvas["width"]); H = int(canvas["height"])
     data = app.ladder_rows()
@@ -1208,8 +1258,10 @@ def _draw_ladder(canvas, app):
     n = len(rows)
     top = 4
     row_h = max(11, min(20, (H - 8) // n))
-    x_bar0 = 92                 # inicio de las barras
-    bar_max = W - x_bar0 - 62   # ancho maximo de barra (deja espacio al valor)
+    x_strike_r = 42            # etiqueta de strike (anchor e)
+    x_mark_r = 100             # carril de marcadores precio/contrato (anchor e) -> NO sobre barras
+    x_bar0 = 104               # inicio de las barras
+    bar_max = W - x_bar0 - 52  # ancho maximo de barra (deja espacio al valor)
     max_prem = data["max_prem"] or 1.0
 
     def y_at(i):
@@ -1225,15 +1277,21 @@ def _draw_ladder(canvas, app):
                 return y_at(i) + frac * (y_at(i + 1) - y_at(i))
         return None
 
+    # separador del carril de marcadores
+    canvas.create_line(x_bar0 - 2, top, x_bar0 - 2, top + n * row_h, fill="#1f2937", width=1)
+
     for i, (s, prem, side, tag) in enumerate(rows):
         y = y_at(i)
-        lbl = f"{s:g}"
-        col_lbl = "#cbd5e1"
-        if tag == "CW":
-            lbl += " CW"; col_lbl = "#22c55e"
-        elif tag == "PW":
-            lbl += " PW"; col_lbl = "#ef4444"
-        canvas.create_text(x_bar0 - 4, y, text=lbl, fill=col_lbl, font=("Consolas", 8), anchor="e")
+        lbl = f"{s:g}{tag}"
+        if "CW" in tag:
+            col_lbl = "#22c55e"
+        elif "PW" in tag:
+            col_lbl = "#ef4444"
+        elif "M" in tag:                 # magneto (Max Pain)
+            col_lbl = "#a78bfa"
+        else:
+            col_lbl = "#cbd5e1"
+        canvas.create_text(x_strike_r, y, text=lbl, fill=col_lbl, font=("Consolas", 8), anchor="e")
         ln = int(bar_max * (prem / max_prem)) if max_prem > 0 else 0
         col = "#16a34a" if side == "call" else "#dc2626"
         if ln > 0:
@@ -1242,20 +1300,45 @@ def _draw_ladder(canvas, app):
         canvas.create_text(x_bar0 + ln + 4, y, text=_money(prem), fill="#94a3b8",
                            font=("Consolas", 7), anchor="w")
 
-    price = data["price"]
-    yp = y_of_level(price) if (price is not None and not math.isnan(price)) else None
-    if yp is not None:
-        canvas.create_line(x_bar0, yp, W - 2, yp, fill="#f8fafc", width=1)
-        st = data["state"]
-        stcol = {"UP": "#22c55e", "DOWN": "#ef4444"}.get(st, "#e5e7eb")
-        canvas.create_text(x_bar0 + 3, yp - 6,
-                           text=f"PRECIO {price:.2f}  {st if st in ('UP', 'DOWN') else ''}".strip(),
-                           fill=stcol, font=("Consolas", 8, "bold"), anchor="w")
+    # --- GAMMA FLIP: raya punteada naranja + etiqueta a la derecha ---
     yf = y_of_level(data["flip"])
     if yf is not None:
         canvas.create_line(x_bar0, yf, W - 2, yf, fill="#f59e0b", width=1, dash=(3, 2))
-        canvas.create_text(W - 4, yf + 6, text=f"Gamma Flip {data['flip']:.2f}",
+        canvas.create_text(W - 4, yf + 6, text=f"flip {data['flip']:.2f}",
                            fill="#f59e0b", font=("Consolas", 7), anchor="e")
+
+    # --- PRECIO: raya blanca cruzando las barras + etiqueta en el carril (con estado) ---
+    price = data["price"]
+    yp = y_of_level(price) if (price is not None and not math.isnan(price)) else None
+    if yp is not None:
+        st = data["state"]
+        stcol = {"UP": "#22c55e", "DOWN": "#ef4444"}.get(st, "#e5e7eb")
+        arrow = {"UP": "^", "DOWN": "v"}.get(st, "-")
+        canvas.create_line(x_bar0, yp, W - 2, yp, fill="#f8fafc", width=1)
+        canvas.create_text(x_mark_r, yp, text=f"{arrow} {price:.2f}", fill=stcol,
+                           font=("Consolas", 8, "bold"), anchor="e")
+
+    # --- CONTRATO COMPRADO: raya amarilla al nivel del strike + etiqueta en el carril ---
+    ct = data.get("contract")
+    if ct is not None:
+        yc = y_of_level(ct["strike"])
+        if yc is None:
+            yce = [y_at(i) for i, r in enumerate(rows) if r[0] == ct["strike"]]
+            yc = yce[0] if yce else None
+        if yc is not None:
+            rl = "C" if ct["side"] == "CALL" else "P"
+            pr = ct.get("price"); en = ct.get("entry")
+            # color de la raya/etiqueta segun P&L: verde si subio, rojo si bajo, amarillo si sin dato
+            ccol = "#fbbf24"
+            if pr is not None and en:
+                ccol = "#22c55e" if pr >= en else "#ef4444"
+            canvas.create_line(x_bar0, yc, W - 2, yc, fill=ccol, width=2)
+            ytxt = yc + (9 if (yp is not None and abs(yc - yp) < 9) else 0)
+            txt = f">{ct['strike']:g}{rl}"
+            if pr is not None:
+                txt += f" {pr:.2f}"
+            canvas.create_text(x_mark_r, ytxt, text=txt, fill=ccol,
+                               font=("Consolas", 8, "bold"), anchor="e")
 
 
 def run_gui(app):
@@ -1263,11 +1346,11 @@ def run_gui(app):
     root.title("SPY Direction")
     root.report_callback_exception = lambda *a: LOG.error("Error en GUI", exc_info=a)
     root.configure(bg="#111111")
-    root.geometry("560x1020")
+    root.geometry("560x940")
 
-    big = tk.Label(root, text="-", font=("Segoe UI", 110, "bold"),
+    big = tk.Label(root, text="-", font=("Segoe UI", 46, "bold"),
                    fg="#888888", bg="#111111")
-    big.pack(pady=(14, 0))
+    big.pack(pady=(8, 0))
 
     sub = tk.Label(root, text="", font=("Segoe UI", 12), fg="#dddddd", bg="#111111")
     sub.pack()
@@ -1360,6 +1443,12 @@ def run_gui(app):
                             and time.monotonic() - app.last_walls_calc > WALLS_RECALC_SECS):
                         app.compute_walls()   # informativo: recalcula/guarda cada 3 min
                         app.last_walls_calc = time.monotonic()
+                    # precio ACTUAL del contrato comprado (tiempo real, para P&L)
+                    _cc = app.buy_call if app.pos == "CALL" else (app.buy_put if app.pos == "PUT" else None)
+                    if _cc is not None:
+                        _m = app._mid(_cc)
+                        if _m is not None:
+                            app.contract_price = _m
             except Exception:
                 LOG.exception("Error en el ciclo principal (tick)")
 
@@ -1399,13 +1488,25 @@ def run_gui(app):
                 f"peso {_fmt(w.get('prem_center'))}\n"
                 f"GEX {gtxt} {gg.get('regime', '-')}  Flip {_fmt(gg.get('gamma_flip'))}"))
 
-        # contrato comprado (SOLO si hay posicion real en IBKR; al vender/FLAT desaparece)
-        if app.pos == "CALL" and app.buy_call is not None:
-            ep = f" @ {app.entry_price:.2f}" if app.entry_price else ""
-            contract_lbl.config(text=f"Contrato comprado: SPY {app.buy_call.strike:g}C {app.expiry or ''}{ep}")
-        elif app.pos == "PUT" and app.buy_put is not None:
-            ep = f" @ {app.entry_price:.2f}" if app.entry_price else ""
-            contract_lbl.config(text=f"Contrato comprado: SPY {app.buy_put.strike:g}P {app.expiry or ''}{ep}")
+        # contrato comprado (SOLO si hay posicion real; al vender/FLAT desaparece).
+        # Precio en vivo + P&L, color verde/rojo segun subio/bajo desde la entrada.
+        _bc = app.buy_call if app.pos == "CALL" else (app.buy_put if app.pos == "PUT" else None)
+        if _bc is not None:
+            rl = "C" if app.pos == "CALL" else "P"
+            en = app.entry_price
+            pr = app.contract_price
+            txt = f"Contrato: SPY {_bc.strike:g}{rl} {app.expiry or ''}"
+            col = "#fbbf24"
+            if en:
+                txt += f"  entrada {en:.2f}"
+            if pr is not None:
+                txt += f"  ->  {pr:.2f}"
+                if en:
+                    pnl = (pr - en) * 100.0 * QTY
+                    pct = (pr / en - 1.0) * 100.0
+                    txt += f"  ({pnl:+.0f}$ / {pct:+.1f}%)"
+                    col = "#22c55e" if pr >= en else "#ef4444"
+            contract_lbl.config(text=txt, fg=col)
         else:
             contract_lbl.config(text="")
 

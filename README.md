@@ -52,9 +52,16 @@ Para la **expiración cercana**, cada 3 min desde tickers en **streaming** (no s
 - **GEX** (Σ 100·spot²·(+γc·OIc −γp·OIp)) → régimen **LONG** (>0, mean-reverting) / **SHORT** (<0,
   tendencial); y **Gamma Flip** (nivel donde el GEX neto cruza cero; proxy por acumulada).
 - **Gamma Ladder VISUAL (solo lectura, estilo MarketSnack):** Canvas con barras de **premium $ por
-  strike** (verde≥precio / rojo<precio), CW/PW, línea de precio + señal UP/DOWN y Gamma Flip. Más una
-  línea **"Contrato comprado"** que solo aparece si hay posición real en IBKR (desaparece al vender).
-  Sin botones. NO incluye el "tape" institucional (IBKR no da ese feed) ni chart temporal.
+  strike** (verde≥precio / rojo<precio), etiquetas **CW/PW/MAG** (magneto), **precio** con señal UP/DOWN
+  y **Gamma Flip** como rayas en su carril propio (izquierda, no encima de las barras). Más la raya del
+  **contrato comprado** a su strike: su **precio se actualiza en vivo** (`_mid`) y la raya/etiqueta se
+  pone **verde si sube / rojo si baja** desde la entrada; solo aparece si hay posición real en IBKR y
+  desaparece al vender. Sin botones. NO incluye el "tape" institucional (IBKR no da ese feed) ni chart.
+- **Notificaciones (toast Windows):** en cada **giro** de señal y en el **FILL real** de compra/venta
+  (`_on_filled`, no al enviar la orden); al vender el toast incluye el **profit $/%**.
+- ⚠️ **DECISIÓN DE COMPRA/VENTA = SOLO PREMIUM** (`net_call − net_put` + umbral adaptativo + momentum,
+  en `_update_signal`→`self.target`). **TA, GEX, Walls y la Ladder son informativos: NO afectan la
+  ejecución** (verificado por grep: `_update_signal`/`trade_poll` no leen ta_vals/gex/walls).
 - **NO toca la señal ni la ejecución.** Se registra todo por minuto/3 min en SQLite (`walls_snapshot`,
   `premium_minute` con net_prem/OI/gamma) + logs, para **cruzarlo contra la gráfica** y decidir con
   datos cómo usarlo (mejorar la precisión de los cambios de dirección).
