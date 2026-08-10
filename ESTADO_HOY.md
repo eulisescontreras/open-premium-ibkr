@@ -8,15 +8,50 @@ tarde, se construyó toda la instrumentación de operaciones, y se analizaron lo
 
 ---
 
-## AHORA MISMO
+## ESTADO AL CERRAR (2026-08-10, 16:20)
 
-- App **CORRIENDO**. Verificar SIEMPRE **1 sola instancia**:
-  `Get-CimInstance Win32_Process -Filter "Name='python.exe'" | ? { $_.CommandLine -like '*spy_direction.py*' }`
-- **NO reiniciar sin autorización explícita del usuario.**
-- Antes de cualquier reinicio: **las 14 suites de cold run en verde** (rutas abajo).
-- Cuenta paper. `TRADING_ENABLED=True`, `QTY=1`. Gateway paper 4002, clientId 7.
+**Sesión cerrada y todo subido a GitHub.** La app y el Gateway los cerró el usuario tras el
+cierre de mercado. Nada quedó a medias.
+
+```
+16:15:01  MERCADO CERRADO - sesion detenida y desconectada
+          0 ordenes · 0 huerfanas · 0 ALERTA EOD · cuenta PLANA · integrity_check: ok
+BD final: ta=323 · premium=18.732 · walls=139 · giros=95 · strike_accum=47 · sesiones=3
+```
+
+- **11 arranques hoy** (los 3 últimos sellados en `sesion_config`).
+- `trades` y `posicion_minuto` **siguen en 0 filas**: la única posición del día se compró con el
+  código viejo. **La primera operación registrada será la próxima compra de mañana.**
+
+### PRIMEROS PASOS MAÑANA
+
+1. Abrir **IB Gateway** (paper 4002, clientId 7) y **lanzar la app antes de las 09:30**:
+   `Start-Process python -ArgumentList "spy_direction.py" -WorkingDirectory <repo>`
+   Con el mercado cerrado no conecta: espera sola a la apertura y elige los strikes con el
+   precio real de ese momento.
+2. Verificar **1 sola instancia**:
+   `Get-CimInstance Win32_Process -Filter "Name='python.exe'" | ? { $_.CommandLine -like '*spy_direction.py*' }`
+3. En el arranque debe verse: `ESTADO INTRADIA restaurado`, `SELLO DE SESION` y **NINGÚN
+   `GIRO ->` en los primeros segundos** (si aparece, el GAP 18 ha reaparecido).
+4. En la **primera compra**, comprobar que `trades` recibe su fila **con las griegas rellenas**
+   (delta/gamma/theta/iv). Es lo único que quedó **NO VERIFICADO en vivo** de todo lo de hoy.
+
+### REGLAS DE OPERACIÓN (del usuario, innegociables)
+
+- **NO reiniciar la app sin autorización explícita.**
+- Antes de cualquier reinicio: **las 14 suites de cold run en verde**.
+- **NO hacer push sin autorización explícita** (en este repo sí está autorizado; en ATC no).
 - `gh`/`git` necesitan `$env:GITHUB_TOKEN=''` antes (hay un token roto en el entorno).
-- **10 arranques hoy.** Desde el de las 14:52 cada uno queda sellado en `sesion_config`.
+- Cuenta paper. `TRADING_ENABLED=True` (arranca ARMADO), `QTY=1`.
+
+### DECISIONES DE DISEÑO YA TOMADAS — no volver a proponerlas
+
+| Propuesta | Decisión | Motivo |
+|---|---|---|
+| **Botón de venta manual** en la GUI | ❌ **RECHAZADA por el usuario** (2026-08-10) | *"Ese botón después me tienta a presionarlo y comienzo a limitar ganancia."* Hay que **deducir de los datos** los momentos de compra y venta, no meter una decisión discrecional |
+| Take-profit fijo por % | ⏸️ **No hasta tener datos** | La simulación sobre el subyacente dijo que ninguno mejora; sobre la **prima** está sin medir. Necesita `trades.mfe` de 3-5 sesiones |
+| Cambiar la señal a ventana móvil | ⏸️ **No hasta tener datos** | Se guardan las ventanas 1/5/15 min en paralelo para poder comparar |
+| Multi-ticker (NVDA) simultáneo | ⏸️ Aplazado | 68 líneas de market data por instancia; dos no caben en ~100. Y NVDA **no tiene 0DTE diario** |
 
 ---
 

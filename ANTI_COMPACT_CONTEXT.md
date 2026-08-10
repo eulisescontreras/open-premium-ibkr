@@ -202,6 +202,17 @@ que `_load_intradia` restaure → ~4 s con el umbral en el piso de 5.000 → **g
 **`trades` y `posicion_minuto` siguen en 0 filas**: la única posición del día se compró con el
 código viejo. La primera operación registrada será la próxima compra.
 
+### DECISIONES YA TOMADAS — no volver a proponerlas
+
+- **Botón de venta manual en la GUI: RECHAZADO por el usuario** (2026-08-10).
+  Motivo textual: *"ese botón después me tienta a presionarlo y comienzo a limitar ganancia;
+  tenemos que tratar de detectar esos momentos de compra y venta con los datos, es mejor"*.
+  La idea era buena técnicamente (reutilizaba toda la maquinaria de `_place`), pero introduce
+  una decisión discrecional que sesga el resultado. **El objetivo es deducir la salida de los
+  datos, no delegarla en el criterio del momento.**
+- **Take-profit fijo, cambio de la señal a ventana móvil y multi-ticker**: aplazados hasta tener
+  3-5 sesiones de datos. Ver `ANALISIS_ENTRADA_SALIDA.md` §5 y §7.
+
 ## 1. QUÉ ES / OBJETIVO
 App de **1 archivo** (`spy_direction.py`, ~1000+ líneas) para **scalping de SPY** vía flujo de
 opciones. Se conecta a **IB Gateway (paper, puerto 4002, clientId 7)** con `ib_insync`.
