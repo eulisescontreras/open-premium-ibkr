@@ -198,6 +198,34 @@ check(tags.get(775) == "CW", f"tag CW en 775 -> {tags.get(775)}")
 check(tags.get(765) == "PW", f"tag PW en 765 -> {tags.get(765)}")
 check(lr["state"] in ("-", "UP", "DOWN"), f"state presente -> {lr['state']}")
 
+# ================================================================ TEST D: flujo --demo (datos de prueba)
+print("== TEST D: modo demo (simulate_step puebla ladder + contrato) ==")
+dapp = S.SpyDirection(demo=True)
+dapp.db.close()
+dapp.db = sqlite3.connect(":memory:")
+dapp._init_db()
+saw_call = saw_put = saw_flat = False
+prem_moved = set()
+for _ in range(80):
+    dapp.simulate_step()
+    lr = dapp.ladder_rows()
+    if lr["rows"]:
+        prem_moved.add(round(lr["max_prem"], 1))
+    if dapp.pos == "CALL":
+        saw_call = True
+    elif dapp.pos == "PUT":
+        saw_put = True
+    elif dapp.pos == "FLAT":
+        saw_flat = True
+check(len(dapp.band_contracts) == 22, f"demo creo banda de 11 strikes x2 -> {len(dapp.band_contracts)}")
+lr = dapp.ladder_rows()
+check(lr["rows"] and lr["max_prem"] > 0, f"demo puebla la ladder (max_prem>0) -> {lr['max_prem']:.0f}")
+check(len(prem_moved) > 5, f"las barras se MUEVEN entre steps (valores distintos) -> {len(prem_moved)}")
+check(dapp.walls is not None and dapp.gex is not None, "demo puebla walls y gex")
+check(saw_call and saw_put and saw_flat,
+      f"contrato rota y desaparece: CALL={saw_call} PUT={saw_put} FLAT={saw_flat}")
+check(dapp.gex["regime"] in ("LONG", "SHORT", "FLAT"), f"regime demo -> {dapp.gex['regime']}")
+
 # ================================================================ resultado
 print()
 if FAILS:

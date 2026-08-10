@@ -61,3 +61,31 @@
 2026-08-09 22:34:25,363 INFO WALLS spot=772.00 PW=765.00 CW=775.00 magneto est=770.00/din=770.00 peso=780.00 | GEX=-0.656Bn regime=SHORT flip=- | faltan OI=0 greeks=0 de 6 | frescura: gamma cambiaron=0/6 ult_tick=2026-08-11 10:00:00
 2026-08-09 22:34:25,363 INFO WALLS AVISO: ningun gamma cambio desde el ultimo recalculo -> posible dato ESTANCADO/viejo (revisar suscripcion OPRA o fuera de RTH)
 2026-08-09 22:34:25,364 INFO WALLS detalle por strike: 770C:OI=100.00,g=0.05,net=+0 | 775C:OI=500.00,g=0.04,net=+0 | 780C:OI=200.00,g=0.03,net=+12000000 | 760P:OI=100.00,g=0.03,net=+0 | 765P:OI=600.00,g=0.04,net=+0 | 770P:OI=300.00,g=0.05,net=+0
+2026-08-09 22:40:32,304 INFO WALLS spot=772.00 PW=765.00 CW=775.00 magneto est=770.00/din=770.00 peso=- | GEX=-0.656Bn regime=SHORT flip=- | faltan OI=0 greeks=0 de 6 | frescura: gamma cambiaron=6/6 ult_tick=2026-08-11 10:00:00
+2026-08-09 22:40:32,304 INFO WALLS detalle por strike: 770C:OI=100.00,g=0.05,net=+0 | 775C:OI=500.00,g=0.04,net=+0 | 780C:OI=200.00,g=0.03,net=+0 | 760P:OI=100.00,g=0.03,net=+0 | 765P:OI=600.00,g=0.04,net=+0 | 770P:OI=300.00,g=0.05,net=+0
+2026-08-09 22:40:32,304 INFO WALLS spot=772.00 PW=765.00 CW=775.00 magneto est=770.00/din=770.00 peso=780.00 | GEX=-0.656Bn regime=SHORT flip=- | faltan OI=0 greeks=0 de 6 | frescura: gamma cambiaron=0/6 ult_tick=2026-08-11 10:00:00
+2026-08-09 22:40:32,304 INFO WALLS AVISO: ningun gamma cambio desde el ultimo recalculo -> posible dato ESTANCADO/viejo (revisar suscripcion OPRA o fuera de RTH)
+2026-08-09 22:40:32,304 INFO WALLS detalle por strike: 770C:OI=100.00,g=0.05,net=+0 | 775C:OI=500.00,g=0.04,net=+0 | 780C:OI=200.00,g=0.03,net=+12000000 | 760P:OI=100.00,g=0.03,net=+0 | 765P:OI=600.00,g=0.04,net=+0 | 770P:OI=300.00,g=0.05,net=+0
+2026-08-09 22:40:32,304 INFO WALLS spot=772.00 PW=765.00 CW=775.00 magneto est=770.00/din=770.00 peso=780.00 | GEX=-0.656Bn regime=SHORT flip=- | faltan OI=0 greeks=0 de 6 | frescura: gamma cambiaron=0/6 ult_tick=2026-08-11 10:00:00
+2026-08-09 22:40:32,304 INFO WALLS AVISO: ningun gamma cambio desde el ultimo recalculo -> posible dato ESTANCADO/viejo (revisar suscripcion OPRA o fuera de RTH)
+2026-08-09 22:40:32,304 INFO WALLS detalle por strike: 770C:OI=100.00,g=0.05,net=+0 | 775C:OI=500.00,g=0.04,net=+0 | 780C:OI=200.00,g=0.03,net=+12000000 | 760P:OI=100.00,g=0.03,net=+0 | 765P:OI=600.00,g=0.04,net=+0 | 770P:OI=300.00,g=0.05,net=+0
+2026-08-09 22:40:32,304 INFO ALERTA FLIP: CAMBIO -> UP  (22:40:32)
+2026-08-09 22:40:32,312 INFO GIRO -> UP (net_call=7777 net_put=2012 thr=5000)
+2026-08-09 22:40:32,312 INFO ALERTA WARN: posible GIRO a DOWN (22:40:32)
+2026-08-09 22:40:32,312 INFO ALERTA FLIP: CAMBIO -> DOWN  (22:40:32)
+2026-08-09 22:40:32,327 INFO GIRO -> DOWN (net_call=2176 net_put=8103 thr=5000)
+2026-08-09 22:40:32,327 INFO ALERTA WARN: posible GIRO a UP (22:40:32)
+2026-08-09 22:40:32,343 INFO ALERTA FLIP: CAMBIO -> UP  (22:40:32)
+2026-08-09 22:40:32,343 INFO GIRO -> UP (net_call=8602 net_put=2164 thr=5000)
+2026-08-09 22:40:32,343 INFO ALERTA WARN: posible GIRO a DOWN (22:40:32)
+2026-08-09 22:40:32,343 INFO ALERTA FLIP: CAMBIO -> DOWN  (22:40:32)
+2026-08-09 22:40:32,343 INFO GIRO -> DOWN (net_call=2480 net_put=8768 thr=5000)
+2026-08-09 22:40:32,343 INFO ALERTA WARN: posible GIRO a UP (22:40:32)
+2026-08-09 22:40:32,343 INFO ALERTA FLIP: CAMBIO -> UP  (22:40:32)
+2026-08-09 22:40:32,343 INFO GIRO -> UP (net_call=7666 net_put=2312 thr=5000)
+2026-08-09 22:41:34,329 INFO ALERTA FLIP: CAMBIO -> UP  (22:41:34)
+2026-08-09 22:41:34,344 INFO GIRO -> UP (net_call=7777 net_put=2012 thr=5000)
+2026-08-09 22:41:34,376 INFO ALERTA WARN: posible GIRO a DOWN (22:41:34)
+2026-08-09 22:41:34,376 INFO ALERTA FLIP: CAMBIO -> DOWN  (22:41:34)
+2026-08-09 22:41:34,391 INFO GIRO -> DOWN (net_call=2176 net_put=8103 thr=5000)
+2026-08-09 22:41:34,423 INFO ALERTA WARN: posible GIRO a UP (22:41:34)

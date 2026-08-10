@@ -912,6 +912,55 @@ class SpyDirection:
         self.spy_price = 773.0 + math.sin(t / 6.0) * 0.8
         self.status = "MODO DEMO - entradas simuladas (no es dato real)"
         self._update_signal()
+        self._demo_walls(t)
+
+    def _demo_walls(self, t):
+        """SOLO --demo: genera datos de prueba SINTETICOS (no reales) para VER moverse la
+        Gamma Ladder, walls/GEX/flip y la linea de contrato comprado. No toca IBKR ni la BD real."""
+        self.expiry = "DEMO"
+        center = round(self.spy_price)
+        if not self.band_contracts:
+            strikes = [center - 5 + i for i in range(11)]     # 11 strikes alrededor del precio
+            self.band_contracts = []
+            for s in strikes:
+                self.band_contracts.append(Option(SYMBOL, self.expiry, s, "C", "SMART", tradingClass=SYMBOL))
+                self.band_contracts.append(Option(SYMBOL, self.expiry, s, "P", "SMART", tradingClass=SYMBOL))
+        # strike "caliente" que se desplaza -> el pico de premium se mueve (barras respiran)
+        hot = self.spy_price + 2.0 * math.sin(t / 10.0)
+        for c in self.band_contracts:
+            s = c.strike
+            bump = math.exp(-((s - hot) ** 2) / 6.0)          # gaussiana movil
+            wobble = 1.0 + 0.35 * math.sin(t / 3.0 + s)
+            base = 1_200_000.0 if c.right == "C" else 900_000.0
+            self.today_prem[(self.expiry, s, c.right)] = base * bump * wobble
+        # walls sinteticos: CW arriba, PW abajo, magnetos y centro de peso
+        cw = center + 2
+        pw = center - 2
+        self.walls = {
+            "put_wall": float(pw), "call_wall": float(cw),
+            "max_pain_static": float(center),
+            "max_pain_dyn": float(center + round(math.sin(t / 8.0))),
+            "prem_center": hot, "spot": self.spy_price,
+        }
+        gex_total = 3.0e9 * math.sin(t / 7.0)                  # cambia de signo -> LONG/SHORT alterna
+        self.gex = {
+            "gex_total": gex_total,
+            "regime": "LONG" if gex_total > 0 else ("SHORT" if gex_total < 0 else "FLAT"),
+            "gamma_flip": self.spy_price - 1.0 + 0.6 * math.sin(t / 5.0),
+            "spot": self.spy_price,
+        }
+        # contrato comprado SIMULADO: sigue la señal; cada ~18 ticks queda FLAT 3 ticks (para ver
+        # que la linea DESAPARECE al vender y reaparece al recomprar)
+        if (t % 18) < 3:
+            self.pos = "FLAT"; self.entry_price = None
+        elif self.state == "UP":
+            self.pos = "CALL"
+            self.buy_call = Option(SYMBOL, self.expiry, center + 1, "C", "SMART", tradingClass=SYMBOL)
+            self.entry_price = 1.05
+        elif self.state == "DOWN":
+            self.pos = "PUT"
+            self.buy_put = Option(SYMBOL, self.expiry, center - 1, "P", "SMART", tradingClass=SYMBOL)
+            self.entry_price = 2.05
 
     # ================= EJECUCION AUTOMATICA (rotar 1 opcion) =================
     def _minTick(self, contract):
