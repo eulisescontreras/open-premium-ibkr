@@ -72,7 +72,17 @@ Para la **expiración cercana**, cada 3 min desde tickers en **streaming** (no s
 ## 5. Persistencia (SQLite `spy_history.db`)
 `transitions` (giros), `strike_accum`/`strike_daily` (línea base), `ta_minute` (TA por minuto),
 `premium_minute` (premium+net_prem+OI+gamma por strike), `walls_snapshot` (walls/GEX/flip cada 3 min).
-Logs: `spy_activity.log` (actividad exhaustiva) y `spy_direction.log` (errores).
+
+**Logs SÚPER exhaustivos** (`spy_activity.log` actividad, `spy_direction.log` errores), con
+**rotación DIARIA** (`TimedRotatingFileHandler`, 1 archivo por día, 120 días) → respaldo completo por si
+la BD falla. Por minuto registra: TA completo, señal (netC/netP/diff/thr/momentum/estado), contrato+P&L,
+y premium por strike con actividad. Eventos al instante: giros, órdenes, fills (con profit), cancelaciones,
+**todos los mensajes/errores de IBKR con código**, conexión, y la razón de cada decisión de trading.
+
+**Horario de mercado (sencillo, `is_market_open()`):** arranca solo cuando abre (Lun-Vie 09:30 ET),
+se detiene al cerrar (16:00 ET) — desconecta y reconecta al reabrir con la nueva expiración del día;
+`reset_day()` deja la señal en 0 cada mañana. **Las operaciones cesan 15:45** (aplanado, en `trade_poll`)
+pero la **recolección sigue hasta las 16:00**. No maneja festivos (simple).
 
 ## 6. Gotchas de IBKR (IMPORTANTES)
 - **`10197 "No market data during competing live session"`**: en fin de semana/mantenimiento IBKR corta

@@ -24,7 +24,7 @@ import time
 import sqlite3
 import subprocess
 import logging
-from logging.handlers import RotatingFileHandler
+from logging.handlers import RotatingFileHandler, TimedRotatingFileHandler
 from datetime import datetime, timezone, timedelta
 
 try:
@@ -203,8 +203,8 @@ def _make_logger(name, filename):
     lg.setLevel(logging.INFO)
     lg.propagate = False
     try:
-        h = RotatingFileHandler(os.path.join(_app_dir(), filename),
-                                maxBytes=3_000_000, backupCount=5, encoding="utf-8")
+        h = TimedRotatingFileHandler(os.path.join(_app_dir(), filename),
+                                     when="midnight", backupCount=120, encoding="utf-8")
     except Exception:
         h = logging.StreamHandler()
     h.setFormatter(logging.Formatter("%(asctime)s %(levelname)s %(message)s"))
@@ -352,6 +352,10 @@ class SpyDirection:
         self.trade_msg = "trading OFF"   # ultima accion (para la pantalla)
         self.entry_price = None          # precio de entrada del contrato comprado (para la linea)
         self.contract_price = None       # precio ACTUAL del contrato comprado (tiempo real, P&L)
+        self.last_diff = 0.0             # ultimos valores de la senal (para log exhaustivo)
+        self.last_thr = 0.0
+        self.last_momentum = 0.0
+        self._last_trade_log = ""        # dedupe del log de decision de trading
         self.eod_flat = False            # ya se aplano hoy
         self.reconciled = False
         # --- TA de 1 min + registro por minuto ---
@@ -435,6 +439,8 @@ class SpyDirection:
         ACT.info("Conectado a IB Gateway %s:%s (clientId=%s)", HOST, PORT, CLIENT_ID)
 
     def _on_error(self, reqId, code, msg, contract):
+        sym = getattr(contract, "localSymbol", "") or getattr(contract, "symbol", "") if contract else ""
+        ACT.info("IBKR code=%s reqId=%s %s%s", code, reqId, msg, (f" [{sym}]" if sym else ""))
         if code in (354, 10167, 10168, 10197, 10089, 10091):
             if self.mode not in ("DELAYED", "DEMO"):
                 self.mode = "DELAYED"
@@ -443,6 +449,36 @@ class SpyDirection:
                     self.ib.reqMarketDataType(3)
                 except Exception:
                     pass
+
+    def is_market_open(self):
+        """SENCILLO: RTH = dia habil (Lun-Vie) y 09:30 <= hora ET < 16:00. (No maneja festivos.)"""
+        et = now_et()
+        return et.weekday() < 5 and "09:30" <= et.strftime("%H:%M") < "16:00"
+
+    def reset_day(self):
+        """Nuevo dia de mercado: limpiar acumuladores intradia (la senal arranca en 0)."""
+        self.net_call = 0.0; self.net_put = 0.0
+        self.today_prem = {}; self.net_prem = {}; self.today_vol = {}
+        self.prev_vol = {}; self.band_prev_vol = {}; self.prev_gamma = {}
+        self.diff_hist = []; self.transitions = []; self.state = "-"
+        self.entry_price = None; self.contract_price = None
+        ACT.info("NUEVO DIA - acumuladores intradia reiniciados (senal en 0)")
+
+    def end_session(self):
+        """Mercado cerrado: persistir, cancelar ordenes vivas y desconectar (reconecta al reabrir)."""
+        try:
+            self._persist_accum()
+        except Exception:
+            pass
+        try:
+            if self.ib.isConnected():
+                self._cancel_working()
+                self.ib.disconnect()
+        except Exception:
+            LOG.exception("Error al cerrar sesion de mercado")
+        self.reconciled = False
+        self.mode = "?"
+        ACT.info("MERCADO CERRADO - sesion detenida y desconectada (recoleccion se reanuda al abrir)")
 
     # ---------------- seleccion de contratos ----------------
     def _read_price(self, spy):
@@ -851,6 +887,7 @@ class SpyDirection:
         else:
             thr = SIGNAL_THRESHOLD
         mom_min = MOM_FRAC * thr
+        self.last_diff = diff; self.last_thr = thr; self.last_momentum = momentum  # para log exhaustivo
 
         band = thr * WARN_BAND_FRAC
         if self.state == "UP" and diff < band and momentum <= -mom_min:
@@ -1233,9 +1270,28 @@ class SpyDirection:
                     "cum_prem,day_prem) VALUES(?,?,?,?,?,?,?)",
                     (fecha, hora, exp, strike, right, cp, dp))
             self.db.commit()
-            ACT.info("MIN %s SPY=%.2f TA=%s rsi=%.0f macdh=%+.3f | netC=%.0f netP=%.0f "
-                     "state=%s pos=%s", hora, vals["close"], vals["dir"], vals["rsi"],
-                     vals["macd_hist"], self.net_call, self.net_put, self.state, self.pos)
+            # --- LOG EXHAUSTIVO POR MINUTO (respaldo completo del dia por si la BD falla) ---
+            ACT.info("MIN %s | SPY=%.2f | TA dir=%s score=%+d rsi=%.1f macd=%.3f/%.3f/%+.3f "
+                     "ema8/21/50=%.2f/%.2f/%.2f bb=%.2f/%.2f/%.2f atr=%.2f(%.2f%%) vwap=%.2f obv=%s",
+                     hora, vals["close"], vals["dir"], vals["score"], vals["rsi"],
+                     vals["macd_line"], vals["macd_signal"], vals["macd_hist"],
+                     vals["ema8"], vals["ema21"], vals["ema50"],
+                     vals["bb_up"], vals["bb_mid"], vals["bb_low"],
+                     vals["atr"], vals["atr_pct"], vals["vwap"], vals["obv_trend"])
+            ACT.info("MIN %s | SENAL netC=%.0f netP=%.0f diff=%.0f thr=%.0f mom=%.0f -> estado=%s pos=%s",
+                     hora, self.net_call, self.net_put, self.last_diff, self.last_thr,
+                     self.last_momentum, self.state, self.pos)
+            if self.pos in ("CALL", "PUT"):
+                en = self.entry_price or 0.0
+                pr = self.contract_price
+                pnl = ((pr - en) * 100.0 * QTY) if (pr is not None and en) else 0.0
+                ACT.info("MIN %s | CONTRATO %s entrada=%.2f actual=%s pnl=%+.0f$", hora, self.pos,
+                         en, (f"{pr:.2f}" if pr is not None else "-"), pnl)
+            for (exp, strike, right), dp in sorted(self.today_prem.items()):
+                if dp > 0:   # solo strikes con actividad
+                    ACT.info("MIN %s | PREM %s %g%s day=%.0f cum=%.0f net=%+.0f", hora, exp,
+                             strike, right, dp, self.accum.get((exp, strike, right), 0.0),
+                             self.net_prem.get((exp, strike, right), 0.0))
         except Exception:
             LOG.exception("Error guardando registro por minuto")
 
@@ -1418,6 +1474,7 @@ def run_gui(app):
 
     def try_connect():
         try:
+            app.reset_day()      # nuevo dia: acumuladores intradia en 0 antes del setup
             app.connect()
             if app.setup_contracts():
                 connected["ok"] = True
@@ -1428,7 +1485,8 @@ def run_gui(app):
     def tick():
         if app.demo:
             app.simulate_step()
-        else:
+        elif app.is_market_open():
+            # MERCADO ABIERTO (09:30-16:00 ET): arrancar/recolectar. (Trading cesa 15:45 en trade_poll.)
             if not connected["ok"] and not app.ib.isConnected():
                 try_connect()
             try:
@@ -1449,8 +1507,18 @@ def run_gui(app):
                         _m = app._mid(_cc)
                         if _m is not None:
                             app.contract_price = _m
+                    # log de cambios de decision de trading (por que opera / por que no)
+                    if app.trade_msg != app._last_trade_log:
+                        ACT.info("TRADE %s", app.trade_msg)
+                        app._last_trade_log = app.trade_msg
             except Exception:
                 LOG.exception("Error en el ciclo principal (tick)")
+        else:
+            # MERCADO CERRADO: detener la sesion una vez y esperar la proxima apertura
+            if connected["ok"] or app.ib.isConnected():
+                app.end_session()
+                connected["ok"] = False
+            app.status = "MERCADO CERRADO (ET) - esperando apertura 09:30"
 
         big.config(text=app.state, fg=colors.get(app.state, "#888888"))
         sub.config(text=(f"SPY {app.spy_price:.2f}    "

@@ -21,6 +21,11 @@ import spy_direction as S
 
 S.ENABLE_TOAST = False   # NO lanzar toasts de Windows durante el cold run (evita spam)
 
+import logging as _lg      # silenciar los loggers para NO contaminar spy_activity.log/spy_direction.log
+for _l in (S.ACT, S.LOG):
+    _l.handlers = []
+    _l.addHandler(_lg.NullHandler())
+
 FAILS = []
 
 
@@ -255,6 +260,44 @@ check("Profit" in eapp.trade_msg and "+30.00" in eapp.trade_msg,
       f"profit +30.00 calculado al vender -> {eapp.trade_msg}")
 check(eapp.pos == "FLAT" and eapp.entry_price is None and eapp.contract_price is None,
       "tras vender: pos FLAT, entry/contract_price limpiados")
+
+# ================================================================ TEST F: horario de mercado (sencillo)
+print("== TEST F: is_market_open (RTH sencillo, sin festivos) ==")
+class _FakeET:
+    def __init__(self, wd, hhmm): self._wd = wd; self._hhmm = hhmm
+    def weekday(self): return self._wd
+    def strftime(self, f): return self._hhmm
+_orig_now = S.now_et
+mapp = S.SpyDirection(demo=True); mapp.db.close(); mapp.db = sqlite3.connect(":memory:"); mapp._init_db()
+S.now_et = lambda: _FakeET(2, "10:00"); check(mapp.is_market_open() is True, "miercoles 10:00 -> ABIERTO")
+S.now_et = lambda: _FakeET(2, "09:30"); check(mapp.is_market_open() is True, "09:30 exacto -> ABIERTO")
+S.now_et = lambda: _FakeET(2, "16:00"); check(mapp.is_market_open() is False, "16:00 exacto -> CERRADO")
+S.now_et = lambda: _FakeET(2, "16:30"); check(mapp.is_market_open() is False, "miercoles 16:30 -> CERRADO")
+S.now_et = lambda: _FakeET(5, "10:00"); check(mapp.is_market_open() is False, "sabado 10:00 -> CERRADO")
+S.now_et = lambda: _FakeET(2, "08:00"); check(mapp.is_market_open() is False, "premarket 08:00 -> CERRADO")
+S.now_et = _orig_now
+
+# ================================================================ TEST G: log exhaustivo + reset/end
+print("== TEST G: _log_minute exhaustivo + reset_day + end_session ==")
+gapp = S.SpyDirection(demo=True); gapp.db.close(); gapp.db = sqlite3.connect(":memory:"); gapp._init_db()
+gapp.expiry = "20260814"
+gapp.today_prem = {("20260814", 773, "C"): 12345.0}
+gapp.net_prem = {("20260814", 773, "C"): 6000.0}
+gapp.accum = {("20260814", 773, "C"): 99999.0}
+gapp.pos = "CALL"; gapp.entry_price = 1.00; gapp.contract_price = 1.30
+gapp.buy_call = S.Option(S.SYMBOL, "20260814", 773, "C", "SMART", tradingClass=S.SYMBOL)
+_vals = {"close": 773.2, "rsi": 60, "ema8": 773, "ema21": 772, "ema50": 771,
+         "macd_line": 0.1, "macd_signal": 0.05, "macd_hist": 0.05, "bb_up": 775, "bb_mid": 773,
+         "bb_low": 771, "atr": 1.2, "atr_pct": 0.15, "vwap": 773, "obv_trend": "bullish",
+         "score": 3, "dir": "BULL"}
+gapp._log_minute(_vals, "2026-08-11 10:31:00")
+check(gapp.db.execute("SELECT COUNT(*) FROM ta_minute").fetchone()[0] == 1, "ta_minute escrito")
+check(gapp.db.execute("SELECT COUNT(*) FROM premium_minute").fetchone()[0] >= 1, "premium_minute escrito")
+gapp.net_call = 999.0; gapp.today_prem = {("x", 1, "C"): 5.0}
+gapp.reset_day()
+check(gapp.net_call == 0.0 and gapp.today_prem == {}, "reset_day limpia acumuladores intradia")
+gapp.end_session()   # sin conexion IBKR -> no debe crashear
+check(gapp.reconciled is False, "end_session corre sin conexion (no crashea)")
 
 # ================================================================ resultado
 print()

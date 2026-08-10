@@ -139,6 +139,17 @@ Diseño final (aprobado por el usuario; plan en `~/.claude/plans/structured-pond
   `diff = net_call − net_put` + umbral adaptativo + momentum → `self.target` (CALL si UP, PUT si DOWN);
   `trade_poll` ejecuta ese target. **TA, GEX, Walls y la Ladder son informativos: NO tocan la
   ejecución.** (Idea futura del usuario: quizá accionarlos, pero solo tras validar con datos reales.)
+- **🆕 LOG súper exhaustivo + rotación DIARIA (2026-08-09):** `TimedRotatingFileHandler` (midnight, 120
+  backups). Por minuto (`_log_minute`): TA completo, señal (diff/thr/mom), contrato+P&L, premium por
+  strike con actividad. Eventos: giros, órdenes/fills(+profit), cancelaciones, TODOS los mensajes IBKR
+  (`_on_error` loguea code+msg), y `TRADE` con la razón de cada decisión. Respaldo del día por si la BD
+  falla. Cold run TEST G verde.
+- **🆕 HORARIO DE MERCADO sencillo (2026-08-09):** `is_market_open()` (Lun-Vie, 09:30≤ET<16:00, SIN
+  festivos). En `tick()`: `if demo / elif is_market_open() (recolecta+opera) / else (cerrado: end_session
+  una vez)`. Al abrir: `reset_day()` (señal en 0) + `try_connect`→setup (nueva expiry). Al cerrar:
+  `end_session()` (persist+cancel+disconnect). **Operaciones cesan 15:45** (trade_poll), **recolección
+  sigue hasta 16:00**. Cold run TEST F verde. NOTA: el proceso debe quedar VIVO (la GUI) para que
+  arranque/pare solo; si se cierra la ventana, hay que relanzarlo.
 - **Fuera de alcance (ahora):** comparador visual "Δ overnight" (default cierre vs apertura), uso
   ACCIONABLE (veto/target), el "tape" institucional y el chart temporal — no ahora.
 
