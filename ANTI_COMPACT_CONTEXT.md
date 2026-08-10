@@ -138,3 +138,12 @@ Diseño final (aprobado por el usuario; plan en `~/.claude/plans/structured-pond
 - **No implementar nada sin probarlo antes** (lo pidió explícito para el OI).
 - Escribe **por partes**: unir los mensajes cortos, no quedarse solo con el último.
 - Cuenta paper ~$397 (DU7154467). Riesgo real del scalping: whipsaw + comisiones + 0DTE decay.
+
+## 12. REPOSITORIO GitHub (ya NO se manda Gmail)
+- **URL:** https://github.com/eulisescontreras/open-premium-ibkr  (PRIVADO, cuenta `eulisescontreras`).
+- Se sube **TODO** (código, docs, exe/dist, build, .db, logs, .zip) — el usuario lo quiere completo para
+  pasar de máquina en máquina. NO hay `.gitignore` (por decisión del usuario). Sin llaves/secretos.
+- El `README.md` es la **doc de entrada para el otro agente** (qué es, cómo correr, reglas, gotchas,
+  estado, de qué estar pendiente). Este `ANTI_COMPACT_CONTEXT.md` es el contexto vivo (leer primero).
+- Deploy de cambios: `git add -A && git commit && git push` (rama `main`). Los archivos de 53MB
+  (exe/pkg) dan warning de GitHub (>50MB) pero suben bien.
