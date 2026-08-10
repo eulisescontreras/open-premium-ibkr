@@ -1339,6 +1339,15 @@ class SpyDirection:
                      "volume": b.volume, "date": b.date} for b in self.bars]
         except Exception:
             return
+        # PRECIO EN VIVO: self.spy_price solo se fijaba en setup_contracts (1 vez por sesion),
+        # asi que quedaba CONGELADO todo el dia -> transitions.spy, walls_snapshot.spot, el GEX
+        # (factor spot^2) y la Ladder usaban el precio de la apertura. Las barras ya llegan en
+        # vivo (keepUpToDate=True): se reutiliza ese dato, sin pedir nada mas a IBKR.
+        # OJO: va ANTES del corte de 26 barras, o el precio seguiria congelado 26 minutos.
+        if rows:
+            _px = rows[-1]["close"]
+            if _px is not None and not math.isnan(_px) and _px > 0:
+                self.spy_price = float(_px)
         if len(rows) < 26:
             return
         df = pd.DataFrame(rows)
