@@ -85,6 +85,10 @@ FLATTEN_HHMM = "15:45"      # ET: cerrar cualquier opcion abierta
 STOP_NEW_HHMM = "15:40"     # ET: no abrir nuevas cerca del cierre
 RECONNECT_SECS = 15.0       # espera entre reintentos si se cae el socket (no saturar el Gateway)
 SYNC_POS_SECS = 20.0        # cada cuanto re-sincronizar la posicion CONTRA IBKR (la realidad manda)
+STRIKE_REFRESH_SECS = 20.0  # cada cuanto re-centrar senal/ejecucion/banda al precio actual
+BUY_SETTLE_SECS = 25.0      # margen para que aterricen fills tardios antes de liberar el cupo
+                            # de compra (medido 2026-08-10: IBKR lleno una orden 22 s DESPUES
+                            # de reportarla como cancelada)
 # --- Walls / GEX / Gamma Flip (informativo, "como el TA": se guarda y se analiza vs la grafica) ---
 WALLS_ENABLED = True        # calcular walls/GEX/flip. NO toca la senal UP/DOWN ni la ejecucion.
 WALLS_BAND = 10             # strikes a CADA lado del precio a escanear (banda). Bajo por limite de lineas IBKR.
@@ -128,13 +132,35 @@ def _max_pain(call_oi, put_oi):
     return best_k
 
 
-def compute_walls_from_oi(call_oi, put_oi, spot):
-    """Funcion pura y testeable. call_oi/put_oi: dict strike->OI. Devuelve walls + max pain."""
+def compute_walls_from_oi(call_oi, put_oi, spot, call_gamma=None, put_gamma=None):
+    """Funcion pura y testeable. call_oi/put_oi: dict strike->OI. Devuelve walls + max pain.
+
+    Si se pasan los gamma, las walls se ponderan por EXPOSICION GAMMA (gamma*OI) en vez de
+    por OI puro. Motivo (verificado con datos reales 2026-08-10): el OI que da IBKR es de
+    CIERRE del dia anterior y no se mueve intradia, mientras que el gamma SI es en vivo.
+    Con OI puro la wall se quedaba clavada en el strike con mas contratos aunque estuviera
+    lejos del precio (780, OI=13144, gamma=0.025 -> 19.744 M) en vez del que realmente
+    manda (775, OI=10945, gamma=0.1726 -> 113.346 M). Es el criterio que usa MarketSnack."""
     strikes = sorted(set(call_oi) | set(put_oi))
     if not strikes:
         return None
-    put_wall = max(put_oi, key=lambda k: put_oi.get(k, 0)) if put_oi else None
-    call_wall = max(call_oi, key=lambda k: call_oi.get(k, 0)) if call_oi else None
+
+    def _peso(oi_map, g_map):
+        """gamma*OI si hay gamma utilizable; si no, OI puro (compatibilidad)."""
+        if not g_map:
+            return dict(oi_map)
+        out = {}
+        for k, oi in oi_map.items():
+            g = g_map.get(k)
+            if g is None or (isinstance(g, float) and math.isnan(g)):
+                return dict(oi_map)      # gamma incompleto -> no mezclar criterios
+            out[k] = oi * g
+        return out
+
+    pw_map = _peso(put_oi, put_gamma)
+    cw_map = _peso(call_oi, call_gamma)
+    put_wall = max(pw_map, key=lambda k: pw_map.get(k, 0)) if pw_map else None
+    call_wall = max(cw_map, key=lambda k: cw_map.get(k, 0)) if cw_map else None
     return {"put_wall": put_wall, "call_wall": call_wall,
             "max_pain": _max_pain(call_oi, put_oi), "spot": spot}
 
@@ -344,6 +370,14 @@ class SpyDirection:
         self.pos = "FLAT"                # FLAT / CALL / PUT (lo que tenemos)
         self.pos_qty = 0.0               # cantidad REAL en cartera segun IBKR (no se asume)
         self.last_sync = 0.0             # ultimo _sync_pos (la realidad de IBKR manda sobre self.pos)
+        self.strikes = []                # cadena de strikes viva (para re-centrar al precio)
+        self.last_strikes = 0.0          # ultimo refresh_strikes()
+        # COMPRAS COMPROMETIDAS: ordenes de compra enviadas cuyo destino aun no se conoce.
+        # IBKR puede llenar una orden que ya reporto como CANCELADA hasta 22 s despues
+        # (medido 2026-08-10), asi que mirar solo la posicion confirmada NO basta para
+        # garantizar "1 solo contrato": hay que contar tambien lo que va en vuelo.
+        self.buys_pend = 0               # compras enviadas y sin resolver
+        self.last_buy_ts = 0.0           # cuando se envio la ultima compra
         self.target = "FLAT"             # lado deseado segun ultima señal
         self.order = None                # Trade activo (ib_insync)
         self.order_action = None         # BUY / SELL
@@ -503,6 +537,7 @@ class SpyDirection:
         # contadores de cuenta/P&L del dia (la base se recaptura en la 1a lectura)
         self.acct_net_open = None
         self.pnl_realizado = 0.0; self.n_trades = 0; self.n_wins = 0
+        self.buys_pend = 0; self.last_buy_ts = 0.0
         ACT.info("NUEVO DIA - acumuladores intradia reiniciados (senal en 0)")
 
     def end_session(self):
@@ -566,6 +601,7 @@ class SpyDirection:
         exps = sorted(chain.expirations)
         self.expiry = next((e for e in exps if e >= today), exps[0])  # mas cercano
         strikes = sorted(chain.strikes)
+        self.strikes = strikes        # cadena viva: la necesita refresh_exec_strikes()
 
         # --- señal: ATM call/put del vencimiento mas cercano ---
         below = [s for s in strikes if s <= self.spy_price]
@@ -761,7 +797,8 @@ class SpyDirection:
                           f"net={self.net_prem.get(key, 0.0):+.0f}")
 
         spot = self.spy_price
-        w = compute_walls_from_oi(call_oi, put_oi, spot)
+        # walls ponderadas por gamma (el OI es EOD y no se mueve; el gamma si es en vivo)
+        w = compute_walls_from_oi(call_oi, put_oi, spot, call_g, put_g)
         self.walls = {
             "put_wall": w["put_wall"] if w else None,
             "call_wall": w["call_wall"] if w else None,
@@ -1197,6 +1234,104 @@ class SpyDirection:
         except Exception:
             return []
 
+    def _nuevo_opt(self, strike, right):
+        """Crea+califica un contrato de opcion de la expiracion en curso."""
+        c = Option(SYMBOL, self.expiry, strike, right, "SMART", tradingClass=SYMBOL)
+        self.ib.qualifyContracts(c)
+        return c if getattr(c, "conId", None) else None
+
+    def _soltar_mkt(self, contract):
+        """Libera la suscripcion de market data de un contrato que ya no se sigue."""
+        try:
+            if contract is None:
+                return
+            self.ib.cancelMktData(contract)
+            self._mkt_subs.discard(getattr(contract, "conId", None))
+        except Exception:
+            pass
+
+    def refresh_strikes(self):
+        """TODO SIGUE AL PRECIO. setup_contracts solo corre 1 vez por sesion, asi que los
+        strikes quedaban congelados al precio de apertura: la SENAL medira flujo en strikes
+        que ya no son ATM, la EJECUCION compra el contrato equivocado y la banda de walls
+        deja de estar centrada. Aqui se recalculan los tres con el precio actual.
+
+        SEGURIDAD: los contratos de EJECUCION solo se mueven con la cuenta PLANA y sin orden
+        viva; cambiarlos con posicion abierta haria que trade_poll vendiera algo que no se
+        posee (corto descubierto)."""
+        if not self.strikes or self.spy_price is None or math.isnan(self.spy_price):
+            return
+        px = self.spy_price
+        try:
+            # ---- 1) SENAL: ATM/ITM (call<=precio, put>=precio), nunca OTM ----
+            below = [s for s in self.strikes if s <= px]
+            above = [s for s in self.strikes if s >= px]
+            if below and above:
+                cs, ps = max(below), min(above)
+                if self.call is None or self.call.strike != cs:
+                    nc = self._nuevo_opt(cs, "C")
+                    if nc is not None:
+                        self._soltar_mkt(self.call)
+                        self.call = nc
+                        self.ib.reqMktData(nc, "233", False, False)
+                        ACT.info("SENAL call re-centrada -> %gC (precio %.2f)", cs, px)
+                if self.put is None or self.put.strike != ps:
+                    np_ = self._nuevo_opt(ps, "P")
+                    if np_ is not None:
+                        self._soltar_mkt(self.put)
+                        self.put = np_
+                        self.ib.reqMktData(np_, "233", False, False)
+                        ACT.info("SENAL put re-centrada -> %gP (precio %.2f)", ps, px)
+
+            # ---- 2) EJECUCION: ATM REAL (strike mas cercano al precio) ----
+            # Solo con la cuenta plana: con posicion abierta se venderia otro contrato.
+            if self.pos == "FLAT" and self.order is None:
+                atm = min(self.strikes, key=lambda s: abs(s - px))
+                if self.buy_call is None or self.buy_call.strike != atm:
+                    bc = self._nuevo_opt(atm, "C")
+                    if bc is not None:
+                        self._soltar_mkt(self.buy_call)
+                        self.buy_call = bc
+                        self.ib.reqMktData(bc, "", False, False)
+                        self._mkt_subs.add(bc.conId)
+                        ACT.info("EJECUCION call -> ATM real %gC (precio %.2f)", atm, px)
+                if self.buy_put is None or self.buy_put.strike != atm:
+                    bp = self._nuevo_opt(atm, "P")
+                    if bp is not None:
+                        self._soltar_mkt(self.buy_put)
+                        self.buy_put = bp
+                        self.ib.reqMktData(bp, "", False, False)
+                        self._mkt_subs.add(bp.conId)
+                        ACT.info("EJECUCION put -> ATM real %gP (precio %.2f)", atm, px)
+
+            # ---- 3) BANDA DE WALLS: re-centrar si el precio se ha ido del medio ----
+            # Cuesta 40 suscripciones, asi que solo cuando la deriva es real (>3 strikes).
+            if WALLS_ENABLED and self.band_contracts:
+                ban = sorted({c.strike for c in self.band_contracts})
+                centro = ban[len(ban) // 2]
+                idx_c = min(range(len(self.strikes)), key=lambda i: abs(self.strikes[i] - centro))
+                idx_p = min(range(len(self.strikes)), key=lambda i: abs(self.strikes[i] - px))
+                if abs(idx_p - idx_c) > 3:
+                    nb = ([s for s in self.strikes if s <= px][-WALLS_BAND:]
+                          + [s for s in self.strikes if s > px][:WALLS_BAND])
+                    viejos = list(self.band_contracts)
+                    nuevos = []
+                    for s in nb:
+                        for r in ("C", "P"):
+                            o = self._nuevo_opt(s, r)
+                            if o is not None:
+                                nuevos.append(o)
+                    if nuevos:
+                        for c in viejos:
+                            self._soltar_mkt(c)
+                        self.band_contracts = nuevos
+                        for c in nuevos:
+                            self.ib.reqMktData(c, "100,101,106", False, False)
+                        ACT.info("BANDA walls re-centrada en %.2f: %g-%g (%d contratos)",
+                                 px, nb[0], nb[-1], len(nuevos))
+        except Exception:
+            LOG.exception("Error re-centrando strikes")
+
     def _ensure_mkt(self, contract):
         """Asegura bid/ask para un contrato en cartera.
         CRITICO: los contratos que devuelve ib.positions() vienen SIN market data (la
@@ -1266,6 +1401,13 @@ class SpyDirection:
             if real == "FLAT":
                 self.entry_price = None
                 self.contract_price = None
+                # Liberar el cupo de compra SOLO cuando ya no puede llegar un fill tardio.
+                # Si se libera antes, se vuelve a comprar y acabamos con 2-3 contratos.
+                if (self.buys_pend and not self._live_orders()
+                        and time.monotonic() - self.last_buy_ts > BUY_SETTLE_SECS):
+                    ACT.info("Cupo de compra liberado (FLAT, sin ordenes vivas, %.0fs desde "
+                             "la ultima compra)", time.monotonic() - self.last_buy_ts)
+                    self.buys_pend = 0
         except Exception:
             LOG.exception("Error en _sync_pos")
 
@@ -1285,14 +1427,28 @@ class SpyDirection:
         q = int(qty) if qty else QTY
         if q <= 0:
             return
+        # LIMITE DURO DE 1 CONTRATO (hasta que el usuario decida cambiarlo).
+        # No basta con mirar la posicion CONFIRMADA: IBKR puede llenar una orden que ya
+        # reporto como cancelada hasta 22 s despues (medido 2026-08-10: 3 compras del mismo
+        # strike por recotizar cada 4 s). Hay que contar tambien lo que va EN VUELO.
+        if action == "BUY":
+            comprometido = self.pos_qty + self.buys_pend
+            if comprometido >= QTY:
+                self.trade_msg = (f"{comprometido:g} contrato(s) comprometido(s) "
+                                  f"(max {QTY}) - NO se compra mas")
+                return
         try:
             self.order = self.ib.placeOrder(contract, LimitOrder(action, q, px))
             self.order_action = action
             self.order_side = side
             self.order_contract = contract
             self.order_deadline = time.monotonic() + REPRICE_SECS
+            if action == "BUY":
+                self.buys_pend += q          # cupo ocupado hasta que se resuelva
+                self.last_buy_ts = time.monotonic()
             self.trade_msg = f"{action} {side} x{q} LIMIT MID @ {px:.2f}"
-            ACT.info("ORDEN %s %s x%d LIMIT MID @ %.2f", action, side, q, px)
+            ACT.info("ORDEN %s %s x%d LIMIT MID @ %.2f (comprometido=%g)",
+                     action, side, q, px, self.pos_qty + self.buys_pend)
         except Exception as e:
             self.trade_msg = f"error orden: {e}"
             self.order = None
@@ -1441,6 +1597,12 @@ class SpyDirection:
                         self.trade_msg = (f"ya hay {self.pos_qty:g} contrato(s) en cartera "
                                           f"- NO se compra hasta cerrarlos")
                         return
+                    # RE-CENTRAR AHORA MISMO: hay que comprar el ATM de ESTE instante, no el
+                    # de hace 20 s. Tras cerrar una posicion, _reconcile deja buy_call/buy_put
+                    # apuntando al contrato que se acaba de vender; sin esto se recompraria
+                    # el mismo strike viejo en vez del ATM actual.
+                    self.refresh_strikes()
+                    self.last_strikes = time.monotonic()
                     contract = self.buy_call if self.target == "CALL" else self.buy_put
                     px = self._mid(contract)
                     if px is None:
@@ -1767,8 +1929,11 @@ def run_gui(app):
                     if time.monotonic() - app.last_snapshot > SNAPSHOT_SECS:
                         app._persist_accum()
                         app.last_snapshot = time.monotonic()
+                    app.ta_poll()        # ANTES de re-centrar: actualiza el precio en vivo
+                    if time.monotonic() - app.last_strikes > STRIKE_REFRESH_SECS:
+                        app.refresh_strikes()   # senal/ejecucion/banda siguen al precio
+                        app.last_strikes = time.monotonic()
                     app.trade_poll()
-                    app.ta_poll()
                     if time.monotonic() - app.last_acct > 10.0:
                         app._read_account()      # estado de cuenta para la vista
                         app.last_acct = time.monotonic()
