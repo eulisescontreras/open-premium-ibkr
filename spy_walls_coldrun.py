@@ -271,7 +271,13 @@ _orig_now = S.now_et
 mapp = S.SpyDirection(demo=True); mapp.db.close(); mapp.db = sqlite3.connect(":memory:"); mapp._init_db()
 S.now_et = lambda: _FakeET(2, "10:00"); check(mapp.is_market_open() is True, "miercoles 10:00 -> ABIERTO")
 S.now_et = lambda: _FakeET(2, "09:30"); check(mapp.is_market_open() is True, "09:30 exacto -> ABIERTO")
-S.now_et = lambda: _FakeET(2, "16:00"); check(mapp.is_market_open() is False, "16:00 exacto -> CERRADO")
+# ACTUALIZADO 2026-08-10: la ventana de RECOLECCION se extendio de 16:00 a CLOSE_HHMM=16:15
+# para MEDIR si las opciones de SPY siguen negociandose esos 15 min. OJO: is_market_open es la
+# ventana de RECOLECCION, no la de TRADING (operar acaba a las 15:45 con FLATTEN_HHMM).
+S.now_et = lambda: _FakeET(2, "16:00"); check(mapp.is_market_open() is True,
+                                             "16:00 -> sigue RECOLECTANDO (hasta %s)" % S.CLOSE_HHMM)
+S.now_et = lambda: _FakeET(2, "16:14"); check(mapp.is_market_open() is True, "16:14 -> recolectando")
+S.now_et = lambda: _FakeET(2, "16:15"); check(mapp.is_market_open() is False, "16:15 exacto -> CERRADO")
 S.now_et = lambda: _FakeET(2, "16:30"); check(mapp.is_market_open() is False, "miercoles 16:30 -> CERRADO")
 S.now_et = lambda: _FakeET(5, "10:00"); check(mapp.is_market_open() is False, "sabado 10:00 -> CERRADO")
 S.now_et = lambda: _FakeET(2, "08:00"); check(mapp.is_market_open() is False, "premarket 08:00 -> CERRADO")

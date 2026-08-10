@@ -88,15 +88,30 @@ REPRICE_SECS = 4.0          # re-precia al mid si no llena en este tiempo
 MAX_FILL_SECS = 60.0        # tiempo maximo intentando llenar una entrada
 FLATTEN_HHMM = "15:45"      # ET: cerrar cualquier opcion abierta
 STOP_NEW_HHMM = "15:40"     # ET: no abrir nuevas cerca del cierre
+CLOSE_HHMM = "16:15"        # hasta que hora se RECOLECTA (no se opera: eso acaba a las 15:45).
+                            # 2026-08-10: se subio de 16:00 a 16:15 para MEDIR si las opciones
+                            # de SPY siguen negociandose esos 15 min. Es una PRUEBA: si el
+                            # volumen no avanza entre 16:00 y 16:15, se vuelve a 16:00.
 CROSS_HHMM = "15:55"        # GAP 4: ULTIMO RECURSO. Solo en los ultimos 5 minutos las VENTAS
                             # cruzan el spread (van al BID). Antes de esa hora se insiste al MID
                             # recotizando rapido: ir al BID es regalar el spread y el usuario NO
                             # lo quiere salvo cuando ya no queda tiempo. A las 16:00 end_session
                             # cancela y desconecta: una 0DTE sin vender EXPIRA valiendo 0.
-EOD_REPRICE_SECS = 1.5      # de FLATTEN_HHMM en adelante se recotiza MUCHO mas rapido que
-                            # REPRICE_SECS: colocar al MID, si no llena cancelar y volver a
-                            # colocar, una y otra vez. En el EOD el riesgo no es pagar de mas
-                            # por recotizar, es quedarse dentro.
+EOD_REPRICE_SECS = 12.0     # de FLATTEN_HHMM en adelante: recotizar al MID hasta que llene.
+                            # CORREGIDO 2026-08-10 (era 1.5 y provoco el GAP 19): "rapido" NO
+                            # puede significar mas rapido que la latencia del broker. Medido:
+                            # latencia de fill mediana 1 s con cola de 25 s, y hoy una
+                            # cancelacion tardo 21 s en resolverse (15:45:01 -> 15:45:22).
+                            # Recotizar antes NO acelera el llenado: solo multiplica ordenes
+                            # en vuelo. Con el cruce a las 15:55 quedan 10 min = ~50 intentos.
+CANCEL_SETTLE_SECS = 10.0   # GAP 19: tras CANCELAR, no colocar NADA nuevo durante este tiempo,
+                            # AUNQUE IBKR diga que la orden ya esta cancelada. El 2026-08-10 a
+                            # las 15:45 IBKR reporto `Cancelled` (estado FINAL), la orden
+                            # desaparecio de openTrades()... y se ejecuto 16 s despues. En ese
+                            # instante NO habia ningun estado que consultar que lo evitara:
+                            # la unica defensa posible es el reloj. Mismo principio que
+                            # BUY_SETTLE_SECS, que ya cubria las COMPRAS pero no las ventas.
+                            # NO CALIBRADO: con la latencia real de varias sesiones se ajusta.
 RECONNECT_SECS = 15.0       # espera entre reintentos si se cae el socket (no saturar el Gateway)
 SYNC_POS_SECS = 20.0        # cada cuanto re-sincronizar la posicion CONTRA IBKR (la realidad manda)
 STRIKE_REFRESH_SECS = 20.0  # cada cuanto re-centrar senal/ejecucion/banda al precio actual
@@ -413,6 +428,10 @@ class SpyDirection:
         # garantizar "1 solo contrato": hay que contar tambien lo que va en vuelo.
         self.buys_pend = 0               # compras enviadas y sin resolver
         self.last_buy_ts = 0.0           # cuando se envio la ultima compra
+        self.last_cancel_ts = 0.0        # GAP 19: cuando se pidio la ultima cancelacion. Hasta
+                                         # que pasen CANCEL_SETTLE_SECS no se coloca nada nuevo,
+                                         # aunque IBKR diga que la orden ya esta cancelada.
+        self._last_order_status = None   # ultimo estado visto (para loguear los cambios)
         self.target = "FLAT"             # lado deseado segun ultima señal
         self.order = None                # Trade activo (ib_insync)
         self.order_action = None         # BUY / SELL
@@ -728,9 +747,13 @@ class SpyDirection:
                      BARS_RETRY_SECS)
 
     def is_market_open(self):
-        """SENCILLO: RTH = dia habil (Lun-Vie) y 09:30 <= hora ET < 16:00. (No maneja festivos.)"""
+        """RECOLECCION: dia habil (Lun-Vie) y 09:30 <= hora ET < CLOSE_HHMM. (No maneja festivos.)
+
+        OJO - esto NO es la ventana de TRADING, es la de RECOLECCION. Operar ya esta acotado
+        aparte: FLATTEN_HHMM (15:45) fuerza target=FLAT y `in_session`/STOP_NEW_HHMM impiden
+        abrir nuevas. Pasadas las 16:00 la app solo MIRA y GUARDA."""
         et = now_et()
-        return et.weekday() < 5 and "09:30" <= et.strftime("%H:%M") < "16:00"
+        return et.weekday() < 5 and "09:30" <= et.strftime("%H:%M") < CLOSE_HHMM
 
     def reset_day(self):
         """Nuevo dia de mercado: limpiar acumuladores intradia (la senal arranca en 0)."""
@@ -2321,6 +2344,20 @@ class SpyDirection:
         if vivas:
             self.trade_msg = f"{len(vivas)} orden(es) viva(s) en IBKR - no coloco otra"
             return
+        # GAP 19 - GUARDA POR TIEMPO. La de arriba consulta el ESTADO, y el estado puede mentir:
+        # el 2026-08-10 a las 15:45 IBKR reporto la orden como `Cancelled` (estado FINAL), con
+        # lo que salio de openTrades() y _live_orders() la dio por muerta... y se ejecuto 16 s
+        # despues. Se colocaron 4 ventas encima y solo el control de margen de IBKR evito 4
+        # shorts descubiertos. NO hay estado que consultar que lo evite: la unica defensa es
+        # esperar a que el broker digiera la cancelacion.
+        _desde_cancel = time.monotonic() - self.last_cancel_ts
+        if self.last_cancel_ts and _desde_cancel < CANCEL_SETTLE_SECS:
+            self.trade_msg = (f"esperando {CANCEL_SETTLE_SECS - _desde_cancel:.0f}s a que IBKR "
+                              f"confirme la cancelacion anterior")
+            ACT.info("ORDEN %s %s BLOQUEADA: solo han pasado %.1fs desde el cancel (minimo "
+                     "%.0fs). IBKR puede llenar una orden que ya reporto como cancelada.",
+                     action, side, _desde_cancel, CANCEL_SETTLE_SECS)
+            return
         px = self._mid(contract)
         # GAP 4 - EOD: pasadas las CROSS_HHMM la VENTA cruza el spread (va al BID). Sin esto,
         # una venta al MID que no encuentre contraparte deja la 0DTE viva hasta las 16:00, y
@@ -2475,6 +2512,19 @@ class SpyDirection:
         # ---- orden activa: gestionar fill / re-precio ----
         if self.order is not None:
             st = self.order.orderStatus.status
+            # GAP 19 - TRAZA DE ESTADOS. El 2026-08-10 no se pudo reconstruir por que se
+            # colocaron 4 ventas encima de una orden viva: el log no guardaba los estados
+            # intermedios. Se registra cada CAMBIO (no cada tick, seria spam).
+            if st != self._last_order_status:
+                try:
+                    _f = self.order.orderStatus.filled
+                    _r = self.order.orderStatus.remaining
+                    _oid = getattr(self.order.order, "orderId", "?")
+                except Exception:
+                    _f = _r = _oid = "?"
+                ACT.info("ORDEN estado %s -> %s (id=%s filled=%s remaining=%s)",
+                         self._last_order_status or "-", st, _oid, _f, _r)
+                self._last_order_status = st
             if st == "Filled":
                 self._on_filled()
                 return
@@ -2492,11 +2542,19 @@ class SpyDirection:
                     self._on_filled()
                     return
                 self.order = None
+                self._last_order_status = None
             elif now >= self.order_deadline:
                 # No lleno al MID: SOLO cancelar. La recotizacion al MID nuevo ocurre cuando
                 # el cancel se confirme (order=None) -> jamas 2 limits vivas (no short).
                 try:
                     self.ib.cancelOrder(self.order.order)
+                    # GAP 19: marcar CUANDO se pidio la cancelacion. _place no colocara nada
+                    # nuevo hasta CANCEL_SETTLE_SECS, aunque IBKR reporte la orden como
+                    # cancelada: puede seguir viva y ejecutarse (medido: 16-22 s despues).
+                    if not self.last_cancel_ts or now - self.last_cancel_ts > 1.0:
+                        ACT.info("CANCEL solicitado (id=%s) - no se recoloca hasta %.0fs",
+                                 getattr(self.order.order, "orderId", "?"), CANCEL_SETTLE_SECS)
+                    self.last_cancel_ts = now
                 except Exception:
                     pass
             return

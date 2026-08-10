@@ -381,6 +381,10 @@ S.TRADING_ENABLED = _te
 # en REPOSO (posicion ya en el objetivo) el mensaje refleja el estado real, no se congela.
 # last_sync recien puesto: se evita que _sync_pos (FakeIB sin posiciones) lo lleve a FLAT,
 # que es otro camino distinto del que se quiere probar aqui.
+# HORA FIJA a proposito (2026-08-10): sin esto el test depende del reloj REAL y falla si se
+# corre despues de FLATTEN_HHMM, porque el EOD fuerza target=FLAT y toma la rama de venta.
+_now_bak = S.now_et
+S.now_et = lambda: FakeET("14:30")
 app = nueva_app()
 app.trading = True
 app.pos = "CALL"
@@ -411,6 +415,7 @@ app2.trade_msg = "trading OFF"
 app2.trade_poll()
 check("ARMADO" in app2.trade_msg and "FLAT" in app2.trade_msg,
       "en reposo y plano, tambien -> '%s'" % app2.trade_msg)
+S.now_et = _now_bak
 
 # ================================================================ sesion_config
 print("== SELLO DE SESION: sesion_config deja de ser un CREATE TABLE huerfano ==")
@@ -508,7 +513,11 @@ d_eod = app.order_deadline - t0
 check(px == 0.56, "15:46 -> vende al MID 0.56 (NO al bid 0.54) -> %s" % px)
 check(abs(d_eod - S.EOD_REPRICE_SECS) < 0.3,
       "15:46 -> recotiza cada EOD_REPRICE_SECS=%.1fs -> %.1fs" % (S.EOD_REPRICE_SECS, d_eod))
-check(d_eod < d_normal, "en el EOD recotiza MAS RAPIDO que fuera de el")
+# CORREGIDO 2026-08-10 (GAP 19): antes se exigia que el EOD fuera MAS RAPIDO. Con 1.5s se
+# recolocaban ordenes encima de una cancelacion sin resolver. Ahora el EOD es MAS LENTO a
+# proposito: la recotizacion no acelera el llenado, solo multiplica ordenes en vuelo.
+check(d_eod > d_normal,
+      "en el EOD recotiza MAS DESPACIO (12s vs 4s): respeta la latencia del broker")
 
 # --- 15:46 con spread ANCHO: sigue al MID, no se rinde antes de tiempo ---
 app.ib._tk[1001] = FakeTicker(bid=0.40, ask=0.80, contract=c)   # mid = 0.60
@@ -583,6 +592,139 @@ app2._load_intradia()
 check(app2._intradia_ok is True,
       "_load_intradia la pone en True aunque la BD este vacia (no bloquea la senal para siempre)")
 
+
+# ================================================================ GAP 19
+print("== GAP 19: NO recolocar sobre una orden que IBKR aun no ha cancelado de verdad ==")
+
+
+class FakeIBLatente(FakeIB):
+    """FakeIB que REPRODUCE el fallo real del 2026-08-10 15:45.
+
+    Los 14 cold runs pasaron en verde con el bug dentro porque el FakeIB normal cancelaba
+    al instante. Aqui se imita a IBKR: al cancelar, la orden pasa a 'Cancelled' (estado
+    FINAL, sale de openTrades) pero SIGUE VIVA por dentro y puede ejecutarse despues."""
+    def __init__(self):
+        super().__init__()
+        self.vivas_de_verdad = []      # lo que IBKR tiene realmente, aunque diga otra cosa
+        self.rechazos_margen = 0
+
+    def placeOrder(self, contract, order):
+        # si ya hay una venta viva DE VERDAD, IBKR la rechazaria por margen (short descubierto)
+        if order.action == "SELL" and self.vivas_de_verdad:
+            self.rechazos_margen += 1
+        t = super().placeOrder(contract, order)
+        if order.action == "SELL":
+            self.vivas_de_verdad.append(t)
+        return t
+
+    def cancelOrder(self, order):
+        # IBKR responde 'Cancelled' -> la orden desaparece de openTrades()...
+        for t in self.ordenes:
+            if t[1] is order:
+                pass
+        for t in list(self.vivas_de_verdad):
+            if t.order is order:
+                t.orderStatus.status = "Cancelled"     # ...pero NO se quita de vivas_de_verdad
+        return None
+
+    def openTrades(self):
+        # replica ib_insync: excluye DoneStates ('Filled','Cancelled','ApiCancelled')
+        return [t for t in self.vivas_de_verdad
+                if t.orderStatus.status not in ("Filled", "Cancelled", "ApiCancelled")]
+
+
+app = nueva_app()
+app.ib = FakeIBLatente()
+c = FakeContract(773, "C", 1001)
+app.ib._tk[1001] = FakeTicker(bid=0.30, ask=0.34, contract=c)
+app.min_tick[1001] = 0.01
+app.trading = True
+app.pos = "CALL"
+app.pos_qty = 1
+
+# 1) primera venta
+app.order = None
+app._place(c, "SELL", "CALL", qty=1)
+check(len(app.ib.ordenes) == 1, "coloca la 1a venta -> %d" % len(app.ib.ordenes))
+tr = app.ib.ordenes[0][1]
+
+# 2) se cancela: IBKR dice 'Cancelled' y desaparece de openTrades, PERO sigue viva
+app.ib.cancelOrder(tr)
+app.last_cancel_ts = time.monotonic()
+check(app.ib.openTrades() == [], "tras el cancel, openTrades() esta VACIO (IBKR dice cancelada)")
+check(len(app.ib.vivas_de_verdad) == 1, "pero la orden SIGUE VIVA en IBKR (el escenario real)")
+check(app._live_orders() == [],
+      "_live_orders() tampoco la ve: NINGUN estado la habria detectado")
+
+# 3) el arreglo: _place NO coloca durante el cooldown, aunque no vea nada vivo
+n_antes = len(app.ib.ordenes)
+app._place(c, "SELL", "CALL", qty=1)
+check(len(app.ib.ordenes) == n_antes,
+      "GAP 19: NO coloca durante CANCEL_SETTLE_SECS aunque openTrades este vacio -> %d ordenes"
+      % len(app.ib.ordenes))
+check(app.ib.rechazos_margen == 0,
+      "y por tanto IBKR no habria rechazado nada por margen -> %d rechazos" % app.ib.rechazos_margen)
+check("cancelacion" in app.trade_msg, "el panel explica por que espera -> '%s'" % app.trade_msg)
+
+# 4) repetido 4 veces seguidas (como paso a las 15:45) -> sigue sin colocar
+for _ in range(4):
+    app._place(c, "SELL", "CALL", qty=1)
+check(len(app.ib.ordenes) == n_antes,
+      "4 intentos seguidos y NINGUNO coloca (a las 15:45 se colocaron 4) -> %d"
+      % len(app.ib.ordenes))
+check(app.ib.rechazos_margen == 0, "cero rechazos por margen (el 2026-08-10 hubo 4)")
+
+# 5) pasado el cooldown, si coloca (no bloquea la salida para siempre)
+app.ib.vivas_de_verdad = []               # IBKR ya resolvio la anterior
+app.last_cancel_ts = time.monotonic() - (S.CANCEL_SETTLE_SECS + 1)
+app.order = None
+app._place(c, "SELL", "CALL", qty=1)
+check(len(app.ib.ordenes) == n_antes + 1,
+      "pasado el cooldown SI vuelve a colocar (no bloquea la salida) -> %d" % len(app.ib.ordenes))
+
+# 6) el parametro que causo el fallo
+check(S.EOD_REPRICE_SECS >= 10.0,
+      "EOD_REPRICE_SECS ya no es mas rapido que la latencia del broker -> %.1fs"
+      % S.EOD_REPRICE_SECS)
+check(S.CANCEL_SETTLE_SECS >= 5.0, "CANCEL_SETTLE_SECS razonable -> %.1fs" % S.CANCEL_SETTLE_SECS)
+
+
+# ================================================================ ventana 16:00-16:15
+print("== RECOLECTAR hasta %s NO puede significar OPERAR hasta %s ==" % (S.CLOSE_HHMM, S.CLOSE_HHMM))
+_now_bak2 = S.now_et
+app = nueva_app()
+c = FakeContract(773, "C", 1001)
+app.ib._tk[1001] = FakeTicker(bid=0.30, ask=0.34, contract=c)
+app.min_tick[1001] = 0.01
+app.buy_call = c
+app.buy_put = FakeContract(772, "P", 1002)
+app.ib._tk[1002] = FakeTicker(bid=0.30, ask=0.34, contract=app.buy_put)
+app.trading = True
+app.reconciled = True
+app.pos = "FLAT"
+app.pos_qty = 0
+app.target = "CALL"          # la senal querria comprar
+app.last_sync = time.monotonic()
+app.last_cancel_ts = 0.0
+
+S.now_et = lambda: FakeET("16:05")
+app.ib.ordenes = []
+app.order = None
+app.trade_poll()
+check(len(app.ib.ordenes) == 0,
+      "16:05 -> RECOLECTA pero NO abre posiciones -> %d ordenes" % len(app.ib.ordenes))
+check(app.target == "FLAT", "16:05 -> el objetivo sigue forzado a FLAT -> %s" % app.target)
+
+# y a las 15:30 (sesion normal) SI podria abrir: no se ha roto el comportamiento normal
+S.now_et = lambda: FakeET("13:00")
+app.target = "CALL"
+app.ib.ordenes = []
+app.order = None
+app.buys_pend = 0
+app.trade_poll()
+check(len(app.ib.ordenes) == 1,
+      "13:00 -> en sesion normal SI abre (no se rompio nada) -> %d" % len(app.ib.ordenes))
+S.now_et = _now_bak2
 
 print()
 if FAILS:

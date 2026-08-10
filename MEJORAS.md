@@ -47,6 +47,42 @@ marcaba −98,11 cuando la cuenta real decía −54.
 **Arreglo pendiente:** usar `ib.reqPnL(account)` (stream de PnL) en vez de `accountSummary`.
 Requiere suscripción explícita y su propio cold run. **NO implementado.**
 
+### 🔴 GAP 19 — recolocar sobre una orden que IBKR aún no ha cancelado (VERIFICADO y ARREGLADO)
+
+Ocurrió en el aplanado del 2026-08-10, provocado por `EOD_REPRICE_SECS=1.5`:
+
+```
+15:45:01  ORDEN SELL @0.32          (orden 1955)
+15:45:06  code=10148 -> "cannot be cancelled, state: PendingCancel"
+15:45:09  ORDEN SELL @0.36  (1956)  -> RECHAZADA: margen 15.493,92 USD
+15:45:13/17/21  (1957/1958/1959)    -> RECHAZADAS
+15:45:22  EXEC REAL SLD ... @0.33   (la ORIGINAL 1955 se llenó igual)
+```
+
+**Daño real: ninguno** — pero IBKR interpretó cada venta nueva como **short descubierto** y solo
+su control de margen lo frenó. Con más capital habrían entrado **4 shorts de 0DTE**.
+
+**Causa raíz (VERIFICADA en ib_insync):** IBKR reportó la orden como `Cancelled` — estado FINAL.
+`DoneStates = {'Filled','Cancelled','ApiCancelled'}` (`order.py:241`), así que salió de
+`openTrades()`, `_live_orders()` la dio por muerta y `_place` colocó encima. **Y se ejecutó 16 s
+después.** En ese instante **no había ningún estado que consultar** que lo evitara.
+
+*(Se descartaron dos hipótesis antes: `_live_orders()` sí contempla `PendingCancel`, y
+`openTrades()` sí devuelve `PendingCancel` — no está en `DoneStates`.)*
+
+**Arreglo:**
+- `CANCEL_SETTLE_SECS=10`: tras cancelar no se coloca nada nuevo, **aunque IBKR diga que está
+  cancelada**. Extiende a las ventas el principio que `BUY_SETTLE_SECS` ya aplicaba a compras.
+- `EOD_REPRICE_SECS` 1,5 → **12 s**. El dato ya estaba en M1: latencia mediana 1 s, **cola 25 s**;
+  hoy una cancelación tardó **21 s**. Recotizar más rápido que el broker no acelera el llenado,
+  solo multiplica órdenes en vuelo.
+- **Traza de estados** de cada orden en el log (antes no se registraban y por eso el diagnóstico
+  fue a ciegas).
+
+**Lección de verificación:** este fallo **pasó los 14 cold runs en verde** porque el `FakeIB`
+cancelaba al instante. Se añadió un `FakeIBLatente` que reproduce el escenario exacto: cancel →
+`openTrades()` vacío → orden aún viva. Ningún test caza un bug de latencia si el doble no la simula.
+
 ### 🔴 GAP 18 — giro espurio en el arranque (VERIFICADO, sin arreglar)
 
 `setup_contracts` suscribe el market data de la señal **antes** de que `_load_intradia`
