@@ -95,6 +95,83 @@ primeros 26 minutos de CADA sesión — consecuencia de diseño, no bug. Pedir `
 producción**: `ALERTA WARN` y `ALERTA FLIP` se dispararon en el MISMO milisegundo (09:30:13,650)
 — el aviso no anticipa nada. Falta calibrar `ADAPT_FRAC` y/o un mínimo de tiempo entre giros.
 
+### TARDE 2026-08-10 (13:00-14:00) — GAP 17 + INSTRUMENTACIÓN DE OPERACIONES
+
+**🔴 GAP 17 ACTIVO AHORA MISMO (VERIFICADO):** a las 13:26:37 IBKR mandó
+`10182 reqId=1547 Failed to request live updates`. Las granjas se repusieron solas
+(`2104`/`2106`); **el stream de barras NO**, y nadie lo repedía.
+```
+13:22:47 spot=773.12 | 13:25:49 spot=773.08 | 13:28:49 spot=773.03 | 13:56:05 spot=773.03
+ta_minute CONGELADA en 13:24 (comprobado a las 13:57)
+```
+Efecto: `spy_price` congelado (su única fuente es `ta_poll` desde el GAP 11) → `walls_snapshot`
+se sigue escribiendo con **spot falso** (GEX usa spot², flip mal), `refresh_strikes` re-centra
+contra un precio muerto, y `ta_minute` deja de escribirse. La señal UP/DOWN y `_mid` **siguen
+vivos** (vienen de ticks de opciones), así que **la app sigue operando sin que nada avise**.
+La app se ve CONECTADA porque **lo está**: murió un stream, no el socket → `ib.isConnected()`
+no sirve para detectarlo. **Decisión del usuario: no reiniciar; que el sistema se repare solo.**
+
+**CÓDIGO NUEVO YA ESCRITO Y VERIFICADO, PERO *NO* ACTIVO** (la app corre el código viejo en
+memoria; entra en el próximo arranque, que el usuario debe autorizar):
+- **`trades`** (1 fila por operación: entrada, salida, greeks de entrada, **MFE/MAE + hora del
+  máximo**, razón de salida) y **`posicion_minuto`** (recorrido del contrato: bid/ask/mid, P&L,
+  greeks; filas `entrada`/`salida` siempre + `minuto` cada `POS_LOG_SECS=60`).
+- **`cum_net`/`day_net`**: acumulado NETO firmado por strike, EN PARALELO al bruto (`cum_prem`
+  NO se toca). El signo ahora se calcula para TODOS los strikes, no solo los 2 de señal.
+  **`net_call`/`net_put` siguen sumando solo los de señal: la decisión NO cambia.**
+- **`ta_minute`**: +`diff`,`thr`,`momentum` y flujo en ventana móvil **1/5/15 min**
+  (`_flujo_ventana`), solo GUARDADO. La decisión sigue usando el acumulado desde 09:30.
+- **GAP 17**: `_subscribe_bars()` (único punto de petición), detección por **frescura**
+  (`_chequear_barras`, `BARS_STALE_SECS=120`) **y** por evento (`10182` en `_on_error`),
+  reposición automática con backoff (`BARS_RETRY_SECS=30`), y `walls_snapshot.spot_stale=1`
+  para marcar las filas escritas con spot muerto.
+- **`_greeks_de(contract)`**: las greeks del contrato operado se leen del ticker **de la banda**.
+  Motivo (VERIFICADO): los contratos de ejecución se piden con `genericTickList=""` y
+  **ib_insync indexa los tickers por `id(OBJETO)`, no por conId** (`wrapper.py:79,168`), así que
+  `ticker(buy_call).modelGreeks` es SIEMPRE `None`. Cero suscripciones nuevas.
+
+**VERIFICACIÓN HECHA:** `posicion_coldrun.py` (nuevo, 49 checks VERDE, ejercita los métodos
+reales) · **diferencial 12/12 suites idénticas** al baseline (la única diferencia, `2.5s`
+vs `2.6s` en fase1, se reproduce con el MISMO código → ruido de reloj) · migración sobre
+**copia de la BD real**: 0 filas perdidas, idempotente, `integrity_check: ok`.
+**NO VERIFICADO:** que `_greeks_de` devuelva greeks reales contra IBKR (necesita mercado
+abierto y arranque). Hasta entonces es HIPÓTESIS FUERTE, no hecho.
+
+**DATOS DE HOY (corrigen la 1ª versión de `ESTADO_HOY.md`):** 52+ FLIPs (no 39-42);
+5 huecos de minuto (no 2). **Coste de girar crece con el día** — giros/hora 17→20→12→3 y a las
+12:36 hacían falta 2,81 M de flujo nuevo (más que el generado en todo el día): `diff` es
+acumulado desde 09:30 y `thr = ADAPT_FRAC*(|net_call|+|net_put|)` crece con él.
+**Episodio del PUT 12:20** (la razón de todo esto): entrada 0.80 → **pico 2.10 (+130 $)** a las
+12:43, >100 $ durante ~13 min → vendido a 1.25 (+45 $) a las 13:01, **18 min después del
+máximo**. 85 $ dejados sobre la mesa. Ese recorrido solo existía en el log como texto.
+
+### TARDE-2 (14:30-15:30) — 5 arreglos más, sello de sesión y ANÁLISIS
+
+**Arreglados y verificados (14 suites verdes, activos desde el arranque de las 14:52):**
+GAP 2 (doble conteo del premium en los strikes de señal) · GAP 4 (cruce de spread a las 15:50
+para que la 0DTE no expire) · GAP 5 (momentum por **30 s reales**, `diff_hist` eliminado) ·
+M2 (P&L realizado desde IBKR) · M12 (`tif='DAY'`) · panel que decía `trading OFF` estando
+armado · **`sesion_config`** (no tenía escritor: 0 `INSERT` en todo el archivo) ·
+**premium por vela** (`prem_call_min`/`prem_put_min`/`net_*_min`) · **contexto de entrada**
+(16 columnas en `trades`).
+
+**🔴 GAP 18 NUEVO, SIN ARREGLAR:** al arrancar, el market data de la señal se suscribe ANTES de
+que `_load_intradia` restaure → ~4 s con el umbral en el piso de 5.000 → **giro espurio**
+(`14:52:29 GIRO -> DOWN thr=5000`). Ya causó daño real por la mañana. Ensucia `transitions`.
+
+**ANÁLISIS (detalle completo en `ANALISIS_ENTRADA_SALIDA.md`):**
+- **El premium NO anticipa** el movimiento a 1 min: todos los lags predictivos ≤0; máximo
+  +0,203 en lag **−2** (va detrás). La entrada de 1,1 M de las 12:36 ocurrió con el SPY
+  movido −0,01. *Limitación: haría falta resolución por segundo para zanjarlo.*
+- **El TA tampoco**: 50,2% vs 49,6% del premium.
+- **Compresión de Bollinger: DESCARTADA** (1,17x sobre una tasa base del 86%).
+- ✅ **Predecir el mercado PLANO sí funciona**: `atr_pct` (−0,83), `abs_momentum`
+  (284 vs 17.211), `abs_dist_flip` (−0,43). **Direccionalmente neutras.**
+- ⚠️ Los predictores de movimiento brusco (OBV −1,00, %B, EMAs, `dist_vwap`) están
+  **contaminados** por el sesgo bajista del día (63% de los movimientos grandes fueron bajistas).
+- **Líneas de market data: 68 de ~100** (2 señal + 2 ejecución + 24 baseline + 40 banda),
+  0 errores de límite en toda la sesión.
+
 ## 1. QUÉ ES / OBJETIVO
 App de **1 archivo** (`spy_direction.py`, ~1000+ líneas) para **scalping de SPY** vía flujo de
 opciones. Se conecta a **IB Gateway (paper, puerto 4002, clientId 7)** con `ib_insync`.

@@ -4,9 +4,34 @@ App de **1 archivo** (`spy_direction.py`) para **scalping de SPY** leyendo el **
 opciones** (net call vs put) en tiempo real desde **IB Gateway (paper)**. Proyecto **independiente**
 (no tiene relación con ningún otro bot). Windows + Python. Idioma del proyecto: **español**.
 
-> **Este README es la puerta de entrada para el otro agente.** Léelo completo y luego, ANTES de tocar
-> nada, lee **`ANTI_COMPACT_CONTEXT.md`** (contexto vivo, estado VERIFICADO/NO VERIFICADO, gotchas y
-> pendientes). Reglas de trabajo abajo (§Reglas).
+> **Este README es la puerta de entrada para el otro agente.**
+
+## 🚦 EMPIEZA AQUÍ — orden de lectura obligatorio
+
+| # | Documento | Qué contiene |
+|---|---|---|
+| 1 | **`ESTADO_HOY.md`** | **Traspaso completo.** Qué se hizo, qué falta, qué está pendiente, reglas duras, cómo verificar |
+| 2 | **`ANALISIS_ENTRADA_SALIDA.md`** | Todo el análisis de datos: qué predice y qué NO, con sus cifras y **las trampas metodológicas ya identificadas** |
+| 3 | `ANTI_COMPACT_CONTEXT.md` | Contexto vivo: VERIFICADO / NO VERIFICADO / HIPÓTESIS |
+| 4 | `MEJORAS.md` | Mejoras y gaps con su evidencia numérica y su estado |
+
+### Estado en una línea (2026-08-10, primera corrida en vivo)
+
+23 gaps cerrados · instrumentación completa de operaciones (`trades`, `posicion_minuto`,
+griegas, premium por vela, acumulado neto, sello de sesión) · **14 suites de cold run en verde**.
+
+### Lo más importante que debes saber antes de tocar nada
+
+1. **El problema del sistema NO es la dirección, es entrar demasiado pronto.** Caso medido: compra
+   con SPY 773,00 y prima 0,73; 1h53m después el SPY estaba **más arriba** (773,11) y la prima en
+   **0,50**. Dirección correcta, pérdida por theta.
+2. **Acierto direccional ~50%** (TA 50,2% · premium 49,6%). Puede que no tenga arreglo.
+3. **El premium NO anticipa el movimiento** a resolución de 1 minuto — va detrás (lag −2).
+4. **Lo único que separa bien es el mercado PLANO** (ATR + |momentum| + distancia al gamma flip),
+   y son variables direccionalmente neutras. Ahí está el filtro aprovechable.
+5. **NO reiniciar la app ni hacer push sin autorización explícita del usuario.**
+6. Antes de cualquier reinicio: **las 14 suites de cold run en verde**.
+7. 🔴 **GAP 18 abierto**: giro espurio en los ~4 s del arranque, con el umbral en el piso de 5.000.
 
 ---
 
