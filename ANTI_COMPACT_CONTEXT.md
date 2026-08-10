@@ -1,8 +1,99 @@
 # ANTI-COMPACT — SPY Direction (contexto vivo para continuar)
 
 > Léeme primero tras compact/clear. Proyecto **independiente**, local, NO tiene relación con el
-> trading-bot del VPS. Carpeta: `C:\Users\17862\open-premium-ibkr\`. Idioma: español.
-> Fecha de este contexto: 2026-08-09 (domingo). Mercado cerrado.
+> trading-bot del VPS. Idioma: español.
+> **Carpeta ACTUAL: `C:\Users\eulis\proyectos\open-premium-ibkr`** (antes `C:\Users\17862\...`,
+> otra máquina — los logs viejos del repo tienen esa ruta).
+
+## 0. SESIÓN EN CURSO — LUNES 2026-08-10 (PRIMERA CORRIDA EN VIVO REAL)
+
+Hoy es el "LUNES" que el resto de este documento marca como bloqueador. Estado a las 09:14 ET:
+
+**VERIFICADO HOY (evidencia de log/ejecución, no memoria):**
+- BD `spy_history.db` arrancó **VACÍA** (7 tablas en 0 filas). Todo lo de hoy es dato nuevo.
+- Conexión IB Gateway clientId 7, modo **`[LIVE]`** (el `10197` del finde YA NO aparece).
+- `Market data farm connection is OK:usopt` → OPRA conectado.
+- SPY leído real (772.59 → 773.00). Cadena OK, `cercano=20260810` = **0DTE**.
+- 68 líneas de market data suscritas: 2 señal + 2 ejecución + 24 baseline + **40 banda**.
+- **Read-Only API DESACTIVADO** por el usuario. Antes daba `Error 321` + `open orders request
+  timed out`; tras desmarcarlo, ambos desaparecieron → `openTrades`/`positions` YA responden.
+- `accountSummary`: **$397.13** disponibles. 0 órdenes vivas, 0 posiciones (arranque limpio).
+- `_can_afford` → True hasta $3.97/contrato (techo real por el tamaño de la cuenta).
+
+**CAMBIOS DE CÓDIGO HECHOS HOY (orden explícita del usuario):**
+- `TRADING_ENABLED = False` → **`True`** (línea 80). Rompe a propósito la regla dura §4.6
+  ("arranca OFF"); el usuario lo pidió para que opere sin intervención. El botón sigue sirviendo
+  para DESARMAR.
+- Botón GUI conectado al estado real: arranca diciendo "DESARMAR" si `trading` es True.
+- **Cold run diferencial VERDE (exit 0), idéntico al baseline previo al cambio.**
+
+**AÚN NO VERIFICADO (se resuelve con el mercado abierto):**
+- `pendingTickersEvent` + flujo `"233"` → que `net_call`/`net_put` dejen de ser 0. **Es el corazón
+  del sistema y nunca ha recibido un solo trade real.**
+- OI + gamma reales de la banda (`probe_oi_gamma.py`). Walls/GEX sigue verificado SOLO con FakeIB.
+- `placeOrder` / `cancelOrder` / `reqContractDetails` (se ejercitan en la primera orden).
+
+**7 GAPS LEÍDOS DEL CÓDIGO (ninguno arreglado — decisión: observar hoy, no tocar):**
+1. 🔴 `:1490` **Sin reconexión.** `connected["ok"]` no vuelve a False en sesión → si cae el socket,
+   la app queda muda, sin error ni log, hasta las 16:00.
+2. 🔴 `:862` vs `:696` **Doble conteo** de `today_prem` en los 2 strikes ATM (`_on_ticks` y
+   `compute_walls` escriben la misma clave con deltas independientes).
+3. 🟠 `:545-546` **Strikes congelados** al precio de apertura (`setup_contracts` corre 1 vez/sesión).
+   YA OBSERVADO en vivo: cambiaron al moverse SPY de 772.59 a 773.00.
+4. 🟠 `:1516-1520` **Posición huérfana** si la venta de las 15:45 no llena antes de las 16:00
+   (`end_session` cancela y desconecta). Con 0DTE = expira.
+5. 🟡 `:880-882` **Momentum mide eventos, no tiempo** (`MOMENTUM_WIN=8` sobre `pendingTickersEvent`).
+6. 🟡 68 líneas de market data vs límite IBKR ~100 (margen, pero sin espacio para añadir).
+7. 🟡 `:1268` `_log_minute` hace INSERT OR REPLACE de 7 columnas sobre filas de 10 →
+   **deja `net_prem`/`open_interest`/`gamma` en NULL** al colisionar con `_persist_walls`.
+
+**Objetivo del día (dicho por el usuario):** ver que se guarden GEX, TA, precio del SPY; que
+detecte los flips; que compre y venda. Recolectar, no arreglar.
+
+### RESULTADO DE LA PRIMERA APERTURA EN VIVO (09:30-09:32) — VERIFICADO
+
+**FUNCIONÓ (todo lo que estaba ❌ NO VERIFICADO):**
+- Flujo de premium real: `GIRO -> UP (net_call=6236 net_put=315 thr=5000)`. La señal se alimenta.
+- **OI + gamma REALES de IBKR**: `faltan OI=0 greeks=0 de 40 | gamma cambiaron=40/40`.
+  El módulo Walls/GEX deja de estar verificado-solo-con-FakeIB. GEX +104Bn→+167Bn, flip 774.92→773.92,
+  magneto dinámico SE MUEVE (771→772) mientras el estático no. 80 filas con OI y gamma en BD.
+- **Ciclo completo de trading**: `FILL BUY PUT @0.90` → giro → `FILL SELL PUT @0.84 | PROFIT -6.00 (-6.7%)`.
+- Reconexión (arreglo de hoy) verificada en vivo: `CONECTADO (sesion 2026-08-10)`.
+- `spy_direction.log`: **0 errores**.
+
+**🔴 GAP 9 (NUEVO, CRÍTICO) — ÓRDENES FANTASMA. Ya corregido:**
+Se colocaron 4 BUY PUT (reqId 148-151). La app vio 1 fill y 1 venta y se creyó **FLAT**.
+La realidad en IBKR: **3 puts abiertas** (`SPY 260810P00772000 qty=3.0`), que vaciaron la cuenta
+(`Equity with Loan Value -253.53`). Causa: `trade_poll` trataba el estado `Cancelled` como
+"no pasó nada" y liberaba `self.order` **sin comprobar `orderStatus.filled`** — entre el
+`cancelOrder` y su confirmación la orden sigue siendo ejecutable y se llenó igual.
+Como `self.pos` decía FLAT, el aplanado de 15:45 **jamás** habría cerrado esas 3 puts (0DTE).
+Rompía las invariantes duras §4.2 ("jamás 2 limits vivas") y §4.3 ("una sola opción").
+
+**REQUISITO DEL USUARIO (2026-08-10):** con capital bajo, **1 sola posición y 1 solo contrato**;
+se cierra ese contrato y solo DESPUÉS se abre otro, sucesivamente.
+
+**Correcciones aplicadas (cold run `gap9_coldrun.py`, 11 checks VERDE):**
+1. `trade_poll`: si el estado es `Cancelled`/`ApiCancelled`/`Inactive` pero `filled > 0`,
+   se procesa como FILL en vez de descartarse.
+2. `_sync_pos()` (nuevo): cada `SYNC_POS_SECS=20` la posición REAL de IBKR sobrescribe `self.pos`
+   y `pos_qty`, y reapunta `buy_call`/`buy_put` al contrato poseído. No toca `self.target`.
+3. `_live_orders()` (nuevo) + guarda en `_place`: no se coloca ninguna orden si IBKR reporta
+   alguna viva. La invariante deja de ser una suposición y pasa a ser una verificación.
+4. Guarda dura en el BUY: se re-sincroniza contra IBKR y **no se compra si `pos_qty > 0`**.
+5. `_place(..., qty)`: las VENTAS usan la cantidad REAL en cartera (vender QTY=1 con 3 lotes
+   dejaba 2 huérfanos). `_on_filled` calcula el profit con la cantidad realmente llenada.
+6. Si `pos_qty > QTY` se fuerza `target=FLAT` para aplanar el exceso.
+
+**GAP 10 DESCARTADO (mi hipótesis era falsa):** `ta_minute=0` NO era un fallo silencioso de
+`reqHistoricalData`. Probado contra IBKR: devuelve barras bien, pero con `useRTH=True` + `"1 D"`
+solo trae las de HOY (10 barras a las 09:39) y `TAEngine` exige **≥26**. El TA está ciego los
+primeros 26 minutos de CADA sesión — consecuencia de diseño, no bug. Pedir `"2 D"` lo resolvería.
+
+**⚠️ PENDIENTE SIN RESOLVER — WHIPSAW:** 5 giros en 90 segundos (09:30:06 UP, :13 DOWN, :30 UP,
+:37 DOWN, 09:31:14 UP). Con 0DTE cada rotación paga el spread. Además **GAP 5 confirmado en
+producción**: `ALERTA WARN` y `ALERTA FLIP` se dispararon en el MISMO milisegundo (09:30:13,650)
+— el aviso no anticipa nada. Falta calibrar `ADAPT_FRAC` y/o un mínimo de tiempo entre giros.
 
 ## 1. QUÉ ES / OBJETIVO
 App de **1 archivo** (`spy_direction.py`, ~1000+ líneas) para **scalping de SPY** vía flujo de
@@ -64,7 +155,9 @@ opciones. Se conecta a **IB Gateway (paper, puerto 4002, clientId 7)** con `ib_i
 `PORT=4002` (paper; live=4001) · `CLIENT_ID=7` · `QTY=1` · `SIGNAL_THRESHOLD=5000` (piso) ·
 `ADAPTIVE=True`, `ADAPT_FRAC=0.15`, `MOM_FRAC=0.6` · `REPRICE_SECS=4`, `MAX_FILL_SECS=60` ·
 `FLATTEN_HHMM=15:45`, `STOP_NEW_HHMM=15:40` · `ITM_DEPTH=3`, `BASELINE_EXPIRIES=3`,
-`SNAPSHOT_SECS=120` · `WALLS_BAND=20`, `WALLS_REFRESH=900` · `TRADING_ENABLED=False`.
+`SNAPSHOT_SECS=120` · `WALLS_BAND=10`, `WALLS_RECALC_SECS=180` · `TRADING_ENABLED=True`.
+(CORREGIDO 2026-08-10: este parrafo decia `WALLS_BAND=20`/`WALLS_REFRESH=900`, nombres y valores
+que NO existen en el codigo. Los reales son los de arriba, verificados en `spy_direction.py:88-89`.)
 
 ## 6. CÓMO CORRER / PROBAR
 - Real: `python spy_direction.py` (o `dist\spy_direction.exe`). Demo: `--demo`. Diagnóstico: `--selftest`.

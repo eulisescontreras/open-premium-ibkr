@@ -77,12 +77,14 @@ ADAPTIVE = True
 ADAPT_FRAC = 0.15           # umbral = ADAPT_FRAC * (|net_call|+|net_put|)
 MOM_FRAC = 0.6             # momentum minimo = MOM_FRAC * umbral
 # --- EJECUCION AUTOMATICA (rotar 1 opcion) ---
-TRADING_ENABLED = False     # ARRANCA APAGADO. Se ARMA con el boton en pantalla.
+TRADING_ENABLED = True      # ARRANCA ARMADO (2026-08-10, orden del usuario). Boton = DESARMAR.
 QTY = 1                     # contratos por señal (cuenta pequeña)
 REPRICE_SECS = 4.0          # re-precia al mid si no llena en este tiempo
 MAX_FILL_SECS = 60.0        # tiempo maximo intentando llenar una entrada
 FLATTEN_HHMM = "15:45"      # ET: cerrar cualquier opcion abierta
 STOP_NEW_HHMM = "15:40"     # ET: no abrir nuevas cerca del cierre
+RECONNECT_SECS = 15.0       # espera entre reintentos si se cae el socket (no saturar el Gateway)
+SYNC_POS_SECS = 20.0        # cada cuanto re-sincronizar la posicion CONTRA IBKR (la realidad manda)
 # --- Walls / GEX / Gamma Flip (informativo, "como el TA": se guarda y se analiza vs la grafica) ---
 WALLS_ENABLED = True        # calcular walls/GEX/flip. NO toca la senal UP/DOWN ni la ejecucion.
 WALLS_BAND = 10             # strikes a CADA lado del precio a escanear (banda). Bajo por limite de lineas IBKR.
@@ -340,6 +342,8 @@ class SpyDirection:
         self.buy_call = None             # contrato de EJECUCION call (ATM lado OTM: strike > precio)
         self.buy_put = None              # contrato de EJECUCION put  (ATM lado OTM: strike < precio)
         self.pos = "FLAT"                # FLAT / CALL / PUT (lo que tenemos)
+        self.pos_qty = 0.0               # cantidad REAL en cartera segun IBKR (no se asume)
+        self.last_sync = 0.0             # ultimo _sync_pos (la realidad de IBKR manda sobre self.pos)
         self.target = "FLAT"             # lado deseado segun ultima señal
         self.order = None                # Trade activo (ib_insync)
         self.order_action = None         # BUY / SELL
@@ -1091,8 +1095,18 @@ class SpyDirection:
                     if p.contract.symbol == SYMBOL and p.contract.secType == "OPT"
                     and p.position and p.position > 0]
             if len(opts) == 1:
-                self.pos = "CALL" if opts[0].contract.right == "C" else "PUT"
+                p = opts[0]
+                self.pos = "CALL" if p.contract.right == "C" else "PUT"
                 self.target = self.pos            # mantener hasta el proximo flip
+                # El contrato a VENDER debe ser el que se POSEE, no el que recalculo
+                # setup_contracts: si el precio se movio, el strike nuevo seria otro y
+                # venderiamos algo que no tenemos (corto descubierto).
+                if self.pos == "CALL":
+                    self.buy_call = p.contract
+                else:
+                    self.buy_put = p.contract
+                ACT.info("Reconcile: posicion real %s %s -> contrato de salida reapuntado",
+                         self.pos, getattr(p.contract, "localSymbol", "?"))
             elif len(opts) > 1:
                 self.pos = "CALL" if opts[0].contract.right == "C" else "PUT"
                 self.target = "FLAT"              # >1 posicion: aplanar todo al MID
@@ -1102,20 +1116,71 @@ class SpyDirection:
         except Exception:
             LOG.exception("Error en reconcile")
 
-    def _place(self, contract, action, side):
-        """Coloca SIEMPRE una LimitOrder al MID. Si no hay MID, NO coloca (espera)."""
+    def _live_orders(self):
+        """Ordenes de opciones SPY VIVAS segun IBKR (no segun self.order)."""
+        try:
+            return [tr for tr in self.ib.openTrades()
+                    if tr.contract.symbol == SYMBOL and tr.contract.secType == "OPT"
+                    and tr.orderStatus.status in ("PreSubmitted", "Submitted",
+                                                  "PendingSubmit", "PendingCancel")]
+        except Exception:
+            return []
+
+    def _sync_pos(self):
+        """RED DE SEGURIDAD: la posicion REAL de IBKR manda sobre self.pos.
+        self.pos es una variable en memoria y puede DIVERGIR de la realidad (una orden
+        'cancelada' puede haberse llenado igual). No toca self.target: eso lo decide la senal."""
+        try:
+            opts = [p for p in self.ib.positions()
+                    if p.contract.symbol == SYMBOL and p.contract.secType == "OPT"
+                    and p.position and p.position > 0]
+            real, qty, con = "FLAT", 0.0, None
+            if opts:
+                p = opts[0]
+                real = "CALL" if p.contract.right == "C" else "PUT"
+                qty = float(p.position)
+                con = p.contract
+            if real != self.pos or qty != self.pos_qty:
+                ACT.info("SYNC posicion REAL de IBKR=%s x%g | la app creia %s x%g -> corregido",
+                         real, qty, self.pos, self.pos_qty)
+            if con is not None:
+                # vender SIEMPRE el contrato que se POSEE, no el recalculado por setup_contracts
+                if real == "CALL":
+                    self.buy_call = con
+                else:
+                    self.buy_put = con
+            self.pos = real
+            self.pos_qty = qty
+            if real == "FLAT":
+                self.entry_price = None
+                self.contract_price = None
+        except Exception:
+            LOG.exception("Error en _sync_pos")
+
+    def _place(self, contract, action, side, qty=None):
+        """Coloca SIEMPRE una LimitOrder al MID. Si no hay MID, NO coloca (espera).
+        qty=None -> QTY (compras). En las VENTAS se pasa la cantidad REAL en cartera."""
+        # GUARDA DURA: si IBKR reporta alguna orden viva, NO colocar otra (invariante
+        # "jamas 2 limits vivas"). self.order puede estar en None y aun asi haber una viva.
+        vivas = self._live_orders()
+        if vivas:
+            self.trade_msg = f"{len(vivas)} orden(es) viva(s) en IBKR - no coloco otra"
+            return
         px = self._mid(contract)
         if px is None:
             self.trade_msg = f"esperando MID para {action} {side} (sin bid/ask)"
             return
+        q = int(qty) if qty else QTY
+        if q <= 0:
+            return
         try:
-            self.order = self.ib.placeOrder(contract, LimitOrder(action, QTY, px))
+            self.order = self.ib.placeOrder(contract, LimitOrder(action, q, px))
             self.order_action = action
             self.order_side = side
             self.order_contract = contract
             self.order_deadline = time.monotonic() + REPRICE_SECS
-            self.trade_msg = f"{action} {side} LIMIT MID @ {px:.2f}"
-            ACT.info("ORDEN %s %s x%d LIMIT MID @ %.2f", action, side, QTY, px)
+            self.trade_msg = f"{action} {side} x{q} LIMIT MID @ {px:.2f}"
+            ACT.info("ORDEN %s %s x%d LIMIT MID @ %.2f", action, side, q, px)
         except Exception as e:
             self.trade_msg = f"error orden: {e}"
             self.order = None
@@ -1127,10 +1192,15 @@ class SpyDirection:
             px = self.order.orderStatus.avgFillPrice
         except Exception:
             px = 0.0
+        # cantidad REALMENTE llenada (puede no ser QTY: fills parciales / venta de varios lotes)
+        try:
+            nq = float(self.order.orderStatus.filled) or float(QTY)
+        except Exception:
+            nq = float(QTY)
         # profit al VENDER (usa el precio de entrada ANTES de limpiarlo)
         profit = pct = None
         if act == "SELL" and self.entry_price:
-            profit = (px - self.entry_price) * 100.0 * QTY
+            profit = (px - self.entry_price) * 100.0 * nq
             pct = (px / self.entry_price - 1.0) * 100.0
         rl = "C" if side == "CALL" else "P"
         c = getattr(self, "order_contract", None)
@@ -1150,7 +1220,9 @@ class SpyDirection:
                     body += f"  |  Profit {profit:+.2f} ({pct:+.1f}%)"
                 self._toast(f"SPY: VENTA {side} LLENADA", body)
         # actualizar posicion/entrada DESPUES de calcular el profit
+        # (valor PROVISIONAL: _sync_pos lo corrige contra IBKR, que es la fuente de verdad)
         self.pos = side if act == "BUY" else "FLAT"
+        self.pos_qty = nq if act == "BUY" else 0.0
         self.entry_price = px if act == "BUY" else None
         if act != "BUY":
             self.contract_price = None
@@ -1165,6 +1237,19 @@ class SpyDirection:
             return
         if not self.reconciled:
             self._reconcile()
+
+        # RED DE SEGURIDAD: la posicion REAL de IBKR manda sobre self.pos. Sin esto la app
+        # puede creerse FLAT teniendo contratos (orden 'cancelada' que se llenó igual).
+        if self.order is None and time.monotonic() - self.last_sync > SYNC_POS_SECS:
+            self._sync_pos()
+            self.last_sync = time.monotonic()
+
+        # CAPITAL BAJO: NUNCA mas de QTY contrato(s). Si hay de mas, aplanar TODO.
+        if self.pos_qty > QTY:
+            if self.target != "FLAT":
+                ACT.info("EXCESO de posicion: %g contratos (maximo %d) -> aplanar TODO",
+                         self.pos_qty, QTY)
+            self.target = "FLAT"
 
         et = now_et()
         hhmm = et.strftime("%H:%M")
@@ -1182,6 +1267,18 @@ class SpyDirection:
                 self._on_filled()
                 return
             if st in ("Cancelled", "ApiCancelled", "Inactive"):
+                # OJO: 'Cancelado' NO significa 'no paso nada'. Entre el cancelOrder y su
+                # confirmacion la orden SIGUE siendo ejecutable y puede haberse llenado
+                # (total o parcialmente). Si se ignora, la app cree estar FLAT teniendo
+                # contratos reales -> posiciones huerfanas que nadie cierra.
+                try:
+                    llenado = float(self.order.orderStatus.filled or 0)
+                except Exception:
+                    llenado = 0.0
+                if llenado > 0:
+                    ACT.info("ORDEN cancelada PERO llenada x%g -> se procesa como FILL", llenado)
+                    self._on_filled()
+                    return
                 self.order = None
             elif now >= self.order_deadline:
                 # No lleno al MID: SOLO cancelar. La recotizacion al MID nuevo ocurre cuando
@@ -1195,9 +1292,11 @@ class SpyDirection:
         # ---- sin orden viva: mover posicion al objetivo (SIEMPRE LimitOrder al MID) ----
         if self.pos != self.target:
             if self.pos in ("CALL", "PUT"):
-                # CERRAR: vender al MID, RELENTLESS (reintenta hasta llenar)
+                # CERRAR: vender al MID, RELENTLESS (reintenta hasta llenar).
+                # Se vende la cantidad REAL en cartera (si quedaron 3 lotes, se cierran los 3;
+                # vender QTY=1 dejaria 2 huerfanos que nadie cerraria).
                 contract = self.buy_call if self.pos == "CALL" else self.buy_put
-                self._place(contract, "SELL", self.pos)
+                self._place(contract, "SELL", self.pos, qty=(self.pos_qty or QTY))
             elif self.target in ("CALL", "PUT") and not stop_new:
                 # ABRIR: comprar al MID, con limite de tiempo (si no llena, abandona -> FLAT)
                 if not self.open_deadline:
@@ -1207,6 +1306,15 @@ class SpyDirection:
                     self.target = "FLAT"
                     self.open_deadline = 0.0
                 else:
+                    # GUARDA DURA (capital bajo): 1 SOLA posicion, 1 SOLO contrato.
+                    # Se comprueba contra IBKR, NO contra self.pos: una orden 'cancelada'
+                    # pudo llenarse y dejarnos con contratos que la app no sabe que tiene.
+                    self._sync_pos()
+                    self.last_sync = time.monotonic()
+                    if self.pos_qty > 0:
+                        self.trade_msg = (f"ya hay {self.pos_qty:g} contrato(s) en cartera "
+                                          f"- NO se compra hasta cerrarlos")
+                        return
                     contract = self.buy_call if self.target == "CALL" else self.buy_put
                     px = self._mid(contract)
                     if px is None:
@@ -1424,7 +1532,8 @@ def run_gui(app):
     def _toggle():
         on = app.toggle_trading()
         btn.config(text="DESARMAR" if on else "ARMAR")
-    btn = tk.Button(trow, text="ARMAR", font=("Segoe UI", 10, "bold"),
+    btn = tk.Button(trow, text=("DESARMAR" if app.trading else "ARMAR"),
+                    font=("Segoe UI", 10, "bold"),
                     command=_toggle, bg="#1f2937", fg="#ffffff", activebackground="#374151")
     btn.grid(row=0, column=2, padx=4)
 
@@ -1471,13 +1580,18 @@ def run_gui(app):
 
     colors = {"UP": "#22c55e", "DOWN": "#ef4444", "-": "#888888"}
     connected = {"ok": False}
+    sesion = {"fecha": None, "reintento": 0.0}   # fecha de la sesion viva + cooldown de reintento
 
-    def try_connect():
+    def try_connect(nuevo_dia):
         try:
-            app.reset_day()      # nuevo dia: acumuladores intradia en 0 antes del setup
+            if nuevo_dia:
+                # SOLO en dia nuevo: acumuladores intradia en 0. En una RECONEXION no se toca,
+                # o cada caida de socket borraria net_call/net_put del dia.
+                app.reset_day()
             app.connect()
             if app.setup_contracts():
                 connected["ok"] = True
+                app.reconciled = False   # re-sincronizar posicion/ordenes tras (re)conectar
         except Exception as e:
             app.status = f"SIN CONEXION a IB Gateway ({e}). Reintentando..."
             LOG.exception("Fallo al conectar/setup")
@@ -1487,8 +1601,19 @@ def run_gui(app):
             app.simulate_step()
         elif app.is_market_open():
             # MERCADO ABIERTO (09:30-16:00 ET): arrancar/recolectar. (Trading cesa 15:45 en trade_poll.)
-            if not connected["ok"] and not app.ib.isConnected():
-                try_connect()
+            # La verdad de la conexion es el SOCKET, no una bandera local: si se cae a mitad
+            # de sesion hay que reintentar (antes quedaba muda hasta las 16:00, sin error).
+            if not app.ib.isConnected():
+                if connected["ok"]:
+                    connected["ok"] = False
+                    ACT.info("DESCONEXION detectada - reintentando cada %.0fs", RECONNECT_SECS)
+                hoy = now_et().strftime("%Y-%m-%d")
+                if time.monotonic() >= sesion["reintento"]:
+                    sesion["reintento"] = time.monotonic() + RECONNECT_SECS
+                    try_connect(nuevo_dia=(sesion["fecha"] != hoy))
+                    if connected["ok"]:
+                        sesion["fecha"] = hoy
+                        ACT.info("CONECTADO (sesion %s)", hoy)
             try:
                 if app.ib.isConnected():
                     app.ib.sleep(REFRESH_SECS)
