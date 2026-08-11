@@ -9842,3 +9842,1154 @@
 2026-08-11 11:46:47,683 INFO WALLS spot=772.11 PW=773.00 CW=773.00 magneto est=772.00/din=773.00 peso=772.99 | GEX=-42.541Bn regime=SHORT flip=- | faltan OI=0 greeks=0 de 40 | frescura: gamma cambiaron=40/40 ult_tick=2026-08-11 15:46:47.673771+00:00
 2026-08-11 11:46:47,683 INFO WALLS detalle por strike: 764C:OI=1485.00,g=0.01,net=-2262 | 764P:OI=4210.00,g=0.01,net=+1423 | 765C:OI=784.00,g=0.02,net=-434062 | 765P:OI=11907.00,g=0.02,net=+16666 | 766C:OI=873.00,g=0.02,net=-76927 | 766P:OI=5035.00,g=0.02,net=+4644 | 767C:OI=1633.00,g=0.04,net=-85530 | 767P:OI=6107.00,g=0.04,net=+60669 | 768C:OI=978.00,g=0.05,net=+79822 | 768P:OI=4474.00,g=0.05,net=+265283 | 769C:OI=1723.00,g=0.08,net=+264960 | 769P:OI=5507.00,g=0.08,net=+244183 | 770C:OI=6182.00,g=0.11,net=+46842 | 770P:OI=12729.00,g=0.11,net=+575470 | 771C:OI=4384.00,g=0.16,net=+397429 | 771P:OI=6252.00,g=0.16,net=+1848947 | 772C:OI=4158.00,g=0.19,net=+244403 | 772P:OI=9389.00,g=0.19,net=-4123886 | 773C:OI=12230.00,g=0.18,net=+4006788 | 773P:OI=11080.00,g=0.18,net=+3695193 | 774C:OI=7748.00,g=0.13,net=+3291327 | 774P:OI=4050.00,g=0.13,net=+1135214 | 775C:OI=13318.00,g=0.07,net=-370170 | 775P:OI=1516.00,g=0.07,net=-642434 | 776C:OI=7556.00,g=0.04,net=+374380 | 776P:OI=816.00,g=0.04,net=-88607 | 777C:OI=7461.00,g=0.02,net=+89802 | 777P:OI=1055.00,g=0.03,net=+55089 | 778C:OI=6002.00,g=0.02,net=+42085 | 778P:OI=442.00,g=0.02,net=-11563 | 779C:OI=4817.00,g=0.01,net=-1313 | 779P:OI=328.00,g=0.01,net=+19410 | 780C:OI=8223.00,g=0.01,net=+1636 | 780P:OI=209.00,g=0.01,net=+48 | 781C:OI=3575.00,g=0.01,net=+1217 | 781P:OI=6.00,g=0.01,net=+131310 | 782C:OI=3184.00,g=0.01,net=-981 | 782P:OI=5.00,g=0.01,net=-78211 | 783C:OI=2341.00,g=0.00,net=-193 | 783P:OI=15.00,g=0.01,net=+5425
 2026-08-11 11:46:47,683 INFO WALLS GAP2: premium de los strikes de SENAL (772C, 773P) NO sumado aqui para evitar el doble conteo (lo lleva _on_ticks, por tick)
+2026-08-11 11:47:03,907 INFO MIN 11:46 | SPY=771.98 | TA dir=BEAR score=-1 rsi=32.1 macd=-0.167/-0.197/+0.029 ema8/21/50=772.07/772.20/772.55 bb=772.59/772.17/771.75 atr=0.24(0.03%) vwap=772.09 obv=bearish
+2026-08-11 11:47:03,907 INFO MIN 11:46 | SMA 20/50/200 = 772.17/772.64/773.15 | precio-SMA: -0.19/-0.66/-1.17 (informativo, NO decide)
+2026-08-11 11:47:03,907 INFO MIN 11:46 | SENAL netC=-941409 netP=-2960939 diff=2019530 thr=585352 mom=12594(30s) -> estado=UP pos=CALL
+2026-08-11 11:47:03,907 INFO MIN 11:46 | VELA 20260811 bruto C=726808.00 P=1168265.00 (sesgo PUT) | neto C=8926.00 P=-22353.00 (diff 31279.00)
+2026-08-11 11:47:03,907 INFO MIN 11:46 | VENTANAS 1m: C=6742.00 P=-22761.00 diff=29503.00 | 5m: C=749181.00 P=462958.00 diff=286223.00 | 15m: C=646180.00 P=590926.00 diff=55254.00   (informativo, NO decide)
+2026-08-11 11:47:03,907 INFO MIN 11:46 | Cuenta $310.08   disp $265.08   |   DIA -89.92 (-22.5%)   |   realizado +0.96 (interno)   ops 1 (1 ganadoras, 100%)
+2026-08-11 11:47:03,907 INFO MIN 11:46 | CONTRATO CALL entrada=1.35 actual=0.40 pnl=-95$
+2026-08-11 11:47:03,907 INFO MIN 11:46 | PREM 20260811 763C day=80057 cum=0 | netdia=+0 netcum=+0 | net3m=+0
+2026-08-11 11:47:03,907 INFO MIN 11:46 | PREM 20260811 763P day=2040 cum=0 | netdia=+0 netcum=+0 | net3m=+0
+2026-08-11 11:47:03,907 INFO MIN 11:46 | PREM 20260811 764C day=759595 cum=0 | netdia=+0 netcum=+0 | net3m=-2262
+2026-08-11 11:47:03,907 INFO MIN 11:46 | PREM 20260811 764P day=5390 cum=0 | netdia=+0 netcum=+0 | net3m=+1423
+2026-08-11 11:47:03,907 INFO MIN 11:46 | PREM 20260811 765C day=833570 cum=0 | netdia=+0 netcum=+0 | net3m=-434062
+2026-08-11 11:47:03,907 INFO MIN 11:46 | PREM 20260811 765P day=115049 cum=0 | netdia=+0 netcum=+0 | net3m=+16666
+2026-08-11 11:47:03,907 INFO MIN 11:46 | PREM 20260811 766C day=706687 cum=0 | netdia=+0 netcum=+0 | net3m=-76927
+2026-08-11 11:47:03,907 INFO MIN 11:46 | PREM 20260811 766P day=162586 cum=0 | netdia=+0 netcum=+0 | net3m=+4644
+2026-08-11 11:47:03,907 INFO MIN 11:46 | PREM 20260811 767C day=677118 cum=0 | netdia=+0 netcum=+0 | net3m=-85530
+2026-08-11 11:47:03,907 INFO MIN 11:46 | PREM 20260811 767P day=359565 cum=0 | netdia=+0 netcum=+0 | net3m=+60669
+2026-08-11 11:47:03,907 INFO MIN 11:46 | PREM 20260811 768C day=909982 cum=0 | netdia=+0 netcum=+0 | net3m=+79822
+2026-08-11 11:47:03,907 INFO MIN 11:46 | PREM 20260811 768P day=799903 cum=0 | netdia=+0 netcum=+0 | net3m=+265283
+2026-08-11 11:47:03,907 INFO MIN 11:46 | PREM 20260811 769C day=1649704 cum=355657 | netdia=+0 netcum=+3221 | net3m=+264960
+2026-08-11 11:47:03,907 INFO MIN 11:46 | PREM 20260811 769P day=1516592 cum=0 | netdia=+0 netcum=+0 | net3m=+244183
+2026-08-11 11:47:03,907 INFO MIN 11:46 | PREM 20260811 770C day=4362851 cum=3255316 | netdia=+0 netcum=-578290 | net3m=+46842
+2026-08-11 11:47:03,907 INFO MIN 11:46 | PREM 20260811 770P day=5204191 cum=0 | netdia=+0 netcum=+0 | net3m=+575470
+2026-08-11 11:47:03,907 INFO MIN 11:46 | PREM 20260811 771C day=5509026 cum=3353070 | netdia=-39107 netcum=+88104 | net3m=+397429
+2026-08-11 11:47:03,907 INFO MIN 11:46 | PREM 20260811 771P day=7423709 cum=0 | netdia=+0 netcum=+0 | net3m=+1848947
+2026-08-11 11:47:03,907 INFO MIN 11:46 | PREM 20260811 772C day=18009758 cum=16151767 | netdia=-545431 netcum=-547361 | net3m=+244403
+2026-08-11 11:47:03,907 INFO MIN 11:46 | PREM 20260811 772P day=20235889 cum=2668707 | netdia=+359832 netcum=+359832 | net3m=-4123886
+2026-08-11 11:47:03,907 INFO MIN 11:46 | PREM 20260811 773C day=32849129 cum=30492814 | netdia=-198459 netcum=-848649 | net3m=+4006788
+2026-08-11 11:47:03,907 INFO MIN 11:46 | PREM 20260811 773P day=36876922 cum=24053980 | netdia=-3528781 netcum=-3484328 | net3m=+3695193
+2026-08-11 11:47:03,907 INFO MIN 11:46 | PREM 20260811 774C day=25217446 cum=2939751 | netdia=-156433 netcum=-158412 | net3m=+3291327
+2026-08-11 11:47:03,907 INFO MIN 11:46 | PREM 20260811 774P day=20051383 cum=20290373 | netdia=+208620 netcum=+235673 | net3m=+1135214
+2026-08-11 11:47:03,907 INFO MIN 11:46 | PREM 20260811 775C day=9504923 cum=0 | netdia=+0 netcum=+0 | net3m=-370170
+2026-08-11 11:47:03,907 INFO MIN 11:46 | PREM 20260811 775P day=6703428 cum=4586418 | netdia=+3455 netcum=+125686 | net3m=-642434
+2026-08-11 11:47:03,907 INFO MIN 11:46 | PREM 20260811 776C day=2735009 cum=0 | netdia=+0 netcum=+0 | net3m=+374380
+2026-08-11 11:47:03,907 INFO MIN 11:46 | PREM 20260811 776P day=3550535 cum=1655082 | netdia=+0 netcum=-22633 | net3m=-88607
+2026-08-11 11:47:03,907 INFO MIN 11:46 | PREM 20260811 777C day=1047820 cum=0 | netdia=+0 netcum=+0 | net3m=+89802
+2026-08-11 11:47:03,907 INFO MIN 11:46 | PREM 20260811 777P day=1373468 cum=773947 | netdia=+0 netcum=+47208 | net3m=+55089
+2026-08-11 11:47:03,907 INFO MIN 11:46 | PREM 20260811 778C day=397751 cum=0 | netdia=+0 netcum=+0 | net3m=+42085
+2026-08-11 11:47:03,907 INFO MIN 11:46 | PREM 20260811 778P day=874451 cum=30692 | netdia=+0 netcum=+0 | net3m=-11563
+2026-08-11 11:47:03,907 INFO MIN 11:46 | PREM 20260811 779C day=68259 cum=0 | netdia=+0 netcum=+0 | net3m=-1313
+2026-08-11 11:47:03,907 INFO MIN 11:46 | PREM 20260811 779P day=468033 cum=0 | netdia=+0 netcum=+0 | net3m=+19410
+2026-08-11 11:47:03,907 INFO MIN 11:46 | PREM 20260811 780C day=42344 cum=0 | netdia=+0 netcum=+0 | net3m=+1636
+2026-08-11 11:47:03,907 INFO MIN 11:46 | PREM 20260811 780P day=340785 cum=0 | netdia=+0 netcum=+0 | net3m=+48
+2026-08-11 11:47:03,907 INFO MIN 11:46 | PREM 20260811 781C day=13621 cum=0 | netdia=+0 netcum=+0 | net3m=+1217
+2026-08-11 11:47:03,907 INFO MIN 11:46 | PREM 20260811 781P day=372864 cum=0 | netdia=+0 netcum=+0 | net3m=+131310
+2026-08-11 11:47:03,907 INFO MIN 11:46 | PREM 20260811 782C day=6983 cum=0 | netdia=+0 netcum=+0 | net3m=-981
+2026-08-11 11:47:03,907 INFO MIN 11:46 | PREM 20260811 782P day=914441 cum=0 | netdia=+0 netcum=+0 | net3m=-78211
+2026-08-11 11:47:03,907 INFO MIN 11:46 | PREM 20260811 783C day=2593 cum=0 | netdia=+0 netcum=+0 | net3m=-193
+2026-08-11 11:47:03,907 INFO MIN 11:46 | PREM 20260811 783P day=769746 cum=0 | netdia=+0 netcum=+0 | net3m=+5425
+2026-08-11 11:47:03,907 INFO MIN 11:46 | PREM 20260811 784C day=4446 cum=0 | netdia=+0 netcum=+0 | net3m=+0
+2026-08-11 11:47:03,907 INFO MIN 11:46 | PREM 20260812 768C day=4009 cum=4009 | netdia=-495 netcum=-495 | net3m=+0
+2026-08-11 11:47:03,907 INFO MIN 11:46 | PREM 20260812 769C day=83323 cum=261807 | netdia=+2993 netcum=-14977 | net3m=+0
+2026-08-11 11:47:03,907 INFO MIN 11:46 | PREM 20260812 770C day=532792 cum=1178846 | netdia=-37448 netcum=-46096 | net3m=+0
+2026-08-11 11:47:03,907 INFO MIN 11:46 | PREM 20260812 771C day=1058952 cum=1690015 | netdia=-155134 netcum=-158334 | net3m=+0
+2026-08-11 11:47:03,907 INFO MIN 11:46 | PREM 20260812 772C day=2995506 cum=5416058 | netdia=-93946 netcum=-660 | net3m=+0
+2026-08-11 11:47:03,907 INFO MIN 11:46 | PREM 20260812 772P day=909759 cum=930379 | netdia=-133687 netcum=-133687 | net3m=+0
+2026-08-11 11:47:03,907 INFO MIN 11:46 | PREM 20260812 773C day=4821359 cum=6040302 | netdia=-252372 netcum=-378114 | net3m=+0
+2026-08-11 11:47:03,907 INFO MIN 11:46 | PREM 20260812 773P day=2600009 cum=3968128 | netdia=+75279 netcum=+49464 | net3m=+0
+2026-08-11 11:47:03,907 INFO MIN 11:46 | PREM 20260812 774C day=227076 cum=520475 | netdia=+79882 netcum=+79882 | net3m=+0
+2026-08-11 11:47:03,907 INFO MIN 11:46 | PREM 20260812 774P day=3699581 cum=5557283 | netdia=-160331 netcum=-246327 | net3m=+0
+2026-08-11 11:47:03,907 INFO MIN 11:46 | PREM 20260812 775P day=1921052 cum=2623107 | netdia=+93904 netcum=+93692 | net3m=+0
+2026-08-11 11:47:03,907 INFO MIN 11:46 | PREM 20260812 776P day=301402 cum=602687 | netdia=+14812 netcum=+10501 | net3m=+0
+2026-08-11 11:47:03,907 INFO MIN 11:46 | PREM 20260812 777P day=256231 cum=689969 | netdia=-38114 netcum=-40050 | net3m=+0
+2026-08-11 11:47:03,907 INFO MIN 11:46 | PREM 20260812 778P day=968 cum=24033 | netdia=-968 netcum=-968 | net3m=+0
+2026-08-11 11:47:03,907 INFO MIN 11:46 | PREM 20260813 768C day=33925 cum=33925 | netdia=+1534 netcum=+1534 | net3m=+0
+2026-08-11 11:47:03,907 INFO MIN 11:46 | PREM 20260813 769C day=41351 cum=66132 | netdia=+1615 netcum=+1017 | net3m=+0
+2026-08-11 11:47:03,916 INFO MIN 11:46 | PREM 20260813 770C day=327810 cum=672823 | netdia=-50509 netcum=-65272 | net3m=+0
+2026-08-11 11:47:03,916 INFO MIN 11:46 | PREM 20260813 771C day=102571 cum=559192 | netdia=+31203 netcum=+43699 | net3m=+0
+2026-08-11 11:47:03,916 INFO MIN 11:46 | PREM 20260813 772C day=373636 cum=783369 | netdia=-13689 netcum=-13843 | net3m=+0
+2026-08-11 11:47:03,916 INFO MIN 11:46 | PREM 20260813 772P day=88166 cum=90490 | netdia=+41645 netcum=+41645 | net3m=+0
+2026-08-11 11:47:03,916 INFO MIN 11:46 | PREM 20260813 773C day=724368 cum=1588622 | netdia=+90234 netcum=+110584 | net3m=+0
+2026-08-11 11:47:03,916 INFO MIN 11:46 | PREM 20260813 773P day=503094 cum=1007551 | netdia=-86584 netcum=-64210 | net3m=+0
+2026-08-11 11:47:03,916 INFO MIN 11:46 | PREM 20260813 774C day=79109 cum=432389 | netdia=+27280 netcum=+27280 | net3m=+0
+2026-08-11 11:47:03,916 INFO MIN 11:46 | PREM 20260813 774P day=899929 cum=1562599 | netdia=+343535 netcum=+300244 | net3m=+0
+2026-08-11 11:47:03,916 INFO MIN 11:46 | PREM 20260813 775P day=178171 cum=463179 | netdia=+9840 netcum=+13029 | net3m=+0
+2026-08-11 11:47:03,916 INFO MIN 11:46 | PREM 20260813 776P day=89835 cum=244671 | netdia=+2454 netcum=+11923 | net3m=+0
+2026-08-11 11:47:03,916 INFO MIN 11:46 | PREM 20260813 777P day=60235 cum=165389 | netdia=+11026 netcum=+13721 | net3m=+0
+2026-08-11 11:47:03,916 INFO MIN 11:46 | PREM 20260813 778P day=8474 cum=9011 | netdia=-2104 netcum=-2104 | net3m=+0
+2026-08-11 11:47:03,916 INFO MIN 11:46 | PREM 20260814 768C day=5112 cum=5112 | netdia=+5112 netcum=+5112 | net3m=+0
+2026-08-11 11:47:03,916 INFO MIN 11:46 | PREM 20260814 769C day=14247 cum=14247 | netdia=+4 netcum=+4 | net3m=+0
+2026-08-11 11:47:03,916 INFO MIN 11:46 | PREM 20260814 770C day=597660 cum=597660 | netdia=+5213 netcum=+5213 | net3m=+0
+2026-08-11 11:47:03,916 INFO MIN 11:46 | PREM 20260814 771C day=265150 cum=265150 | netdia=-6763 netcum=-6763 | net3m=+0
+2026-08-11 11:47:03,916 INFO MIN 11:46 | PREM 20260814 772C day=927996 cum=927996 | netdia=-158 netcum=-158 | net3m=+0
+2026-08-11 11:47:03,916 INFO MIN 11:46 | PREM 20260814 772P day=221604 cum=221604 | netdia=+54533 netcum=+54533 | net3m=+0
+2026-08-11 11:47:03,916 INFO MIN 11:46 | PREM 20260814 773C day=1195248 cum=1195248 | netdia=+3810 netcum=+3810 | net3m=+0
+2026-08-11 11:47:03,916 INFO MIN 11:46 | PREM 20260814 773P day=737335 cum=737335 | netdia=-52152 netcum=-52152 | net3m=+0
+2026-08-11 11:47:03,916 INFO MIN 11:46 | PREM 20260814 774C day=69301 cum=69301 | netdia=-30963 netcum=-30963 | net3m=+0
+2026-08-11 11:47:03,916 INFO MIN 11:46 | PREM 20260814 774P day=884003 cum=884003 | netdia=+43121 netcum=+43121 | net3m=+0
+2026-08-11 11:47:03,916 INFO MIN 11:46 | PREM 20260814 775P day=700507 cum=700507 | netdia=-23628 netcum=-23628 | net3m=+0
+2026-08-11 11:47:03,916 INFO MIN 11:46 | PREM 20260814 776P day=100835 cum=100835 | netdia=+20411 netcum=+20411 | net3m=+0
+2026-08-11 11:47:03,916 INFO MIN 11:46 | PREM 20260814 777P day=71640 cum=71640 | netdia=-13533 netcum=-13533 | net3m=+0
+2026-08-11 11:47:16,095 INFO SENAL put re-centrada -> 772P (precio 772.00)
+2026-08-11 11:47:16,718 INFO LINEA BASE re-centrada en 772.00: +3 nuevos, -3 soltados (siguiendo 24 contratos de 3 expiraciones)
+2026-08-11 11:47:18,749 INFO POS #5 minuto  773C | SPY=772.01 mid=0.40 (bid=0.40 ask=0.41 spread=0.01) | entrada=1.35 pnl=-94.86$ (-70.34%) | delta=0.31 gamma=0.18 theta=-0.40 vega=0.06 iv=0.11 | 4192s en posicion
+2026-08-11 11:47:36,983 INFO SENAL call re-centrada -> 771C (precio 771.97)
+2026-08-11 11:47:37,650 INFO LINEA BASE re-centrada en 771.97: +3 nuevos, -3 soltados (siguiendo 24 contratos de 3 expiraciones)
+2026-08-11 11:48:03,915 INFO MIN 11:47 | SPY=771.91 | TA dir=BEAR score=-1 rsi=32.6 macd=-0.170/-0.191/+0.021 ema8/21/50=772.04/772.18/772.53 bb=772.55/772.14/771.73 atr=0.23(0.03%) vwap=772.07 obv=bearish
+2026-08-11 11:48:03,915 INFO MIN 11:47 | SMA 20/50/200 = 772.14/772.60/773.15 | precio-SMA: -0.23/-0.69/-1.24 (informativo, NO decide)
+2026-08-11 11:48:03,915 INFO MIN 11:47 | SENAL netC=-739751 netP=-2034785 diff=1295034 thr=416180 mom=226121(30s) -> estado=UP pos=CALL
+2026-08-11 11:48:03,915 INFO MIN 11:47 | VELA 20260811 bruto C=243552.00 P=1081940.00 (sesgo PUT) | neto C=201658.00 P=926154.00 (diff -724496.00)
+2026-08-11 11:48:03,915 INFO MIN 11:47 | VENTANAS 1m: C=201658.00 P=926154.00 diff=-724496.00 | 5m: C=315479.00 P=876410.00 diff=-560931.00 | 15m: C=801515.00 P=1629109.00 diff=-827594.00   (informativo, NO decide)
+2026-08-11 11:48:03,915 INFO MIN 11:47 | Cuenta $304.08   disp $265.08   |   DIA -95.92 (-24.0%)   |   realizado +0.96 (interno)   ops 1 (1 ganadoras, 100%)
+2026-08-11 11:48:03,915 INFO MIN 11:47 | CONTRATO CALL entrada=1.35 actual=0.38 pnl=-97$
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260811 763C day=80057 cum=0 | netdia=+0 netcum=+0 | net3m=+0
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260811 763P day=2040 cum=0 | netdia=+0 netcum=+0 | net3m=+0
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260811 764C day=759595 cum=0 | netdia=+0 netcum=+0 | net3m=-2262
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260811 764P day=5390 cum=0 | netdia=+0 netcum=+0 | net3m=+1423
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260811 765C day=833570 cum=0 | netdia=+0 netcum=+0 | net3m=-434062
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260811 765P day=115049 cum=0 | netdia=+0 netcum=+0 | net3m=+16666
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260811 766C day=706687 cum=0 | netdia=+0 netcum=+0 | net3m=-76927
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260811 766P day=162586 cum=0 | netdia=+0 netcum=+0 | net3m=+4644
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260811 767C day=677118 cum=0 | netdia=+0 netcum=+0 | net3m=-85530
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260811 767P day=359565 cum=0 | netdia=+0 netcum=+0 | net3m=+60669
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260811 768C day=909982 cum=0 | netdia=+0 netcum=+0 | net3m=+79822
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260811 768P day=799903 cum=0 | netdia=+0 netcum=+0 | net3m=+265283
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260811 769C day=1649704 cum=355657 | netdia=+0 netcum=+3221 | net3m=+264960
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260811 769P day=1516592 cum=0 | netdia=+0 netcum=+0 | net3m=+244183
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260811 770C day=4362851 cum=3255316 | netdia=+0 netcum=-578290 | net3m=+46842
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260811 770P day=5204191 cum=0 | netdia=+0 netcum=+0 | net3m=+575470
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260811 771C day=5707496 cum=3551540 | netdia=+155751 netcum=+282962 | net3m=+397429
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260811 771P day=7423709 cum=0 | netdia=+0 netcum=+0 | net3m=+1848947
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260811 772C day=18054840 cum=16196849 | netdia=-538631 netcum=-540561 | net3m=+244403
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260811 772P day=21302382 cum=3735200 | netdia=+1292509 netcum=+1292509 | net3m=-4123886
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260811 773C day=32849129 cum=30492814 | netdia=-198459 netcum=-848649 | net3m=+4006788
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260811 773P day=36892369 cum=24069427 | netdia=-3535304 netcum=-3490851 | net3m=+3695193
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260811 774C day=25217446 cum=2939751 | netdia=-156433 netcum=-158412 | net3m=+3291327
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260811 774P day=20051383 cum=20290373 | netdia=+208620 netcum=+235673 | net3m=+1135214
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260811 775C day=9504923 cum=0 | netdia=+0 netcum=+0 | net3m=-370170
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260811 775P day=6703428 cum=4586418 | netdia=+3455 netcum=+125686 | net3m=-642434
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260811 776C day=2735009 cum=0 | netdia=+0 netcum=+0 | net3m=+374380
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260811 776P day=3550535 cum=1655082 | netdia=+0 netcum=-22633 | net3m=-88607
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260811 777C day=1047820 cum=0 | netdia=+0 netcum=+0 | net3m=+89802
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260811 777P day=1373468 cum=773947 | netdia=+0 netcum=+47208 | net3m=+55089
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260811 778C day=397751 cum=0 | netdia=+0 netcum=+0 | net3m=+42085
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260811 778P day=874451 cum=30692 | netdia=+0 netcum=+0 | net3m=-11563
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260811 779C day=68259 cum=0 | netdia=+0 netcum=+0 | net3m=-1313
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260811 779P day=468033 cum=0 | netdia=+0 netcum=+0 | net3m=+19410
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260811 780C day=42344 cum=0 | netdia=+0 netcum=+0 | net3m=+1636
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260811 780P day=340785 cum=0 | netdia=+0 netcum=+0 | net3m=+48
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260811 781C day=13621 cum=0 | netdia=+0 netcum=+0 | net3m=+1217
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260811 781P day=372864 cum=0 | netdia=+0 netcum=+0 | net3m=+131310
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260811 782C day=6983 cum=0 | netdia=+0 netcum=+0 | net3m=-981
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260811 782P day=914441 cum=0 | netdia=+0 netcum=+0 | net3m=-78211
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260811 783C day=2593 cum=0 | netdia=+0 netcum=+0 | net3m=-193
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260811 783P day=769746 cum=0 | netdia=+0 netcum=+0 | net3m=+5425
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260811 784C day=4446 cum=0 | netdia=+0 netcum=+0 | net3m=+0
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260812 768C day=8041 cum=8041 | netdia=-495 netcum=-495 | net3m=+0
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260812 769C day=84613 cum=263097 | netdia=+4283 netcum=-13687 | net3m=+0
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260812 770C day=532792 cum=1178846 | netdia=-37448 netcum=-46096 | net3m=+0
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260812 771C day=1068665 cum=1699728 | netdia=-155429 netcum=-158629 | net3m=+0
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260812 772C day=3003438 cum=5423990 | netdia=-90579 netcum=+2707 | net3m=+0
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260812 772P day=978143 cum=998763 | netdia=-182269 netcum=-182269 | net3m=+0
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260812 773C day=4821359 cum=6040302 | netdia=-252372 netcum=-378114 | net3m=+0
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260812 773P day=2602855 cum=3970974 | netdia=+75866 netcum=+50051 | net3m=+0
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260812 774C day=227076 cum=520475 | netdia=+79882 netcum=+79882 | net3m=+0
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260812 774P day=3700271 cum=5557973 | netdia=-159986 netcum=-245982 | net3m=+0
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260812 775P day=1921864 cum=2623919 | netdia=+93904 netcum=+93692 | net3m=+0
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260812 776P day=301402 cum=602687 | netdia=+14812 netcum=+10501 | net3m=+0
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260812 777P day=256231 cum=689969 | netdia=-38114 netcum=-40050 | net3m=+0
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260812 778P day=968 cum=24033 | netdia=-968 netcum=-968 | net3m=+0
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260813 768C day=37267 cum=37267 | netdia=-1808 netcum=-1808 | net3m=+0
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260813 769C day=41351 cum=66132 | netdia=+1615 netcum=+1017 | net3m=+0
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260813 770C day=327810 cum=672823 | netdia=-50509 netcum=-65272 | net3m=+0
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260813 771C day=102931 cum=559552 | netdia=+31203 netcum=+43699 | net3m=+0
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260813 772C day=376995 cum=786728 | netdia=-12166 netcum=-12320 | net3m=+0
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260813 772P day=96438 cum=98762 | netdia=+45477 netcum=+45477 | net3m=+0
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260813 773C day=724368 cum=1588622 | netdia=+90234 netcum=+110584 | net3m=+0
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260813 773P day=569353 cum=1073810 | netdia=-62291 netcum=-39917 | net3m=+0
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260813 774C day=79109 cum=432389 | netdia=+27280 netcum=+27280 | net3m=+0
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260813 774P day=899929 cum=1562599 | netdia=+343535 netcum=+300244 | net3m=+0
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260813 775P day=178171 cum=463179 | netdia=+9840 netcum=+13029 | net3m=+0
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260813 776P day=91410 cum=246246 | netdia=+2454 netcum=+11923 | net3m=+0
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260813 777P day=60235 cum=165389 | netdia=+11026 netcum=+13721 | net3m=+0
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260813 778P day=8474 cum=9011 | netdia=-2104 netcum=-2104 | net3m=+0
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260814 768C day=5112 cum=5112 | netdia=+5112 netcum=+5112 | net3m=+0
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260814 769C day=14247 cum=14247 | netdia=+4 netcum=+4 | net3m=+0
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260814 770C day=608490 cum=608490 | netdia=+5213 netcum=+5213 | net3m=+0
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260814 771C day=266010 cum=266010 | netdia=-5903 netcum=-5903 | net3m=+0
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260814 772C day=940025 cum=940025 | netdia=+4351 netcum=+4351 | net3m=+0
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260814 772P day=223317 cum=223317 | netdia=+52820 netcum=+52820 | net3m=+0
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260814 773C day=1195248 cum=1195248 | netdia=+3810 netcum=+3810 | net3m=+0
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260814 773P day=738503 cum=738503 | netdia=-52536 netcum=-52536 | net3m=+0
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260814 774C day=69301 cum=69301 | netdia=-30963 netcum=-30963 | net3m=+0
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260814 774P day=890670 cum=890670 | netdia=+43121 netcum=+43121 | net3m=+0
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260814 775P day=700507 cum=700507 | netdia=-23628 netcum=-23628 | net3m=+0
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260814 776P day=100835 cum=100835 | netdia=+20411 netcum=+20411 | net3m=+0
+2026-08-11 11:48:03,915 INFO MIN 11:47 | PREM 20260814 777P day=71640 cum=71640 | netdia=-13533 netcum=-13533 | net3m=+0
+2026-08-11 11:48:20,111 INFO POS #5 minuto  773C | SPY=771.95 mid=0.40 (bid=0.39 ask=0.40 spread=0.01) | entrada=1.35 pnl=-94.86$ (-70.34%) | delta=0.30 gamma=0.17 theta=-0.38 vega=0.06 iv=0.11 | 4254s en posicion
+2026-08-11 11:48:49,750 INFO NUEVO DIA - acumuladores intradia reiniciados (senal en 0)
+2026-08-11 11:48:50,055 INFO Conectado a IB Gateway 127.0.0.1:4002 (clientId=7)
+2026-08-11 11:48:57,721 INFO WALLS banda lista (streaming): 40 contratos (20 strikes, +-10 por lado)
+2026-08-11 11:48:57,737 INFO ESTADO INTRADIA restaurado (guardado 11:48:14): netC=-738308 netP=-2033412 -> umbral 415758 (sin restaurar habria sido 5000) | realizado 0.96 ops 1 (1 ganadoras) | estado=UP | base del dia=400.00
+2026-08-11 11:48:57,737 INFO ESTADO DEL DIA repuesto: 84 strikes con premium, 0 con net_prem, 0 con volumen, 7 giros | prev_vol/band_prev_vol/buys_pend vacios a proposito
+2026-08-11 11:48:57,737 INFO SELLO DE SESION 11:48:57: QTY=1 thr=5000 adapt=0.15 mom=0.60/30s reprice=4s banda=10/180s exec=ATM-real walls=gamma trading=ON cross=15:55 barras=2 D recoleccion>=09:30 opera>=09:35 | gaps: GAP1,GAP3,GAP7,GAP8,GAP9,GAP11,GAP12,GAP13,GAP14,GAP15,GAP16,GAP17,GAP2,GAP4,GAP5,M2,M12,GAP18,GAP19,GAP17bis,GAP20,GAP21,SMA20-50-200,BARS2D
+2026-08-11 11:48:59,261 INFO SETUP OK  SPY=771.97  cercano=20260811  senal C771/P772 (ATM/ITM)  opera C772/P771 (OTM)  | baseline exps=3  [LIVE]
+2026-08-11 11:48:59,261 INFO CONECTADO (sesion 2026-08-11)
+2026-08-11 11:49:00,330 INFO SENAL call re-centrada -> 772C (precio 772.00)
+2026-08-11 11:49:00,604 INFO EJECUCION put -> ATM real 772P (precio 772.00)
+2026-08-11 11:49:01,525 INFO LINEA BASE re-centrada en 772.00: +3 nuevos, -3 soltados (siguiendo 24 contratos de 3 expiraciones)
+2026-08-11 11:49:01,525 INFO Market data suscrito para el contrato en cartera SPY   260811C00773000
+2026-08-11 11:49:01,525 INFO Entrada recuperada de IBKR (avgCost=134.86) -> 1.3486
+2026-08-11 11:49:01,525 INFO Reconcile: posicion real CALL SPY   260811C00773000 x1 -> contrato de salida reapuntado
+2026-08-11 11:49:01,525 INFO TRADE: posicion CALL x1 adoptada de IBKR sin registro -> abriendo fila en trades @ 1.3486 (GAP 20)
+2026-08-11 11:49:01,541 INFO POS #6 entrada 773C | SPY=772.00 mid=- (bid=- ask=- spread=-) | entrada=1.35 pnl=-$ (-%) | delta=0.31 gamma=0.18 theta=-0.40 vega=0.06 iv=0.11 | 0s en posicion
+2026-08-11 11:49:01,541 INFO TRADE #6 ABIERTO CALL 773C @ 1.35 | greeks delta=0.31 gamma=0.18 theta=-0.40 iv=0.11
+2026-08-11 11:49:01,541 INFO TRADE #6 CONTEXTO | min_sesion=139 | TA BEAR score=-2.00 rsi=52.53 atr=0.03% bb_ancho=0.10% | dist: vwap=-0.04 peso=- flip=- CW=- PW=- | GEX=- - | diff=1299490.00 thr=416540.40 mom=0.00
+2026-08-11 11:49:01,699 INFO PNL: IBKR no expone RealizedPnL en accountSummary -> el panel sigue usando el calculo interno (puede desviarse, ver M2)
+2026-08-11 11:49:01,715 INFO WALLS spot=772.00 PW=773.00 CW=773.00 magneto est=772.00/din=772.00 peso=772.90 | GEX=-53.572Bn regime=SHORT flip=- | faltan OI=0 greeks=0 de 40 | frescura: gamma cambiaron=40/40 ult_tick=2026-08-11 15:49:01.651986+00:00
+2026-08-11 11:49:01,715 INFO WALLS detalle por strike: 762C:OI=630.00,g=0.01,net=+0 | 762P:OI=3018.00,g=0.01,net=+0 | 763C:OI=387.00,g=0.01,net=+0 | 763P:OI=3297.00,g=0.01,net=+0 | 764C:OI=1485.00,g=0.01,net=+0 | 764P:OI=4210.00,g=0.01,net=+0 | 765C:OI=784.00,g=0.02,net=+0 | 765P:OI=11907.00,g=0.02,net=+0 | 766C:OI=873.00,g=0.02,net=+0 | 766P:OI=5035.00,g=0.02,net=+0 | 767C:OI=1633.00,g=0.03,net=+0 | 767P:OI=6107.00,g=0.03,net=+0 | 768C:OI=978.00,g=0.05,net=+0 | 768P:OI=4474.00,g=0.05,net=+0 | 769C:OI=1723.00,g=0.08,net=+0 | 769P:OI=5507.00,g=0.08,net=+0 | 770C:OI=6182.00,g=0.12,net=+0 | 770P:OI=12729.00,g=0.12,net=+0 | 771C:OI=4384.00,g=0.16,net=+0 | 771P:OI=6252.00,g=0.16,net=+0 | 772C:OI=4158.00,g=0.19,net=+0 | 772P:OI=9389.00,g=0.20,net=+0 | 773C:OI=12230.00,g=0.18,net=+0 | 773P:OI=11080.00,g=0.18,net=+0 | 774C:OI=7748.00,g=0.12,net=+0 | 774P:OI=4050.00,g=0.12,net=+0 | 775C:OI=13318.00,g=0.07,net=+0 | 775P:OI=1516.00,g=0.07,net=+0 | 776C:OI=7556.00,g=0.04,net=+0 | 776P:OI=816.00,g=0.04,net=+0 | 777C:OI=7461.00,g=0.02,net=+0 | 777P:OI=1055.00,g=0.03,net=+0 | 778C:OI=6002.00,g=0.02,net=+0 | 778P:OI=442.00,g=0.02,net=+0 | 779C:OI=4817.00,g=0.01,net=+0 | 779P:OI=328.00,g=0.01,net=+0 | 780C:OI=8223.00,g=0.01,net=+0 | 780P:OI=209.00,g=0.01,net=+0 | 781C:OI=3575.00,g=0.01,net=+0 | 781P:OI=6.00,g=0.01,net=+0
+2026-08-11 11:49:01,715 INFO WALLS GAP2: premium de los strikes de SENAL (772C, 772P) NO sumado aqui para evitar el doble conteo (lo lleva _on_ticks, por tick)
+2026-08-11 11:49:01,715 INFO TRADE ARMADO - en CALL 1, esperando giro a DOWN
+2026-08-11 11:49:03,780 INFO MIN 11:48 | SPY=772.00 | TA dir=BEAR score=-2 rsi=52.5 macd=-0.163/-0.186/+0.022 ema8/21/50=772.03/772.16/772.51 bb=772.51/772.12/771.72 atr=0.20(0.03%) vwap=772.04 obv=neutral
+2026-08-11 11:49:03,780 INFO MIN 11:48 | SMA 20/50/200 = 772.12/772.57/773.14 | precio-SMA: -0.12/-0.57/-1.14 (informativo, NO decide)
+2026-08-11 11:49:03,780 INFO MIN 11:48 | SENAL netC=-744462 netP=-2035776 diff=1291314 thr=417036 mom=0(30s) -> estado=UP pos=CALL
+2026-08-11 11:49:03,780 INFO MIN 11:48 | VELA 20260811 bruto C=- P=- (sesgo -) | neto C=- P=- (diff -)
+2026-08-11 11:49:03,780 INFO MIN 11:48 | VENTANAS 1m: C=- P=- diff=- | 5m: C=- P=- diff=- | 15m: C=- P=- diff=-   (informativo, NO decide)
+2026-08-11 11:49:03,780 INFO MIN 11:48 | Cuenta $304.08   disp $265.08   |   DIA -95.92 (-24.0%)   |   realizado +0.96 (interno)   ops 1 (1 ganadoras, 100%)
+2026-08-11 11:49:03,780 INFO MIN 11:48 | CONTRATO CALL entrada=1.35 actual=0.40 pnl=-95$
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260811 763C day=80057 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=8.92 ask=9.22 mid=9.07 last=9.12 sprd=0.30
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260811 763P day=2040 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=0.02 ask=0.03 mid=0.03 last=0.02 sprd=0.01
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260811 764C day=759595 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=7.92 ask=8.11 mid=8.02 last=8.06 sprd=0.19
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260811 764P day=5390 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=0.02 ask=0.03 mid=0.03 last=0.03 sprd=0.01
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260811 765C day=833570 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=6.96 ask=7.11 mid=7.04 last=7.00 sprd=0.15
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260811 765P day=115049 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=0.03 ask=0.04 mid=0.04 last=0.04 sprd=0.01
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260811 766C day=706687 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=5.94 ask=6.13 mid=6.04 last=6.10 sprd=0.19
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260811 766P day=162586 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=0.04 ask=0.05 mid=0.04 last=0.04 sprd=0.01
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260811 767C day=677118 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=4.99 ask=5.08 mid=5.04 last=5.05 sprd=0.09
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260811 767P day=359565 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=0.06 ask=0.07 mid=0.07 last=0.07 sprd=0.01
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260811 768C day=909982 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=4.08 ask=4.10 mid=4.09 last=4.14 sprd=0.02
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260811 768P day=799903 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=0.09 ask=0.10 mid=0.10 last=0.09 sprd=0.01
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260811 769C day=1649704 cum=355657 | netdia=+0 netcum=+3221 | net3m=+0 | bid=3.14 ask=3.16 mid=3.15 last=3.17 sprd=0.02
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260811 769P day=1516592 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=0.15 ask=0.16 mid=0.15 last=0.16 sprd=0.01
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260811 770C day=4362851 cum=3255316 | netdia=+0 netcum=-578290 | net3m=+0 | bid=2.25 ask=2.27 mid=2.26 last=2.24 sprd=0.02
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260811 770P day=5204191 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=0.27 ask=0.28 mid=0.28 last=0.28 sprd=0.01
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260811 771C day=5714252 cum=3558296 | netdia=+157194 netcum=+284405 | net3m=+0 | bid=1.45 ask=1.46 mid=1.46 last=1.45 sprd=0.01
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260811 771P day=7423709 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=0.47 ask=0.48 mid=0.47 last=0.47 sprd=0.01
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260811 772C day=18065620 cum=16207629 | netdia=-544785 netcum=-546715 | net3m=+0 | bid=0.82 ask=0.83 mid=0.82 last=0.83 sprd=0.01
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260811 772P day=21340619 cum=3773437 | netdia=+1291518 netcum=+1291518 | net3m=+0 | bid=0.83 ask=0.84 mid=0.83 last=0.84 sprd=0.01
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260811 773C day=32849129 cum=30492814 | netdia=-198459 netcum=-848649 | net3m=+0 | bid=0.39 ask=0.40 mid=0.40 last=0.39 sprd=0.01
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260811 773P day=36892369 cum=24069427 | netdia=-3535304 netcum=-3490851 | net3m=+0 | bid=1.39 ask=1.42 mid=1.41 last=1.43 sprd=0.03
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260811 774C day=25217446 cum=2939751 | netdia=-156433 netcum=-158412 | net3m=+0 | bid=0.17 ask=0.18 mid=0.17 last=0.17 sprd=0.01
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260811 774P day=20051383 cum=20290373 | netdia=+208620 netcum=+235673 | net3m=+0 | bid=2.17 ask=2.19 mid=2.18 last=2.18 sprd=0.02
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260811 775C day=9504923 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=0.08 ask=0.09 mid=0.09 last=0.08 sprd=0.01
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260811 775P day=6703428 cum=4586418 | netdia=+3455 netcum=+125686 | net3m=+0 | bid=3.03 ask=3.15 mid=3.09 last=3.11 sprd=0.12
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260811 776C day=2735009 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=0.04 ask=0.05 mid=0.04 last=0.04 sprd=0.01
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260811 776P day=3550535 cum=1655082 | netdia=+0 netcum=-22633 | net3m=+0 | bid=3.99 ask=4.11 mid=4.05 last=3.99 sprd=0.12
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260811 777C day=1047820 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=0.03 ask=0.04 mid=0.04 last=0.03 sprd=0.01
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260811 777P day=1373468 cum=773947 | netdia=+0 netcum=+47208 | net3m=+0 | bid=4.95 ask=5.10 mid=5.03 last=5.10 sprd=0.15
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260811 778C day=397751 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=0.02 ask=0.03 mid=0.03 last=0.02 sprd=0.01
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260811 778P day=874451 cum=30692 | netdia=+0 netcum=+0 | net3m=+0 | bid=6.00 ask=6.09 mid=6.04 last=6.05 sprd=0.09
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260811 779C day=68259 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=0.02 ask=0.03 mid=0.03 last=0.03 sprd=0.01
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260811 779P day=468033 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=6.93 ask=7.12 mid=7.03 last=6.95 sprd=0.19
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260811 780C day=42344 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=0.01 ask=0.02 mid=0.01 last=0.01 sprd=0.01
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260811 780P day=340785 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=7.93 ask=8.12 mid=8.03 last=8.07 sprd=0.19
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260811 781C day=13621 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=0.01 ask=0.02 mid=0.01 last=0.01 sprd=0.01
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260811 781P day=372864 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=8.93 ask=9.12 mid=9.03 last=9.16 sprd=0.19
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260811 782C day=6983 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260811 782P day=914441 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260811 783C day=2593 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260811 783P day=769746 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260811 784C day=4446 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260812 768C day=8041 cum=8041 | netdia=-495 netcum=-495 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260812 769C day=85466 cum=263950 | netdia=+4711 netcum=-13259 | net3m=+0 | bid=4.27 ask=4.31 mid=4.29 last=4.34 sprd=0.04
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260812 770C day=532792 cum=1178846 | netdia=-37448 netcum=-46096 | net3m=+0 | bid=3.58 ask=3.62 mid=3.60 last=3.63 sprd=0.04
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260812 771C day=1068665 cum=1699728 | netdia=-155429 netcum=-158629 | net3m=+0 | bid=2.95 ask=2.99 mid=2.97 last=3.00 sprd=0.04
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260812 772C day=3003678 cum=5424230 | netdia=-90339 netcum=+2947 | net3m=+0 | bid=2.39 ask=2.41 mid=2.40 last=2.40 sprd=0.02
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260812 772P day=996467 cum=1017087 | netdia=-193435 netcum=-193435 | net3m=+0 | bid=2.36 ask=2.37 mid=2.37 last=2.38 sprd=0.01
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260812 773C day=4821359 cum=6040302 | netdia=-252372 netcum=-378114 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260812 773P day=2603431 cum=3971550 | netdia=+75866 netcum=+50051 | net3m=+0 | bid=2.84 ask=2.88 mid=2.86 last=2.88 sprd=0.04
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260812 774C day=227076 cum=520475 | netdia=+79882 netcum=+79882 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260812 774P day=3700961 cum=5558663 | netdia=-160331 netcum=-246327 | net3m=+0 | bid=3.42 ask=3.45 mid=3.44 last=3.41 sprd=0.03
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260812 775P day=1921864 cum=2623919 | netdia=+93904 netcum=+93692 | net3m=+0 | bid=4.06 ask=4.10 mid=4.08 last=4.07 sprd=0.04
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260812 776P day=301402 cum=602687 | netdia=+14812 netcum=+10501 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260812 777P day=256231 cum=689969 | netdia=-38114 netcum=-40050 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260812 778P day=968 cum=24033 | netdia=-968 netcum=-968 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260813 768C day=37267 cum=37267 | netdia=-1808 netcum=-1808 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260813 769C day=41351 cum=66132 | netdia=+1615 netcum=+1017 | net3m=+0 | bid=4.85 ask=4.94 mid=4.89 last=5.00 sprd=0.09
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260813 770C day=327810 cum=672823 | netdia=-50509 netcum=-65272 | net3m=+0 | bid=4.18 ask=4.25 mid=4.21 last=4.28 sprd=0.07
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260813 771C day=103649 cum=560270 | netdia=+31203 netcum=+43699 | net3m=+0 | bid=3.57 ask=3.64 mid=3.60 last=3.61 sprd=0.07
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260813 772C day=376995 cum=786728 | netdia=-12166 netcum=-12320 | net3m=+0 | bid=3.03 ask=3.05 mid=3.04 last=3.04 sprd=0.02
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260813 772P day=102054 cum=104378 | netdia=+46056 netcum=+46056 | net3m=+0 | bid=2.94 ask=2.96 mid=2.95 last=2.95 sprd=0.02
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260813 773C day=724368 cum=1588622 | netdia=+90234 netcum=+110584 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260813 773P day=569698 cum=1074155 | netdia=-62636 netcum=-40262 | net3m=+0 | bid=3.44 ask=3.45 mid=3.44 last=3.45 sprd=0.01
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260813 774C day=79109 cum=432389 | netdia=+27280 netcum=+27280 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260813 774P day=899929 cum=1562599 | netdia=+343535 netcum=+300244 | net3m=+0 | bid=3.96 ask=4.04 mid=4.00 last=4.03 sprd=0.08
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260813 775P day=178171 cum=463179 | netdia=+9840 netcum=+13029 | net3m=+0 | bid=4.57 ask=4.65 mid=4.61 last=4.46 sprd=0.08
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260813 776P day=91410 cum=246246 | netdia=+2454 netcum=+11923 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260813 777P day=60235 cum=165389 | netdia=+11026 netcum=+13721 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260813 778P day=8474 cum=9011 | netdia=-2104 netcum=-2104 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260814 768C day=5112 cum=5112 | netdia=+5112 netcum=+5112 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260814 769C day=14247 cum=14247 | netdia=+4 netcum=+4 | net3m=+0 | bid=5.54 ask=5.62 mid=5.58 last=6.07 sprd=0.08
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260814 770C day=608490 cum=608490 | netdia=+5213 netcum=+5213 | net3m=+0 | bid=4.89 ask=4.95 mid=4.92 last=4.90 sprd=0.06
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260814 771C day=266445 cum=266445 | netdia=-5468 netcum=-5468 | net3m=+0 | bid=4.28 ask=4.33 mid=4.30 last=4.35 sprd=0.05
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260814 772C day=940402 cum=940402 | netdia=+4728 netcum=+4728 | net3m=+0 | bid=3.73 ask=3.75 mid=3.74 last=3.77 sprd=0.02
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260814 772P day=226065 cum=226065 | netdia=+52820 netcum=+52820 | net3m=+0 | bid=3.43 ask=3.45 mid=3.44 last=3.43 sprd=0.02
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260814 773C day=1195248 cum=1195248 | netdia=+3810 netcum=+3810 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260814 773P day=740476 cum=740476 | netdia=-53324 netcum=-53324 | net3m=+0 | bid=3.91 ask=3.94 mid=3.92 last=3.90 sprd=0.03
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260814 774C day=69301 cum=69301 | netdia=-30963 netcum=-30963 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260814 774P day=891113 cum=891113 | netdia=+43121 netcum=+43121 | net3m=+0 | bid=4.43 ask=4.49 mid=4.46 last=4.43 sprd=0.06
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260814 775P day=700507 cum=700507 | netdia=-23628 netcum=-23628 | net3m=+0 | bid=5.01 ask=5.08 mid=5.04 last=4.97 sprd=0.07
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260814 776P day=100835 cum=100835 | netdia=+20411 netcum=+20411 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:49:03,780 INFO MIN 11:48 | PREM 20260814 777P day=71640 cum=71640 | netdia=-13533 netcum=-13533 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:49:22,117 INFO SENAL put re-centrada -> 773P (precio 772.04)
+2026-08-11 11:49:23,049 INFO LINEA BASE re-centrada en 772.04: +3 nuevos, -3 soltados (siguiendo 24 contratos de 3 expiraciones)
+2026-08-11 11:50:01,549 INFO POS #6 minuto  773C | SPY=772.00 mid=0.40 (bid=0.40 ask=0.41 spread=0.01) | entrada=1.35 pnl=-94.86$ (-70.34%) | delta=0.32 gamma=0.18 theta=-0.42 vega=0.06 iv=0.12 | 60s en posicion
+2026-08-11 11:50:03,581 INFO MIN 11:49 | SPY=772.00 | TA dir=BEAR score=-3 rsi=49.5 macd=-0.156/-0.180/+0.024 ema8/21/50=772.02/772.15/772.49 bb=772.47/772.10/771.72 atr=0.20(0.03%) vwap=772.01 obv=bearish
+2026-08-11 11:50:03,581 INFO MIN 11:49 | SMA 20/50/200 = 772.10/772.54/773.13 | precio-SMA: -0.10/-0.54/-1.13 (informativo, NO decide)
+2026-08-11 11:50:03,581 INFO MIN 11:49 | SENAL netC=-759992 netP=-2095469 diff=1335477 thr=428319 mom=-4385(30s) -> estado=UP pos=CALL
+2026-08-11 11:50:03,581 INFO MIN 11:49 | VELA 20260811 bruto C=92732.00 P=126813.00 (sesgo PUT) | neto C=-15530.00 P=-59693.00 (diff 44163.00)
+2026-08-11 11:50:03,581 INFO MIN 11:49 | VENTANAS 1m: C=-15447.00 P=-59441.00 diff=43994.00 | 5m: C=- P=- diff=- | 15m: C=- P=- diff=-   (informativo, NO decide)
+2026-08-11 11:50:03,581 INFO MIN 11:49 | Cuenta $304.08   disp $265.08   |   DIA -95.92 (-24.0%)   |   realizado +0.96 (interno)   ops 1 (1 ganadoras, 100%)
+2026-08-11 11:50:03,581 INFO MIN 11:49 | CONTRATO CALL entrada=1.35 actual=0.40 pnl=-95$
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260811 763C day=80057 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=8.92 ask=9.22 mid=9.07 last=9.12 sprd=0.30
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260811 763P day=2040 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=0.02 ask=0.03 mid=0.03 last=0.02 sprd=0.01
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260811 764C day=759595 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=8.01 ask=8.21 mid=8.11 last=8.06 sprd=0.20
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260811 764P day=5390 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=0.02 ask=0.03 mid=0.03 last=0.02 sprd=0.01
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260811 765C day=833570 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=7.02 ask=7.21 mid=7.12 last=7.00 sprd=0.19
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260811 765P day=115049 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=0.03 ask=0.04 mid=0.04 last=0.03 sprd=0.01
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260811 766C day=706687 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=6.01 ask=6.22 mid=6.12 last=6.10 sprd=0.21
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260811 766P day=162586 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=0.04 ask=0.05 mid=0.04 last=0.05 sprd=0.01
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260811 767C day=677118 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=5.05 ask=5.17 mid=5.11 last=5.05 sprd=0.12
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260811 767P day=359565 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=0.06 ask=0.07 mid=0.07 last=0.06 sprd=0.01
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260811 768C day=909982 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=4.16 ask=4.18 mid=4.17 last=4.21 sprd=0.02
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260811 768P day=799903 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=0.09 ask=0.10 mid=0.10 last=0.10 sprd=0.01
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260811 769C day=1649704 cum=355657 | netdia=+0 netcum=+3221 | net3m=+0 | bid=3.21 ask=3.24 mid=3.23 last=3.25 sprd=0.03
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260811 769P day=1516592 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=0.15 ask=0.16 mid=0.15 last=0.15 sprd=0.01
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260811 770C day=4362851 cum=3255316 | netdia=+0 netcum=-578290 | net3m=+0 | bid=2.31 ask=2.34 mid=2.33 last=2.31 sprd=0.03
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260811 770P day=5204191 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=0.25 ask=0.26 mid=0.26 last=0.25 sprd=0.01
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260811 771C day=5714252 cum=3558296 | netdia=+157194 netcum=+284405 | net3m=+0 | bid=1.50 ask=1.51 mid=1.50 last=1.50 sprd=0.01
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260811 771P day=7423709 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=0.43 ask=0.45 mid=0.44 last=0.45 sprd=0.02
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260811 772C day=18158352 cum=16300361 | netdia=-560315 netcum=-562245 | net3m=+0 | bid=0.85 ask=0.86 mid=0.85 last=0.86 sprd=0.01
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260811 772P day=21427472 cum=3860290 | netdia=+1247529 netcum=+1247529 | net3m=+0 | bid=0.78 ask=0.79 mid=0.79 last=0.79 sprd=0.01
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260811 773C day=32849129 cum=30492814 | netdia=-198459 netcum=-848649 | net3m=+0 | bid=0.40 ask=0.41 mid=0.41 last=0.41 sprd=0.01
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260811 773P day=36932329 cum=24109387 | netdia=-3551008 netcum=-3506555 | net3m=+0 | bid=1.32 ask=1.35 mid=1.33 last=1.34 sprd=0.03
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260811 774C day=25217446 cum=2939751 | netdia=-156433 netcum=-158412 | net3m=+0 | bid=0.17 ask=0.18 mid=0.17 last=0.18 sprd=0.01
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260811 774P day=20051383 cum=20290373 | netdia=+208620 netcum=+235673 | net3m=+0 | bid=2.09 ask=2.11 mid=2.10 last=2.11 sprd=0.02
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260811 775C day=9504923 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=0.08 ask=0.09 mid=0.09 last=0.08 sprd=0.01
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260811 775P day=6703428 cum=4586418 | netdia=+3455 netcum=+125686 | net3m=+0 | bid=2.97 ask=3.08 mid=3.02 last=3.01 sprd=0.11
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260811 776C day=2735009 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=0.04 ask=0.05 mid=0.04 last=0.04 sprd=0.01
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260811 776P day=3550535 cum=1655082 | netdia=+0 netcum=-22633 | net3m=+0 | bid=3.94 ask=4.05 mid=4.00 last=3.98 sprd=0.11
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260811 777C day=1047820 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=0.03 ask=0.04 mid=0.04 last=0.04 sprd=0.01
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260811 777P day=1373468 cum=773947 | netdia=+0 netcum=+47208 | net3m=+0 | bid=4.85 ask=5.04 mid=4.95 last=4.90 sprd=0.19
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260811 778C day=397751 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=0.02 ask=0.03 mid=0.03 last=0.03 sprd=0.01
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260811 778P day=874451 cum=30692 | netdia=+0 netcum=+0 | net3m=+0 | bid=5.84 ask=6.03 mid=5.93 last=5.98 sprd=0.19
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260811 779C day=68259 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=0.02 ask=0.03 mid=0.03 last=0.02 sprd=0.01
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260811 779P day=468033 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=6.88 ask=7.04 mid=6.96 last=6.95 sprd=0.16
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260811 780C day=42344 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=0.01 ask=0.02 mid=0.01 last=0.01 sprd=0.01
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260811 780P day=340785 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=7.88 ask=8.09 mid=7.99 last=7.93 sprd=0.21
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260811 781C day=13621 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=0.01 ask=0.02 mid=0.01 last=0.01 sprd=0.01
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260811 781P day=372864 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=8.88 ask=9.09 mid=8.98 last=9.16 sprd=0.21
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260811 782C day=6983 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260811 782P day=914441 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260811 783C day=2593 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260811 783P day=769746 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260811 784C day=4446 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260812 768C day=8041 cum=8041 | netdia=-495 netcum=-495 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260812 769C day=88930 cum=267414 | netdia=+4717 netcum=-13253 | net3m=+0 | bid=4.33 ask=4.37 mid=4.35 last=4.34 sprd=0.04
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260812 770C day=569822 cum=1215876 | netdia=-37813 netcum=-46461 | net3m=+0 | bid=3.64 ask=3.68 mid=3.66 last=3.65 sprd=0.04
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260812 771C day=1069866 cum=1700929 | netdia=-156630 netcum=-159830 | net3m=+0 | bid=3.00 ask=3.04 mid=3.02 last=2.98 sprd=0.04
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260812 772C day=3022656 cum=5443208 | netdia=-84251 netcum=+9035 | net3m=+0 | bid=2.44 ask=2.45 mid=2.44 last=2.43 sprd=0.01
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260812 772P day=1030315 cum=1050935 | netdia=-161232 netcum=-161232 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260812 773C day=4821359 cum=6040302 | netdia=-252372 netcum=-378114 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260812 773P day=2614980 cum=3983099 | netdia=+79235 netcum=+53420 | net3m=+0 | bid=2.79 ask=2.83 mid=2.81 last=2.83 sprd=0.04
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260812 774C day=227076 cum=520475 | netdia=+79882 netcum=+79882 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260812 774P day=3701634 cum=5559336 | netdia=-160322 netcum=-246318 | net3m=+0 | bid=3.36 ask=3.40 mid=3.38 last=3.32 sprd=0.04
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260812 775P day=1921864 cum=2623919 | netdia=+93904 netcum=+93692 | net3m=+0 | bid=4.00 ask=4.04 mid=4.02 last=4.07 sprd=0.04
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260812 776P day=301402 cum=602687 | netdia=+14812 netcum=+10501 | net3m=+0 | bid=4.70 ask=4.75 mid=4.72 last=4.74 sprd=0.05
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260812 777P day=256231 cum=689969 | netdia=-38114 netcum=-40050 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260812 778P day=968 cum=24033 | netdia=-968 netcum=-968 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260813 768C day=37267 cum=37267 | netdia=-1808 netcum=-1808 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260813 769C day=41351 cum=66132 | netdia=+1615 netcum=+1017 | net3m=+0 | bid=4.91 ask=4.98 mid=4.95 last=5.00 sprd=0.07
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260813 770C day=327810 cum=672823 | netdia=-50509 netcum=-65272 | net3m=+0 | bid=4.24 ask=4.31 mid=4.28 last=4.28 sprd=0.07
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260813 771C day=104013 cum=560634 | netdia=+31203 netcum=+43699 | net3m=+0 | bid=3.62 ask=3.68 mid=3.65 last=3.64 sprd=0.06
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260813 772C day=377915 cum=787648 | netdia=-11860 netcum=-12014 | net3m=+0 | bid=3.07 ask=3.10 mid=3.08 last=3.07 sprd=0.03
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260813 772P day=102054 cum=104378 | netdia=+46056 netcum=+46056 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260813 773C day=724368 cum=1588622 | netdia=+90234 netcum=+110584 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260813 773P day=569698 cum=1074155 | netdia=-62636 netcum=-40262 | net3m=+0 | bid=3.38 ask=3.41 mid=3.40 last=3.45 sprd=0.03
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260813 774C day=79109 cum=432389 | netdia=+27280 netcum=+27280 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260813 774P day=899929 cum=1562599 | netdia=+343535 netcum=+300244 | net3m=+0 | bid=3.91 ask=3.98 mid=3.94 last=4.03 sprd=0.07
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260813 775P day=178171 cum=463179 | netdia=+9840 netcum=+13029 | net3m=+0 | bid=4.51 ask=4.59 mid=4.55 last=4.46 sprd=0.08
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260813 776P day=92967 cum=247803 | netdia=+897 netcum=+10366 | net3m=+0 | bid=5.11 ask=5.33 mid=5.22 last=5.19 sprd=0.22
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260813 777P day=60235 cum=165389 | netdia=+11026 netcum=+13721 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260813 778P day=8474 cum=9011 | netdia=-2104 netcum=-2104 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260814 768C day=5112 cum=5112 | netdia=+5112 netcum=+5112 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260814 769C day=14247 cum=14247 | netdia=+4 netcum=+4 | net3m=+0 | bid=5.59 ask=5.67 mid=5.63 last=6.07 sprd=0.08
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260814 770C day=614485 cum=614485 | netdia=+10214 netcum=+10214 | net3m=+0 | bid=4.95 ask=5.00 mid=4.97 last=4.98 sprd=0.05
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260814 771C day=267313 cum=267313 | netdia=-5468 netcum=-5468 | net3m=+0 | bid=4.33 ask=4.38 mid=4.36 last=4.33 sprd=0.05
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260814 772C day=943044 cum=943044 | netdia=+5474 netcum=+5474 | net3m=+0 | bid=3.76 ask=3.80 mid=3.78 last=3.80 sprd=0.04
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260814 772P day=227088 cum=227088 | netdia=+52479 netcum=+52479 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260814 773C day=1195248 cum=1195248 | netdia=+3810 netcum=+3810 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260814 773P day=741251 cum=741251 | netdia=-53710 netcum=-53710 | net3m=+0 | bid=3.86 ask=3.90 mid=3.88 last=3.89 sprd=0.04
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260814 774C day=69301 cum=69301 | netdia=-30963 netcum=-30963 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260814 774P day=894151 cum=894151 | netdia=+40083 netcum=+40083 | net3m=+0 | bid=4.38 ask=4.45 mid=4.42 last=4.43 sprd=0.07
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260814 775P day=705507 cum=705507 | netdia=-19628 netcum=-19628 | net3m=+0 | bid=4.95 ask=5.03 mid=4.99 last=5.00 sprd=0.08
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260814 776P day=100835 cum=100835 | netdia=+20411 netcum=+20411 | net3m=+0 | bid=5.57 ask=5.66 mid=5.62 last=5.57 sprd=0.09
+2026-08-11 11:50:03,581 INFO MIN 11:49 | PREM 20260814 777P day=71640 cum=71640 | netdia=-13533 netcum=-13533 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:51:02,222 INFO POS #6 minuto  773C | SPY=772.23 mid=0.46 (bid=0.46 ask=0.47 spread=0.01) | entrada=1.35 pnl=-88.86$ (-65.89%) | delta=0.35 gamma=0.19 theta=-0.48 vega=0.07 iv=0.12 | 121s en posicion
+2026-08-11 11:51:04,260 INFO MIN 11:50 | SPY=772.23 | TA dir=NEUTRAL score=+0 rsi=58.0 macd=-0.130/-0.170/+0.040 ema8/21/50=772.07/772.15/772.48 bb=772.41/772.08/771.76 atr=0.20(0.03%) vwap=772.03 obv=bullish
+2026-08-11 11:51:04,260 INFO MIN 11:50 | SMA 20/50/200 = 772.08/772.51/773.13 | precio-SMA: +0.15/-0.28/-0.90 (informativo, NO decide)
+2026-08-11 11:51:04,260 INFO MIN 11:50 | SENAL netC=-802030 netP=-2119758 diff=1317728 thr=438268 mom=-63938(30s) -> estado=UP pos=CALL
+2026-08-11 11:51:04,260 INFO MIN 11:50 | VELA 20260811 bruto C=250280.00 P=94193.00 (sesgo CALL) | neto C=-42038.00 P=-24289.00 (diff -17749.00)
+2026-08-11 11:51:04,260 INFO MIN 11:50 | VENTANAS 1m: C=-42038.00 P=-24289.00 diff=-17749.00 | 5m: C=- P=- diff=- | 15m: C=- P=- diff=-   (informativo, NO decide)
+2026-08-11 11:51:04,260 INFO MIN 11:50 | Cuenta $311.10   disp $265.08   |   DIA -88.90 (-22.2%)   |   realizado +0.96 (interno)   ops 1 (1 ganadoras, 100%)
+2026-08-11 11:51:04,260 INFO MIN 11:50 | CONTRATO CALL entrada=1.35 actual=0.46 pnl=-89$
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260811 763C day=80057 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=8.96 ask=9.32 mid=9.14 last=9.12 sprd=0.36
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260811 763P day=2040 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=0.02 ask=0.03 mid=0.03 last=0.02 sprd=0.01
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260811 764C day=759595 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=8.13 ask=8.32 mid=8.22 last=8.06 sprd=0.19
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260811 764P day=5390 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=0.02 ask=0.03 mid=0.03 last=0.03 sprd=0.01
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260811 765C day=833570 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=7.14 ask=7.33 mid=7.24 last=7.00 sprd=0.19
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260811 765P day=115049 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=0.03 ask=0.04 mid=0.04 last=0.03 sprd=0.01
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260811 766C day=706687 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=6.16 ask=6.34 mid=6.25 last=6.22 sprd=0.18
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260811 766P day=162586 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=0.04 ask=0.05 mid=0.04 last=0.04 sprd=0.01
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260811 767C day=677118 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=5.15 ask=5.35 mid=5.25 last=5.29 sprd=0.20
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260811 767P day=359565 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=0.05 ask=0.06 mid=0.06 last=0.05 sprd=0.01
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260811 768C day=909982 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=4.29 ask=4.38 mid=4.33 last=4.32 sprd=0.09
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260811 768P day=799903 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=0.08 ask=0.09 mid=0.09 last=0.08 sprd=0.01
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260811 769C day=1649704 cum=355657 | netdia=+0 netcum=+3221 | net3m=+0 | bid=3.36 ask=3.39 mid=3.38 last=3.38 sprd=0.03
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260811 769P day=1516592 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=0.13 ask=0.14 mid=0.14 last=0.13 sprd=0.01
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260811 770C day=4362851 cum=3255316 | netdia=+0 netcum=-578290 | net3m=+0 | bid=2.45 ask=2.48 mid=2.46 last=2.48 sprd=0.03
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260811 770P day=5204191 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=0.21 ask=0.22 mid=0.21 last=0.21 sprd=0.01
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260811 771C day=5714252 cum=3558296 | netdia=+157194 netcum=+284405 | net3m=+0 | bid=1.62 ask=1.64 mid=1.63 last=1.63 sprd=0.02
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260811 771P day=7423709 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=0.38 ask=0.39 mid=0.39 last=0.39 sprd=0.01
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260811 772C day=18408632 cum=16550641 | netdia=-602353 netcum=-604283 | net3m=+0 | bid=0.94 ask=0.95 mid=0.94 last=0.94 sprd=0.01
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260811 772P day=21427472 cum=3860290 | netdia=+1247529 netcum=+1247529 | net3m=+0 | bid=0.70 ask=0.71 mid=0.70 last=0.70 sprd=0.01
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260811 773C day=32849129 cum=30492814 | netdia=-198459 netcum=-848649 | net3m=+0 | bid=0.46 ask=0.47 mid=0.47 last=0.47 sprd=0.01
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260811 773P day=37026522 cum=24203580 | netdia=-3575297 netcum=-3530844 | net3m=+0 | bid=1.21 ask=1.23 mid=1.22 last=1.22 sprd=0.02
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260811 774C day=25217446 cum=2939751 | netdia=-156433 netcum=-158412 | net3m=+0 | bid=0.19 ask=0.20 mid=0.20 last=0.20 sprd=0.01
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260811 774P day=20051383 cum=20290373 | netdia=+208620 netcum=+235673 | net3m=+0 | bid=1.94 ask=1.97 mid=1.96 last=1.94 sprd=0.03
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260811 775C day=9504923 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=0.08 ask=0.09 mid=0.09 last=0.09 sprd=0.01
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260811 775P day=6703428 cum=4586418 | netdia=+3455 netcum=+125686 | net3m=+0 | bid=2.83 ask=2.86 mid=2.85 last=2.84 sprd=0.03
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260811 776C day=2735009 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=0.04 ask=0.05 mid=0.04 last=0.05 sprd=0.01
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260811 776P day=3550535 cum=1655082 | netdia=+0 netcum=-22633 | net3m=+0 | bid=3.75 ask=3.93 mid=3.84 last=3.98 sprd=0.18
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260811 777C day=1047820 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=0.03 ask=0.04 mid=0.04 last=0.03 sprd=0.01
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260811 777P day=1373468 cum=773947 | netdia=+0 netcum=+47208 | net3m=+0 | bid=4.73 ask=4.90 mid=4.82 last=4.83 sprd=0.17
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260811 778C day=397751 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=0.02 ask=0.03 mid=0.03 last=0.03 sprd=0.01
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260811 778P day=874451 cum=30692 | netdia=+0 netcum=+0 | net3m=+0 | bid=5.72 ask=5.90 mid=5.81 last=5.77 sprd=0.18
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260811 779C day=68259 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=0.02 ask=0.03 mid=0.03 last=0.02 sprd=0.01
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260811 779P day=468033 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=6.72 ask=6.95 mid=6.83 last=6.95 sprd=0.23
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260811 780C day=42344 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=0.01 ask=0.02 mid=0.01 last=0.02 sprd=0.01
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260811 780P day=340785 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=7.72 ask=7.94 mid=7.83 last=7.93 sprd=0.22
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260811 781C day=13621 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=0.01 ask=0.02 mid=0.01 last=0.01 sprd=0.01
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260811 781P day=372864 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=8.72 ask=8.95 mid=8.84 last=9.16 sprd=0.23
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260811 782C day=6983 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260811 782P day=914441 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260811 783C day=2593 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260811 783P day=769746 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260811 784C day=4446 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260812 768C day=8041 cum=8041 | netdia=-495 netcum=-495 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260812 769C day=89380 cum=267864 | netdia=+4717 netcum=-13253 | net3m=+0 | bid=4.45 ask=4.49 mid=4.47 last=4.50 sprd=0.04
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260812 770C day=573931 cum=1219985 | netdia=-38184 netcum=-46832 | net3m=+0 | bid=3.76 ask=3.79 mid=3.77 last=3.75 sprd=0.03
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260812 771C day=1080642 cum=1711705 | netdia=-161210 netcum=-164410 | net3m=+0 | bid=3.10 ask=3.14 mid=3.12 last=3.11 sprd=0.04
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260812 772C day=3081248 cum=5501800 | netdia=-107043 netcum=-13757 | net3m=+0 | bid=2.53 ask=2.54 mid=2.54 last=2.54 sprd=0.01
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260812 772P day=1030315 cum=1050935 | netdia=-161232 netcum=-161232 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260812 773C day=4821359 cum=6040302 | netdia=-252372 netcum=-378114 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260812 773P day=2638477 cum=4006596 | netdia=+66389 netcum=+40574 | net3m=+0 | bid=2.71 ask=2.73 mid=2.72 last=2.72 sprd=0.02
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260812 774C day=227076 cum=520475 | netdia=+79882 netcum=+79882 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260812 774P day=3708266 cum=5565968 | netdia=-164628 netcum=-250624 | net3m=+0 | bid=3.26 ask=3.30 mid=3.28 last=3.29 sprd=0.04
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260812 775P day=1923056 cum=2625111 | netdia=+94303 netcum=+94091 | net3m=+0 | bid=3.88 ask=3.93 mid=3.90 last=3.93 sprd=0.05
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260812 776P day=301868 cum=603153 | netdia=+14346 netcum=+10035 | net3m=+0 | bid=4.58 ask=4.62 mid=4.60 last=4.66 sprd=0.04
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260812 777P day=256231 cum=689969 | netdia=-38114 netcum=-40050 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260812 778P day=968 cum=24033 | netdia=-968 netcum=-968 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260813 768C day=37267 cum=37267 | netdia=-1808 netcum=-1808 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260813 769C day=41351 cum=66132 | netdia=+1615 netcum=+1017 | net3m=+0 | bid=5.03 ask=5.11 mid=5.07 last=5.00 sprd=0.08
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260813 770C day=327810 cum=672823 | netdia=-50509 netcum=-65272 | net3m=+0 | bid=4.35 ask=4.43 mid=4.39 last=4.28 sprd=0.08
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260813 771C day=105885 cum=562506 | netdia=+31961 netcum=+44457 | net3m=+0 | bid=3.72 ask=3.79 mid=3.75 last=3.79 sprd=0.07
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260813 772C day=380137 cum=789870 | netdia=-12177 netcum=-12331 | net3m=+0 | bid=3.16 ask=3.19 mid=3.17 last=3.17 sprd=0.03
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260813 772P day=102054 cum=104378 | netdia=+46056 netcum=+46056 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260813 773C day=724368 cum=1588622 | netdia=+90234 netcum=+110584 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260813 773P day=571355 cum=1075812 | netdia=-62637 netcum=-40263 | net3m=+0 | bid=3.29 ask=3.32 mid=3.31 last=3.31 sprd=0.03
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260813 774C day=79109 cum=432389 | netdia=+27280 netcum=+27280 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260813 774P day=899929 cum=1562599 | netdia=+343535 netcum=+300244 | net3m=+0 | bid=3.80 ask=3.88 mid=3.84 last=4.03 sprd=0.08
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260813 775P day=179942 cum=464950 | netdia=+8514 netcum=+11703 | net3m=+0 | bid=4.39 ask=4.48 mid=4.43 last=4.45 sprd=0.09
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260813 776P day=97069 cum=251905 | netdia=+1420 netcum=+10889 | net3m=+0 | bid=5.05 ask=5.14 mid=5.09 last=5.09 sprd=0.09
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260813 777P day=60235 cum=165389 | netdia=+11026 netcum=+13721 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260813 778P day=8474 cum=9011 | netdia=-2104 netcum=-2104 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260814 768C day=5112 cum=5112 | netdia=+5112 netcum=+5112 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260814 769C day=14247 cum=14247 | netdia=+4 netcum=+4 | net3m=+0 | bid=5.71 ask=5.80 mid=5.75 last=6.07 sprd=0.09
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260814 770C day=628041 cum=628041 | netdia=+3722 netcum=+3722 | net3m=+0 | bid=5.06 ask=5.11 mid=5.08 last=5.09 sprd=0.05
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260814 771C day=269977 cum=269977 | netdia=-5468 netcum=-5468 | net3m=+0 | bid=4.43 ask=4.48 mid=4.46 last=4.45 sprd=0.05
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260814 772C day=949595 cum=949595 | netdia=+5863 netcum=+5863 | net3m=+0 | bid=3.87 ask=3.89 mid=3.88 last=3.87 sprd=0.02
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260814 772P day=227088 cum=227088 | netdia=+52479 netcum=+52479 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260814 773C day=1195248 cum=1195248 | netdia=+3810 netcum=+3810 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260814 773P day=748085 cum=748085 | netdia=-52950 netcum=-52950 | net3m=+0 | bid=3.77 ask=3.80 mid=3.79 last=3.80 sprd=0.03
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260814 774C day=69301 cum=69301 | netdia=-30963 netcum=-30963 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260814 774P day=894151 cum=894151 | netdia=+40083 netcum=+40083 | net3m=+0 | bid=4.27 ask=4.34 mid=4.30 last=4.43 sprd=0.07
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260814 775P day=705507 cum=705507 | netdia=-19628 netcum=-19628 | net3m=+0 | bid=4.84 ask=4.91 mid=4.88 last=5.00 sprd=0.07
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260814 776P day=111880 cum=111880 | netdia=+20411 netcum=+20411 | net3m=+0 | bid=5.45 ask=5.54 mid=5.50 last=5.51 sprd=0.09
+2026-08-11 11:51:04,260 INFO MIN 11:50 | PREM 20260814 777P day=71640 cum=71640 | netdia=-13533 netcum=-13533 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:52:02,962 INFO WALLS spot=771.93 PW=773.00 CW=773.00 magneto est=772.00/din=772.00 peso=772.89 | GEX=-58.007Bn regime=SHORT flip=- | faltan OI=0 greeks=0 de 40 | frescura: gamma cambiaron=40/40 ult_tick=2026-08-11 15:52:02.914316+00:00
+2026-08-11 11:52:02,962 INFO WALLS detalle por strike: 762C:OI=630.00,g=0.01,net=+0 | 762P:OI=3018.00,g=0.01,net=+4 | 763C:OI=387.00,g=0.01,net=+0 | 763P:OI=3297.00,g=0.01,net=-8 | 764C:OI=1485.00,g=0.01,net=+0 | 764P:OI=4210.00,g=0.01,net=+36 | 765C:OI=784.00,g=0.01,net=+9269 | 765P:OI=11907.00,g=0.01,net=+72 | 766C:OI=873.00,g=0.02,net=+0 | 766P:OI=5035.00,g=0.02,net=-280 | 767C:OI=1633.00,g=0.03,net=+508 | 767P:OI=6107.00,g=0.03,net=+2149 | 768C:OI=978.00,g=0.05,net=+24012 | 768P:OI=4474.00,g=0.05,net=-48519 | 769C:OI=1723.00,g=0.08,net=-33588 | 769P:OI=5507.00,g=0.08,net=+35184 | 770C:OI=6182.00,g=0.12,net=+153228 | 770P:OI=12729.00,g=0.12,net=+65016 | 771C:OI=4384.00,g=0.17,net=+0 | 771P:OI=6252.00,g=0.17,net=+232848 | 772C:OI=4158.00,g=0.20,net=-567729 | 772P:OI=9389.00,g=0.20,net=+539868 | 773C:OI=12230.00,g=0.18,net=-267813 | 773P:OI=11080.00,g=0.18,net=+0 | 774C:OI=7748.00,g=0.12,net=+70326 | 774P:OI=4050.00,g=0.12,net=-140392 | 775C:OI=13318.00,g=0.07,net=-26640 | 775P:OI=1516.00,g=0.07,net=+0 | 776C:OI=7556.00,g=0.04,net=+2280 | 776P:OI=816.00,g=0.04,net=-2737 | 777C:OI=7461.00,g=0.03,net=+132 | 777P:OI=1055.00,g=0.03,net=+0 | 778C:OI=6002.00,g=0.02,net=-140 | 778P:OI=442.00,g=0.02,net=-3462 | 779C:OI=4817.00,g=0.01,net=-10 | 779P:OI=328.00,g=0.01,net=-695 | 780C:OI=8223.00,g=0.01,net=-27 | 780P:OI=209.00,g=0.01,net=+0 | 781C:OI=3575.00,g=0.01,net=+0 | 781P:OI=6.00,g=0.01,net=+0
+2026-08-11 11:52:02,962 INFO WALLS GAP2: premium de los strikes de SENAL (772C, 773P) NO sumado aqui para evitar el doble conteo (lo lleva _on_ticks, por tick)
+2026-08-11 11:52:02,962 INFO POS #6 minuto  773C | SPY=771.93 mid=0.40 (bid=0.39 ask=0.40 spread=0.01) | entrada=1.35 pnl=-94.86$ (-70.34%) | delta=0.30 gamma=0.18 theta=-0.36 vega=0.06 iv=0.11 | 181s en posicion
+2026-08-11 11:52:04,992 INFO MIN 11:51 | SPY=771.93 | TA dir=BEAR score=-2 rsi=47.8 macd=-0.132/-0.162/+0.030 ema8/21/50=772.04/772.13/772.46 bb=772.37/772.06/771.76 atr=0.21(0.03%) vwap=772.02 obv=neutral
+2026-08-11 11:52:04,992 INFO MIN 11:51 | SMA 20/50/200 = 772.06/772.47/773.12 | precio-SMA: -0.13/-0.54/-1.19 (informativo, NO decide)
+2026-08-11 11:52:04,992 INFO MIN 11:51 | SENAL netC=-773372 netP=-2160523 diff=1387151 thr=440084 mom=-7285(30s) -> estado=UP pos=CALL
+2026-08-11 11:52:04,992 INFO MIN 11:51 | VELA 20260811 bruto C=1026288.00 P=1233805.00 (sesgo PUT) | neto C=28658.00 P=-40765.00 (diff 69423.00)
+2026-08-11 11:52:04,992 INFO MIN 11:51 | VENTANAS 1m: C=28658.00 P=-40765.00 diff=69423.00 | 5m: C=- P=- diff=- | 15m: C=- P=- diff=-   (informativo, NO decide)
+2026-08-11 11:52:04,992 INFO MIN 11:51 | Cuenta $311.10   disp $265.08   |   DIA -88.90 (-22.2%)   |   realizado +0.96 (interno)   ops 1 (1 ganadoras, 100%)
+2026-08-11 11:52:04,992 INFO MIN 11:51 | CONTRATO CALL entrada=1.35 actual=0.40 pnl=-95$
+2026-08-11 11:52:04,992 INFO MIN 11:51 | PREM 20260811 762P day=4 cum=0 | netdia=+0 netcum=+0 | net3m=+4 | bid=0.01 ask=0.02 mid=0.01 last=0.02 sprd=0.01
+2026-08-11 11:52:04,992 INFO MIN 11:51 | PREM 20260811 763C day=80057 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=8.92 ask=9.24 mid=9.08 last=9.12 sprd=0.32
+2026-08-11 11:52:04,992 INFO MIN 11:51 | PREM 20260811 763P day=2048 cum=0 | netdia=+0 netcum=+0 | net3m=-8 | bid=0.02 ask=0.03 mid=0.03 last=0.02 sprd=0.01
+2026-08-11 11:52:04,992 INFO MIN 11:51 | PREM 20260811 764C day=759595 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=7.93 ask=8.13 mid=8.03 last=7.97 sprd=0.20
+2026-08-11 11:52:04,992 INFO MIN 11:51 | PREM 20260811 764P day=5426 cum=0 | netdia=+0 netcum=+0 | net3m=+36 | bid=0.02 ask=0.03 mid=0.03 last=0.03 sprd=0.01
+2026-08-11 11:52:04,992 INFO MIN 11:51 | PREM 20260811 765C day=842839 cum=0 | netdia=+0 netcum=+0 | net3m=+9269 | bid=6.94 ask=7.11 mid=7.03 last=7.13 sprd=0.17
+2026-08-11 11:52:04,992 INFO MIN 11:51 | PREM 20260811 765P day=115121 cum=0 | netdia=+0 netcum=+0 | net3m=+72 | bid=0.03 ask=0.04 mid=0.04 last=0.04 sprd=0.01
+2026-08-11 11:52:04,992 INFO MIN 11:51 | PREM 20260811 766C day=706687 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=5.95 ask=6.17 mid=6.06 last=6.22 sprd=0.22
+2026-08-11 11:52:04,992 INFO MIN 11:51 | PREM 20260811 766P day=162866 cum=0 | netdia=+0 netcum=+0 | net3m=-280 | bid=0.04 ask=0.05 mid=0.04 last=0.04 sprd=0.01
+2026-08-11 11:52:04,992 INFO MIN 11:51 | PREM 20260811 767C day=677626 cum=0 | netdia=+0 netcum=+0 | net3m=+508 | bid=4.98 ask=5.08 mid=5.03 last=5.08 sprd=0.10
+2026-08-11 11:52:04,992 INFO MIN 11:51 | PREM 20260811 767P day=361714 cum=0 | netdia=+0 netcum=+0 | net3m=+2149 | bid=0.06 ask=0.07 mid=0.07 last=0.07 sprd=0.01
+2026-08-11 11:52:04,992 INFO MIN 11:51 | PREM 20260811 768C day=933994 cum=0 | netdia=+0 netcum=+0 | net3m=+24012 | bid=4.04 ask=4.07 mid=4.05 last=4.07 sprd=0.03
+2026-08-11 11:52:04,992 INFO MIN 11:51 | PREM 20260811 768P day=848422 cum=0 | netdia=+0 netcum=+0 | net3m=-48519 | bid=0.09 ask=0.10 mid=0.10 last=0.09 sprd=0.01
+2026-08-11 11:52:04,992 INFO MIN 11:51 | PREM 20260811 769C day=1683292 cum=355657 | netdia=+0 netcum=+3221 | net3m=-33588 | bid=3.10 ask=3.13 mid=3.12 last=3.11 sprd=0.03
+2026-08-11 11:52:04,992 INFO MIN 11:51 | PREM 20260811 769P day=1551776 cum=0 | netdia=+0 netcum=+0 | net3m=+35184 | bid=0.15 ask=0.16 mid=0.15 last=0.15 sprd=0.01
+2026-08-11 11:52:04,992 INFO MIN 11:51 | PREM 20260811 770C day=4516079 cum=3255316 | netdia=+0 netcum=-578290 | net3m=+153228 | bid=2.21 ask=2.24 mid=2.23 last=2.24 sprd=0.03
+2026-08-11 11:52:04,992 INFO MIN 11:51 | PREM 20260811 770P day=5269207 cum=0 | netdia=+0 netcum=+0 | net3m=+65016 | bid=0.26 ask=0.27 mid=0.27 last=0.26 sprd=0.01
+2026-08-11 11:52:04,992 INFO MIN 11:51 | PREM 20260811 771C day=5883177 cum=3558296 | netdia=+157194 netcum=+284405 | net3m=+0 | bid=1.42 ask=1.44 mid=1.43 last=1.44 sprd=0.02
+2026-08-11 11:52:04,992 INFO MIN 11:51 | PREM 20260811 771P day=7656557 cum=0 | netdia=+0 netcum=+0 | net3m=+232848 | bid=0.47 ask=0.48 mid=0.47 last=0.47 sprd=0.01
+2026-08-11 11:52:04,992 INFO MIN 11:51 | PREM 20260811 772C day=18678022 cum=16820031 | netdia=-573695 netcum=-575625 | net3m=-567729 | bid=0.81 ask=0.82 mid=0.81 last=0.81 sprd=0.01
+2026-08-11 11:52:04,992 INFO MIN 11:51 | PREM 20260811 772P day=21967340 cum=3860290 | netdia=+1247529 netcum=+1247529 | net3m=+539868 | bid=0.84 ask=0.85 mid=0.84 last=0.84 sprd=0.01
+2026-08-11 11:52:04,992 INFO MIN 11:51 | PREM 20260811 773C day=33116942 cum=30492814 | netdia=-198459 netcum=-848649 | net3m=-267813 | bid=0.39 ask=0.40 mid=0.40 last=0.39 sprd=0.01
+2026-08-11 11:52:04,997 INFO MIN 11:51 | PREM 20260811 773P day=37127254 cum=24304312 | netdia=-3616062 netcum=-3571609 | net3m=+0 | bid=1.42 ask=1.44 mid=1.43 last=1.42 sprd=0.02
+2026-08-11 11:52:04,997 INFO MIN 11:51 | PREM 20260811 774C day=25287772 cum=2939751 | netdia=-156433 netcum=-158412 | net3m=+70326 | bid=0.17 ask=0.18 mid=0.17 last=0.18 sprd=0.01
+2026-08-11 11:52:04,997 INFO MIN 11:51 | PREM 20260811 774P day=20191775 cum=20290373 | netdia=+208620 netcum=+235673 | net3m=-140392 | bid=2.20 ask=2.23 mid=2.21 last=2.21 sprd=0.03
+2026-08-11 11:52:04,997 INFO MIN 11:51 | PREM 20260811 775C day=9531563 cum=0 | netdia=+0 netcum=+0 | net3m=-26640 | bid=0.08 ask=0.09 mid=0.09 last=0.08 sprd=0.01
+2026-08-11 11:52:04,997 INFO MIN 11:51 | PREM 20260811 775P day=6748688 cum=4586418 | netdia=+3455 netcum=+125686 | net3m=+0 | bid=3.08 ask=3.14 mid=3.11 last=3.12 sprd=0.06
+2026-08-11 11:52:04,997 INFO MIN 11:51 | PREM 20260811 776C day=2737289 cum=0 | netdia=+0 netcum=+0 | net3m=+2280 | bid=0.04 ask=0.05 mid=0.04 last=0.04 sprd=0.01
+2026-08-11 11:52:04,997 INFO MIN 11:51 | PREM 20260811 776P day=3553272 cum=1655082 | netdia=+0 netcum=-22633 | net3m=-2737 | bid=4.03 ask=4.14 mid=4.08 last=3.91 sprd=0.11
+2026-08-11 11:52:04,997 INFO MIN 11:51 | PREM 20260811 777C day=1047952 cum=0 | netdia=+0 netcum=+0 | net3m=+132 | bid=0.03 ask=0.04 mid=0.04 last=0.04 sprd=0.01
+2026-08-11 11:52:04,997 INFO MIN 11:51 | PREM 20260811 777P day=1387608 cum=773947 | netdia=+0 netcum=+47208 | net3m=+0 | bid=4.93 ask=5.10 mid=5.01 last=5.05 sprd=0.17
+2026-08-11 11:52:04,997 INFO MIN 11:51 | PREM 20260811 778C day=397891 cum=0 | netdia=+0 netcum=+0 | net3m=-140 | bid=0.02 ask=0.03 mid=0.03 last=0.02 sprd=0.01
+2026-08-11 11:52:04,997 INFO MIN 11:51 | PREM 20260811 778P day=877913 cum=30692 | netdia=+0 netcum=+0 | net3m=-3462 | bid=5.94 ask=6.12 mid=6.03 last=5.77 sprd=0.18
+2026-08-11 11:52:04,997 INFO MIN 11:51 | PREM 20260811 779C day=68269 cum=0 | netdia=+0 netcum=+0 | net3m=-10 | bid=0.02 ask=0.03 mid=0.03 last=0.02 sprd=0.01
+2026-08-11 11:52:04,997 INFO MIN 11:51 | PREM 20260811 779P day=468728 cum=0 | netdia=+0 netcum=+0 | net3m=-695 | bid=6.95 ask=7.12 mid=7.04 last=6.95 sprd=0.17
+2026-08-11 11:52:04,997 INFO MIN 11:51 | PREM 20260811 780C day=42371 cum=0 | netdia=+0 netcum=+0 | net3m=-27 | bid=0.01 ask=0.02 mid=0.01 last=0.01 sprd=0.01
+2026-08-11 11:52:04,997 INFO MIN 11:51 | PREM 20260811 780P day=343188 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=7.98 ask=8.12 mid=8.05 last=8.01 sprd=0.14
+2026-08-11 11:52:04,997 INFO MIN 11:51 | PREM 20260811 781C day=13621 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=0.01 ask=0.02 mid=0.01 last=0.01 sprd=0.01
+2026-08-11 11:52:04,997 INFO MIN 11:51 | PREM 20260811 781P day=372864 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=8.94 ask=9.12 mid=9.03 last=9.16 sprd=0.18
+2026-08-11 11:52:04,997 INFO MIN 11:51 | PREM 20260811 782C day=6983 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:52:04,997 INFO MIN 11:51 | PREM 20260811 782P day=914441 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:52:04,997 INFO MIN 11:51 | PREM 20260811 783C day=2593 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:52:04,997 INFO MIN 11:51 | PREM 20260811 783P day=769746 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:52:04,997 INFO MIN 11:51 | PREM 20260811 784C day=4446 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:52:04,997 INFO MIN 11:51 | PREM 20260812 768C day=8041 cum=8041 | netdia=-495 netcum=-495 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:52:04,997 INFO MIN 11:51 | PREM 20260812 769C day=89818 cum=268302 | netdia=+4717 netcum=-13253 | net3m=+0 | bid=4.26 ask=4.30 mid=4.28 last=4.38 sprd=0.04
+2026-08-11 11:52:04,997 INFO MIN 11:51 | PREM 20260812 770C day=600022 cum=1246076 | netdia=-14287 netcum=-22935 | net3m=+0 | bid=3.57 ask=3.60 mid=3.58 last=3.57 sprd=0.03
+2026-08-11 11:52:04,997 INFO MIN 11:51 | PREM 20260812 771C day=1082181 cum=1713244 | netdia=-160572 netcum=-163772 | net3m=+0 | bid=2.94 ask=2.97 mid=2.96 last=2.95 sprd=0.03
+2026-08-11 11:52:04,997 INFO MIN 11:51 | PREM 20260812 772C day=3114480 cum=5535032 | netdia=-93901 netcum=-615 | net3m=+0 | bid=2.38 ask=2.40 mid=2.39 last=2.39 sprd=0.02
+2026-08-11 11:52:04,997 INFO MIN 11:51 | PREM 20260812 772P day=1030315 cum=1050935 | netdia=-161232 netcum=-161232 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:52:04,997 INFO MIN 11:51 | PREM 20260812 773C day=4821359 cum=6040302 | netdia=-252372 netcum=-378114 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:52:04,997 INFO MIN 11:51 | PREM 20260812 773P day=2652020 cum=4020139 | netdia=+71698 netcum=+45883 | net3m=+0 | bid=2.86 ask=2.89 mid=2.88 last=2.85 sprd=0.03
+2026-08-11 11:52:04,997 INFO MIN 11:51 | PREM 20260812 774C day=227076 cum=520475 | netdia=+79882 netcum=+79882 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:52:04,997 INFO MIN 11:51 | PREM 20260812 774P day=3723056 cum=5580758 | netdia=-161258 netcum=-247254 | net3m=+0 | bid=3.43 ask=3.47 mid=3.45 last=3.40 sprd=0.04
+2026-08-11 11:52:04,997 INFO MIN 11:51 | PREM 20260812 775P day=1923056 cum=2625111 | netdia=+94303 netcum=+94091 | net3m=+0 | bid=4.08 ask=4.12 mid=4.10 last=3.93 sprd=0.04
+2026-08-11 11:52:04,997 INFO MIN 11:51 | PREM 20260812 776P day=301868 cum=603153 | netdia=+14346 netcum=+10035 | net3m=+0 | bid=4.79 ask=4.83 mid=4.81 last=4.66 sprd=0.04
+2026-08-11 11:52:04,997 INFO MIN 11:51 | PREM 20260812 777P day=256231 cum=689969 | netdia=-38114 netcum=-40050 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:52:04,997 INFO MIN 11:51 | PREM 20260812 778P day=968 cum=24033 | netdia=-968 netcum=-968 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:52:04,997 INFO MIN 11:51 | PREM 20260813 768C day=37267 cum=37267 | netdia=-1808 netcum=-1808 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:52:04,997 INFO MIN 11:51 | PREM 20260813 769C day=41351 cum=66132 | netdia=+1615 netcum=+1017 | net3m=+0 | bid=4.85 ask=4.91 mid=4.88 last=5.00 sprd=0.06
+2026-08-11 11:52:04,997 INFO MIN 11:51 | PREM 20260813 770C day=327810 cum=672823 | netdia=-50509 netcum=-65272 | net3m=+0 | bid=4.18 ask=4.25 mid=4.21 last=4.28 sprd=0.07
+2026-08-11 11:52:04,997 INFO MIN 11:51 | PREM 20260813 771C day=105885 cum=562506 | netdia=+31961 netcum=+44457 | net3m=+0 | bid=3.57 ask=3.63 mid=3.60 last=3.79 sprd=0.06
+2026-08-11 11:52:04,997 INFO MIN 11:51 | PREM 20260813 772C day=396485 cum=806218 | netdia=+1117 netcum=+963 | net3m=+0 | bid=3.02 ask=3.04 mid=3.03 last=3.04 sprd=0.02
+2026-08-11 11:52:04,997 INFO MIN 11:51 | PREM 20260813 772P day=102054 cum=104378 | netdia=+46056 netcum=+46056 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:52:04,997 INFO MIN 11:51 | PREM 20260813 773C day=724368 cum=1588622 | netdia=+90234 netcum=+110584 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:52:04,997 INFO MIN 11:51 | PREM 20260813 773P day=572027 cum=1076484 | netdia=-62968 netcum=-40594 | net3m=+0 | bid=3.44 ask=3.47 mid=3.46 last=3.41 sprd=0.03
+2026-08-11 11:52:04,997 INFO MIN 11:51 | PREM 20260813 774C day=79109 cum=432389 | netdia=+27280 netcum=+27280 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:52:04,997 INFO MIN 11:51 | PREM 20260813 774P day=899929 cum=1562599 | netdia=+343535 netcum=+300244 | net3m=+0 | bid=3.97 ask=4.04 mid=4.00 last=4.03 sprd=0.07
+2026-08-11 11:52:04,997 INFO MIN 11:51 | PREM 20260813 775P day=180395 cum=465403 | netdia=+8514 netcum=+11703 | net3m=+0 | bid=4.58 ask=4.66 mid=4.62 last=4.53 sprd=0.08
+2026-08-11 11:52:04,997 INFO MIN 11:51 | PREM 20260813 776P day=100791 cum=255627 | netdia=+3552 netcum=+13021 | net3m=+0 | bid=5.12 ask=5.34 mid=5.23 last=5.30 sprd=0.22
+2026-08-11 11:52:04,997 INFO MIN 11:51 | PREM 20260813 777P day=60235 cum=165389 | netdia=+11026 netcum=+13721 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:52:04,999 INFO MIN 11:51 | PREM 20260813 778P day=8474 cum=9011 | netdia=-2104 netcum=-2104 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:52:04,999 INFO MIN 11:51 | PREM 20260814 768C day=5112 cum=5112 | netdia=+5112 netcum=+5112 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:52:04,999 INFO MIN 11:51 | PREM 20260814 769C day=15377 cum=15377 | netdia=+4 netcum=+4 | net3m=+0 | bid=5.54 ask=5.61 mid=5.58 last=5.65 sprd=0.07
+2026-08-11 11:52:04,999 INFO MIN 11:51 | PREM 20260814 770C day=660837 cum=660837 | netdia=-19174 netcum=-19174 | net3m=+0 | bid=4.88 ask=4.93 mid=4.91 last=4.95 sprd=0.05
+2026-08-11 11:52:04,999 INFO MIN 11:51 | PREM 20260814 771C day=269977 cum=269977 | netdia=-5468 netcum=-5468 | net3m=+0 | bid=4.27 ask=4.32 mid=4.29 last=4.45 sprd=0.05
+2026-08-11 11:52:04,999 INFO MIN 11:51 | PREM 20260814 772C day=955658 cum=955658 | netdia=+940 netcum=+940 | net3m=+0 | bid=3.71 ask=3.74 mid=3.73 last=3.71 sprd=0.03
+2026-08-11 11:52:04,999 INFO MIN 11:51 | PREM 20260814 772P day=227088 cum=227088 | netdia=+52479 netcum=+52479 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:52:04,999 INFO MIN 11:51 | PREM 20260814 773C day=1195248 cum=1195248 | netdia=+3810 netcum=+3810 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:52:04,999 INFO MIN 11:51 | PREM 20260814 773P day=748085 cum=748085 | netdia=-52950 netcum=-52950 | net3m=+0 | bid=3.92 ask=3.95 mid=3.94 last=3.80 sprd=0.03
+2026-08-11 11:52:04,999 INFO MIN 11:51 | PREM 20260814 774C day=69301 cum=69301 | netdia=-30963 netcum=-30963 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:52:04,999 INFO MIN 11:51 | PREM 20260814 774P day=894151 cum=894151 | netdia=+40083 netcum=+40083 | net3m=+0 | bid=4.44 ask=4.50 mid=4.47 last=4.43 sprd=0.06
+2026-08-11 11:52:04,999 INFO MIN 11:51 | PREM 20260814 775P day=705507 cum=705507 | netdia=-19628 netcum=-19628 | net3m=+0 | bid=5.01 ask=5.09 mid=5.05 last=5.00 sprd=0.08
+2026-08-11 11:52:04,999 INFO MIN 11:51 | PREM 20260814 776P day=111880 cum=111880 | netdia=+20411 netcum=+20411 | net3m=+0 | bid=5.64 ask=5.72 mid=5.68 last=5.51 sprd=0.08
+2026-08-11 11:52:04,999 INFO MIN 11:51 | PREM 20260814 777P day=71640 cum=71640 | netdia=-13533 netcum=-13533 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:52:05,050 INFO SENAL call re-centrada -> 771C (precio 771.95)
+2026-08-11 11:52:05,199 INFO SENAL put re-centrada -> 772P (precio 771.95)
+2026-08-11 11:52:06,889 INFO LINEA BASE re-centrada en 771.95: +6 nuevos, -6 soltados (siguiendo 24 contratos de 3 expiraciones)
+2026-08-11 11:53:03,453 INFO MIN 11:52 | SPY=771.84 | TA dir=NEUTRAL score=+0 rsi=44.8 macd=-0.140/-0.158/+0.018 ema8/21/50=771.99/772.11/772.43 bb=772.29/772.03/771.77 atr=0.20(0.03%) vwap=772.01 obv=bearish
+2026-08-11 11:53:03,453 INFO MIN 11:52 | SMA 20/50/200 = 772.03/772.44/773.12 | precio-SMA: -0.19/-0.60/-1.28 (informativo, NO decide)
+2026-08-11 11:53:03,453 INFO MIN 11:52 | SENAL netC=-790664 netP=-2601643 diff=1810979 thr=508846 mom=-53581(30s) -> estado=UP pos=CALL
+2026-08-11 11:53:03,453 INFO MIN 11:52 | VELA 20260811 bruto C=218908.00 P=696936.00 (sesgo PUT) | neto C=-17292.00 P=-441120.00 (diff 423828.00)
+2026-08-11 11:53:03,453 INFO MIN 11:52 | VENTANAS 1m: C=-18020.00 P=-441120.00 diff=423100.00 | 5m: C=- P=- diff=- | 15m: C=- P=- diff=-   (informativo, NO decide)
+2026-08-11 11:53:03,453 INFO MIN 11:52 | Cuenta $311.10   disp $265.08   |   DIA -88.90 (-22.2%)   |   realizado +0.96 (interno)   ops 1 (1 ganadoras, 100%)
+2026-08-11 11:53:03,453 INFO MIN 11:52 | CONTRATO CALL entrada=1.35 actual=0.38 pnl=-97$
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260811 762P day=4 cum=0 | netdia=+0 netcum=+0 | net3m=+4 | bid=0.01 ask=0.02 mid=0.01 last=0.02 sprd=0.01
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260811 763C day=80057 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=8.87 ask=9.19 mid=9.03 last=9.12 sprd=0.32
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260811 763P day=2048 cum=0 | netdia=+0 netcum=+0 | net3m=-8 | bid=0.02 ask=0.03 mid=0.03 last=0.03 sprd=0.01
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260811 764C day=759595 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=7.88 ask=8.07 mid=7.97 last=7.97 sprd=0.19
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260811 764P day=5426 cum=0 | netdia=+0 netcum=+0 | net3m=+36 | bid=0.02 ask=0.03 mid=0.03 last=0.03 sprd=0.01
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260811 765C day=842839 cum=0 | netdia=+0 netcum=+0 | net3m=+9269 | bid=6.89 ask=7.06 mid=6.97 last=7.13 sprd=0.17
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260811 765P day=115121 cum=0 | netdia=+0 netcum=+0 | net3m=+72 | bid=0.03 ask=0.04 mid=0.04 last=0.03 sprd=0.01
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260811 766C day=706687 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=5.90 ask=6.08 mid=5.99 last=6.22 sprd=0.18
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260811 766P day=162866 cum=0 | netdia=+0 netcum=+0 | net3m=-280 | bid=0.04 ask=0.05 mid=0.04 last=0.04 sprd=0.01
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260811 767C day=677626 cum=0 | netdia=+0 netcum=+0 | net3m=+508 | bid=4.92 ask=5.00 mid=4.96 last=4.98 sprd=0.08
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260811 767P day=361714 cum=0 | netdia=+0 netcum=+0 | net3m=+2149 | bid=0.06 ask=0.07 mid=0.07 last=0.07 sprd=0.01
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260811 768C day=933994 cum=0 | netdia=+0 netcum=+0 | net3m=+24012 | bid=4.00 ask=4.03 mid=4.01 last=4.01 sprd=0.03
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260811 768P day=848422 cum=0 | netdia=+0 netcum=+0 | net3m=-48519 | bid=0.10 ask=0.11 mid=0.10 last=0.11 sprd=0.01
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260811 769C day=1683292 cum=355657 | netdia=+0 netcum=+3221 | net3m=-33588 | bid=3.06 ask=3.08 mid=3.07 last=3.06 sprd=0.02
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260811 769P day=1551776 cum=0 | netdia=+0 netcum=+0 | net3m=+35184 | bid=0.16 ask=0.17 mid=0.17 last=0.16 sprd=0.01
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260811 770C day=4516079 cum=3255316 | netdia=+0 netcum=-578290 | net3m=+153228 | bid=2.18 ask=2.20 mid=2.19 last=2.19 sprd=0.02
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260811 770P day=5269207 cum=0 | netdia=+0 netcum=+0 | net3m=+65016 | bid=0.28 ask=0.29 mid=0.28 last=0.28 sprd=0.01
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260811 771C day=6102004 cum=3777123 | netdia=+139983 netcum=+267194 | net3m=+0 | bid=1.40 ask=1.41 mid=1.41 last=1.40 sprd=0.01
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260811 771P day=7656557 cum=0 | netdia=+0 netcum=+0 | net3m=+232848 | bid=0.50 ask=0.51 mid=0.51 last=0.50 sprd=0.01
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260811 772C day=18678103 cum=16820112 | netdia=-573776 netcum=-575706 | net3m=-567729 | bid=0.78 ask=0.79 mid=0.79 last=0.78 sprd=0.01
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260811 772P day=22662702 cum=4555652 | netdia=+806265 netcum=+806265 | net3m=+539868 | bid=0.88 ask=0.89 mid=0.89 last=0.89 sprd=0.01
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260811 773C day=33116942 cum=30492814 | netdia=-198459 netcum=-848649 | net3m=-267813 | bid=0.37 ask=0.38 mid=0.38 last=0.37 sprd=0.01
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260811 773P day=37128828 cum=24305886 | netdia=-3615918 netcum=-3571465 | net3m=+0 | bid=1.46 ask=1.48 mid=1.47 last=1.48 sprd=0.02
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260811 774C day=25287772 cum=2939751 | netdia=-156433 netcum=-158412 | net3m=+70326 | bid=0.16 ask=0.17 mid=0.17 last=0.16 sprd=0.01
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260811 774P day=20191775 cum=20290373 | netdia=+208620 netcum=+235673 | net3m=-140392 | bid=2.25 ask=2.27 mid=2.26 last=2.26 sprd=0.02
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260811 775C day=9531563 cum=0 | netdia=+0 netcum=+0 | net3m=-26640 | bid=0.08 ask=0.09 mid=0.09 last=0.08 sprd=0.01
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260811 775P day=6748688 cum=4586418 | netdia=+3455 netcum=+125686 | net3m=+0 | bid=3.14 ask=3.18 mid=3.16 last=3.14 sprd=0.04
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260811 776C day=2737289 cum=0 | netdia=+0 netcum=+0 | net3m=+2280 | bid=0.04 ask=0.05 mid=0.04 last=0.05 sprd=0.01
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260811 776P day=3553272 cum=1655082 | netdia=+0 netcum=-22633 | net3m=-2737 | bid=4.10 ask=4.19 mid=4.14 last=4.14 sprd=0.09
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260811 777C day=1047952 cum=0 | netdia=+0 netcum=+0 | net3m=+132 | bid=0.03 ask=0.04 mid=0.04 last=0.03 sprd=0.01
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260811 777P day=1387608 cum=773947 | netdia=+0 netcum=+47208 | net3m=+0 | bid=5.05 ask=5.18 mid=5.12 last=5.03 sprd=0.13
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260811 778C day=397891 cum=0 | netdia=+0 netcum=+0 | net3m=-140 | bid=0.02 ask=0.03 mid=0.03 last=0.02 sprd=0.01
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260811 778P day=877913 cum=30692 | netdia=+0 netcum=+0 | net3m=-3462 | bid=6.00 ask=6.17 mid=6.08 last=6.14 sprd=0.17
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260811 779C day=68269 cum=0 | netdia=+0 netcum=+0 | net3m=-10 | bid=0.02 ask=0.03 mid=0.03 last=0.02 sprd=0.01
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260811 779P day=468728 cum=0 | netdia=+0 netcum=+0 | net3m=-695 | bid=7.02 ask=7.17 mid=7.09 last=6.95 sprd=0.15
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260811 780C day=42371 cum=0 | netdia=+0 netcum=+0 | net3m=-27 | bid=0.01 ask=0.02 mid=0.01 last=0.01 sprd=0.01
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260811 780P day=343188 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=8.02 ask=8.17 mid=8.10 last=8.01 sprd=0.15
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260811 781C day=13621 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=0.01 ask=0.02 mid=0.01 last=0.01 sprd=0.01
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260811 781P day=372864 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=9.01 ask=9.16 mid=9.09 last=9.16 sprd=0.15
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260811 782C day=6983 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260811 782P day=914441 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260811 783C day=2593 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260811 783P day=769746 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260811 784C day=4446 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260812 768C day=9538 cum=9538 | netdia=-495 netcum=-495 | net3m=+0 | bid=4.97 ask=5.01 mid=4.99 last=4.99 sprd=0.04
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260812 769C day=90242 cum=268726 | netdia=+4717 netcum=-13253 | net3m=+0 | bid=4.22 ask=4.26 mid=4.24 last=4.24 sprd=0.04
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260812 770C day=602892 cum=1248946 | netdia=-12846 netcum=-21494 | net3m=+0 | bid=3.53 ask=3.57 mid=3.55 last=3.59 sprd=0.04
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260812 771C day=1086892 cum=1717955 | netdia=-159393 netcum=-162593 | net3m=+0 | bid=2.92 ask=2.94 mid=2.93 last=2.93 sprd=0.02
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260812 772C day=3114720 cum=5535272 | netdia=-93661 netcum=-375 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260812 772P day=1100785 cum=1121405 | netdia=-187159 netcum=-187159 | net3m=+0 | bid=2.39 ask=2.41 mid=2.40 last=2.40 sprd=0.02
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260812 773C day=4821359 cum=6040302 | netdia=-252372 netcum=-378114 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260812 773P day=2661929 cum=4030048 | netdia=+70240 netcum=+44425 | net3m=+0 | bid=2.89 ask=2.92 mid=2.90 last=2.92 sprd=0.03
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260812 774C day=227076 cum=520475 | netdia=+79882 netcum=+79882 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260812 774P day=3728220 cum=5585922 | netdia=-164338 netcum=-250334 | net3m=+0 | bid=3.47 ask=3.51 mid=3.49 last=3.49 sprd=0.04
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260812 775P day=1924708 cum=2626763 | netdia=+95544 netcum=+95332 | net3m=+0 | bid=4.12 ask=4.16 mid=4.14 last=4.15 sprd=0.04
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260812 776P day=301868 cum=603153 | netdia=+14346 netcum=+10035 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260812 777P day=256231 cum=689969 | netdia=-38114 netcum=-40050 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260812 778P day=968 cum=24033 | netdia=-968 netcum=-968 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260813 768C day=40678 cum=40678 | netdia=-59 netcum=-59 | net3m=+0 | bid=5.50 ask=5.59 mid=5.54 last=5.54 sprd=0.09
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260813 769C day=46201 cum=70982 | netdia=+1615 netcum=+1017 | net3m=+0 | bid=4.80 ask=4.88 mid=4.84 last=4.85 sprd=0.08
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260813 770C day=327810 cum=672823 | netdia=-50509 netcum=-65272 | net3m=+0 | bid=4.14 ask=4.20 mid=4.17 last=4.28 sprd=0.06
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260813 771C day=105885 cum=562506 | netdia=+31961 netcum=+44457 | net3m=+0 | bid=3.56 ask=3.59 mid=3.58 last=3.79 sprd=0.03
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260813 772C day=396485 cum=806218 | netdia=+1117 netcum=+963 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260813 772P day=102054 cum=104378 | netdia=+46056 netcum=+46056 | net3m=+0 | bid=2.97 ask=3.00 mid=2.98 last=2.92 sprd=0.03
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260813 773C day=724368 cum=1588622 | netdia=+90234 netcum=+110584 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260813 773P day=574109 cum=1078566 | netdia=-62968 netcum=-40594 | net3m=+0 | bid=3.47 ask=3.51 mid=3.49 last=3.48 sprd=0.04
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260813 774C day=79109 cum=432389 | netdia=+27280 netcum=+27280 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260813 774P day=900334 cum=1563004 | netdia=+343535 netcum=+300244 | net3m=+0 | bid=4.01 ask=4.09 mid=4.05 last=4.05 sprd=0.08
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260813 775P day=180862 cum=465870 | netdia=+8514 netcum=+11703 | net3m=+0 | bid=4.63 ask=4.71 mid=4.67 last=4.67 sprd=0.08
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260813 776P day=100791 cum=255627 | netdia=+3552 netcum=+13021 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260813 777P day=60235 cum=165389 | netdia=+11026 netcum=+13721 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260813 778P day=8474 cum=9011 | netdia=-2104 netcum=-2104 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260814 768C day=8859 cum=8859 | netdia=+5139 netcum=+5139 | net3m=+0 | bid=6.18 ask=6.25 mid=6.21 last=6.20 sprd=0.07
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260814 769C day=15377 cum=15377 | netdia=+4 netcum=+4 | net3m=+0 | bid=5.49 ask=5.56 mid=5.53 last=5.65 sprd=0.07
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260814 770C day=673584 cum=673584 | netdia=-18679 netcum=-18679 | net3m=+0 | bid=4.85 ask=4.90 mid=4.88 last=4.89 sprd=0.05
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260814 771C day=271257 cum=271257 | netdia=-5468 netcum=-5468 | net3m=+0 | bid=4.24 ask=4.29 mid=4.26 last=4.25 sprd=0.05
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260814 772C day=955658 cum=955658 | netdia=+940 netcum=+940 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260814 772P day=251246 cum=251246 | netdia=+40064 netcum=+40064 | net3m=+0 | bid=3.46 ask=3.49 mid=3.48 last=3.49 sprd=0.03
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260814 773C day=1195248 cum=1195248 | netdia=+3810 netcum=+3810 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260814 773P day=748877 cum=748877 | netdia=-52158 netcum=-52158 | net3m=+0 | bid=3.94 ask=3.98 mid=3.96 last=3.97 sprd=0.04
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260814 774C day=69301 cum=69301 | netdia=-30963 netcum=-30963 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260814 774P day=894600 cum=894600 | netdia=+40083 netcum=+40083 | net3m=+0 | bid=4.48 ask=4.54 mid=4.51 last=4.49 sprd=0.06
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260814 775P day=707025 cum=707025 | netdia=-20134 netcum=-20134 | net3m=+0 | bid=5.06 ask=5.14 mid=5.10 last=5.06 sprd=0.08
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260814 776P day=111880 cum=111880 | netdia=+20411 netcum=+20411 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:53:03,453 INFO MIN 11:52 | PREM 20260814 777P day=71640 cum=71640 | netdia=-13533 netcum=-13533 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:53:03,469 INFO POS #6 minuto  773C | SPY=771.87 mid=0.38 (bid=0.37 ask=0.38 spread=0.01) | entrada=1.35 pnl=-96.86$ (-71.82%) | delta=0.28 gamma=0.17 theta=-0.34 vega=0.06 iv=0.11 | 242s en posicion
+2026-08-11 11:54:04,106 INFO MIN 11:53 | SPY=771.79 | TA dir=BEAR score=-1 rsi=47.4 macd=-0.148/-0.156/+0.008 ema8/21/50=771.95/772.08/772.41 bb=772.23/772.00/771.78 atr=0.19(0.02%) vwap=771.98 obv=bearish
+2026-08-11 11:54:04,106 INFO MIN 11:53 | SMA 20/50/200 = 772.00/772.40/773.11 | precio-SMA: -0.21/-0.61/-1.32 (informativo, NO decide)
+2026-08-11 11:54:04,106 INFO MIN 11:53 | SENAL netC=-786045 netP=-2679620 diff=1893575 thr=519850 mom=102819(30s) -> estado=UP pos=CALL
+2026-08-11 11:54:04,106 INFO MIN 11:53 | VELA 20260811 bruto C=80947.00 P=304709.00 (sesgo PUT) | neto C=4619.00 P=-77977.00 (diff 82596.00)
+2026-08-11 11:54:04,106 INFO MIN 11:53 | VENTANAS 1m: C=4619.00 P=-77977.00 diff=82596.00 | 5m: C=-41500.00 P=-643592.00 diff=602092.00 | 15m: C=- P=- diff=-   (informativo, NO decide)
+2026-08-11 11:54:04,106 INFO MIN 11:53 | Cuenta $302.08   disp $265.08   |   DIA -97.92 (-24.5%)   |   realizado +0.96 (interno)   ops 1 (1 ganadoras, 100%)
+2026-08-11 11:54:04,106 INFO MIN 11:53 | CONTRATO CALL entrada=1.35 actual=0.36 pnl=-99$
+2026-08-11 11:54:04,106 INFO MIN 11:53 | PREM 20260811 762P day=4 cum=0 | netdia=+0 netcum=+0 | net3m=+4 | bid=0.01 ask=0.02 mid=0.01 last=0.02 sprd=0.01
+2026-08-11 11:54:04,106 INFO MIN 11:53 | PREM 20260811 763C day=80057 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=8.80 ask=9.12 mid=8.96 last=9.12 sprd=0.32
+2026-08-11 11:54:04,106 INFO MIN 11:53 | PREM 20260811 763P day=2048 cum=0 | netdia=+0 netcum=+0 | net3m=-8 | bid=0.02 ask=0.03 mid=0.03 last=0.02 sprd=0.01
+2026-08-11 11:54:04,106 INFO MIN 11:53 | PREM 20260811 764C day=759595 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=7.81 ask=7.97 mid=7.89 last=7.84 sprd=0.16
+2026-08-11 11:54:04,106 INFO MIN 11:53 | PREM 20260811 764P day=5426 cum=0 | netdia=+0 netcum=+0 | net3m=+36 | bid=0.02 ask=0.03 mid=0.03 last=0.03 sprd=0.01
+2026-08-11 11:54:04,106 INFO MIN 11:53 | PREM 20260811 765C day=842839 cum=0 | netdia=+0 netcum=+0 | net3m=+9269 | bid=6.82 ask=7.03 mid=6.92 last=7.13 sprd=0.21
+2026-08-11 11:54:04,106 INFO MIN 11:53 | PREM 20260811 765P day=115121 cum=0 | netdia=+0 netcum=+0 | net3m=+72 | bid=0.03 ask=0.04 mid=0.04 last=0.04 sprd=0.01
+2026-08-11 11:54:04,106 INFO MIN 11:53 | PREM 20260811 766C day=706687 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=5.83 ask=6.03 mid=5.93 last=5.90 sprd=0.20
+2026-08-11 11:54:04,106 INFO MIN 11:53 | PREM 20260811 766P day=162866 cum=0 | netdia=+0 netcum=+0 | net3m=-280 | bid=0.04 ask=0.05 mid=0.04 last=0.04 sprd=0.01
+2026-08-11 11:54:04,106 INFO MIN 11:53 | PREM 20260811 767C day=677626 cum=0 | netdia=+0 netcum=+0 | net3m=+508 | bid=4.85 ask=4.94 mid=4.89 last=4.97 sprd=0.09
+2026-08-11 11:54:04,106 INFO MIN 11:53 | PREM 20260811 767P day=361714 cum=0 | netdia=+0 netcum=+0 | net3m=+2149 | bid=0.06 ask=0.07 mid=0.07 last=0.07 sprd=0.01
+2026-08-11 11:54:04,106 INFO MIN 11:53 | PREM 20260811 768C day=933994 cum=0 | netdia=+0 netcum=+0 | net3m=+24012 | bid=3.93 ask=3.96 mid=3.94 last=4.01 sprd=0.03
+2026-08-11 11:54:04,106 INFO MIN 11:53 | PREM 20260811 768P day=848422 cum=0 | netdia=+0 netcum=+0 | net3m=-48519 | bid=0.10 ask=0.11 mid=0.10 last=0.11 sprd=0.01
+2026-08-11 11:54:04,106 INFO MIN 11:53 | PREM 20260811 769C day=1683292 cum=355657 | netdia=+0 netcum=+3221 | net3m=-33588 | bid=3.00 ask=3.03 mid=3.02 last=3.08 sprd=0.03
+2026-08-11 11:54:04,106 INFO MIN 11:53 | PREM 20260811 769P day=1551776 cum=0 | netdia=+0 netcum=+0 | net3m=+35184 | bid=0.17 ask=0.18 mid=0.17 last=0.18 sprd=0.01
+2026-08-11 11:54:04,106 INFO MIN 11:53 | PREM 20260811 770C day=4516079 cum=3255316 | netdia=+0 netcum=-578290 | net3m=+153228 | bid=2.12 ask=2.15 mid=2.13 last=2.14 sprd=0.03
+2026-08-11 11:54:04,106 INFO MIN 11:53 | PREM 20260811 770P day=5269207 cum=0 | netdia=+0 netcum=+0 | net3m=+65016 | bid=0.30 ask=0.31 mid=0.30 last=0.31 sprd=0.01
+2026-08-11 11:54:04,106 INFO MIN 11:53 | PREM 20260811 771C day=6182951 cum=3858070 | netdia=+144602 netcum=+271813 | net3m=+0 | bid=1.35 ask=1.37 mid=1.36 last=1.35 sprd=0.02
+2026-08-11 11:54:04,106 INFO MIN 11:53 | PREM 20260811 771P day=7656557 cum=0 | netdia=+0 netcum=+0 | net3m=+232848 | bid=0.52 ask=0.53 mid=0.53 last=0.52 sprd=0.01
+2026-08-11 11:54:04,106 INFO MIN 11:53 | PREM 20260811 772C day=18678103 cum=16820112 | netdia=-573776 netcum=-575706 | net3m=-567729 | bid=0.74 ask=0.75 mid=0.74 last=0.74 sprd=0.01
+2026-08-11 11:54:04,106 INFO MIN 11:53 | PREM 20260811 772P day=22967411 cum=4860361 | netdia=+728288 netcum=+728288 | net3m=+539868 | bid=0.90 ask=0.92 mid=0.91 last=0.92 sprd=0.02
+2026-08-11 11:54:04,106 INFO MIN 11:53 | PREM 20260811 773C day=33116942 cum=30492814 | netdia=-198459 netcum=-848649 | net3m=-267813 | bid=0.35 ask=0.36 mid=0.35 last=0.36 sprd=0.01
+2026-08-11 11:54:04,106 INFO MIN 11:53 | PREM 20260811 773P day=37128828 cum=24305886 | netdia=-3615918 netcum=-3571465 | net3m=+0 | bid=1.51 ask=1.53 mid=1.52 last=1.51 sprd=0.02
+2026-08-11 11:54:04,106 INFO MIN 11:53 | PREM 20260811 774C day=25287772 cum=2939751 | netdia=-156433 netcum=-158412 | net3m=+70326 | bid=0.16 ask=0.17 mid=0.17 last=0.17 sprd=0.01
+2026-08-11 11:54:04,106 INFO MIN 11:53 | PREM 20260811 774P day=20191775 cum=20290373 | netdia=+208620 netcum=+235673 | net3m=-140392 | bid=2.30 ask=2.32 mid=2.31 last=2.32 sprd=0.02
+2026-08-11 11:54:04,106 INFO MIN 11:53 | PREM 20260811 775C day=9531563 cum=0 | netdia=+0 netcum=+0 | net3m=-26640 | bid=0.08 ask=0.09 mid=0.09 last=0.08 sprd=0.01
+2026-08-11 11:54:04,106 INFO MIN 11:53 | PREM 20260811 775P day=6748688 cum=4586418 | netdia=+3455 netcum=+125686 | net3m=+0 | bid=3.20 ask=3.29 mid=3.25 last=3.29 sprd=0.09
+2026-08-11 11:54:04,108 INFO MIN 11:53 | PREM 20260811 776C day=2737289 cum=0 | netdia=+0 netcum=+0 | net3m=+2280 | bid=0.04 ask=0.05 mid=0.04 last=0.05 sprd=0.01
+2026-08-11 11:54:04,108 INFO MIN 11:53 | PREM 20260811 776P day=3553272 cum=1655082 | netdia=+0 netcum=-22633 | net3m=-2737 | bid=4.15 ask=4.26 mid=4.21 last=4.21 sprd=0.11
+2026-08-11 11:54:04,108 INFO MIN 11:53 | PREM 20260811 777C day=1047952 cum=0 | netdia=+0 netcum=+0 | net3m=+132 | bid=0.03 ask=0.04 mid=0.04 last=0.03 sprd=0.01
+2026-08-11 11:54:04,108 INFO MIN 11:53 | PREM 20260811 777P day=1387608 cum=773947 | netdia=+0 netcum=+47208 | net3m=+0 | bid=5.05 ask=5.25 mid=5.15 last=5.20 sprd=0.20
+2026-08-11 11:54:04,108 INFO MIN 11:53 | PREM 20260811 778C day=397891 cum=0 | netdia=+0 netcum=+0 | net3m=-140 | bid=0.02 ask=0.03 mid=0.03 last=0.02 sprd=0.01
+2026-08-11 11:54:04,108 INFO MIN 11:53 | PREM 20260811 778P day=877913 cum=30692 | netdia=+0 netcum=+0 | net3m=-3462 | bid=6.07 ask=6.24 mid=6.16 last=6.09 sprd=0.17
+2026-08-11 11:54:04,108 INFO MIN 11:53 | PREM 20260811 779C day=68269 cum=0 | netdia=+0 netcum=+0 | net3m=-10 | bid=0.02 ask=0.03 mid=0.03 last=0.03 sprd=0.01
+2026-08-11 11:54:04,108 INFO MIN 11:53 | PREM 20260811 779P day=468728 cum=0 | netdia=+0 netcum=+0 | net3m=-695 | bid=7.08 ask=7.24 mid=7.16 last=6.95 sprd=0.16
+2026-08-11 11:54:04,108 INFO MIN 11:53 | PREM 20260811 780C day=42371 cum=0 | netdia=+0 netcum=+0 | net3m=-27 | bid=0.01 ask=0.02 mid=0.01 last=0.02 sprd=0.01
+2026-08-11 11:54:04,108 INFO MIN 11:53 | PREM 20260811 780P day=343188 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=8.05 ask=8.24 mid=8.14 last=8.01 sprd=0.19
+2026-08-11 11:54:04,108 INFO MIN 11:53 | PREM 20260811 781C day=13621 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=0.01 ask=0.02 mid=0.01 last=0.01 sprd=0.01
+2026-08-11 11:54:04,108 INFO MIN 11:53 | PREM 20260811 781P day=372864 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=9.07 ask=9.23 mid=9.15 last=9.16 sprd=0.16
+2026-08-11 11:54:04,108 INFO MIN 11:53 | PREM 20260811 782C day=6983 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:54:04,108 INFO MIN 11:53 | PREM 20260811 782P day=914441 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:54:04,108 INFO MIN 11:53 | PREM 20260811 783C day=2593 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:54:04,108 INFO MIN 11:53 | PREM 20260811 783P day=769746 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:54:04,108 INFO MIN 11:53 | PREM 20260811 784C day=4446 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:54:04,108 INFO MIN 11:53 | PREM 20260812 768C day=12013 cum=12013 | netdia=-495 netcum=-495 | net3m=+0 | bid=4.92 ask=4.97 mid=4.95 last=4.95 sprd=0.05
+2026-08-11 11:54:04,108 INFO MIN 11:53 | PREM 20260812 769C day=92345 cum=270829 | netdia=+4716 netcum=-13254 | net3m=+0 | bid=4.18 ask=4.22 mid=4.20 last=4.20 sprd=0.04
+2026-08-11 11:54:04,108 INFO MIN 11:53 | PREM 20260812 770C day=609217 cum=1255271 | netdia=-11790 netcum=-20438 | net3m=+0 | bid=3.50 ask=3.54 mid=3.52 last=3.51 sprd=0.04
+2026-08-11 11:54:04,108 INFO MIN 11:53 | PREM 20260812 771C day=1120129 cum=1751192 | netdia=-144447 netcum=-147647 | net3m=+0 | bid=2.87 ask=2.91 mid=2.89 last=2.90 sprd=0.04
+2026-08-11 11:54:04,108 INFO MIN 11:53 | PREM 20260812 772C day=3114720 cum=5535272 | netdia=-93661 netcum=-375 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:54:04,108 INFO MIN 11:53 | PREM 20260812 772P day=1138673 cum=1159293 | netdia=-187051 netcum=-187051 | net3m=+0 | bid=2.42 ask=2.44 mid=2.43 last=2.45 sprd=0.02
+2026-08-11 11:54:04,108 INFO MIN 11:53 | PREM 20260812 773C day=4821359 cum=6040302 | netdia=-252372 netcum=-378114 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:54:04,108 INFO MIN 11:53 | PREM 20260812 773P day=2681571 cum=4049690 | netdia=+70567 netcum=+44752 | net3m=+0 | bid=2.93 ask=2.96 mid=2.94 last=2.94 sprd=0.03
+2026-08-11 11:54:04,108 INFO MIN 11:53 | PREM 20260812 774C day=227076 cum=520475 | netdia=+79882 netcum=+79882 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:54:04,108 INFO MIN 11:53 | PREM 20260812 774P day=3729626 cum=5587328 | netdia=-163983 netcum=-249979 | net3m=+0 | bid=3.51 ask=3.55 mid=3.53 last=3.55 sprd=0.04
+2026-08-11 11:54:04,108 INFO MIN 11:53 | PREM 20260812 775P day=1925124 cum=2627179 | netdia=+95128 netcum=+94916 | net3m=+0 | bid=4.16 ask=4.20 mid=4.18 last=4.16 sprd=0.04
+2026-08-11 11:54:04,108 INFO MIN 11:53 | PREM 20260812 776P day=301868 cum=603153 | netdia=+14346 netcum=+10035 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:54:04,108 INFO MIN 11:53 | PREM 20260812 777P day=256231 cum=689969 | netdia=-38114 netcum=-40050 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:54:04,108 INFO MIN 11:53 | PREM 20260812 778P day=968 cum=24033 | netdia=-968 netcum=-968 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:54:04,108 INFO MIN 11:53 | PREM 20260813 768C day=40678 cum=40678 | netdia=-59 netcum=-59 | net3m=+0 | bid=5.45 ask=5.62 mid=5.54 last=5.54 sprd=0.17
+2026-08-11 11:54:04,108 INFO MIN 11:53 | PREM 20260813 769C day=46201 cum=70982 | netdia=+1615 netcum=+1017 | net3m=+0 | bid=4.76 ask=4.83 mid=4.79 last=4.85 sprd=0.07
+2026-08-11 11:54:04,108 INFO MIN 11:53 | PREM 20260813 770C day=327810 cum=672823 | netdia=-50509 netcum=-65272 | net3m=+0 | bid=4.10 ask=4.17 mid=4.13 last=4.28 sprd=0.07
+2026-08-11 11:54:04,108 INFO MIN 11:53 | PREM 20260813 771C day=108376 cum=564997 | netdia=+31961 netcum=+44457 | net3m=+0 | bid=3.49 ask=3.56 mid=3.52 last=3.55 sprd=0.07
+2026-08-11 11:54:04,108 INFO MIN 11:53 | PREM 20260813 772C day=396485 cum=806218 | netdia=+1117 netcum=+963 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:54:04,108 INFO MIN 11:53 | PREM 20260813 772P day=103557 cum=105881 | netdia=+46654 netcum=+46654 | net3m=+0 | bid=3.01 ask=3.04 mid=3.02 last=3.04 sprd=0.03
+2026-08-11 11:54:04,108 INFO MIN 11:53 | PREM 20260813 773C day=724368 cum=1588622 | netdia=+90234 netcum=+110584 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:54:04,108 INFO MIN 11:53 | PREM 20260813 773P day=575168 cum=1079625 | netdia=-61909 netcum=-39535 | net3m=+0 | bid=3.50 ask=3.54 mid=3.52 last=3.53 sprd=0.04
+2026-08-11 11:54:04,108 INFO MIN 11:53 | PREM 20260813 774C day=79109 cum=432389 | netdia=+27280 netcum=+27280 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:54:04,108 INFO MIN 11:53 | PREM 20260813 774P day=900334 cum=1563004 | netdia=+343535 netcum=+300244 | net3m=+0 | bid=4.05 ask=4.14 mid=4.09 last=4.05 sprd=0.09
+2026-08-11 11:54:04,108 INFO MIN 11:53 | PREM 20260813 775P day=181327 cum=466335 | netdia=+8514 netcum=+11703 | net3m=+0 | bid=4.66 ask=4.75 mid=4.71 last=4.65 sprd=0.09
+2026-08-11 11:54:04,108 INFO MIN 11:53 | PREM 20260813 776P day=100791 cum=255627 | netdia=+3552 netcum=+13021 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:54:04,108 INFO MIN 11:53 | PREM 20260813 777P day=60235 cum=165389 | netdia=+11026 netcum=+13721 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:54:04,108 INFO MIN 11:53 | PREM 20260813 778P day=8474 cum=9011 | netdia=-2104 netcum=-2104 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:54:04,108 INFO MIN 11:53 | PREM 20260814 768C day=8859 cum=8859 | netdia=+5139 netcum=+5139 | net3m=+0 | bid=6.14 ask=6.21 mid=6.17 last=6.20 sprd=0.07
+2026-08-11 11:54:04,108 INFO MIN 11:53 | PREM 20260814 769C day=15377 cum=15377 | netdia=+4 netcum=+4 | net3m=+0 | bid=5.44 ask=5.52 mid=5.48 last=5.65 sprd=0.08
+2026-08-11 11:54:04,108 INFO MIN 11:53 | PREM 20260814 770C day=680416 cum=680416 | netdia=-19166 netcum=-19166 | net3m=+0 | bid=4.82 ask=4.86 mid=4.84 last=4.83 sprd=0.04
+2026-08-11 11:54:04,108 INFO MIN 11:53 | PREM 20260814 771C day=271257 cum=271257 | netdia=-5468 netcum=-5468 | net3m=+0 | bid=4.20 ask=4.25 mid=4.22 last=4.25 sprd=0.05
+2026-08-11 11:54:04,108 INFO MIN 11:53 | PREM 20260814 772C day=955658 cum=955658 | netdia=+940 netcum=+940 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:54:04,108 INFO MIN 11:53 | PREM 20260814 772P day=343302 cum=343302 | netdia=+118802 netcum=+118802 | net3m=+0 | bid=3.49 ask=3.52 mid=3.50 last=3.52 sprd=0.03
+2026-08-11 11:54:04,110 INFO MIN 11:53 | PREM 20260814 773C day=1195248 cum=1195248 | netdia=+3810 netcum=+3810 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:54:04,110 INFO MIN 11:53 | PREM 20260814 773P day=758433 cum=758433 | netdia=-47780 netcum=-47780 | net3m=+0 | bid=3.99 ask=4.02 mid=4.00 last=3.98 sprd=0.03
+2026-08-11 11:54:04,110 INFO MIN 11:53 | PREM 20260814 774C day=69301 cum=69301 | netdia=-30963 netcum=-30963 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:54:04,110 INFO MIN 11:53 | PREM 20260814 774P day=895054 cum=895054 | netdia=+40083 netcum=+40083 | net3m=+0 | bid=4.51 ask=4.58 mid=4.54 last=4.54 sprd=0.07
+2026-08-11 11:54:04,110 INFO MIN 11:53 | PREM 20260814 775P day=707538 cum=707538 | netdia=-19621 netcum=-19621 | net3m=+0 | bid=5.11 ask=5.18 mid=5.14 last=5.13 sprd=0.07
+2026-08-11 11:54:04,110 INFO MIN 11:53 | PREM 20260814 776P day=111880 cum=111880 | netdia=+20411 netcum=+20411 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:54:04,110 INFO MIN 11:53 | PREM 20260814 777P day=71640 cum=71640 | netdia=-13533 netcum=-13533 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:54:04,110 INFO POS #6 minuto  773C | SPY=771.79 mid=0.36 (bid=0.35 ask=0.36 spread=0.01) | entrada=1.35 pnl=-98.86$ (-73.31%) | delta=0.28 gamma=0.17 theta=-0.35 vega=0.06 iv=0.12 | 303s en posicion
+2026-08-11 11:55:04,822 INFO MIN 11:54 | SPY=771.84 | TA dir=NEUTRAL score=+0 rsi=44.2 macd=-0.149/-0.155/+0.006 ema8/21/50=771.92/772.06/772.38 bb=772.24/772.00/771.76 atr=0.18(0.02%) vwap=771.94 obv=bearish
+2026-08-11 11:55:04,822 INFO MIN 11:54 | SMA 20/50/200 = 772.00/772.37/773.10 | precio-SMA: -0.16/-0.53/-1.26 (informativo, NO decide)
+2026-08-11 11:55:04,822 INFO MIN 11:54 | SENAL netC=-868087 netP=-2729527 diff=1861440 thr=539642 mom=26641(30s) -> estado=UP pos=CALL
+2026-08-11 11:55:04,822 INFO MIN 11:54 | VELA 20260811 bruto C=124544.00 P=146961.00 (sesgo PUT) | neto C=-82042.00 P=-49907.00 (diff -32135.00)
+2026-08-11 11:55:04,822 INFO MIN 11:54 | VENTANAS 1m: C=-82042.00 P=-49907.00 diff=-32135.00 | 5m: C=-107239.00 P=-634058.00 diff=526819.00 | 15m: C=- P=- diff=-   (informativo, NO decide)
+2026-08-11 11:55:04,822 INFO MIN 11:54 | Cuenta $302.08   disp $265.08   |   DIA -97.92 (-24.5%)   |   realizado +0.96 (interno)   ops 1 (1 ganadoras, 100%)
+2026-08-11 11:55:04,822 INFO MIN 11:54 | CONTRATO CALL entrada=1.35 actual=0.36 pnl=-99$
+2026-08-11 11:55:04,822 INFO MIN 11:54 | PREM 20260811 762P day=4 cum=0 | netdia=+0 netcum=+0 | net3m=+4 | bid=0.01 ask=0.02 mid=0.01 last=0.02 sprd=0.01
+2026-08-11 11:55:04,822 INFO MIN 11:54 | PREM 20260811 763C day=80057 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=8.80 ask=9.12 mid=8.96 last=9.12 sprd=0.32
+2026-08-11 11:55:04,822 INFO MIN 11:54 | PREM 20260811 763P day=2048 cum=0 | netdia=+0 netcum=+0 | net3m=-8 | bid=0.02 ask=0.03 mid=0.03 last=0.02 sprd=0.01
+2026-08-11 11:55:04,822 INFO MIN 11:54 | PREM 20260811 764C day=759595 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=7.81 ask=8.01 mid=7.91 last=7.84 sprd=0.20
+2026-08-11 11:55:04,822 INFO MIN 11:54 | PREM 20260811 764P day=5426 cum=0 | netdia=+0 netcum=+0 | net3m=+36 | bid=0.02 ask=0.03 mid=0.03 last=0.03 sprd=0.01
+2026-08-11 11:55:04,822 INFO MIN 11:54 | PREM 20260811 765C day=842839 cum=0 | netdia=+0 netcum=+0 | net3m=+9269 | bid=6.83 ask=7.03 mid=6.93 last=6.90 sprd=0.20
+2026-08-11 11:55:04,822 INFO MIN 11:54 | PREM 20260811 765P day=115121 cum=0 | netdia=+0 netcum=+0 | net3m=+72 | bid=0.03 ask=0.04 mid=0.04 last=0.03 sprd=0.01
+2026-08-11 11:55:04,822 INFO MIN 11:54 | PREM 20260811 766C day=706687 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=5.84 ask=6.02 mid=5.93 last=5.92 sprd=0.18
+2026-08-11 11:55:04,822 INFO MIN 11:54 | PREM 20260811 766P day=162866 cum=0 | netdia=+0 netcum=+0 | net3m=-280 | bid=0.04 ask=0.05 mid=0.04 last=0.05 sprd=0.01
+2026-08-11 11:55:04,822 INFO MIN 11:54 | PREM 20260811 767C day=677626 cum=0 | netdia=+0 netcum=+0 | net3m=+508 | bid=4.86 ask=5.05 mid=4.96 last=4.90 sprd=0.19
+2026-08-11 11:55:04,822 INFO MIN 11:54 | PREM 20260811 767P day=361714 cum=0 | netdia=+0 netcum=+0 | net3m=+2149 | bid=0.06 ask=0.07 mid=0.07 last=0.07 sprd=0.01
+2026-08-11 11:55:04,822 INFO MIN 11:54 | PREM 20260811 768C day=933994 cum=0 | netdia=+0 netcum=+0 | net3m=+24012 | bid=4.03 ask=4.07 mid=4.05 last=3.96 sprd=0.04
+2026-08-11 11:55:04,822 INFO MIN 11:54 | PREM 20260811 768P day=848422 cum=0 | netdia=+0 netcum=+0 | net3m=-48519 | bid=0.10 ask=0.11 mid=0.10 last=0.11 sprd=0.01
+2026-08-11 11:55:04,822 INFO MIN 11:54 | PREM 20260811 769C day=1683292 cum=355657 | netdia=+0 netcum=+3221 | net3m=-33588 | bid=3.09 ask=3.12 mid=3.10 last=3.05 sprd=0.03
+2026-08-11 11:55:04,822 INFO MIN 11:54 | PREM 20260811 769P day=1551776 cum=0 | netdia=+0 netcum=+0 | net3m=+35184 | bid=0.16 ask=0.17 mid=0.17 last=0.16 sprd=0.01
+2026-08-11 11:55:04,822 INFO MIN 11:54 | PREM 20260811 770C day=4516079 cum=3255316 | netdia=+0 netcum=-578290 | net3m=+153228 | bid=2.21 ask=2.23 mid=2.22 last=2.18 sprd=0.02
+2026-08-11 11:55:04,822 INFO MIN 11:54 | PREM 20260811 770P day=5269207 cum=0 | netdia=+0 netcum=+0 | net3m=+65016 | bid=0.27 ask=0.28 mid=0.28 last=0.27 sprd=0.01
+2026-08-11 11:55:04,822 INFO MIN 11:54 | PREM 20260811 771C day=6307495 cum=3982614 | netdia=+62560 netcum=+189771 | net3m=+0 | bid=1.41 ask=1.43 mid=1.42 last=1.43 sprd=0.02
+2026-08-11 11:55:04,822 INFO MIN 11:54 | PREM 20260811 771P day=7656557 cum=0 | netdia=+0 netcum=+0 | net3m=+232848 | bid=0.47 ask=0.48 mid=0.47 last=0.47 sprd=0.01
+2026-08-11 11:55:04,822 INFO MIN 11:54 | PREM 20260811 772C day=18678103 cum=16820112 | netdia=-573776 netcum=-575706 | net3m=-567729 | bid=0.79 ask=0.80 mid=0.80 last=0.79 sprd=0.01
+2026-08-11 11:55:04,822 INFO MIN 11:54 | PREM 20260811 772P day=23114372 cum=5007322 | netdia=+678381 netcum=+678381 | net3m=+539868 | bid=0.84 ask=0.86 mid=0.85 last=0.86 sprd=0.02
+2026-08-11 11:55:04,822 INFO MIN 11:54 | PREM 20260811 773C day=33116942 cum=30492814 | netdia=-198459 netcum=-848649 | net3m=-267813 | bid=0.37 ask=0.38 mid=0.38 last=0.37 sprd=0.01
+2026-08-11 11:55:04,822 INFO MIN 11:54 | PREM 20260811 773P day=37128828 cum=24305886 | netdia=-3615918 netcum=-3571465 | net3m=+0 | bid=1.42 ask=1.45 mid=1.44 last=1.42 sprd=0.03
+2026-08-11 11:55:04,822 INFO MIN 11:54 | PREM 20260811 774C day=25287772 cum=2939751 | netdia=-156433 netcum=-158412 | net3m=+70326 | bid=0.16 ask=0.17 mid=0.17 last=0.17 sprd=0.01
+2026-08-11 11:55:04,822 INFO MIN 11:54 | PREM 20260811 774P day=20191775 cum=20290373 | netdia=+208620 netcum=+235673 | net3m=-140392 | bid=2.22 ask=2.24 mid=2.23 last=2.25 sprd=0.02
+2026-08-11 11:55:04,822 INFO MIN 11:54 | PREM 20260811 775C day=9531563 cum=0 | netdia=+0 netcum=+0 | net3m=-26640 | bid=0.08 ask=0.09 mid=0.09 last=0.08 sprd=0.01
+2026-08-11 11:55:04,822 INFO MIN 11:54 | PREM 20260811 775P day=6748688 cum=4586418 | netdia=+3455 netcum=+125686 | net3m=+0 | bid=3.10 ask=3.21 mid=3.15 last=3.20 sprd=0.11
+2026-08-11 11:55:04,822 INFO MIN 11:54 | PREM 20260811 776C day=2737289 cum=0 | netdia=+0 netcum=+0 | net3m=+2280 | bid=0.04 ask=0.05 mid=0.04 last=0.05 sprd=0.01
+2026-08-11 11:55:04,822 INFO MIN 11:54 | PREM 20260811 776P day=3553272 cum=1655082 | netdia=+0 netcum=-22633 | net3m=-2737 | bid=4.06 ask=4.13 mid=4.09 last=4.21 sprd=0.07
+2026-08-11 11:55:04,822 INFO MIN 11:54 | PREM 20260811 777C day=1047952 cum=0 | netdia=+0 netcum=+0 | net3m=+132 | bid=0.03 ask=0.04 mid=0.04 last=0.03 sprd=0.01
+2026-08-11 11:55:04,822 INFO MIN 11:54 | PREM 20260811 777P day=1387608 cum=773947 | netdia=+0 netcum=+47208 | net3m=+0 | bid=5.05 ask=5.13 mid=5.09 last=5.12 sprd=0.08
+2026-08-11 11:55:04,822 INFO MIN 11:54 | PREM 20260811 778C day=397891 cum=0 | netdia=+0 netcum=+0 | net3m=-140 | bid=0.02 ask=0.03 mid=0.03 last=0.02 sprd=0.01
+2026-08-11 11:55:04,822 INFO MIN 11:54 | PREM 20260811 778P day=877913 cum=30692 | netdia=+0 netcum=+0 | net3m=-3462 | bid=6.05 ask=6.24 mid=6.14 last=6.09 sprd=0.19
+2026-08-11 11:55:04,822 INFO MIN 11:54 | PREM 20260811 779C day=68269 cum=0 | netdia=+0 netcum=+0 | net3m=-10 | bid=0.02 ask=0.03 mid=0.03 last=0.03 sprd=0.01
+2026-08-11 11:55:04,822 INFO MIN 11:54 | PREM 20260811 779P day=468728 cum=0 | netdia=+0 netcum=+0 | net3m=-695 | bid=7.04 ask=7.24 mid=7.14 last=6.95 sprd=0.20
+2026-08-11 11:55:04,822 INFO MIN 11:54 | PREM 20260811 780C day=42371 cum=0 | netdia=+0 netcum=+0 | net3m=-27 | bid=0.01 ask=0.02 mid=0.01 last=0.01 sprd=0.01
+2026-08-11 11:55:04,822 INFO MIN 11:54 | PREM 20260811 780P day=343188 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=8.03 ask=8.24 mid=8.13 last=8.01 sprd=0.21
+2026-08-11 11:55:04,822 INFO MIN 11:54 | PREM 20260811 781C day=13621 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=0.01 ask=0.02 mid=0.01 last=0.01 sprd=0.01
+2026-08-11 11:55:04,822 INFO MIN 11:54 | PREM 20260811 781P day=372864 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=9.03 ask=9.23 mid=9.13 last=9.16 sprd=0.20
+2026-08-11 11:55:04,822 INFO MIN 11:54 | PREM 20260811 782C day=6983 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:55:04,822 INFO MIN 11:54 | PREM 20260811 782P day=914441 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:55:04,822 INFO MIN 11:54 | PREM 20260811 783C day=2593 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:55:04,822 INFO MIN 11:54 | PREM 20260811 783P day=769746 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:55:04,822 INFO MIN 11:54 | PREM 20260811 784C day=4446 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:55:04,822 INFO MIN 11:54 | PREM 20260812 768C day=14013 cum=14013 | netdia=-495 netcum=-495 | net3m=+0 | bid=5.00 ask=5.04 mid=5.02 last=5.00 sprd=0.04
+2026-08-11 11:55:04,822 INFO MIN 11:54 | PREM 20260812 769C day=94874 cum=273358 | netdia=+4716 netcum=-13254 | net3m=+0 | bid=4.25 ask=4.30 mid=4.28 last=4.21 sprd=0.05
+2026-08-11 11:55:04,822 INFO MIN 11:54 | PREM 20260812 770C day=612758 cum=1258812 | netdia=-12840 netcum=-21488 | net3m=+0 | bid=3.56 ask=3.60 mid=3.58 last=3.57 sprd=0.04
+2026-08-11 11:55:04,822 INFO MIN 11:54 | PREM 20260812 771C day=1125937 cum=1757000 | netdia=-143850 netcum=-147050 | net3m=+0 | bid=2.93 ask=2.96 mid=2.94 last=2.88 sprd=0.03
+2026-08-11 11:55:04,822 INFO MIN 11:54 | PREM 20260812 772C day=3114720 cum=5535272 | netdia=-93661 netcum=-375 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:55:04,822 INFO MIN 11:54 | PREM 20260812 772P day=1181229 cum=1201849 | netdia=-193015 netcum=-193015 | net3m=+0 | bid=2.37 ask=2.38 mid=2.38 last=2.39 sprd=0.01
+2026-08-11 11:55:04,822 INFO MIN 11:54 | PREM 20260812 773C day=4821359 cum=6040302 | netdia=-252372 netcum=-378114 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:55:04,822 INFO MIN 11:54 | PREM 20260812 773P day=2695972 cum=4064091 | netdia=+77934 netcum=+52119 | net3m=+0 | bid=2.87 ask=2.90 mid=2.88 last=2.93 sprd=0.03
+2026-08-11 11:55:04,822 INFO MIN 11:54 | PREM 20260812 774C day=227076 cum=520475 | netdia=+79882 netcum=+79882 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:55:04,822 INFO MIN 11:54 | PREM 20260812 774P day=3733858 cum=5591560 | netdia=-160802 netcum=-246798 | net3m=+0 | bid=3.45 ask=3.48 mid=3.46 last=3.53 sprd=0.03
+2026-08-11 11:55:04,822 INFO MIN 11:54 | PREM 20260812 775P day=1929224 cum=2631279 | netdia=+95128 netcum=+94916 | net3m=+0 | bid=4.09 ask=4.13 mid=4.11 last=4.10 sprd=0.04
+2026-08-11 11:55:04,838 INFO MIN 11:54 | PREM 20260812 776P day=301868 cum=603153 | netdia=+14346 netcum=+10035 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:55:04,838 INFO MIN 11:54 | PREM 20260812 777P day=256231 cum=689969 | netdia=-38114 netcum=-40050 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:55:04,838 INFO MIN 11:54 | PREM 20260812 778P day=968 cum=24033 | netdia=-968 netcum=-968 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:55:04,838 INFO MIN 11:54 | PREM 20260813 768C day=40678 cum=40678 | netdia=-59 netcum=-59 | net3m=+0 | bid=5.45 ask=5.65 mid=5.55 last=5.54 sprd=0.20
+2026-08-11 11:55:04,838 INFO MIN 11:54 | PREM 20260813 769C day=46201 cum=70982 | netdia=+1615 netcum=+1017 | net3m=+0 | bid=4.83 ask=4.91 mid=4.87 last=4.85 sprd=0.08
+2026-08-11 11:55:04,838 INFO MIN 11:54 | PREM 20260813 770C day=327810 cum=672823 | netdia=-50509 netcum=-65272 | net3m=+0 | bid=4.16 ask=4.24 mid=4.20 last=4.28 sprd=0.08
+2026-08-11 11:55:04,838 INFO MIN 11:54 | PREM 20260813 771C day=109084 cum=565705 | netdia=+31961 netcum=+44457 | net3m=+0 | bid=3.55 ask=3.61 mid=3.58 last=3.54 sprd=0.06
+2026-08-11 11:55:04,838 INFO MIN 11:54 | PREM 20260813 772C day=396485 cum=806218 | netdia=+1117 netcum=+963 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:55:04,838 INFO MIN 11:54 | PREM 20260813 772P day=106265 cum=108589 | netdia=+48459 netcum=+48459 | net3m=+0 | bid=2.95 ask=2.98 mid=2.96 last=3.01 sprd=0.03
+2026-08-11 11:55:04,838 INFO MIN 11:54 | PREM 20260813 773C day=724368 cum=1588622 | netdia=+90234 netcum=+110584 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:55:04,838 INFO MIN 11:54 | PREM 20260813 773P day=576568 cum=1081025 | netdia=-63309 netcum=-40935 | net3m=+0 | bid=3.45 ask=3.48 mid=3.46 last=3.50 sprd=0.03
+2026-08-11 11:55:04,838 INFO MIN 11:54 | PREM 20260813 774C day=79109 cum=432389 | netdia=+27280 netcum=+27280 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:55:04,838 INFO MIN 11:54 | PREM 20260813 774P day=900334 cum=1563004 | netdia=+343535 netcum=+300244 | net3m=+0 | bid=3.99 ask=4.07 mid=4.03 last=4.05 sprd=0.08
+2026-08-11 11:55:04,838 INFO MIN 11:54 | PREM 20260813 775P day=181327 cum=466335 | netdia=+8514 netcum=+11703 | net3m=+0 | bid=4.59 ask=4.69 mid=4.64 last=4.65 sprd=0.10
+2026-08-11 11:55:04,838 INFO MIN 11:54 | PREM 20260813 776P day=100791 cum=255627 | netdia=+3552 netcum=+13021 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:55:04,838 INFO MIN 11:54 | PREM 20260813 777P day=60235 cum=165389 | netdia=+11026 netcum=+13721 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:55:04,838 INFO MIN 11:54 | PREM 20260813 778P day=8474 cum=9011 | netdia=-2104 netcum=-2104 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:55:04,838 INFO MIN 11:54 | PREM 20260814 768C day=9479 cum=9479 | netdia=+5139 netcum=+5139 | net3m=+0 | bid=6.22 ask=6.29 mid=6.25 last=6.20 sprd=0.07
+2026-08-11 11:55:04,838 INFO MIN 11:54 | PREM 20260814 769C day=15377 cum=15377 | netdia=+4 netcum=+4 | net3m=+0 | bid=5.52 ask=5.60 mid=5.56 last=5.65 sprd=0.08
+2026-08-11 11:55:04,838 INFO MIN 11:54 | PREM 20260814 770C day=683818 cum=683818 | netdia=-19166 netcum=-19166 | net3m=+0 | bid=4.89 ask=4.93 mid=4.91 last=4.91 sprd=0.04
+2026-08-11 11:55:04,838 INFO MIN 11:54 | PREM 20260814 771C day=272536 cum=272536 | netdia=-5468 netcum=-5468 | net3m=+0 | bid=4.27 ask=4.32 mid=4.29 last=4.26 sprd=0.05
+2026-08-11 11:55:04,838 INFO MIN 11:54 | PREM 20260814 772C day=955658 cum=955658 | netdia=+940 netcum=+940 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:55:04,838 INFO MIN 11:54 | PREM 20260814 772P day=349265 cum=349265 | netdia=+114945 netcum=+114945 | net3m=+0 | bid=3.45 ask=3.47 mid=3.46 last=3.51 sprd=0.02
+2026-08-11 11:55:04,838 INFO MIN 11:54 | PREM 20260814 773C day=1195248 cum=1195248 | netdia=+3810 netcum=+3810 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:55:04,838 INFO MIN 11:54 | PREM 20260814 773P day=767609 cum=767609 | netdia=-46986 netcum=-46986 | net3m=+0 | bid=3.93 ask=3.97 mid=3.95 last=4.00 sprd=0.04
+2026-08-11 11:55:04,838 INFO MIN 11:54 | PREM 20260814 774C day=69301 cum=69301 | netdia=-30963 netcum=-30963 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:55:04,838 INFO MIN 11:54 | PREM 20260814 774P day=895511 cum=895511 | netdia=+40540 netcum=+40540 | net3m=+0 | bid=4.47 ask=4.54 mid=4.50 last=4.57 sprd=0.07
+2026-08-11 11:55:04,838 INFO MIN 11:54 | PREM 20260814 775P day=709081 cum=709081 | netdia=-18591 netcum=-18591 | net3m=+0 | bid=5.05 ask=5.13 mid=5.09 last=5.13 sprd=0.08
+2026-08-11 11:55:04,838 INFO MIN 11:54 | PREM 20260814 776P day=111880 cum=111880 | netdia=+20411 netcum=+20411 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:55:04,838 INFO MIN 11:54 | PREM 20260814 777P day=71640 cum=71640 | netdia=-13533 netcum=-13533 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:55:04,838 INFO WALLS spot=771.83 PW=773.00 CW=773.00 magneto est=772.00/din=772.00 peso=772.87 | GEX=-67.691Bn regime=SHORT flip=- | faltan OI=0 greeks=0 de 40 | frescura: gamma cambiaron=40/40 ult_tick=2026-08-11 15:55:04.661181+00:00
+2026-08-11 11:55:04,838 INFO WALLS detalle por strike: 762C:OI=630.00,g=0.01,net=+0 | 762P:OI=3018.00,g=0.01,net=+148 | 763C:OI=387.00,g=0.01,net=+0 | 763P:OI=3297.00,g=0.01,net=-34 | 764C:OI=1485.00,g=0.01,net=+0 | 764P:OI=4210.00,g=0.01,net=+240 | 765C:OI=784.00,g=0.02,net=+9269 | 765P:OI=11907.00,g=0.02,net=-249 | 766C:OI=873.00,g=0.02,net=+0 | 766P:OI=5035.00,g=0.02,net=-55 | 767C:OI=1633.00,g=0.04,net=+508 | 767P:OI=6107.00,g=0.04,net=+4788 | 768C:OI=978.00,g=0.05,net=+4608 | 768P:OI=4474.00,g=0.05,net=-30831 | 769C:OI=1723.00,g=0.08,net=-64088 | 769P:OI=5507.00,g=0.08,net=-27904 | 770C:OI=6182.00,g=0.12,net=+17850 | 770P:OI=12729.00,g=0.12,net=-37908 | 771C:OI=4384.00,g=0.17,net=+264979 | 771P:OI=6252.00,g=0.17,net=-204863 | 772C:OI=4158.00,g=0.19,net=-995040 | 772P:OI=9389.00,g=0.19,net=+1213076 | 773C:OI=12230.00,g=0.17,net=-533547 | 773P:OI=11080.00,g=0.17,net=-334836 | 774C:OI=7748.00,g=0.11,net=+120102 | 774P:OI=4050.00,g=0.11,net=+40058 | 775C:OI=13318.00,g=0.07,net=-44816 | 775P:OI=1516.00,g=0.07,net=+0 | 776C:OI=7556.00,g=0.04,net=+3960 | 776P:OI=816.00,g=0.04,net=+8209 | 777C:OI=7461.00,g=0.02,net=-2211 | 777P:OI=1055.00,g=0.02,net=+0 | 778C:OI=6002.00,g=0.02,net=-176 | 778P:OI=442.00,g=0.02,net=-3462 | 779C:OI=4817.00,g=0.01,net=+380 | 779P:OI=328.00,g=0.01,net=-695 | 780C:OI=8223.00,g=0.01,net=-35 | 780P:OI=209.00,g=0.01,net=+0 | 781C:OI=3575.00,g=0.01,net=-27 | 781P:OI=6.00,g=0.01,net=+0
+2026-08-11 11:55:04,838 INFO WALLS GAP2: premium de los strikes de SENAL (771C, 772P) NO sumado aqui para evitar el doble conteo (lo lleva _on_ticks, por tick)
+2026-08-11 11:55:04,838 INFO POS #6 minuto  773C | SPY=771.83 mid=0.38 (bid=0.37 ask=0.38 spread=0.01) | entrada=1.35 pnl=-96.86$ (-71.82%) | delta=0.30 gamma=0.17 theta=-0.39 vega=0.06 iv=0.12 | 363s en posicion
+2026-08-11 11:56:05,481 INFO MIN 11:55 | SPY=771.79 | TA dir=NEUTRAL score=+0 rsi=42.9 macd=-0.152/-0.154/+0.002 ema8/21/50=771.89/772.03/772.36 bb=772.24/771.99/771.73 atr=0.18(0.02%) vwap=771.88 obv=bearish
+2026-08-11 11:56:05,481 INFO MIN 11:55 | SMA 20/50/200 = 771.99/772.34/773.10 | precio-SMA: -0.20/-0.55/-1.31 (informativo, NO decide)
+2026-08-11 11:56:05,481 INFO MIN 11:55 | SENAL netC=-898662 netP=-2777913 diff=1879251 thr=551486 mom=4586(30s) -> estado=UP pos=CALL
+2026-08-11 11:56:05,481 INFO MIN 11:55 | VELA 20260811 bruto C=1061244.00 P=1363464.00 (sesgo PUT) | neto C=-30575.00 P=-48386.00 (diff 17811.00)
+2026-08-11 11:56:05,481 INFO MIN 11:55 | VENTANAS 1m: C=-30575.00 P=-48386.00 diff=17811.00 | 5m: C=-92540.00 P=-658155.00 diff=565615.00 | 15m: C=- P=- diff=-   (informativo, NO decide)
+2026-08-11 11:56:05,481 INFO MIN 11:55 | Cuenta $302.08   disp $265.08   |   DIA -97.92 (-24.5%)   |   realizado +0.96 (interno)   ops 1 (1 ganadoras, 100%)
+2026-08-11 11:56:05,481 INFO MIN 11:55 | CONTRATO CALL entrada=1.35 actual=0.36 pnl=-99$
+2026-08-11 11:56:05,481 INFO MIN 11:55 | PREM 20260811 762P day=148 cum=0 | netdia=+0 netcum=+0 | net3m=+148 | bid=0.01 ask=0.02 mid=0.01 last=0.02 sprd=0.01
+2026-08-11 11:56:05,481 INFO MIN 11:55 | PREM 20260811 763C day=80057 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=8.80 ask=9.12 mid=8.96 last=8.95 sprd=0.32
+2026-08-11 11:56:05,481 INFO MIN 11:55 | PREM 20260811 763P day=2074 cum=0 | netdia=+0 netcum=+0 | net3m=-34 | bid=0.02 ask=0.03 mid=0.03 last=0.02 sprd=0.01
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260811 764C day=767435 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=7.81 ask=8.04 mid=7.92 last=7.84 sprd=0.23
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260811 764P day=5630 cum=0 | netdia=+0 netcum=+0 | net3m=+240 | bid=0.02 ask=0.03 mid=0.03 last=0.03 sprd=0.01
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260811 765C day=843529 cum=0 | netdia=+0 netcum=+0 | net3m=+9269 | bid=6.85 ask=7.05 mid=6.95 last=6.90 sprd=0.20
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260811 765P day=115442 cum=0 | netdia=+0 netcum=+0 | net3m=-249 | bid=0.03 ask=0.04 mid=0.04 last=0.04 sprd=0.01
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260811 766C day=710831 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=5.84 ask=6.06 mid=5.95 last=5.92 sprd=0.22
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260811 766P day=163091 cum=0 | netdia=+0 netcum=+0 | net3m=-55 | bid=0.04 ask=0.05 mid=0.04 last=0.05 sprd=0.01
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260811 767C day=686936 cum=0 | netdia=+0 netcum=+0 | net3m=+508 | bid=4.87 ask=5.07 mid=4.97 last=4.90 sprd=0.20
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260811 767P day=364353 cum=0 | netdia=+0 netcum=+0 | net3m=+4788 | bid=0.06 ask=0.07 mid=0.07 last=0.07 sprd=0.01
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260811 768C day=953398 cum=0 | netdia=+0 netcum=+0 | net3m=+4608 | bid=3.98 ask=4.01 mid=4.00 last=4.02 sprd=0.03
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260811 768P day=866110 cum=0 | netdia=+0 netcum=+0 | net3m=-30831 | bid=0.10 ask=0.11 mid=0.10 last=0.10 sprd=0.01
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260811 769C day=1713792 cum=355657 | netdia=+0 netcum=+3221 | net3m=-64088 | bid=3.04 ask=3.07 mid=3.06 last=3.08 sprd=0.03
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260811 769P day=1614864 cum=0 | netdia=+0 netcum=+0 | net3m=-27904 | bid=0.17 ask=0.18 mid=0.17 last=0.17 sprd=0.01
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260811 770C day=4651457 cum=3255316 | netdia=+0 netcum=-578290 | net3m=+17850 | bid=2.16 ask=2.18 mid=2.17 last=2.15 sprd=0.02
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260811 770P day=5372131 cum=0 | netdia=+0 netcum=+0 | net3m=-37908 | bid=0.28 ask=0.29 mid=0.28 last=0.29 sprd=0.01
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260811 771C day=6395992 cum=4071111 | netdia=+31985 netcum=+159196 | net3m=+264979 | bid=1.37 ask=1.39 mid=1.38 last=1.36 sprd=0.02
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260811 771P day=8094268 cum=0 | netdia=+0 netcum=+0 | net3m=-204863 | bid=0.49 ask=0.50 mid=0.49 last=0.50 sprd=0.01
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260811 772C day=19105414 cum=16820112 | netdia=-573776 netcum=-575706 | net3m=-995040 | bid=0.76 ask=0.77 mid=0.77 last=0.76 sprd=0.01
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260811 772P day=23276836 cum=5169786 | netdia=+629995 netcum=+629995 | net3m=+1213076 | bid=0.87 ask=0.89 mid=0.88 last=0.88 sprd=0.02
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260811 773C day=33382676 cum=30492814 | netdia=-198459 netcum=-848649 | net3m=-533547 | bid=0.36 ask=0.37 mid=0.36 last=0.36 sprd=0.01
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260811 773P day=37463664 cum=24305886 | netdia=-3615918 netcum=-3571465 | net3m=-334836 | bid=1.47 ask=1.49 mid=1.48 last=1.48 sprd=0.02
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260811 774C day=25337548 cum=2939751 | netdia=-156433 netcum=-158412 | net3m=+120102 | bid=0.16 ask=0.17 mid=0.17 last=0.16 sprd=0.01
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260811 774P day=20372225 cum=20290373 | netdia=+208620 netcum=+235673 | net3m=+40058 | bid=2.26 ask=2.29 mid=2.27 last=2.28 sprd=0.03
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260811 775C day=9549739 cum=0 | netdia=+0 netcum=+0 | net3m=-44816 | bid=0.08 ask=0.09 mid=0.09 last=0.08 sprd=0.01
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260811 775P day=6778448 cum=4586418 | netdia=+3455 netcum=+125686 | net3m=+0 | bid=3.10 ask=3.26 mid=3.18 last=3.25 sprd=0.16
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260811 776C day=2738969 cum=0 | netdia=+0 netcum=+0 | net3m=+3960 | bid=0.04 ask=0.05 mid=0.04 last=0.04 sprd=0.01
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260811 776P day=3564218 cum=1655082 | netdia=+0 netcum=-22633 | net3m=+8209 | bid=4.08 ask=4.24 mid=4.16 last=4.09 sprd=0.16
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260811 777C day=1050295 cum=0 | netdia=+0 netcum=+0 | net3m=-2211 | bid=0.03 ask=0.04 mid=0.04 last=0.03 sprd=0.01
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260811 777P day=1403992 cum=773947 | netdia=+0 netcum=+47208 | net3m=+0 | bid=5.08 ask=5.23 mid=5.16 last=5.12 sprd=0.15
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260811 778C day=397927 cum=0 | netdia=+0 netcum=+0 | net3m=-176 | bid=0.02 ask=0.03 mid=0.03 last=0.02 sprd=0.01
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260811 778P day=881567 cum=30692 | netdia=+0 netcum=+0 | net3m=-3462 | bid=6.10 ask=6.23 mid=6.17 last=6.05 sprd=0.13
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260811 779C day=68659 cum=0 | netdia=+0 netcum=+0 | net3m=+380 | bid=0.02 ask=0.03 mid=0.03 last=0.02 sprd=0.01
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260811 779P day=468728 cum=0 | netdia=+0 netcum=+0 | net3m=-695 | bid=7.07 ask=7.24 mid=7.16 last=6.95 sprd=0.17
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260811 780C day=42379 cum=0 | netdia=+0 netcum=+0 | net3m=-35 | bid=0.01 ask=0.02 mid=0.01 last=0.01 sprd=0.01
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260811 780P day=343188 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=8.08 ask=8.24 mid=8.16 last=8.01 sprd=0.16
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260811 781C day=13648 cum=0 | netdia=+0 netcum=+0 | net3m=-27 | bid=0.01 ask=0.02 mid=0.01 last=0.01 sprd=0.01
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260811 781P day=372864 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=9.07 ask=9.22 mid=9.14 last=9.16 sprd=0.15
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260811 782C day=6983 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260811 782P day=914441 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260811 783C day=2593 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260811 783P day=769746 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260811 784C day=4446 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260812 768C day=18523 cum=18523 | netdia=-3005 netcum=-3005 | net3m=+0 | bid=4.95 ask=5.00 mid=4.97 last=4.98 sprd=0.05
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260812 769C day=97422 cum=275906 | netdia=+5567 netcum=-12403 | net3m=+0 | bid=4.21 ask=4.25 mid=4.23 last=4.24 sprd=0.04
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260812 770C day=613833 cum=1259887 | netdia=-13195 netcum=-21843 | net3m=+0 | bid=3.52 ask=3.56 mid=3.54 last=3.55 sprd=0.04
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260812 771C day=1131800 cum=1762863 | netdia=-144411 netcum=-147611 | net3m=+0 | bid=2.90 ask=2.93 mid=2.92 last=2.92 sprd=0.03
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260812 772C day=3114720 cum=5535272 | netdia=-93661 netcum=-375 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260812 772P day=1226609 cum=1247229 | netdia=-174713 netcum=-174713 | net3m=+0 | bid=2.40 ask=2.41 mid=2.40 last=2.42 sprd=0.01
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260812 773C day=4821359 cum=6040302 | netdia=-252372 netcum=-378114 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260812 773P day=2710442 cum=4078561 | netdia=+76207 netcum=+50392 | net3m=+0 | bid=2.90 ask=2.93 mid=2.92 last=2.93 sprd=0.03
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260812 774C day=227076 cum=520475 | netdia=+79882 netcum=+79882 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260812 774P day=3735606 cum=5593308 | netdia=-160802 netcum=-246798 | net3m=+0 | bid=3.48 ask=3.52 mid=3.50 last=3.50 sprd=0.04
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260812 775P day=1936619 cum=2638674 | netdia=+88978 netcum=+88766 | net3m=+0 | bid=4.13 ask=4.17 mid=4.15 last=4.16 sprd=0.04
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260812 776P day=301868 cum=603153 | netdia=+14346 netcum=+10035 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260812 777P day=256231 cum=689969 | netdia=-38114 netcum=-40050 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260812 778P day=968 cum=24033 | netdia=-968 netcum=-968 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260813 768C day=40678 cum=40678 | netdia=-59 netcum=-59 | net3m=+0 | bid=5.45 ask=5.65 mid=5.55 last=5.54 sprd=0.20
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260813 769C day=46201 cum=70982 | netdia=+1615 netcum=+1017 | net3m=+0 | bid=4.78 ask=4.87 mid=4.83 last=4.85 sprd=0.09
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260813 770C day=327810 cum=672823 | netdia=-50509 netcum=-65272 | net3m=+0 | bid=4.12 ask=4.20 mid=4.16 last=4.28 sprd=0.08
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260813 771C day=113001 cum=569622 | netdia=+31961 netcum=+44457 | net3m=+0 | bid=3.51 ask=3.58 mid=3.54 last=3.53 sprd=0.07
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260813 772C day=396485 cum=806218 | netdia=+1117 netcum=+963 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260813 772P day=109537 cum=111861 | netdia=+45489 netcum=+45489 | net3m=+0 | bid=2.99 ask=3.02 mid=3.00 last=3.02 sprd=0.03
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260813 773C day=724368 cum=1588622 | netdia=+90234 netcum=+110584 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260813 773P day=576568 cum=1081025 | netdia=-63309 netcum=-40935 | net3m=+0 | bid=3.48 ask=3.52 mid=3.50 last=3.50 sprd=0.04
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260813 774C day=79109 cum=432389 | netdia=+27280 netcum=+27280 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260813 774P day=900334 cum=1563004 | netdia=+343535 netcum=+300244 | net3m=+0 | bid=4.03 ask=4.12 mid=4.08 last=4.05 sprd=0.09
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260813 775P day=182740 cum=467748 | netdia=+8514 netcum=+11703 | net3m=+0 | bid=4.65 ask=4.74 mid=4.70 last=4.71 sprd=0.09
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260813 776P day=100791 cum=255627 | netdia=+3552 netcum=+13021 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260813 777P day=60235 cum=165389 | netdia=+11026 netcum=+13721 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260813 778P day=8474 cum=9011 | netdia=-2104 netcum=-2104 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260814 768C day=9479 cum=9479 | netdia=+5139 netcum=+5139 | net3m=+0 | bid=6.16 ask=6.25 mid=6.21 last=6.20 sprd=0.09
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260814 769C day=15377 cum=15377 | netdia=+4 netcum=+4 | net3m=+0 | bid=5.47 ask=5.56 mid=5.51 last=5.65 sprd=0.09
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260814 770C day=694127 cum=694127 | netdia=-18677 netcum=-18677 | net3m=+0 | bid=4.84 ask=4.90 mid=4.87 last=4.89 sprd=0.06
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260814 771C day=274256 cum=274256 | netdia=-5468 netcum=-5468 | net3m=+0 | bid=4.23 ask=4.29 mid=4.26 last=4.30 sprd=0.06
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260814 772C day=955658 cum=955658 | netdia=+940 netcum=+940 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260814 772P day=351687 cum=351687 | netdia=+112523 netcum=+112523 | net3m=+0 | bid=3.48 ask=3.51 mid=3.50 last=3.46 sprd=0.03
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260814 773C day=1195248 cum=1195248 | netdia=+3810 netcum=+3810 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260814 773P day=778285 cum=778285 | netdia=-52467 netcum=-52467 | net3m=+0 | bid=3.97 ask=4.00 mid=3.98 last=4.00 sprd=0.03
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260814 774C day=69301 cum=69301 | netdia=-30963 netcum=-30963 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260814 774P day=895511 cum=895511 | netdia=+40540 netcum=+40540 | net3m=+0 | bid=4.49 ask=4.58 mid=4.54 last=4.57 sprd=0.09
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260814 775P day=709596 cum=709596 | netdia=-18591 netcum=-18591 | net3m=+0 | bid=5.08 ask=5.18 mid=5.13 last=5.15 sprd=0.10
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260814 776P day=111880 cum=111880 | netdia=+20411 netcum=+20411 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:56:05,497 INFO MIN 11:55 | PREM 20260814 777P day=71640 cum=71640 | netdia=-13533 netcum=-13533 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:56:05,497 INFO POS #6 minuto  773C | SPY=771.81 mid=0.36 (bid=0.36 ask=0.37 spread=0.01) | entrada=1.35 pnl=-98.86$ (-73.31%) | delta=0.29 gamma=0.17 theta=-0.36 vega=0.06 iv=0.12 | 424s en posicion
+2026-08-11 11:57:04,206 INFO MIN 11:56 | SPY=771.91 | TA dir=NEUTRAL score=+0 rsi=42.4 macd=-0.143/-0.152/+0.009 ema8/21/50=771.90/772.02/772.34 bb=772.24/771.98/771.72 atr=0.17(0.02%) vwap=771.85 obv=bearish
+2026-08-11 11:57:04,206 INFO MIN 11:56 | SMA 20/50/200 = 771.98/772.32/773.09 | precio-SMA: -0.07/-0.41/-1.18 (informativo, NO decide)
+2026-08-11 11:57:04,206 INFO MIN 11:56 | SENAL netC=-899911 netP=-2808269 diff=1908358 thr=556227 mom=-20368(30s) -> estado=UP pos=CALL
+2026-08-11 11:57:04,206 INFO MIN 11:56 | VELA 20260811 bruto C=37529.00 P=144369.00 (sesgo PUT) | neto C=-1249.00 P=-30356.00 (diff 29107.00)
+2026-08-11 11:57:04,206 INFO MIN 11:56 | VENTANAS 1m: C=-3969.00 P=-32105.00 diff=28136.00 | 5m: C=-127349.00 P=-647746.00 diff=520397.00 | 15m: C=- P=- diff=-   (informativo, NO decide)
+2026-08-11 11:57:04,206 INFO MIN 11:56 | Cuenta $303.51   disp $265.08   |   DIA -96.49 (-24.1%)   |   realizado +0.96 (interno)   ops 1 (1 ganadoras, 100%)
+2026-08-11 11:57:04,206 INFO MIN 11:56 | CONTRATO CALL entrada=1.35 actual=0.38 pnl=-97$
+2026-08-11 11:57:04,206 INFO MIN 11:56 | PREM 20260811 762P day=148 cum=0 | netdia=+0 netcum=+0 | net3m=+148 | bid=0.01 ask=0.02 mid=0.01 last=0.02 sprd=0.01
+2026-08-11 11:57:04,206 INFO MIN 11:56 | PREM 20260811 763C day=80057 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=8.86 ask=9.11 mid=8.98 last=8.92 sprd=0.25
+2026-08-11 11:57:04,206 INFO MIN 11:56 | PREM 20260811 763P day=2074 cum=0 | netdia=+0 netcum=+0 | net3m=-34 | bid=0.02 ask=0.03 mid=0.03 last=0.02 sprd=0.01
+2026-08-11 11:57:04,206 INFO MIN 11:56 | PREM 20260811 764C day=767435 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=7.82 ask=8.04 mid=7.93 last=7.84 sprd=0.22
+2026-08-11 11:57:04,206 INFO MIN 11:56 | PREM 20260811 764P day=5630 cum=0 | netdia=+0 netcum=+0 | net3m=+240 | bid=0.02 ask=0.03 mid=0.03 last=0.03 sprd=0.01
+2026-08-11 11:57:04,206 INFO MIN 11:56 | PREM 20260811 765C day=843529 cum=0 | netdia=+0 netcum=+0 | net3m=+9269 | bid=6.90 ask=7.01 mid=6.96 last=6.92 sprd=0.11
+2026-08-11 11:57:04,206 INFO MIN 11:56 | PREM 20260811 765P day=115442 cum=0 | netdia=+0 netcum=+0 | net3m=-249 | bid=0.03 ask=0.04 mid=0.04 last=0.03 sprd=0.01
+2026-08-11 11:57:04,206 INFO MIN 11:56 | PREM 20260811 766C day=710831 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=5.84 ask=6.06 mid=5.95 last=5.92 sprd=0.22
+2026-08-11 11:57:04,206 INFO MIN 11:56 | PREM 20260811 766P day=163091 cum=0 | netdia=+0 netcum=+0 | net3m=-55 | bid=0.04 ask=0.05 mid=0.04 last=0.05 sprd=0.01
+2026-08-11 11:57:04,206 INFO MIN 11:56 | PREM 20260811 767C day=686936 cum=0 | netdia=+0 netcum=+0 | net3m=+508 | bid=4.92 ask=5.07 mid=5.00 last=4.90 sprd=0.15
+2026-08-11 11:57:04,206 INFO MIN 11:56 | PREM 20260811 767P day=364353 cum=0 | netdia=+0 netcum=+0 | net3m=+4788 | bid=0.06 ask=0.07 mid=0.07 last=0.07 sprd=0.01
+2026-08-11 11:57:04,206 INFO MIN 11:56 | PREM 20260811 768C day=953398 cum=0 | netdia=+0 netcum=+0 | net3m=+4608 | bid=4.02 ask=4.04 mid=4.03 last=4.00 sprd=0.02
+2026-08-11 11:57:04,206 INFO MIN 11:56 | PREM 20260811 768P day=866110 cum=0 | netdia=+0 netcum=+0 | net3m=-30831 | bid=0.10 ask=0.11 mid=0.10 last=0.10 sprd=0.01
+2026-08-11 11:57:04,206 INFO MIN 11:56 | PREM 20260811 769C day=1713792 cum=355657 | netdia=+0 netcum=+3221 | net3m=-64088 | bid=3.08 ask=3.11 mid=3.10 last=3.10 sprd=0.03
+2026-08-11 11:57:04,206 INFO MIN 11:56 | PREM 20260811 769P day=1614864 cum=0 | netdia=+0 netcum=+0 | net3m=-27904 | bid=0.16 ask=0.17 mid=0.17 last=0.17 sprd=0.01
+2026-08-11 11:57:04,206 INFO MIN 11:56 | PREM 20260811 770C day=4651457 cum=3255316 | netdia=+0 netcum=-578290 | net3m=+17850 | bid=2.19 ask=2.22 mid=2.21 last=2.20 sprd=0.03
+2026-08-11 11:57:04,213 INFO MIN 11:56 | PREM 20260811 770P day=5372131 cum=0 | netdia=+0 netcum=+0 | net3m=-37908 | bid=0.27 ask=0.28 mid=0.28 last=0.28 sprd=0.01
+2026-08-11 11:57:04,213 INFO MIN 11:56 | PREM 20260811 771C day=6433521 cum=4108640 | netdia=+30736 netcum=+157947 | net3m=+264979 | bid=1.40 ask=1.43 mid=1.42 last=1.41 sprd=0.03
+2026-08-11 11:57:04,213 INFO MIN 11:56 | PREM 20260811 771P day=8094268 cum=0 | netdia=+0 netcum=+0 | net3m=-204863 | bid=0.48 ask=0.49 mid=0.48 last=0.49 sprd=0.01
+2026-08-11 11:57:04,213 INFO MIN 11:56 | PREM 20260811 772C day=19105414 cum=16820112 | netdia=-573776 netcum=-575706 | net3m=-995040 | bid=0.79 ask=0.80 mid=0.80 last=0.79 sprd=0.01
+2026-08-11 11:57:04,213 INFO MIN 11:56 | PREM 20260811 772P day=23421205 cum=5314155 | netdia=+599639 netcum=+599639 | net3m=+1213076 | bid=0.86 ask=0.87 mid=0.86 last=0.86 sprd=0.01
+2026-08-11 11:57:04,213 INFO MIN 11:56 | PREM 20260811 773C day=33382676 cum=30492814 | netdia=-198459 netcum=-848649 | net3m=-533547 | bid=0.38 ask=0.39 mid=0.39 last=0.38 sprd=0.01
+2026-08-11 11:57:04,213 INFO MIN 11:56 | PREM 20260811 773P day=37463664 cum=24305886 | netdia=-3615918 netcum=-3571465 | net3m=-334836 | bid=1.44 ask=1.46 mid=1.45 last=1.44 sprd=0.02
+2026-08-11 11:57:04,213 INFO MIN 11:56 | PREM 20260811 774C day=25337548 cum=2939751 | netdia=-156433 netcum=-158412 | net3m=+120102 | bid=0.16 ask=0.17 mid=0.17 last=0.17 sprd=0.01
+2026-08-11 11:57:04,213 INFO MIN 11:56 | PREM 20260811 774P day=20372225 cum=20290373 | netdia=+208620 netcum=+235673 | net3m=+40058 | bid=2.23 ask=2.25 mid=2.24 last=2.23 sprd=0.02
+2026-08-11 11:57:04,213 INFO MIN 11:56 | PREM 20260811 775C day=9549739 cum=0 | netdia=+0 netcum=+0 | net3m=-44816 | bid=0.08 ask=0.09 mid=0.09 last=0.08 sprd=0.01
+2026-08-11 11:57:04,213 INFO MIN 11:56 | PREM 20260811 775P day=6778448 cum=4586418 | netdia=+3455 netcum=+125686 | net3m=+0 | bid=3.11 ask=3.20 mid=3.15 last=3.15 sprd=0.09
+2026-08-11 11:57:04,213 INFO MIN 11:56 | PREM 20260811 776C day=2738969 cum=0 | netdia=+0 netcum=+0 | net3m=+3960 | bid=0.04 ask=0.05 mid=0.04 last=0.05 sprd=0.01
+2026-08-11 11:57:04,213 INFO MIN 11:56 | PREM 20260811 776P day=3564218 cum=1655082 | netdia=+0 netcum=-22633 | net3m=+8209 | bid=4.06 ask=4.18 mid=4.12 last=4.16 sprd=0.12
+2026-08-11 11:57:04,213 INFO MIN 11:56 | PREM 20260811 777C day=1050295 cum=0 | netdia=+0 netcum=+0 | net3m=-2211 | bid=0.03 ask=0.04 mid=0.04 last=0.03 sprd=0.01
+2026-08-11 11:57:04,213 INFO MIN 11:56 | PREM 20260811 777P day=1403992 cum=773947 | netdia=+0 netcum=+47208 | net3m=+0 | bid=5.06 ask=5.15 mid=5.11 last=5.12 sprd=0.09
+2026-08-11 11:57:04,213 INFO MIN 11:56 | PREM 20260811 778C day=397927 cum=0 | netdia=+0 netcum=+0 | net3m=-176 | bid=0.02 ask=0.03 mid=0.03 last=0.02 sprd=0.01
+2026-08-11 11:57:04,213 INFO MIN 11:56 | PREM 20260811 778P day=881567 cum=30692 | netdia=+0 netcum=+0 | net3m=-3462 | bid=6.05 ask=6.23 mid=6.14 last=6.05 sprd=0.18
+2026-08-11 11:57:04,213 INFO MIN 11:56 | PREM 20260811 779C day=68659 cum=0 | netdia=+0 netcum=+0 | net3m=+380 | bid=0.02 ask=0.03 mid=0.03 last=0.02 sprd=0.01
+2026-08-11 11:57:04,213 INFO MIN 11:56 | PREM 20260811 779P day=468728 cum=0 | netdia=+0 netcum=+0 | net3m=-695 | bid=7.03 ask=7.24 mid=7.13 last=6.95 sprd=0.21
+2026-08-11 11:57:04,213 INFO MIN 11:56 | PREM 20260811 780C day=42379 cum=0 | netdia=+0 netcum=+0 | net3m=-35 | bid=0.01 ask=0.02 mid=0.01 last=0.01 sprd=0.01
+2026-08-11 11:57:04,213 INFO MIN 11:56 | PREM 20260811 780P day=343188 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=8.04 ask=8.24 mid=8.14 last=8.01 sprd=0.20
+2026-08-11 11:57:04,213 INFO MIN 11:56 | PREM 20260811 781C day=13648 cum=0 | netdia=+0 netcum=+0 | net3m=-27 | bid=0.01 ask=0.02 mid=0.01 last=0.01 sprd=0.01
+2026-08-11 11:57:04,213 INFO MIN 11:56 | PREM 20260811 781P day=372864 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=9.04 ask=9.22 mid=9.13 last=9.16 sprd=0.18
+2026-08-11 11:57:04,213 INFO MIN 11:56 | PREM 20260811 782C day=6983 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:57:04,213 INFO MIN 11:56 | PREM 20260811 782P day=914441 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:57:04,213 INFO MIN 11:56 | PREM 20260811 783C day=2593 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:57:04,213 INFO MIN 11:56 | PREM 20260811 783P day=769746 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:57:04,213 INFO MIN 11:56 | PREM 20260811 784C day=4446 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:57:04,213 INFO MIN 11:56 | PREM 20260812 768C day=19519 cum=19519 | netdia=-3005 netcum=-3005 | net3m=+0 | bid=4.99 ask=5.04 mid=5.01 last=4.98 sprd=0.05
+2026-08-11 11:57:04,213 INFO MIN 11:56 | PREM 20260812 769C day=99981 cum=278465 | netdia=+6003 netcum=-11967 | net3m=+0 | bid=4.25 ask=4.29 mid=4.27 last=4.29 sprd=0.04
+2026-08-11 11:57:04,213 INFO MIN 11:56 | PREM 20260812 770C day=614190 cum=1260244 | netdia=-13195 netcum=-21843 | net3m=+0 | bid=3.56 ask=3.60 mid=3.58 last=3.57 sprd=0.04
+2026-08-11 11:57:04,213 INFO MIN 11:56 | PREM 20260812 771C day=1144654 cum=1775717 | netdia=-156675 netcum=-159875 | net3m=+0 | bid=2.93 ask=2.96 mid=2.94 last=2.95 sprd=0.03
+2026-08-11 11:57:04,213 INFO MIN 11:56 | PREM 20260812 772C day=3114720 cum=5535272 | netdia=-93661 netcum=-375 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:57:04,213 INFO MIN 11:56 | PREM 20260812 772P day=1253310 cum=1273930 | netdia=-164986 netcum=-164986 | net3m=+0 | bid=2.37 ask=2.39 mid=2.38 last=2.40 sprd=0.02
+2026-08-11 11:57:04,213 INFO MIN 11:56 | PREM 20260812 773C day=4821359 cum=6040302 | netdia=-252372 netcum=-378114 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:57:04,214 INFO MIN 11:56 | PREM 20260812 773P day=2714208 cum=4082327 | netdia=+76217 netcum=+50402 | net3m=+0 | bid=2.89 ask=2.91 mid=2.90 last=2.90 sprd=0.02
+2026-08-11 11:57:04,214 INFO MIN 11:56 | PREM 20260812 774C day=227076 cum=520475 | netdia=+79882 netcum=+79882 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:57:04,214 INFO MIN 11:56 | PREM 20260812 774P day=3735956 cum=5593658 | netdia=-160452 netcum=-246448 | net3m=+0 | bid=3.45 ask=3.49 mid=3.47 last=3.50 sprd=0.04
+2026-08-11 11:57:04,214 INFO MIN 11:56 | PREM 20260812 775P day=1936619 cum=2638674 | netdia=+88978 netcum=+88766 | net3m=+0 | bid=4.09 ask=4.14 mid=4.12 last=4.16 sprd=0.05
+2026-08-11 11:57:04,214 INFO MIN 11:56 | PREM 20260812 776P day=301868 cum=603153 | netdia=+14346 netcum=+10035 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:57:04,214 INFO MIN 11:56 | PREM 20260812 777P day=256231 cum=689969 | netdia=-38114 netcum=-40050 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:57:04,214 INFO MIN 11:56 | PREM 20260812 778P day=968 cum=24033 | netdia=-968 netcum=-968 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:57:04,214 INFO MIN 11:56 | PREM 20260813 768C day=47311 cum=47311 | netdia=-2239 netcum=-2239 | net3m=+0 | bid=5.51 ask=5.65 mid=5.58 last=5.45 sprd=0.14
+2026-08-11 11:57:04,214 INFO MIN 11:56 | PREM 20260813 769C day=46201 cum=70982 | netdia=+1615 netcum=+1017 | net3m=+0 | bid=4.82 ask=4.90 mid=4.86 last=4.85 sprd=0.08
+2026-08-11 11:57:04,214 INFO MIN 11:56 | PREM 20260813 770C day=327810 cum=672823 | netdia=-50509 netcum=-65272 | net3m=+0 | bid=4.16 ask=4.24 mid=4.20 last=4.28 sprd=0.08
+2026-08-11 11:57:04,214 INFO MIN 11:56 | PREM 20260813 771C day=113001 cum=569622 | netdia=+31961 netcum=+44457 | net3m=+0 | bid=3.54 ask=3.61 mid=3.58 last=3.53 sprd=0.07
+2026-08-11 11:57:04,214 INFO MIN 11:56 | PREM 20260813 772C day=396485 cum=806218 | netdia=+1117 netcum=+963 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:57:04,214 INFO MIN 11:56 | PREM 20260813 772P day=113431 cum=115755 | netdia=+45489 netcum=+45489 | net3m=+0 | bid=2.96 ask=2.99 mid=2.98 last=2.98 sprd=0.03
+2026-08-11 11:57:04,214 INFO MIN 11:56 | PREM 20260813 773C day=724368 cum=1588622 | netdia=+90234 netcum=+110584 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:57:04,214 INFO MIN 11:56 | PREM 20260813 773P day=577606 cum=1082063 | netdia=-64347 netcum=-41973 | net3m=+0 | bid=3.46 ask=3.49 mid=3.48 last=3.46 sprd=0.03
+2026-08-11 11:57:04,214 INFO MIN 11:56 | PREM 20260813 774C day=79109 cum=432389 | netdia=+27280 netcum=+27280 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:57:04,214 INFO MIN 11:56 | PREM 20260813 774P day=900334 cum=1563004 | netdia=+343535 netcum=+300244 | net3m=+0 | bid=3.99 ask=4.08 mid=4.04 last=4.05 sprd=0.09
+2026-08-11 11:57:04,214 INFO MIN 11:56 | PREM 20260813 775P day=182740 cum=467748 | netdia=+8514 netcum=+11703 | net3m=+0 | bid=4.60 ask=4.70 mid=4.65 last=4.71 sprd=0.10
+2026-08-11 11:57:04,214 INFO MIN 11:56 | PREM 20260813 776P day=100791 cum=255627 | netdia=+3552 netcum=+13021 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:57:04,214 INFO MIN 11:56 | PREM 20260813 777P day=60235 cum=165389 | netdia=+11026 netcum=+13721 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:57:04,214 INFO MIN 11:56 | PREM 20260813 778P day=8474 cum=9011 | netdia=-2104 netcum=-2104 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:57:04,214 INFO MIN 11:56 | PREM 20260814 768C day=9479 cum=9479 | netdia=+5139 netcum=+5139 | net3m=+0 | bid=6.20 ask=6.29 mid=6.25 last=6.20 sprd=0.09
+2026-08-11 11:57:04,214 INFO MIN 11:56 | PREM 20260814 769C day=15377 cum=15377 | netdia=+4 netcum=+4 | net3m=+0 | bid=5.51 ask=5.60 mid=5.55 last=5.65 sprd=0.09
+2026-08-11 11:57:04,214 INFO MIN 11:56 | PREM 20260814 770C day=694127 cum=694127 | netdia=-18677 netcum=-18677 | net3m=+0 | bid=4.87 ask=4.93 mid=4.90 last=4.89 sprd=0.06
+2026-08-11 11:57:04,214 INFO MIN 11:56 | PREM 20260814 771C day=274256 cum=274256 | netdia=-5468 netcum=-5468 | net3m=+0 | bid=4.26 ask=4.32 mid=4.29 last=4.30 sprd=0.06
+2026-08-11 11:57:04,214 INFO MIN 11:56 | PREM 20260814 772C day=955658 cum=955658 | netdia=+940 netcum=+940 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:57:04,214 INFO MIN 11:56 | PREM 20260814 772P day=354131 cum=354131 | netdia=+113217 netcum=+113217 | net3m=+0 | bid=3.46 ask=3.48 mid=3.47 last=3.47 sprd=0.02
+2026-08-11 11:57:04,214 INFO MIN 11:56 | PREM 20260814 773C day=1195248 cum=1195248 | netdia=+3810 netcum=+3810 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:57:04,214 INFO MIN 11:56 | PREM 20260814 773P day=778285 cum=778285 | netdia=-52467 netcum=-52467 | net3m=+0 | bid=3.94 ask=3.97 mid=3.96 last=4.00 sprd=0.03
+2026-08-11 11:57:04,214 INFO MIN 11:56 | PREM 20260814 774C day=69301 cum=69301 | netdia=-30963 netcum=-30963 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:57:04,214 INFO MIN 11:56 | PREM 20260814 774P day=895960 cum=895960 | netdia=+40540 netcum=+40540 | net3m=+0 | bid=4.46 ask=4.55 mid=4.50 last=4.49 sprd=0.09
+2026-08-11 11:57:04,214 INFO MIN 11:56 | PREM 20260814 775P day=710105 cum=710105 | netdia=-18591 netcum=-18591 | net3m=+0 | bid=5.07 ask=5.14 mid=5.11 last=5.09 sprd=0.07
+2026-08-11 11:57:04,214 INFO MIN 11:56 | PREM 20260814 776P day=111880 cum=111880 | netdia=+20411 netcum=+20411 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:57:04,214 INFO MIN 11:56 | PREM 20260814 777P day=71640 cum=71640 | netdia=-13533 netcum=-13533 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:57:06,228 INFO POS #6 minuto  773C | SPY=771.89 mid=0.38 (bid=0.38 ask=0.39 spread=0.01) | entrada=1.35 pnl=-96.86$ (-71.82%) | delta=0.29 gamma=0.17 theta=-0.38 vega=0.06 iv=0.12 | 485s en posicion
+2026-08-11 11:58:04,863 INFO MIN 11:57 | SPY=771.86 | TA dir=NEUTRAL score=+0 rsi=37.7 macd=-0.138/-0.149/+0.011 ema8/21/50=771.89/772.01/772.32 bb=772.23/771.97/771.71 atr=0.17(0.02%) vwap=771.85 obv=bearish
+2026-08-11 11:58:04,863 INFO MIN 11:57 | SMA 20/50/200 = 771.97/772.29/773.08 | precio-SMA: -0.11/-0.43/-1.22 (informativo, NO decide)
+2026-08-11 11:58:04,863 INFO MIN 11:57 | SENAL netC=-879139 netP=-2815865 diff=1936726 thr=554251 mom=50065(30s) -> estado=UP pos=CALL
+2026-08-11 11:58:04,863 INFO MIN 11:57 | VELA 20260811 bruto C=56858.00 P=73216.00 (sesgo PUT) | neto C=20772.00 P=-7596.00 (diff 28368.00)
+2026-08-11 11:58:04,863 INFO MIN 11:57 | VENTANAS 1m: C=20772.00 P=-7596.00 diff=28368.00 | 5m: C=-88475.00 P=-223444.00 diff=134969.00 | 15m: C=- P=- diff=-   (informativo, NO decide)
+2026-08-11 11:58:04,863 INFO MIN 11:57 | Cuenta $303.51   disp $265.08   |   DIA -96.49 (-24.1%)   |   realizado +0.96 (interno)   ops 1 (1 ganadoras, 100%)
+2026-08-11 11:58:04,863 INFO MIN 11:57 | CONTRATO CALL entrada=1.35 actual=0.36 pnl=-99$
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260811 762P day=148 cum=0 | netdia=+0 netcum=+0 | net3m=+148 | bid=0.01 ask=0.02 mid=0.01 last=0.02 sprd=0.01
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260811 763C day=80057 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=8.86 ask=9.11 mid=8.98 last=8.92 sprd=0.25
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260811 763P day=2074 cum=0 | netdia=+0 netcum=+0 | net3m=-34 | bid=0.02 ask=0.03 mid=0.03 last=0.02 sprd=0.01
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260811 764C day=767435 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=7.82 ask=8.04 mid=7.93 last=7.94 sprd=0.22
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260811 764P day=5630 cum=0 | netdia=+0 netcum=+0 | net3m=+240 | bid=0.02 ask=0.03 mid=0.03 last=0.03 sprd=0.01
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260811 765C day=843529 cum=0 | netdia=+0 netcum=+0 | net3m=+9269 | bid=6.87 ask=7.01 mid=6.94 last=6.90 sprd=0.14
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260811 765P day=115442 cum=0 | netdia=+0 netcum=+0 | net3m=-249 | bid=0.03 ask=0.04 mid=0.04 last=0.03 sprd=0.01
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260811 766C day=710831 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=5.84 ask=6.06 mid=5.95 last=5.93 sprd=0.22
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260811 766P day=163091 cum=0 | netdia=+0 netcum=+0 | net3m=-55 | bid=0.04 ask=0.05 mid=0.04 last=0.05 sprd=0.01
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260811 767C day=686936 cum=0 | netdia=+0 netcum=+0 | net3m=+508 | bid=4.91 ask=5.07 mid=4.99 last=4.90 sprd=0.16
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260811 767P day=364353 cum=0 | netdia=+0 netcum=+0 | net3m=+4788 | bid=0.06 ask=0.07 mid=0.07 last=0.07 sprd=0.01
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260811 768C day=953398 cum=0 | netdia=+0 netcum=+0 | net3m=+4608 | bid=4.00 ask=4.03 mid=4.01 last=4.01 sprd=0.03
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260811 768P day=866110 cum=0 | netdia=+0 netcum=+0 | net3m=-30831 | bid=0.10 ask=0.11 mid=0.10 last=0.11 sprd=0.01
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260811 769C day=1713792 cum=355657 | netdia=+0 netcum=+3221 | net3m=-64088 | bid=3.06 ask=3.08 mid=3.07 last=3.04 sprd=0.02
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260811 769P day=1614864 cum=0 | netdia=+0 netcum=+0 | net3m=-27904 | bid=0.16 ask=0.17 mid=0.17 last=0.17 sprd=0.01
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260811 770C day=4651457 cum=3255316 | netdia=+0 netcum=-578290 | net3m=+17850 | bid=2.17 ask=2.20 mid=2.19 last=2.15 sprd=0.03
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260811 770P day=5372131 cum=0 | netdia=+0 netcum=+0 | net3m=-37908 | bid=0.27 ask=0.28 mid=0.28 last=0.27 sprd=0.01
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260811 771C day=6490379 cum=4165498 | netdia=+51508 netcum=+178719 | net3m=+264979 | bid=1.38 ask=1.40 mid=1.39 last=1.39 sprd=0.02
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260811 771P day=8094268 cum=0 | netdia=+0 netcum=+0 | net3m=-204863 | bid=0.48 ask=0.49 mid=0.48 last=0.48 sprd=0.01
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260811 772C day=19105414 cum=16820112 | netdia=-573776 netcum=-575706 | net3m=-995040 | bid=0.77 ask=0.78 mid=0.78 last=0.77 sprd=0.01
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260811 772P day=23494421 cum=5387371 | netdia=+592043 netcum=+592043 | net3m=+1213076 | bid=0.86 ask=0.87 mid=0.86 last=0.86 sprd=0.01
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260811 773C day=33382676 cum=30492814 | netdia=-198459 netcum=-848649 | net3m=-533547 | bid=0.36 ask=0.37 mid=0.36 last=0.37 sprd=0.01
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260811 773P day=37463664 cum=24305886 | netdia=-3615918 netcum=-3571465 | net3m=-334836 | bid=1.45 ask=1.48 mid=1.47 last=1.47 sprd=0.03
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260811 774C day=25337548 cum=2939751 | netdia=-156433 netcum=-158412 | net3m=+120102 | bid=0.16 ask=0.17 mid=0.17 last=0.16 sprd=0.01
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260811 774P day=20372225 cum=20290373 | netdia=+208620 netcum=+235673 | net3m=+40058 | bid=2.24 ask=2.27 mid=2.25 last=2.30 sprd=0.03
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260811 775C day=9549739 cum=0 | netdia=+0 netcum=+0 | net3m=-44816 | bid=0.08 ask=0.09 mid=0.09 last=0.08 sprd=0.01
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260811 775P day=6778448 cum=4586418 | netdia=+3455 netcum=+125686 | net3m=+0 | bid=3.13 ask=3.23 mid=3.18 last=3.20 sprd=0.10
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260811 776C day=2738969 cum=0 | netdia=+0 netcum=+0 | net3m=+3960 | bid=0.04 ask=0.05 mid=0.04 last=0.05 sprd=0.01
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260811 776P day=3564218 cum=1655082 | netdia=+0 netcum=-22633 | net3m=+8209 | bid=4.11 ask=4.21 mid=4.16 last=4.16 sprd=0.10
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260811 777C day=1050295 cum=0 | netdia=+0 netcum=+0 | net3m=-2211 | bid=0.03 ask=0.04 mid=0.04 last=0.03 sprd=0.01
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260811 777P day=1403992 cum=773947 | netdia=+0 netcum=+47208 | net3m=+0 | bid=5.09 ask=5.19 mid=5.14 last=5.15 sprd=0.10
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260811 778C day=397927 cum=0 | netdia=+0 netcum=+0 | net3m=-176 | bid=0.02 ask=0.03 mid=0.03 last=0.02 sprd=0.01
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260811 778P day=881567 cum=30692 | netdia=+0 netcum=+0 | net3m=-3462 | bid=6.01 ask=6.23 mid=6.12 last=6.05 sprd=0.22
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260811 779C day=68659 cum=0 | netdia=+0 netcum=+0 | net3m=+380 | bid=0.02 ask=0.03 mid=0.03 last=0.02 sprd=0.01
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260811 779P day=468728 cum=0 | netdia=+0 netcum=+0 | net3m=-695 | bid=7.01 ask=7.24 mid=7.12 last=6.95 sprd=0.23
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260811 780C day=42379 cum=0 | netdia=+0 netcum=+0 | net3m=-35 | bid=0.01 ask=0.02 mid=0.01 last=0.02 sprd=0.01
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260811 780P day=343188 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=8.02 ask=8.19 mid=8.11 last=8.14 sprd=0.17
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260811 781C day=13648 cum=0 | netdia=+0 netcum=+0 | net3m=-27 | bid=0.01 ask=0.02 mid=0.01 last=0.01 sprd=0.01
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260811 781P day=372864 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=9.01 ask=9.22 mid=9.12 last=9.16 sprd=0.21
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260811 782C day=6983 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260811 782P day=914441 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260811 783C day=2593 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260811 783P day=769746 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260811 784C day=4446 cum=0 | netdia=+0 netcum=+0 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260812 768C day=19519 cum=19519 | netdia=-3005 netcum=-3005 | net3m=+0 | bid=4.97 ask=5.02 mid=5.00 last=4.98 sprd=0.05
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260812 769C day=103390 cum=281874 | netdia=+5580 netcum=-12390 | net3m=+0 | bid=4.23 ask=4.27 mid=4.25 last=4.26 sprd=0.04
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260812 770C day=615260 cum=1261314 | netdia=-13195 netcum=-21843 | net3m=+0 | bid=3.54 ask=3.57 mid=3.56 last=3.56 sprd=0.03
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260812 771C day=1157306 cum=1788369 | netdia=-165494 netcum=-168694 | net3m=+0 | bid=2.91 ask=2.95 mid=2.93 last=2.92 sprd=0.04
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260812 772C day=3114720 cum=5535272 | netdia=-93661 netcum=-375 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260812 772P day=1261445 cum=1282065 | netdia=-159489 netcum=-159489 | net3m=+0 | bid=2.39 ask=2.40 mid=2.40 last=2.40 sprd=0.01
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260812 773C day=4821359 cum=6040302 | netdia=-252372 netcum=-378114 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260812 773P day=2734224 cum=4102343 | netdia=+77950 netcum=+52135 | net3m=+0 | bid=2.89 ask=2.92 mid=2.90 last=2.93 sprd=0.03
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260812 774C day=227076 cum=520475 | netdia=+79882 netcum=+79882 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260812 774P day=3735956 cum=5593658 | netdia=-160452 netcum=-246448 | net3m=+0 | bid=3.47 ask=3.51 mid=3.49 last=3.50 sprd=0.04
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260812 775P day=1936619 cum=2638674 | netdia=+88978 netcum=+88766 | net3m=+0 | bid=4.11 ask=4.16 mid=4.13 last=4.16 sprd=0.05
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260812 776P day=301868 cum=603153 | netdia=+14346 netcum=+10035 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260812 777P day=256231 cum=689969 | netdia=-38114 netcum=-40050 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260812 778P day=968 cum=24033 | netdia=-968 netcum=-968 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260813 768C day=47311 cum=47311 | netdia=-2239 netcum=-2239 | net3m=+0 | bid=5.48 ask=5.65 mid=5.57 last=5.45 sprd=0.17
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260813 769C day=51101 cum=75882 | netdia=+1615 netcum=+1017 | net3m=+0 | bid=4.80 ask=4.89 mid=4.84 last=4.90 sprd=0.09
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260813 770C day=328230 cum=673243 | netdia=-50509 netcum=-65272 | net3m=+0 | bid=4.13 ask=4.22 mid=4.17 last=4.20 sprd=0.09
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260813 771C day=113001 cum=569622 | netdia=+31961 netcum=+44457 | net3m=+0 | bid=3.52 ask=3.59 mid=3.56 last=3.53 sprd=0.07
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260813 772C day=396485 cum=806218 | netdia=+1117 netcum=+963 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260813 772P day=114027 cum=116351 | netdia=+46085 netcum=+46085 | net3m=+0 | bid=2.98 ask=3.00 mid=2.99 last=2.98 sprd=0.02
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260813 773C day=724368 cum=1588622 | netdia=+90234 netcum=+110584 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260813 773P day=578647 cum=1083104 | netdia=-64347 netcum=-41973 | net3m=+0 | bid=3.47 ask=3.51 mid=3.49 last=3.47 sprd=0.04
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260813 774C day=79109 cum=432389 | netdia=+27280 netcum=+27280 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260813 774P day=900334 cum=1563004 | netdia=+343535 netcum=+300244 | net3m=+0 | bid=4.01 ask=4.10 mid=4.05 last=4.05 sprd=0.09
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260813 775P day=182740 cum=467748 | netdia=+8514 netcum=+11703 | net3m=+0 | bid=4.62 ask=4.72 mid=4.67 last=4.71 sprd=0.10
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260813 776P day=100791 cum=255627 | netdia=+3552 netcum=+13021 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260813 777P day=60235 cum=165389 | netdia=+11026 netcum=+13721 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260813 778P day=8474 cum=9011 | netdia=-2104 netcum=-2104 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260814 768C day=9479 cum=9479 | netdia=+5139 netcum=+5139 | net3m=+0 | bid=6.18 ask=6.26 mid=6.22 last=6.20 sprd=0.08
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260814 769C day=15377 cum=15377 | netdia=+4 netcum=+4 | net3m=+0 | bid=5.49 ask=5.57 mid=5.53 last=5.65 sprd=0.08
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260814 770C day=699017 cum=699017 | netdia=-18677 netcum=-18677 | net3m=+0 | bid=4.86 ask=4.91 mid=4.88 last=4.89 sprd=0.05
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260814 771C day=274256 cum=274256 | netdia=-5468 netcum=-5468 | net3m=+0 | bid=4.24 ask=4.30 mid=4.27 last=4.30 sprd=0.06
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260814 772C day=955658 cum=955658 | netdia=+940 netcum=+940 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260814 772P day=355516 cum=355516 | netdia=+112179 netcum=+112179 | net3m=+0 | bid=3.47 ask=3.50 mid=3.48 last=3.46 sprd=0.03
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260814 773C day=1195248 cum=1195248 | netdia=+3810 netcum=+3810 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260814 773P day=782648 cum=782648 | netdia=-56437 netcum=-56437 | net3m=+0 | bid=3.96 ask=3.99 mid=3.98 last=3.97 sprd=0.03
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260814 774C day=69301 cum=69301 | netdia=-30963 netcum=-30963 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260814 774P day=896404 cum=896404 | netdia=+40096 netcum=+40096 | net3m=+0 | bid=4.48 ask=4.56 mid=4.52 last=4.44 sprd=0.08
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260814 775P day=711638 cum=711638 | netdia=-18591 netcum=-18591 | net3m=+0 | bid=5.07 ask=5.15 mid=5.11 last=5.13 sprd=0.08
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260814 776P day=111880 cum=111880 | netdia=+20411 netcum=+20411 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:58:04,863 INFO MIN 11:57 | PREM 20260814 777P day=71640 cum=71640 | netdia=-13533 netcum=-13533 | net3m=+0 | bid=- ask=- mid=- last=- sprd=-
+2026-08-11 11:58:04,879 INFO WALLS spot=771.86 PW=773.00 CW=773.00 magneto est=772.00/din=772.00 peso=772.86 | GEX=-63.129Bn regime=SHORT flip=- | faltan OI=0 greeks=0 de 40 | frescura: gamma cambiaron=40/40 ult_tick=2026-08-11 15:58:04.736664+00:00
+2026-08-11 11:58:04,879 INFO WALLS detalle por strike: 762C:OI=630.00,g=0.01,net=+0 | 762P:OI=3018.00,g=0.01,net=+152 | 763C:OI=387.00,g=0.01,net=+0 | 763P:OI=3297.00,g=0.01,net=-112 | 764C:OI=1485.00,g=0.01,net=+0 | 764P:OI=4210.00,g=0.01,net=+246 | 765C:OI=784.00,g=0.01,net=+9269 | 765P:OI=11907.00,g=0.01,net=-435 | 766C:OI=873.00,g=0.02,net=+0 | 766P:OI=5035.00,g=0.02,net=+330 | 767C:OI=1633.00,g=0.04,net=-4882 | 767P:OI=6107.00,g=0.04,net=+7294 | 768C:OI=978.00,g=0.05,net=+4608 | 768P:OI=4474.00,g=0.05,net=+90 | 769C:OI=1723.00,g=0.08,net=-98440 | 769P:OI=5507.00,g=0.08,net=-6280 | 770C:OI=6182.00,g=0.12,net=-43210 | 770P:OI=12729.00,g=0.12,net=-90045 | 771C:OI=4384.00,g=0.17,net=+264979 | 771P:OI=6252.00,g=0.17,net=-415871 | 772C:OI=4158.00,g=0.19,net=-1338537 | 772P:OI=9389.00,g=0.20,net=+835622 | 773C:OI=12230.00,g=0.17,net=-423139 | 773P:OI=11080.00,g=0.17,net=-334836 | 774C:OI=7748.00,g=0.12,net=+76822 | 774P:OI=4050.00,g=0.12,net=+125848 | 775C:OI=13318.00,g=0.07,net=-50656 | 775P:OI=1516.00,g=0.07,net=+0 | 776C:OI=7556.00,g=0.04,net=+5445 | 776P:OI=816.00,g=0.04,net=+8209 | 777C:OI=7461.00,g=0.02,net=-2511 | 777P:OI=1055.00,g=0.03,net=+0 | 778C:OI=6002.00,g=0.02,net=-470 | 778P:OI=442.00,g=0.02,net=-3462 | 779C:OI=4817.00,g=0.01,net=+362 | 779P:OI=328.00,g=0.01,net=-695 | 780C:OI=8223.00,g=0.01,net=-31 | 780P:OI=209.00,g=0.01,net=+0 | 781C:OI=3575.00,g=0.01,net=-40 | 781P:OI=6.00,g=0.01,net=+0
+2026-08-11 11:58:04,879 INFO WALLS GAP2: premium de los strikes de SENAL (771C, 772P) NO sumado aqui para evitar el doble conteo (lo lleva _on_ticks, por tick)
+2026-08-11 11:58:06,893 INFO POS #6 minuto  773C | SPY=771.86 mid=0.36 (bid=0.36 ask=0.37 spread=0.01) | entrada=1.35 pnl=-98.86$ (-73.31%) | delta=0.29 gamma=0.17 theta=-0.37 vega=0.06 iv=0.12 | 545s en posicion
