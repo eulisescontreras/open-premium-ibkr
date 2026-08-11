@@ -142,6 +142,69 @@ Correr con `$env:PYTHONPATH="C:\Users\eulis\proyectos\open-premium-ibkr"`.
 *(Hoy el diferencial cazó una regresión real en `spy_walls` 58→56 por un `AttributeError` en
 `_precio_de` que dejaba walls sin persistir. Por eso se hace.)*
 
+## I. 🔬 BARRIDO DE DIRECCIÓN CON EL PREMIUM POR STRIKE (2026-08-11 tarde)
+
+Petición del usuario: sacar probabilidades de la data guardada para determinar la dirección del
+subyacente, porque el parámetro de giro actual la falla (hoy: UP durante 4 h con el SPY cayendo).
+
+**4 scripts nuevos en `analisis/` (READ-ONLY, la app siguió corriendo):**
+`direccion_premium.py` (barrido de 38 variables × 6 horizontes sobre `premium_minute` por strike) ·
+`direccion_foco.py` (zoom por día/horizonte + sensibilidad al spot de referencia) ·
+`control_reloj.py` (¿la variable es un cronómetro disfrazado?) ·
+`significancia.py` (error estándar + permutación con desplazamiento circular) ·
+`atribucion.py` (qué fracción del flujo lleva signo).
+📌 Ninguno duplica los 11 análisis previos: **todos ellos usaban agregados de `ta_minute`;
+`premium_minute` por strike no lo tocaba nadie.**
+
+### ❌ VEREDICTO: NINGUNA variable de premium determina la dirección en horizonte de scalping
+
+Con 2 días (08-10 completo, 08-11 hasta 14:00), **ninguna de las 38 variables supera su propio
+margen de error a 1/3/5/10/15 min.** El mejor z de todo el barrido en horizontes cortos es **1,5**
+(hace falta ≥2). Lo único que cruza el percentil 95 de la permutación es `vol_C_menos_P` a **30 min**
+— inútil para scalping, con **11 observaciones independientes** y z=1,6.
+
+### 🔑 LO QUE SÍ QUEDÓ VERIFICADO (y explica el porqué)
+
+1. **El premium BRUTO es direccionalmente CIEGO por construcción.** 1 M$ en calls es el mismo
+   número lo compre un alcista o lo venda un bajista. Todas las variables `bruto_*` miden volumen
+   de dinero, no intención. **No es que fallen: es que no pueden funcionar.**
+2. **La dirección solo vive en el NETO, y el neto casi no existe.** Medido en la BD
+   (`atribucion.py`): fracción del bruto que llega con signo = **0,3 % el 08-10 y 4,4 % el 08-11**.
+   Peor aún que el 8,2 % que decía la sección C.
+3. **`net_prem` es ACUMULADO del día, no flujo** — `spy_direction.py:1458` lo suma sobre sí mismo.
+   Yo lo había tratado como flujo. Como NIVEL es un **cronómetro**: rho con el reloj −0,62/−0,75.
+   Construido bien (diferencia contra el snapshot anterior CON neto → `netoNUEVO_*`), **cambia de
+   signo entre los dos días** en casi todos los horizontes.
+4. **La objeción del usuario sobre el spot rancio** (un strike se etiqueta OTM con el precio de
+   ahora, pero se negoció antes) es correcta pero **empíricamente irrelevante aquí**: el SPY se
+   mueve **< medio strike en el 99,4 %** de los intervalos. Probado con 3 referencias de spot
+   (cierre/inicio/media del intervalo): los lifts no se mueven.
+5. **GAP 7 confirmado sobre datos reales:** 1.428 filas el 08-10 y 2.355 el 08-11 tienen `day_prem`
+   pero `net_prem` en NULL — la colisión `INSERT OR REPLACE` de `_log_minute` sobre `_persist_walls`.
+
+### ⚠️ TRAMPAS QUE CAZÉ EN MI PROPIO ANÁLISIS (documentadas para no repetirlas)
+
+- **Permutación plana = significancia inventada.** Barajar los retornos destruye su
+  autocorrelación (dos ventanas de 30 min a 1 min de distancia comparten 29 min) y estrecha la nula.
+  Daba p=0,005. Con **desplazamiento circular** (conserva la autocorrelación): p=0,015 y sobre
+  11 puntos independientes. **La nula correcta para series temporales es el shift, no el shuffle.**
+- **Tratar el ausente como cero.** `net_prem`/`day_vol` solo existen en las filas de walls (cada
+  3 min); sumarlas como 0 en las filas de minuto metía 371 falsos empates y contaminaba la tasa base.
+- **Distancia absoluta al strike.** Un call a +1,5 (OTM, apuesta alcista) caía en el mismo cubo que
+  uno a −1,5 (ITM, casi siempre cierre) y se cancelaban. Hay que usar distancia **con signo**.
+- **Reusar el mismo cursor sqlite dentro del bucle que lo itera** → solo procesa la primera fecha.
+
+### 🎯 CONCLUSIÓN OPERATIVA (no es "el premium no sirve")
+
+La tesis del usuario (*"el premium dice el futuro"*) **NO está refutada**: lo que está medido es que
+**el premium BRUTO agregado a 1-3 min no dice la dirección**, y que la parte que la llevaría — el
+agresor — se descarta en un 95-99,7 %. **No se puede concluir nada sobre la tesis hasta que corra
+el TAPE** (`f3514a3`, implementado, PENDIENTE DE ARRANQUE), que guarda cada operación con su
+`lastSize` y el bid/ask de su propio instante.
+**Orden de trabajo que se deriva:** (1) arrancar con el tape, (2) arreglar el premium fantasma (D),
+(3) repetir este barrido sobre el tape. Repetirlo antes es medir sobre un dato roto.
+📌 Y con 2 días, **cualquier resultado de este barrido es provisional**: hacen falta 5+ sesiones.
+
 ---
 
 ## 0. SESIÓN EN CURSO — LUNES 2026-08-10 (PRIMERA CORRIDA EN VIVO REAL)
