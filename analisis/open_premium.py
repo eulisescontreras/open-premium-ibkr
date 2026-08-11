@@ -264,6 +264,7 @@ def _pintar(F, horas, por_hora, walls, ta, arranques):
     txt = "\n".join(out)
     print(txt)
     ruta = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                        "investigacion",
                         "open_premium_%s.txt" % F)
     with open(ruta, "w", encoding="utf-8") as f:
         f.write(txt + "\n")

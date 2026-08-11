@@ -154,6 +154,7 @@ def main():
 
     # ---- ficheros: la salida por pantalla se corta, estos llevan la rejilla ENTERA
     base = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                        "investigacion",
                         "matriz_minuto_%s" % F)
 
     # TXT alineado: la rejilla ENTERA, un minuto debajo de otro. Sin separadores:

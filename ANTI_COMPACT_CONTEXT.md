@@ -217,7 +217,52 @@ Correr con `$env:PYTHONPATH="C:\Users\eulis\proyectos\open-premium-ibkr"`.
 *(Hoy el diferencial cazó una regresión real en `spy_walls` 58→56 por un `AttributeError` en
 `_precio_de` que dejaba walls sin persistir. Por eso se hace.)*
 
+## I-bis. 🧭 INVESTIGACIÓN DEL OPEN PREMIUM → `investigacion/INVESTIGACION_OPEN_PREMIUM.md`
+
+**LEER ESE DOCUMENTO ANTES DE PROPONER NADA SOBRE DIRECCIÓN.** Resume la sesión entera del
+2026-08-11 separando VERIFICADO / NO VERIFICADO / HIPÓTESIS. Lo esencial:
+
+🔴 **`premium_minute.net_prem` NO ES UN NETO FIABLE.** `compute_walls` clasifica el Δvolumen de
+3 minutos con UN solo `last` y UN solo bid/ask. Contra el `tape`: **75 de 76 comparables fuera de
+[0,5, 2,0] = 99 % de discrepancia**, con inversiones de signo (14:49 770C: net_prem +434.760 vs
+tape −1.060.284). **Invalida el barrido de la sección I.**
+
+✅ **`net_call`/`net_put` (los del panel) SÍ son buenos:** los alimenta `_on_ticks` por tick con el
+bid/ask del propio trade. Limitación: solo los 2 strikes de SEÑAL.
+
+✅ **El precio del SPY guardado es correcto:** contrastado contra `posicion_minuto.und_price`
+(`modelGreeks.undPrice`, fuente independiente): 363 comparaciones, mediana **−0,01**.
+
+🧭 **LA TESIS EN CURSO — dominancia en valor absoluto.** Si `|net_put| > |net_call|` ⇒ DOWN.
+Es la lectura **OPUESTA** a la de la app (que usa `diff` con signo). El 08-11: dominancia DOWN el
+**100 %** de los 359 minutos, SPY **−2,73**; el 08-10: dominancia put solo el 35,6 %, SPY −0,36.
+⚠️ **n = 2 días. No está establecido.**
+
+⛔ **Y el contraejemplo que hay que tener siempre delante:** el bloque del 08-11 (359 min, DOWN)
+**acertó el día y falló los CINCO horizontes** (+5/+10/+15/+30/+60). Acertar la dirección del día
+y acertar el momento de entrada son dos preguntas distintas; para scalping importa la segunda.
+
+⛔ **El 9/10 del DOWN a +60 min está inflado por SOLAPAMIENTO:** los 3 bloques "perfectos" del
+08-10 están entre las 10:44 y las 10:50 — son **la misma caída contada tres veces**.
+
+⛔ **La persistencia NO predice:** duraciones de los que aciertan ≥4 horizontes `1,2,8,12,29,41`;
+de los que aciertan ≤1 `1,1,2,5,6,359`. Hay bloques de 1 minuto en los dos grupos.
+
+💡 **HIPÓTESIS SIN MEDIR:** filtrar por MAGNITUD (ratio |P|/|C| ≥ 3) para separar el parpadeo del
+evento. El 08-10 la señal cambió 7 veces en 10 minutos; el DOWN de las 10:47 gana por **179 $** y
+el de las 10:50 por **170.000 $**. Y el `|CALL|` **se desploma** (190.707 → 7.432) mientras el put
+sube: no es solo "compran puts", es que **desaparece del call**.
+
+📁 Todo en **`investigacion/`**: el documento + las tablas generadas (`net_acumulado_*.txt` es la
+principal). Los scripts siguen en `analisis/` y escriben su salida en `investigacion/`.
+
+---
+
 ## I. 🔬 BARRIDO DE DIRECCIÓN CON EL PREMIUM POR STRIKE (2026-08-11 tarde)
+
+> ⛔ **RESULTADOS INVALIDADOS** — este barrido se midió sobre `premium_minute.net_prem`, que la
+> sección I-bis demuestra que no es un neto fiable. Se conserva por los CONTROLES (reloj,
+> permutación circular, sensibilidad al spot), que sí son reutilizables.
 
 Petición del usuario: sacar probabilidades de la data guardada para determinar la dirección del
 subyacente, porque el parámetro de giro actual la falla (hoy: UP durante 4 h con el SPY cayendo).

@@ -139,6 +139,7 @@ def main():
     txt = "\n".join(salida)
     print(txt)
     ruta = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                        "investigacion",
                         "neto_por_strike_%s.txt" % F)
     with open(ruta, "w", encoding="utf-8") as f:
         f.write(txt + "\n")
