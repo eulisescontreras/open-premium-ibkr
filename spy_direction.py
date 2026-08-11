@@ -88,6 +88,25 @@ REPRICE_SECS = 4.0          # re-precia al mid si no llena en este tiempo
 MAX_FILL_SECS = 60.0        # tiempo maximo intentando llenar una entrada
 FLATTEN_HHMM = "15:45"      # ET: cerrar cualquier opcion abierta
 STOP_NEW_HHMM = "15:40"     # ET: no abrir nuevas cerca del cierre
+OPEN_HHMM = "09:30"         # desde que hora se RECOLECTA.
+                            # 2026-08-11 09:00-09:07: se PROBO bajarlo a "09:00" para ver si el
+                            # pre-market daba algo guardable. MEDIDO CON DATOS REALES -> NO:
+                            #   de 68 filas de premium_minute, day_vol>0 en 0, day_prem>0 en 0,
+                            #   gamma!=0 en 0 (griegas None). Solo llegaba OI, que es de AYER (EOD).
+                            #   walls_snapshot salia con GEX=0, regime=FLAT y spot=773.07 (cierre
+                            #   de ayer) pese a que _read_price(SPY) SI daba 774.23: el spot de
+                            #   walls viene de ta_poll (barras useRTH=True), que no existen antes
+                            #   de las 09:30 -> ta_minute se quedaba en 0 filas.
+                            # Conclusion: las opciones de SPY no cotizan hasta las 09:30 (OPRA) y
+                            # dejarlo en 09:00 solo METIA BASURA en la BD (filas en cero con
+                            # spot_stale=0, es decir marcadas como validas). Revertido.
+                            # Si algun dia se reintenta, hace falta ANTES: barras con useRTH=False
+                            # y marcar esas filas como pre-market para poder excluirlas.
+RTH_OPEN_HHMM = "09:30"     # apertura REAL del mercado. Gobierna (a) cuando se puede OPERAR y
+                            # (b) desde cuando exigirle frescura al stream de barras: con
+                            # useRTH=True las barras NO avanzan antes de esta hora, asi que
+                            # vigilarlas en pre-market daria un GAP 17 falso y repediria el
+                            # stream cada BARS_RETRY_SECS -> riesgo de pacing violation (162/420).
 CLOSE_HHMM = "16:15"        # hasta que hora se RECOLECTA (no se opera: eso acaba a las 15:45).
                             # 2026-08-10: se subio de 16:00 a 16:15 para MEDIR si las opciones
                             # de SPY siguen negociandose esos 15 min. Es una PRUEBA: si el
@@ -747,13 +766,26 @@ class SpyDirection:
                      BARS_RETRY_SECS)
 
     def is_market_open(self):
-        """RECOLECCION: dia habil (Lun-Vie) y 09:30 <= hora ET < CLOSE_HHMM. (No maneja festivos.)
+        """RECOLECCION: dia habil (Lun-Vie) y OPEN_HHMM <= hora ET < CLOSE_HHMM. (Sin festivos.)
 
         OJO - esto NO es la ventana de TRADING, es la de RECOLECCION. Operar ya esta acotado
         aparte: FLATTEN_HHMM (15:45) fuerza target=FLAT y `in_session`/STOP_NEW_HHMM impiden
-        abrir nuevas. Pasadas las 16:00 la app solo MIRA y GUARDA."""
+        abrir nuevas. Pasadas las 16:00 la app solo MIRA y GUARDA.
+
+        2026-08-11: OPEN_HHMM bajo a 09:00 (era el literal "09:30"). Desde entonces esta ventana
+        es MAS ANCHA que la de RTH, asi que todo lo que dependa de "el mercado esta de verdad
+        abierto" (trading, frescura de barras) debe usar is_rth(), NO esta funcion."""
         et = now_et()
-        return et.weekday() < 5 and "09:30" <= et.strftime("%H:%M") < CLOSE_HHMM
+        return et.weekday() < 5 and OPEN_HHMM <= et.strftime("%H:%M") < CLOSE_HHMM
+
+    def is_rth(self):
+        """MERCADO REAL abierto (Regular Trading Hours): RTH_OPEN_HHMM <= ET < CLOSE_HHMM.
+
+        Es lo que is_market_open() significaba ANTES de adelantar la recoleccion a las 09:00.
+        Usarla para lo que solo tiene sentido con el mercado de verdad abierto: exigirle
+        frescura al stream de barras (useRTH=True no produce barras en pre-market)."""
+        et = now_et()
+        return et.weekday() < 5 and RTH_OPEN_HHMM <= et.strftime("%H:%M") < CLOSE_HHMM
 
     def reset_day(self):
         """Nuevo dia de mercado: limpiar acumuladores intradia (la senal arranca en 0)."""
@@ -2506,7 +2538,10 @@ class SpyDirection:
         et = now_et()
         hhmm = et.strftime("%H:%M")
         weekday = et.weekday() < 5
-        in_session = weekday and ("09:30" <= hhmm <= "16:00")
+        # RTH_OPEN_HHMM y NO el literal "09:30": desde 2026-08-11 la RECOLECCION empieza a las
+        # 09:00, pero OPERAR sigue empezando a las 09:30. Antes de esa hora in_session es False
+        # -> stop_new True -> no se abre ninguna posicion en pre-market.
+        in_session = weekday and (RTH_OPEN_HHMM <= hhmm <= "16:00")
         if weekday and hhmm >= FLATTEN_HHMM:      # EOD: aplanar
             if self.target != "FLAT":
                 self.exit_reason = "eod"
@@ -2646,8 +2681,10 @@ class SpyDirection:
                 self.bars_stale = False
                 self.bars_retries = 0
             return
-        # no avanza: solo es un fallo si el mercado esta abierto (fuera de RTH es lo normal)
-        if (not self.bars_stale and self.is_market_open()
+        # no avanza: solo es un fallo si el mercado esta abierto (fuera de RTH es lo normal).
+        # is_rth() y NO is_market_open(): desde 2026-08-11 la recoleccion empieza a las 09:00 y
+        # con useRTH=True no hay barras nuevas hasta las 09:30 -> seria un GAP 17 falso.
+        if (not self.bars_stale and self.is_rth()
                 and self.bars_last_advance
                 and time.monotonic() - self.bars_last_advance > BARS_STALE_SECS):
             self.bars_stale = True
@@ -3011,7 +3048,7 @@ def run_gui(app):
                     # GAP 17: el stream de barras murio (por 10182 o en silencio) -> reponerlo
                     # SOLO. Con backoff: repedir sin freno provoca pacing violations de IBKR
                     # (162/420), que es un fallo peor que el original.
-                    if (app.bars_stale and app.is_market_open()
+                    if (app.bars_stale and app.is_rth()
                             and time.monotonic() - app.bars_retry_ts > BARS_RETRY_SECS):
                         app.bars_retry_ts = time.monotonic()
                         app.bars_retries += 1

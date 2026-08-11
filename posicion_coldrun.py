@@ -372,6 +372,10 @@ app.bars = ["BAR-VIEJA"]
 app.last_bar_time = "2026-08-10 13:24:00"
 S.BARS_STALE_SECS = 0.05          # acelerar el reloj del cold run
 app.is_market_open = lambda: True
+# 2026-08-11: la recoleccion empieza a las 09:00 y _chequear_barras pasó a consultar is_rth()
+# (con useRTH=True no hay barras nuevas en pre-market -> vigilarlas ahi daria un GAP 17 falso).
+# El parche de is_market_open ya no alcanza a esta rama; hay que simular tambien RTH abierto.
+app.is_rth = lambda: True
 
 rows = [{"date": "2026-08-10 13:24:00"}]
 app._chequear_barras(rows)
@@ -437,6 +441,7 @@ check(r[1] == 1,
 
 # y solo cuando la barra AVANZA de verdad se limpia
 app.is_market_open = lambda: True
+app.is_rth = lambda: True         # 2026-08-11: ver nota en el TEST F
 app._chequear_barras([{"date": "2026-08-10 16:20:00"}])
 check(app.bars_stale is False,
       "cuando bars[-1].date AVANZA, entonces si se limpia la bandera")

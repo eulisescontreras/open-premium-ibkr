@@ -253,6 +253,56 @@ en `HIPOTESIS_2026-08-10.md` — leerlo antes de proponer nada sobre entradas/sa
 contrastarlas contra los 100+ restantes. **Ninguna variable entra en producción sin su tasa de
 falsos positivos delante.**
 
+### 2026-08-11 MAÑANA — experimento PRE-MARKET (probado y REVERTIDO) + estado
+
+**🚫 PRE-MARKET: PROBADO CON DATOS REALES Y DESCARTADO. No volver a intentarlo a ciegas.**
+Entre las 09:00 y las 09:07 ET se bajó `OPEN_HHMM` de "09:30" a "09:00" para ver si el pre-market
+daba algo guardable. **NO da nada:**
+```
+de 68 filas de premium_minute:  day_vol>0 -> 0 | day_prem>0 -> 0 | gamma!=0 -> 0 (griegas None)
+                                OI>0 -> 66, pero es el OI de AYER (EOD, estatico)
+ta_minute -> 0 filas (sin barras useRTH=True no hay TA ni precio)
+walls_snapshot -> GEX=0 · regime=FLAT · spot=773.07 (CIERRE DE AYER) y con spot_stale=0
+```
+Lo llamativo: `_read_price(SPY)` SÍ devolvía **774.23** en vivo, pero las walls escribían 773.07,
+porque `spy_price` no sale de ahí sino de `ta_poll` (barras), que no existen antes de las 09:30.
+**El daño no era el vacío sino el falso positivo:** filas en cero marcadas como válidas
+(`spot_stale=0`, porque la bandera arranca en False y sin barras nunca se marcó sucia).
+No es comparable a los 15 min de después del cierre: allí hay reportes TARDÍOS de operaciones
+reales; en pre-market OPRA no ha abierto y no existe nada que reportar.
+**Si algún día se reintenta hace falta ANTES:** barras con `useRTH=False` y marcar esas filas como
+pre-market para poder excluirlas.
+
+**REFACTOR QUE SÍ SE QUEDÓ (verificado, 15/15 suites verde):** se separaron las ventanas que el
+código ya trataba por separado pero con literales duplicados:
+- `OPEN_HHMM = "09:30"` → RECOLECCIÓN (`is_market_open`).
+- `RTH_OPEN_HHMM = "09:30"` → apertura real. Gobierna **(a)** el trading (`in_session` en
+  `trade_poll:2534`, antes literal `"09:30"`) y **(b)** la vigilancia de barras del GAP 17.
+- **`is_rth()` NUEVO**: es lo que `is_market_open()` significaba antes. `_chequear_barras` y el
+  repetidor del stream la usan, para que ampliar la recolección nunca genere un GAP 17 falso.
+- Suite nueva **`coldruns/ventana_horaria_coldrun.py`** (deriva las expectativas de las constantes
+  reales, así sigue valiendo si cambian). Ejercita `trade_poll` REAL: demuestra que fuera de RTH
+  no se coloca ninguna orden.
+- ⚠️ **El diferencial cazó una falsa regresión y por eso se hace:** `posicion_coldrun` bajó de 72 a
+  70 porque hacía `app.is_market_open = lambda: True` (líneas 374 y 439) y esa rama pasó a
+  `is_rth()`. Se actualizó el test (no era bug de producción). Volvió a 72.
+
+**BD LIMPIADA (autorizado por el usuario):** se borraron las 108 filas de `premium_minute` y 3 de
+`walls_snapshot` de hoy con `hora<'09:30'`. Los conteos volvieron EXACTAMENTE a los del cierre de
+ayer (ta=323 · premium=18.732 · walls=139 · giros=95 · strike_accum=47), `integrity_check: ok`.
+Copia previa en **`spy_history_backup_pre-limpieza_20260811.db`**.
+
+**✅ VERIFICADO — el acumulado de ayer SÍ se hereda (y es correcto):** `setup_contracts:992` llama
+a `_load_accum():1009`, que carga `strike_accum` entero en `self.accum`/`self.accum_net`. La expiry
+**20260811 (0DTE de hoy) arranca con 45,5 M de `cum_prem`** de ayer, cuando era la 1D del baseline
+(773C 9,36 M · 773P 7,53 M · 774P 6,58 M).
+- **La SEÑAL no se ve afectada:** `net_call`/`net_put` las pone a 0 `reset_day()`.
+- `today_prem`/`today_net` (→ `day_prem`) también arrancan en 0.
+- Es lo correcto para la tesis del Open Premium (la curva del contrato viene desde que nace), pero
+  **para análisis intradía hay que usar `day_prem`, NUNCA `cum_prem`**.
+- Higiene menor: `strike_accum` conserva la expiry 20260810 ya vencida (8 strikes, 132 M). No
+  molesta pero crece indefinidamente.
+
 ### DECISIONES YA TOMADAS — no volver a proponerlas
 
 - **Botón de venta manual en la GUI: RECHAZADO por el usuario** (2026-08-10).
