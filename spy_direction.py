@@ -159,6 +159,20 @@ BARS_STALE_SECS = 120.0     # sin avance de bars[-1].date -> stream muerto. El d
                             # (1 min) para no dar falso positivo en un minuto sin trades.
 BARS_RETRY_SECS = 30.0      # espera entre intentos de reponer. Repedir sin freno provoca pacing
                             # violations de IBKR (162/420), que es peor que el fallo original.
+BARS_DURATION = "2 D"       # historia que se pide en cada reqHistoricalData de 1 min.
+                            # 2026-08-11: era "1 D". Se sube a "2 D" (orden del usuario) para que
+                            # la SMA200 exista DESDE EL PRIMER MINUTO de sesion; con "1 D" no
+                            # habia 200 barras hasta ~12:50 y la columna quedaba NULL media
+                            # sesion. Medido contra IBKR con keepUpToDate=True:
+                            #   "1 D"->52 barras (a las 10:21) · "2 D"->442 · "3 D"->832 · "1 W"->1612
+                            # ⚠️ CORTE DE COMPARABILIDAD: los indicadores que ARRASTRAN desde el
+                            # inicio de la serie cambian de valor respecto a los ya guardados:
+                            #   - ema8 / ema21 / ema50 (ewm recorre toda la serie)
+                            #   - obv_trend (acumulado desde la 1a barra)
+                            # NO cambian los de ventana fija una vez hay N barras: rsi(14),
+                            # atr(14), bollinger(20), vwap(5), sma20/50/200.
+                            # Al analizar, tratar los datos anteriores al 2026-08-11 10:30 como
+                            # un tramo distinto para esas columnas (ver sesion_config).
 # --- Walls / GEX / Gamma Flip (informativo, "como el TA": se guarda y se analiza vs la grafica) ---
 WALLS_ENABLED = True        # calcular walls/GEX/flip. NO toca la senal UP/DOWN ni la ejecucion.
 WALLS_BAND = 10             # strikes a CADA lado del precio a escanear (banda). Bajo por limite de lineas IBKR.
@@ -674,7 +688,11 @@ class SpyDirection:
         # distingue un tramo de otro: el 2026-08-10 la misma tabla mezcla datos de antes y
         # despues del GAP 2 (premium de senal inflado) y del GAP 17 (spot congelado).
         for _col in ("cross_hhmm TEXT", "bars_stale_secs REAL", "pos_log_secs REAL",
-                     "gaps_activos TEXT"):
+                     "gaps_activos TEXT",
+                     # 2026-08-11: la duracion de las barras cambia el VALOR de ema8/21/50 y obv
+                     # (arrastran desde el inicio de la serie). Sin dejarla registrada, un tramo
+                     # con "1 D" y otro con "2 D" son incomparables y nada lo delata.
+                     "bars_duration TEXT", "start_trade_hhmm TEXT", "open_hhmm TEXT"):
             try:
                 c.execute("ALTER TABLE sesion_config ADD COLUMN " + _col)
             except Exception:
@@ -961,7 +979,8 @@ class SpyDirection:
                 pass
         try:
             self.bars = self.ib.reqHistoricalData(
-                self.spy_stock, "", "1 D", "1 min", "TRADES", useRTH=True, keepUpToDate=True)
+                self.spy_stock, "", BARS_DURATION, "1 min", "TRADES",
+                useRTH=True, keepUpToDate=True)
         except Exception:
             self.bars = None
             LOG.exception("Error pidiendo el stream de barras")
@@ -1183,7 +1202,8 @@ class SpyDirection:
             # gaps/arreglos VIVOS en esta version. Es el dato que de verdad separa un tramo de
             # otro; los parametros numericos por si solos no dicen que bugs estaban activos.
             gaps = "GAP1,GAP3,GAP7,GAP8,GAP9,GAP11,GAP12,GAP13,GAP14,GAP15,GAP16,GAP17," \
-                   "GAP2,GAP4,GAP5,M2,M12"
+                   "GAP2,GAP4,GAP5,M2,M12," \
+                   "GAP18,GAP19,GAP17bis,GAP20,GAP21,SMA20-50-200,BARS2D"
             notas = ("momentum_win guarda SEGUNDOS (MOMENTUM_SECS), no numero de muestras: "
                      "el GAP 5 cambio la ventana de eventos a tiempo. "
                      "Registra: trades/posicion_minuto, cum_net, premium por vela, "
@@ -1193,8 +1213,8 @@ class SpyDirection:
                 "signal_threshold,adapt_frac,mom_frac,momentum_win,reprice_secs,max_fill_secs,"
                 "walls_band,walls_recalc_secs,itm_depth,baseline_expiries,strike_exec,"
                 "walls_criterio,trading,notas,cross_hhmm,bars_stale_secs,pos_log_secs,"
-                "gaps_activos) "
-                "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                "gaps_activos,bars_duration,start_trade_hhmm,open_hhmm) "
+                "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                 (now.strftime("%Y-%m-%d"), now.strftime("%H:%M"), now.strftime("%H:%M:%S"),
                  QTY, SIGNAL_THRESHOLD, ADAPT_FRAC, MOM_FRAC, MOMENTUM_SECS,
                  REPRICE_SECS, MAX_FILL_SECS, WALLS_BAND, WALLS_RECALC_SECS,
@@ -1203,14 +1223,16 @@ class SpyDirection:
                  # que cambio a las 11:03 del 2026-08-10 sin dejar ningun rastro.
                  "ATM real", "gamma",
                  1 if self.trading else 0, notas,
-                 CROSS_HHMM, BARS_STALE_SECS, POS_LOG_SECS, gaps))
+                 CROSS_HHMM, BARS_STALE_SECS, POS_LOG_SECS, gaps,
+                 BARS_DURATION, START_TRADE_HHMM, OPEN_HHMM))
             self.db.commit()
             ACT.info("SELLO DE SESION %s: QTY=%d thr=%.0f adapt=%.2f mom=%.2f/%.0fs "
                      "reprice=%.0fs banda=%d/%.0fs exec=ATM-real walls=gamma trading=%s "
-                     "cross=%s | gaps: %s",
+                     "cross=%s barras=%s recoleccion>=%s opera>=%s | gaps: %s",
                      now.strftime("%H:%M:%S"), QTY, SIGNAL_THRESHOLD, ADAPT_FRAC, MOM_FRAC,
                      MOMENTUM_SECS, REPRICE_SECS, WALLS_BAND, WALLS_RECALC_SECS,
-                     "ON" if self.trading else "OFF", CROSS_HHMM, gaps)
+                     "ON" if self.trading else "OFF", CROSS_HHMM,
+                     BARS_DURATION, OPEN_HHMM, START_TRADE_HHMM, gaps)
             self._sello_arranque = now.strftime("%H:%M:%S")
         except Exception:
             LOG.exception("Error escribiendo el sello de sesion (no bloquea el arranque)")
