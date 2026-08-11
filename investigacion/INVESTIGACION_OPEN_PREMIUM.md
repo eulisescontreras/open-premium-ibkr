@@ -150,6 +150,59 @@ combinación posible. Son dos preguntas distintas: *hacia dónde va el día* y *
 
 ---
 
+### 3.6 El MARCADOR DEL DÍA — contadores acumulados de UP y DOWN
+
+Idea del usuario: llevar dos contadores desde la apertura (cuántos minutos lleva cada palabra)
+y mirar dónde se igualan o dónde uno adelanta al otro.
+
+```
+                    MARCADOR FINAL         cruces (empates + adelantamientos)
+2026-08-10          UP 208 - DOWN 115      12, y ONCE de ellos entre 10:05 y 10:25
+2026-08-11          UP   0 - DOWN 359      ninguno
+```
+
+**VERIFICADO — el 08-11 el contador de UP nunca llega a 1.** Los 359 minutos son DOWN.
+El 08-10, en cambio, tiene el marcador disputado: 12 cambios de liderazgo, casi todos
+apretados en **veinte minutos** (10:05-10:25). Después no vuelve a igualarse hasta las **14:24**
+(115-115), cuatro horas más tarde.
+
+**HIPÓTESIS (no verificada, n=1 día):** los empates aparecen cuando el mercado no va a ningún
+lado. En la franja 10:05-10:25 el SPY oscila entre 773,68 y 774,29 sin dirección.
+
+#### Los tres intervalos que pidió mirar el usuario (08-10)
+
+| intervalo | marcador antes | marcador al salir | dentro | SPY | empates |
+|---|---|---|---|---|---|
+| 09:53-10:12 | *(sin dato previo)* | 8-8 (dif 0) | 8 UP / 8 DOWN | **+1,06** (rango 1,08) | 10:05, 10:12 |
+| 10:16-10:30 | 8-11 (dif −3) | 14-20 (dif −6) | 6 UP / 9 DOWN | **+0,25** (rango 0,50) | 10:18, 10:22, 10:24 |
+| 11:34-12:32 | 39-56 (dif −17) | 66-87 (dif −21) | 27 UP / 31 DOWN | **−0,48** (rango **1,73**) | **ninguno** |
+
+📌 Los dos intervalos **con empates suben**; el único **sin empates baja**, y es el de mayor rango.
+📌 El 10:16-10:30 es el contraejemplo dentro de la propia tabla: el DOWN dobla su ventaja
+(−3 → −6) y el SPY **sube**.
+
+#### Los 8 mayores movimientos de 1 minuto del 08-10, con el marcador de ese instante
+
+```
+12:31  dSPY=-0.69  senal=DOWN   marcador  66-86  (dif -20)
+15:50  dSPY=-0.61  senal=UP     marcador 201-115 (dif +86)
+10:54  dSPY=-0.44  senal=DOWN   marcador  19-37  (dif -18)
+11:01  dSPY=+0.39  senal=DOWN   marcador  19-44  (dif -25)   <- contraejemplo
+11:25  dSPY=-0.37  senal=DOWN   marcador  39-48  (dif  -9)
+15:58  dSPY=+0.35  senal=UP     marcador 208-115 (dif +93)
+10:45  dSPY=+0.34  senal=DOWN   marcador  17-32  (dif -15)
+10:59  dSPY=-0.32  senal=DOWN   marcador  19-42  (dif -23)
+```
+
+Seis de los ocho ocurren con DOWN mandando, y cuatro de esos seis son caídas.
+⚠️ Pero el **11:01** es el mayor desequilibrio de la mañana (−25) y coincide con una **subida**
+de +0,39. Un solo caso, pero impide leerlo como regla.
+
+**Columnas añadidas a `net_acumulado_*.txt`:** `#UP`, `#DOWN` (acumulados) y una sección
+`MARCADOR DEL DIA: EMPATES Y ADELANTAMIENTOS`.
+
+---
+
 ## 4. HIPÓTESIS ABIERTA — la magnitud distingue el parpadeo del evento
 
 La señal binaria tira la información que importa. En el tramo de las 10:44-10:50 del 08-10 la

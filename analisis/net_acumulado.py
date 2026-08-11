@@ -132,7 +132,29 @@ def main():
         s_ant = s
         racha[i] = n_r
 
-    anchos = (8, 15, 15, 15, 10, 7, 5, 4)
+    # CONTADORES ACUMULADOS: cuantos minutos lleva cada palabra desde la apertura.
+    # No es la racha (que se reinicia en cada cambio): es el marcador del dia.
+    cnt = {}
+    cu = cd = 0
+    lider_ant = None
+    cruces = []          # (hora, tipo, cu, cd) -> EMPATE o ADELANTAMIENTO
+    for i, (h, nc, np_, spy) in enumerate(filas):
+        s = ("" if (nc is None or np_ is None)
+             else ("DOWN" if abs(np_) > abs(nc) else ("UP" if abs(nc) > abs(np_) else "=")))
+        if s == "UP":
+            cu += 1
+        elif s == "DOWN":
+            cd += 1
+        cnt[i] = (cu, cd)
+        lider = "UP" if cu > cd else ("DOWN" if cd > cu else "EMPATE")
+        if lider != lider_ant:
+            if lider == "EMPATE":
+                cruces.append((h, "EMPATE", cu, cd, spy))
+            elif lider_ant is not None:
+                cruces.append((h, "pasa a mandar %s" % lider, cu, cd, spy))
+            lider_ant = lider
+
+    anchos = (8, 15, 15, 15, 10, 7, 5, 5, 5, 4)
 
     def linea(i, m, d):
         return i + m.join("─" * (a + 2) for a in anchos) + d
@@ -148,7 +170,7 @@ def main():
     out.append("")
     out.append(linea("┌", "┬", "┐"))
     out.append(fila(("MINUTO", "|CALL|", "|PUT|", "|C| - |P|", "SPY", "SENAL",
-                     "RACHA", "OK")))
+                     "RACHA", "#UP", "#DOWN", "OK")))
     out.append(linea("├", "┼", "┤"))
     for _i, (h, nc, np_, spy) in enumerate(filas):
         # SENAL por DOMINANCIA en valor absoluto: manda el lado que mueve mas dinero,
@@ -176,8 +198,25 @@ def main():
             "" if spy is None else "%.2f" % spy,
             sen,
             str(racha.get(_i, "")),
+            str(cnt.get(_i, ("", ""))[0]),
+            str(cnt.get(_i, ("", ""))[1]),
             marca.get(_i, ""))))
     out.append(linea("└", "┴", "┘"))
+
+    # ---- marcador del dia: empates y adelantamientos
+    out.append("")
+    out.append("MARCADOR DEL DIA: EMPATES Y ADELANTAMIENTOS")
+    out.append("Contadores acumulados desde la apertura (no la racha). Se listan los minutos")
+    out.append("en que los dos contadores se igualan o en que uno pasa a mandar sobre el otro.")
+    out.append("%-8s %-22s %6s %7s %10s" % ("HORA", "QUE PASA", "#UP", "#DOWN", "SPY"))
+    out.append("-" * 58)
+    for h, tipo, u, d, s in cruces:
+        out.append("%-8s %-22s %6d %7d %10s"
+                   % (h, tipo, u, d, ("%.2f" % s) if s is not None else ""))
+    if not cruces:
+        out.append("(ninguno: un solo lado mando toda la sesion)")
+    out.append("-" * 58)
+    out.append("MARCADOR FINAL:  UP %d  -  DOWN %d   sobre %d minutos" % (cu, cd, len(filas)))
 
     # ---- resumen por BLOQUE de senal
     out.append("")
