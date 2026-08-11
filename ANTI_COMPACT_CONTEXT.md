@@ -500,6 +500,44 @@ problema**: la banda cubre ±10 strikes y sale 40/40 (ITM 19/19 · ATM 2/2 · OT
 *Si algún día se quiere cobertura continua de las posteriores: ampliar `ITM_DEPTH` o darles banda
 propia. Cuesta líneas de market data (van 68 de ~100). Es decisión del usuario, no una corrección.*
 
+### 2026-08-11 — TAPE: una fila por OPERACIÓN (implementado, PENDIENTE DE ARRANQUE)
+
+**El problema que resuelve.** El flujo se agregaba al minuto, así que un print institucional de
+3.038 contratos y 50 operaciones de retail de 60 quedaban **idénticos**: mismo `dvol`, mismo
+premium. Y cualquier señal más rápida que 1 minuto se promediaba hasta borrarla.
+
+**⚠️ CORRECCIÓN IMPORTANTE de una afirmación previa mía:** llegué a escribir que el tamaño del print
+"no se puede con RTVolume (verificado)". **Era FALSO y no lo había verificado.** Comprobado en vivo
+contra IBKR: `last=0.9 lastSize=2.0 volume=153529 rtVolume=153559`. **`tk.lastSize` trae el tamaño
+de la operación.** El campo estuvo ahí todo el tiempo.
+*(También retiré la afirmación de que las entradas "puede que nunca" se determinen: extrapolaba de
+una sola sesión. Lo medido es que a resolución de 1 minuto y con las variables actuales el premium
+no anticipó — y esa medición NO puede distinguir "no anticipa" de "anticipa 30 segundos".)*
+
+**Tabla `tape`** (nueva, con 3 índices): `fecha, hora (HH:MM:SS.mmm), ts, expiry, strike, right,
+last, **size**, dvol, bid, ask, agresor (COMPRA/VENTA/MID), premium (last*size*100),
+premium_dvol (lo que usa la señal), grupo (SENAL/BASELINE)`.
+Se guardan **`size` y `dvol` a la vez** para poder medir cuánto distorsiona la agregación.
+
+- **`TAPE_ENABLED = True`** y **`TAPE_FLUSH_N = 400`**. Ponerlo a False lo desactiva sin tocar nada.
+- Se escribe en `_on_ticks` a un **buffer en memoria**: esa función corre en el hilo de Tkinter y a
+  alta frecuencia; un INSERT por tick bloquearía la GUI. Volcado por `executemany` al llegar a
+  `TAPE_FLUSH_N`, **cada minuto** desde `_log_minute`, en `end_session` y en `reset_day`.
+- **El tape JAMÁS puede romper la señal:** `try/except` alrededor de la captura y del volcado.
+- Log por minuto: `MIN hh:mm | TAPE N operaciones este minuto (mayor=X contratos, media=Y)`.
+
+**Verificado:** `coldruns/tape_coldrun.py`, **20 checks** con `_on_ticks` REAL. El decisivo:
+```
+A (1 print grande): filas= 1  dvol_total=3000  size_max=3000
+B (50 pequeñas)   : filas=50  dvol_total=3000  size_max=  60
+premium que ve la SEÑAL: 225.000 en AMBOS  <- por eso hacía falta el tape
+```
+Más: la señal da **exactamente los mismos números** con y sin tape; con la BD rota `_on_ticks` no
+propaga y la señal sigue; `TAPE_ENABLED=False` no escribe nada. **Coste: 11,4 µs/tick** (1,5 sin).
+Diferencial de 21 suites: las 20 previas **idénticas**.
+
+**PENDIENTE:** entra en el próximo arranque. **No se ha reiniciado.**
+
 ### DECISIONES YA TOMADAS — no volver a proponerlas
 
 - **Botón de venta manual en la GUI: RECHAZADO por el usuario** (2026-08-10).

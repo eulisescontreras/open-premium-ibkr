@@ -159,6 +159,18 @@ BARS_STALE_SECS = 120.0     # sin avance de bars[-1].date -> stream muerto. El d
                             # (1 min) para no dar falso positivo en un minuto sin trades.
 BARS_RETRY_SECS = 30.0      # espera entre intentos de reponer. Repedir sin freno provoca pacing
                             # violations de IBKR (162/420), que es peor que el fallo original.
+TAPE_ENABLED = True         # 2026-08-11: guardar UNA FILA POR OPERACION en la tabla `tape`.
+                            # Motivo: el agregado por minuto hacia indistinguible un print
+                            # institucional de 3.038 contratos de 50 operaciones de retail de 60
+                            # (mismo dvol, mismo premium), y borraba por promediado cualquier
+                            # señal mas rapida que 1 minuto. tk.lastSize SI trae el tamaño de la
+                            # operacion (verificado en vivo: last=0.9 lastSize=2.0).
+                            # SOLO REGISTRO: no toca la señal ni la ejecucion. Ponerlo a False
+                            # desactiva la escritura sin afectar a nada mas.
+TAPE_FLUSH_N = 400          # volcado por lotes: _on_ticks corre en el hilo de Tkinter y a alta
+                            # frecuencia, asi que un INSERT por tick bloquearia la GUI. Se
+                            # acumula en memoria y se vuelca con executemany al llegar a este
+                            # tamaño o en el registro del minuto, lo que ocurra antes.
 BARS_DURATION = "2 D"       # historia que se pide en cada reqHistoricalData de 1 min.
                             # 2026-08-11: era "1 D". Se sube a "2 D" (orden del usuario) para que
                             # la SMA200 exista DESDE EL PRIMER MINUTO de sesion; con "1 D" no
@@ -512,6 +524,8 @@ class SpyDirection:
                                       # los tickers por id(OBJETO), no por conId, asi que el
                                       # ticker de buy_call/buy_put NUNCA tiene modelGreeks
                                       # aunque sea el mismo contrato de IBKR.
+        self._tape_buf = []           # TAPE: filas pendientes de volcar (ver _flush_tape)
+        self._tape_n = 0              # total de operaciones registradas hoy (para el log)
         self.band_prev_vol = {}       # conId -> volumen previo (delta entre lecturas de 3 min)
         self.prev_gamma = {}          # conId -> gamma previo (detectar dato estancado/viejo)
         self.today_vol = {}           # (expiry,strike,right) -> volumen del dia (banda)
@@ -685,6 +699,32 @@ class SpyDirection:
         for col in ("bid REAL", "ask REAL", "mid REAL", "last REAL", "spread REAL"):
             try:
                 c.execute("ALTER TABLE premium_minute ADD COLUMN " + col)
+            except Exception:
+                pass
+        # TAPE: una fila por ACTUALIZACION de ticker con operacion nueva (2026-08-11).
+        # POR QUE (peticion del usuario): hasta ahora el flujo se agregaba al minuto, asi que un
+        # print institucional de 3.038 contratos y 50 operaciones de retail de 60 quedaban
+        # IDENTICOS: mismo dvol, mismo premium. Ademas, cualquier señal mas rapida que 1 minuto
+        # se promediaba hasta borrarla, y el resultado "lag 0" que salio el 10-ago es compatible
+        # tanto con "no anticipa" como con "anticipa 30 segundos".
+        # `size` viene de tk.lastSize (RTVolume SI lo trae; se verifico en vivo el 2026-08-11:
+        # last=0.9 lastSize=2.0). `dvol` es el delta de volumen acumulado, que es lo que se venia
+        # usando: se guardan LOS DOS para poder comparar la atribucion exacta con la agregada.
+        c.execute("CREATE TABLE IF NOT EXISTS tape ("
+                  "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                  "fecha TEXT, hora TEXT, ts REAL, "          # hora HH:MM:SS.mmm y epoch
+                  "expiry TEXT, strike REAL, right TEXT, "
+                  "last REAL, size REAL, dvol REAL, "         # size = ESTA operacion; dvol = delta
+                  "bid REAL, ask REAL, "
+                  "agresor TEXT, "                            # COMPRA / VENTA / MID (no atribuible)
+                  "premium REAL, "                            # last * size * 100
+                  "premium_dvol REAL, "                       # last * dvol * 100 (lo que usa la señal)
+                  "grupo TEXT)")                              # SENAL / BASELINE
+        for _ix in ("CREATE INDEX IF NOT EXISTS ix_tape_fh ON tape(fecha,hora)",
+                    "CREATE INDEX IF NOT EXISTS ix_tape_k ON tape(fecha,expiry,strike,right)",
+                    "CREATE INDEX IF NOT EXISTS ix_tape_size ON tape(fecha,size)"):
+            try:
+                c.execute(_ix)
             except Exception:
                 pass
         # SELLO DE CONFIGURACION: que version del codigo y que parametros generaron los datos.
@@ -902,6 +942,13 @@ class SpyDirection:
         self.today_net = {}          # el NETO del dia se reinicia; accum_net NO (es persistente)
         self.prev_vol = {}; self.band_prev_vol = {}; self.prev_gamma = {}
         self.transitions = []; self.state = "-"
+        # TAPE: el contador es del DIA. El buffer se vuelca antes de vaciarlo para no perder
+        # las operaciones que quedaran pendientes del dia anterior.
+        try:
+            self._flush_tape(forzar=True)
+        except Exception:
+            pass
+        self._tape_buf = []; self._tape_n = 0
         self.flow_hist = []          # ventanas moviles: historia de AYER no vale para hoy
         self._prem_snap = None       # premium por vela: sin referencia del dia anterior
         self.entry_price = None; self.contract_price = None
@@ -930,6 +977,16 @@ class SpyDirection:
             self._persist_accum()
         except Exception:
             pass
+        # TAPE: volcar lo que quede en el buffer o se pierden las ultimas operaciones del dia
+        # (el volcado normal es por lotes de TAPE_FLUSH_N o por minuto, y al cerrar puede haber
+        # un lote a medias).
+        if TAPE_ENABLED:
+            try:
+                _n = self._flush_tape(forzar=True)
+                ACT.info("TAPE cerrado: %d operaciones en el ultimo volcado, %d en total hoy",
+                         _n, self._tape_n)
+            except Exception:
+                pass
         # cerrar el sello: sin la hora de cierre no se sabe si un tramo duro 3 minutos o 3 horas
         try:
             if getattr(self, "_sello_arranque", None):
@@ -1217,7 +1274,8 @@ class SpyDirection:
             # otro; los parametros numericos por si solos no dicen que bugs estaban activos.
             gaps = "GAP1,GAP3,GAP7,GAP8,GAP9,GAP11,GAP12,GAP13,GAP14,GAP15,GAP16,GAP17," \
                    "GAP2,GAP4,GAP5,M2,M12," \
-                   "GAP18,GAP19,GAP17bis,GAP20,GAP21,SMA20-50-200,BARS2D"
+                   "GAP18,GAP19,GAP17bis,GAP20,GAP21,SMA20-50-200,BARS2D," \
+                   "PRECIO-CONTRATOS" + (",TAPE" if TAPE_ENABLED else "")
             notas = ("momentum_win guarda SEGUNDOS (MOMENTUM_SECS), no numero de muestras: "
                      "el GAP 5 cambio la ventana de eventos a tiempo. "
                      "Registra: trades/posicion_minuto, cum_net, premium por vela, "
@@ -1789,6 +1847,33 @@ class SpyDirection:
             # acumulado NETO por strike, en paralelo al bruto (columnas cum_net/day_net)
             self.accum_net[key] = self.accum_net.get(key, 0.0) + signed
             self.today_net[key] = self.today_net.get(key, 0.0) + signed
+            # --- TAPE (2026-08-11): una fila por operacion, SOLO REGISTRO ---
+            # No toca la señal: se anota lo mismo que ya se calculo arriba, mas el TAMAÑO de la
+            # operacion (tk.lastSize), que hasta ahora se tiraba. Con el agregado por minuto un
+            # print de 3.038 contratos y 50 de 60 eran indistinguibles.
+            # Va a un buffer en MEMORIA: _on_ticks corre en el hilo de Tkinter y a alta
+            # frecuencia; un INSERT por tick bloquearia la GUI. El volcado es por lotes.
+            if TAPE_ENABLED:
+                try:
+                    _ls = getattr(tk, "lastSize", None)
+                    _ls = None if (_ls is None or math.isnan(_ls) or _ls <= 0) else float(_ls)
+                    _now = datetime.now()
+                    self._tape_buf.append((
+                        _now.strftime("%Y-%m-%d"), _now.strftime("%H:%M:%S.") +
+                        f"{_now.microsecond // 1000:03d}", time.time(),
+                        key[0], key[1], key[2],
+                        float(last), _ls, float(dvol), bid, ask,
+                        ("COMPRA" if signed > 0 else ("VENTA" if signed < 0 else "MID")),
+                        # premium de ESTA operacion (atribucion exacta) vs el del delta de
+                        # volumen (lo que usa la señal): guardar ambos permite medir cuanto
+                        # distorsiona la agregacion, sobre todo cuando el mercado va rapido.
+                        (float(last) * _ls * 100.0) if _ls else None,
+                        premium,
+                        "SENAL" if is_signal else "BASELINE"))
+                except Exception:
+                    pass          # el tape JAMAS puede romper el procesamiento de la señal
+                if len(self._tape_buf) >= TAPE_FLUSH_N:
+                    self._flush_tape()
             # LA SENAL NO CAMBIA: net_call/net_put siguen sumando SOLO los strikes de senal.
             if is_signal:
                 if c.right == "C":
@@ -2123,6 +2208,32 @@ class SpyDirection:
                 "vega": _v(getattr(g, "vega", None)),
                 "iv": _v(getattr(g, "impliedVol", None)),
                 "und_price": _v(getattr(g, "undPrice", None))}
+
+    def _flush_tape(self, forzar=False):
+        """Vuelca a la BD el buffer del TAPE, por lotes.
+
+        Se llama desde _on_ticks (cuando el buffer llega a TAPE_FLUSH_N) y desde _log_minute
+        (una vez por minuto, con forzar=True). Nunca desde ambos a la vez porque el bucle de la
+        app es de un solo hilo.
+
+        NUNCA propaga una excepcion: el tape es SOLO registro y no puede tumbar ni la señal ni
+        el ciclo principal. Si falla, se pierde ese lote y se avisa en el log de errores."""
+        if not self._tape_buf:
+            return 0
+        if not forzar and len(self._tape_buf) < TAPE_FLUSH_N:
+            return 0
+        lote, self._tape_buf = self._tape_buf, []
+        try:
+            self.db.executemany(
+                "INSERT INTO tape(fecha,hora,ts,expiry,strike,right,last,size,dvol,bid,ask,"
+                "agresor,premium,premium_dvol,grupo) "
+                "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", lote)
+            self.db.commit()
+            self._tape_n += len(lote)
+            return len(lote)
+        except Exception:
+            LOG.exception("Error volcando el TAPE (se pierde este lote, la señal NO se afecta)")
+            return 0
 
     _PRECIO_VACIO = {"bid": None, "ask": None, "mid": None, "last": None, "spread": None}
 
@@ -3104,6 +3215,19 @@ class SpyDirection:
                      _fmt((c5m[0] - c5m[1]) if c5m[0] is not None else None),
                      _fmt(c15m[0]), _fmt(c15m[1]),
                      _fmt((c15m[0] - c15m[1]) if c15m[0] is not None else None))
+            # TAPE: volcar lo pendiente del minuto y dejar constancia de cuanto se registro.
+            # Va DESPUES del commit de arriba para no alargar esa transaccion.
+            if TAPE_ENABLED:
+                _n = self._flush_tape(forzar=True)
+                try:
+                    _g = self.db.execute(
+                        "SELECT COUNT(*), MAX(size), ROUND(AVG(size),1) FROM tape "
+                        "WHERE fecha=? AND hora LIKE ?", (fecha, hora + ":%")).fetchone()
+                    ACT.info("MIN %s | TAPE %d operaciones este minuto (mayor=%s contratos, "
+                             "media=%s) | volcadas=%d, total dia=%d",
+                             hora, _g[0] or 0, _fmt(_g[1]), _fmt(_g[2]), _n, self._tape_n)
+                except Exception:
+                    pass
             ACT.info("MIN %s | %s", hora, self.resumen_cuenta())
             if self.pos in ("CALL", "PUT"):
                 en = self.entry_price or 0.0
