@@ -473,6 +473,33 @@ Diferencial de 20 suites: las 19 previas **idénticas**.
 
 **Coste:** la banda pasa de 40 filas cada 3 min a 40 cada minuto ⇒ **≈ +10.400 filas/día**.
 
+### ⚠️ FALSA ALARMA ACLARADA (2026-08-11): huecos de precio en las expiraciones POSTERIORES
+
+**No es un bug. Es `_band` funcionando como está diseñado.** Al revisar el precio por minuto se vio
+que en las 3 expiraciones futuras faltaba el precio de varios strikes —y en las tres **el mismo**
+`772C`— lo que parecía sospechoso. Ejecutando la función REAL:
+```
+SPY=771.84 -> calls seguidos [768,769,770,771]   puts [772,773,774,775]   772C? NO
+SPY=773.79 -> calls seguidos [770,771,772,773]   puts [774,775,776,777]   772C? SI
+```
+`_band` devuelve **ATM+ITM, nunca OTM** (está en su docstring): con el SPY en 771,84 el `772C` es
+OTM y por eso no se sigue. Los 8 strikes con precio por expiry son exactamente `ITM_DEPTH=3` + ATM
+por lado. Y los `776P/777P/778P` sin precio acumularon premium cuando el SPY estaba en 773,79 y
+`refresh_strikes` los soltó al bajar el precio (lo acumulado NO se pierde: `accum` está indexado por
+`(expiry,strike,right)` y persiste en `strike_accum`).
+
+**El origen de la falsa alarma fue mi propia clasificación:** etiqueté el `772C` como "ATM" con un
+margen de ±0,5, mientras el código usa la regla estricta `strike <= precio`. Con el SPY a 16
+centésimas de un strike redondo, las dos definiciones discrepan.
+
+**Consecuencia REAL para el análisis (esto sí importa):** en las expiraciones posteriores, la
+ausencia de precio significa **"fuera de banda en ese minuto"**, NO falta de liquidez. Sus series de
+precio tienen huecos que se abren y cierran según se mueva el SPY. **La expiry de HOY no tiene ese
+problema**: la banda cubre ±10 strikes y sale 40/40 (ITM 19/19 · ATM 2/2 · OTM 19/19).
+
+*Si algún día se quiere cobertura continua de las posteriores: ampliar `ITM_DEPTH` o darles banda
+propia. Cuesta líneas de market data (van 68 de ~100). Es decisión del usuario, no una corrección.*
+
 ### DECISIONES YA TOMADAS — no volver a proponerlas
 
 - **Botón de venta manual en la GUI: RECHAZADO por el usuario** (2026-08-10).
