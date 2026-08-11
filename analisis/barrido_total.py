@@ -11,8 +11,11 @@ import sqlite3
 
 c = sqlite3.connect(
     "file:C:/Users/eulis/proyectos/open-premium-ibkr/spy_history.db?mode=ro", uri=True)
-F = "2026-08-10"
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
+from _fecha import fecha_analisis   # fecha por argumento; por defecto, la ultima con datos
 
+F = fecha_analisis()
 ta = c.execute(
     "SELECT hora,spy,rsi,ema8,ema21,ema50,macd_line,macd_signal,macd_hist,bb_up,bb_mid,"
     "bb_low,atr,atr_pct,vwap,obv_trend,ta_score,net_call,net_put,diff,thr,momentum,"

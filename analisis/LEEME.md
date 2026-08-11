@@ -24,8 +24,24 @@ selección, correlación con el reloj, medir sobre la prima y no sobre el subyac
 
 ```powershell
 cd C:\Users\eulis\proyectos\open-premium-ibkr
-python analisis\barrido_total.py
+python analisis\barrido_total.py                # la ULTIMA fecha con datos en la BD
+python analisis\barrido_total.py 2026-08-10     # una fecha concreta
+python analisis\barrido_total.py ayer           # la fecha anterior a la ultima
 ```
+
+**Todos anuncian en su primera línea qué fecha están analizando.** No es adorno:
+
+> El 2026-08-11, con el mercado abierto, se corrió `auditoria_datos.py` para revisar los datos
+> **de hoy** y devolvió tan tranquilo el informe **de ayer** — 323 minutos de TA, 7 huecos,
+> 6 reinicios: todo correcto y todo del día equivocado. Los 9 scripts tenían
+> `F = "2026-08-10"` escrito a mano. Solo se detectó porque el hueco 13:24→14:00 era la firma
+> del GAP 17 del día anterior.
+
+La fecha la resuelve `_fecha.py` (compartido). El defecto es *la última fecha con datos* y **no**
+*hoy*, a propósito: así sirve también en fin de semana, de madrugada o antes de la apertura. Si se
+pide una fecha sin datos, **aborta con código 2** en vez de analizar el vacío.
+
+*(`verifica_vivo.py` no lleva fecha: comprueba el estado actual de la instrumentación.)*
 
 ## Aviso
 

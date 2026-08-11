@@ -8,7 +8,11 @@ import sqlite3
 
 c = sqlite3.connect(
     "file:C:/Users/eulis/proyectos/open-premium-ibkr/spy_history.db?mode=ro", uri=True)
-FECHA = "2026-08-10"
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
+from _fecha import fecha_analisis   # fecha por argumento; por defecto, la ultima con datos
+
+FECHA = fecha_analisis()
 ADAPT_FRAC = 0.15
 PISO = 5000.0
 

@@ -9,9 +9,11 @@ import sqlite3
 c = sqlite3.connect(
     "file:C:/Users/eulis/proyectos/open-premium-ibkr/spy_history.db?mode=ro", uri=True)
 
-FECHA = "2026-08-10"
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
+from _fecha import fecha_analisis   # fecha por argumento; por defecto, la ultima con datos
 
-
+FECHA = fecha_analisis()
 def mins(h):
     p = h.split(":")
     return int(p[0]) * 60 + int(p[1])
@@ -102,6 +104,15 @@ if recs:
 
 # ---------- 3) simulacion: y si cerrara al llegar a X centavos a favor? ----------
 print("\n== 3) SIMULACION: salir al tocar un objetivo fijo, vs esperar al flip ==")
+# GUARDA (2026-08-11): sin episodios medibles no hay nada que simular, y `tot_cie` ni siquiera
+# existe (se define dentro del `if recs:` de la seccion 2) -> NameError. Salio a la luz al
+# parametrizar la fecha: analizando el 11-ago los 7 flips son de 09:30-09:46 y ta_minute no
+# arranca hasta las 09:55, asi que no hay ni un episodio con serie de precios.
+if not recs:
+    print("  sin episodios medibles en esta fecha: no hay nada que simular.")
+    print("  (causa habitual: los flips ocurrieron ANTES de que ta_minute empezara a escribir,")
+    print("   o la sesion tiene un solo flip. Ver el GAP 21.)")
+    raise SystemExit(0)
 print("  (mismo conjunto de episodios; el objetivo se da por tocado si el MFE lo alcanza)")
 print("  objetivo | veces tocado |   total con objetivo  |  total esperando al flip")
 for obj in (0.10, 0.20, 0.30, 0.50, 0.80, 1.00):

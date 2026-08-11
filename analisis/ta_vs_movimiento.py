@@ -5,8 +5,11 @@ import sqlite3
 
 c = sqlite3.connect(
     "file:C:/Users/eulis/proyectos/open-premium-ibkr/spy_history.db?mode=ro", uri=True)
-F = "2026-08-10"
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
+from _fecha import fecha_analisis   # fecha por argumento; por defecto, la ultima con datos
 
+F = fecha_analisis()
 rows = c.execute("SELECT hora,spy,ta_score,ta_dir,rsi,macd_hist,atr_pct,vwap,bb_up,bb_low,"
                  "bb_mid,obv_trend FROM ta_minute WHERE fecha=? AND spy IS NOT NULL "
                  "ORDER BY hora", (F,)).fetchall()
