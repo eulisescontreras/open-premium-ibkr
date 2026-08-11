@@ -673,6 +673,20 @@ class SpyDirection:
             c.execute("ALTER TABLE premium_minute ADD COLUMN day_vol REAL")
         except Exception:
             pass
+        # PRECIO del contrato por minuto (2026-08-11, peticion del usuario). Hasta ahora se
+        # guardaba cuanto DINERO pasa por cada strike (cum_prem/day_prem/net_prem) pero NO cuanto
+        # VALE el contrato: el unico precio en toda la BD era el del contrato comprado, en
+        # posicion_minuto, y solo mientras la posicion estaba abierta.
+        # No cuesta ni una linea de market data: los 68 contratos ya estan suscritos y sus
+        # tickers traen bid/ask/last; compute_walls ya los leia para clasificar el agresor y
+        # despues los tiraba.
+        # spread se guarda CALCULADO (ask-bid) porque es la magnitud que se va a consultar:
+        # distingue un strike liquido de uno donde el precio existe pero no es operable.
+        for col in ("bid REAL", "ask REAL", "mid REAL", "last REAL", "spread REAL"):
+            try:
+                c.execute("ALTER TABLE premium_minute ADD COLUMN " + col)
+            except Exception:
+                pass
         # SELLO DE CONFIGURACION: que version del codigo y que parametros generaron los datos.
         # Sin esto, filas creadas con criterios distintos (p.ej. walls por OI vs por gamma,
         # o strikes OTM vs ATM) se mezclan en la misma tabla y el analisis saca conclusiones
@@ -1462,14 +1476,22 @@ class SpyDirection:
             for s in strikes:
                 for right, oimap, gmap in (("C", call_oi, call_g), ("P", put_oi, put_g)):
                     key = (self.expiry, s, right)
+                    # PRECIO (2026-08-11): hay que incluirlo AQUI tambien. Este INSERT OR REPLACE
+                    # reescribe la fila ENTERA, asi que si _log_minute ya habia guardado
+                    # bid/ask/mid/last/spread en este mismo minuto y aqui no se nombraran, el
+                    # REPLACE los dejaria en NULL. Es el mismo fallo que el comentario de
+                    # _log_minute advierte en sentido contrario.
+                    px = self._precio_de(self.expiry, s, right)
                     self.db.execute(
                         "INSERT OR REPLACE INTO premium_minute(fecha,hora,expiry,strike,right,"
-                        "cum_prem,day_prem,net_prem,open_interest,gamma,day_vol) "
-                        "VALUES(?,?,?,?,?,?,?,?,?,?,?)",
+                        "cum_prem,day_prem,net_prem,open_interest,gamma,day_vol,"
+                        "bid,ask,mid,last,spread) "
+                        "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                         (fecha, hora, self.expiry, s, right,
                          self.accum.get(key, 0.0), self.today_prem.get(key, 0.0),
                          self.net_prem.get(key, 0.0), oimap.get(s), gmap.get(s),
-                         self.today_vol.get(key, 0.0)))
+                         self.today_vol.get(key, 0.0),
+                         px["bid"], px["ask"], px["mid"], px["last"], px["spread"]))
             self.db.commit()
         except Exception:
             LOG.exception("Error guardando walls_snapshot/premium_minute (banda)")
@@ -2101,6 +2123,80 @@ class SpyDirection:
                 "vega": _v(getattr(g, "vega", None)),
                 "iv": _v(getattr(g, "impliedVol", None)),
                 "und_price": _v(getattr(g, "undPrice", None))}
+
+    _PRECIO_VACIO = {"bid": None, "ask": None, "mid": None, "last": None, "spread": None}
+
+    def _precio_de(self, expiry, strike, right):
+        """Precio VIVO de un contrato seguido: bid/ask/mid/last/spread. Solo para REGISTRO.
+
+        Mismo patron que _greeks_de y por los mismos motivos:
+          - ib_insync indexa los tickers por id(OBJETO), no por conId, asi que hay que usar el
+            MISMO objeto que se paso a reqMktData. Un Option() equivalente NO sirve.
+          - Busqueda directa sobre las listas vivas, sin indice paralelo: band_contracts se
+            reasigna en 3 sitios y _base_ct en 2; un indice desincronizado devolveria el precio
+            del strike EQUIVOCADO sin que nada avisara.
+
+        Orden: banda -> baseline -> senal. La banda va primero porque su ticker es el mas
+        completo (se pide con "100,101,106").
+
+        NUNCA inventa (regla 13): si el contrato no esta suscrito -por ejemplo una expiry YA
+        VENCIDA que sigue viva en self.accum- devuelve todo None y en la BD queda NULL.
+        mid/spread solo existen con bid Y ask; con uno solo, None."""
+        cont = None
+        # 1) banda (expiracion cercana, 40 contratos)
+        # getattr y no acceso directo: un contrato sin lastTradeDateOrContractMonth lanzaria
+        # AttributeError, y como esta funcion se llama DENTRO del try de _persist_walls, ese
+        # error abortaria el bucle entero y dejaria walls SIN persistir (0 filas), sin que
+        # nada avisara salvo una linea en spy_direction.log. Lo detecto el diferencial:
+        # spy_walls_coldrun paso de 58 a 56 checks. Si falta la expiry se compara solo por
+        # strike/right, que dentro de la banda (una sola expiracion) es identificacion
+        # suficiente; si sobra, el filtro por expiry sigue aplicandose.
+        for c in (self.band_contracts or []):
+            if c.strike == strike and c.right == right:
+                exp_c = getattr(c, "lastTradeDateOrContractMonth", None)
+                if exp_c is None or exp_c == expiry:
+                    cont = c
+                    break
+        # 2) baseline (expiraciones futuras). _base_ct guarda el OBJETO suscrito, que es lo que
+        #    hace falta para que ib.ticker() lo encuentre.
+        if cont is None:
+            for cid, info in (self.info_base or {}).items():
+                if info == (expiry, strike, right):
+                    cont = self._base_ct.get(cid)
+                    break
+        # 3) strikes de SENAL (ATM/ITM de la expiry cercana)
+        if cont is None:
+            for c in (self.call, self.put):
+                if c is None or c.strike != strike or c.right != right:
+                    continue
+                exp_c = getattr(c, "lastTradeDateOrContractMonth", None)   # ver nota de arriba
+                if exp_c is None or exp_c == expiry:
+                    cont = c
+                    break
+        if cont is None:
+            return dict(self._PRECIO_VACIO)
+        try:
+            tk = self.ib.ticker(cont)
+        except Exception:
+            return dict(self._PRECIO_VACIO)
+        if tk is None:
+            return dict(self._PRECIO_VACIO)
+
+        def _v(x):
+            """IBKR manda NaN cuando no hay dato: se convierte a None para guardar NULL y no un
+            0 falso. Tambien se descarta el 0 en bid/ask: un contrato no cotiza a cero, es
+            'sin cotizacion' (mismo criterio que _mid)."""
+            try:
+                x = float(x)
+            except (TypeError, ValueError):
+                return None
+            return None if (math.isnan(x) or x <= 0) else x
+
+        bid, ask, last = _v(getattr(tk, "bid", None)), _v(getattr(tk, "ask", None)), \
+            _v(getattr(tk, "last", None))
+        mid = round((bid + ask) / 2.0, 4) if (bid is not None and ask is not None) else None
+        spread = round(ask - bid, 4) if (bid is not None and ask is not None) else None
+        return {"bid": bid, "ask": ask, "mid": mid, "last": last, "spread": spread}
 
     def _read_account(self):
         """Lee el estado de la cuenta de IBKR (la fuente de verdad) para la vista.
@@ -2920,12 +3016,44 @@ class SpyDirection:
                 # con 10 columnas (incluidos open_interest/gamma/net_prem de la banda) y el
                 # REPLACE las dejaria en NULL. ON CONFLICT ... DO UPDATE solo pisa lo que
                 # nombra y preserva el resto (mismo idioma que _persist_accum).
+                # PRECIO del contrato (2026-08-11): del ticker YA vivo, sin pedir nada a IBKR.
+                # Si el contrato no esta suscrito (p.ej. una expiry VENCIDA que sigue en accum)
+                # devuelve None en todo y aqui se guarda NULL.
+                px = self._precio_de(exp, strike, right)
                 self.db.execute(
                     "INSERT INTO premium_minute(fecha,hora,expiry,strike,right,"
-                    "cum_prem,day_prem) VALUES(?,?,?,?,?,?,?) "
+                    "cum_prem,day_prem,bid,ask,mid,last,spread) "
+                    "VALUES(?,?,?,?,?,?,?,?,?,?,?,?) "
                     "ON CONFLICT(fecha,hora,expiry,strike,right) "
-                    "DO UPDATE SET cum_prem=excluded.cum_prem, day_prem=excluded.day_prem",
-                    (fecha, hora, exp, strike, right, cp, dp))
+                    "DO UPDATE SET cum_prem=excluded.cum_prem, day_prem=excluded.day_prem, "
+                    "bid=excluded.bid, ask=excluded.ask, mid=excluded.mid, "
+                    "last=excluded.last, spread=excluded.spread",
+                    (fecha, hora, exp, strike, right, cp, dp,
+                     px["bid"], px["ask"], px["mid"], px["last"], px["spread"]))
+            # LA BANDA (40 contratos de la expiry cercana) NO esta en self.accum: _on_ticks solo
+            # acumula senal + baseline. Hasta ahora sus filas solo se escribian en _persist_walls,
+            # cada WALLS_RECALC_SECS (3 min). Para que TODOS los contratos tengan precio POR
+            # MINUTO se recorre aqui tambien. No cuesta ninguna peticion: son tickers vivos.
+            # Se escriben SOLO las columnas de precio: cum_prem/day_prem/OI/gamma/net_prem de
+            # estos strikes los lleva _persist_walls y no se deben pisar desde aqui.
+            for c in (self.band_contracts or []):
+                # getattr: un contrato sin expiry no puede tumbar el registro del minuto entero
+                # (este bucle vive dentro del try de _log_minute). Se cae a self.expiry, que es
+                # la de la banda por definicion.
+                exp_c = getattr(c, "lastTradeDateOrContractMonth", None) or self.expiry
+                if not exp_c:
+                    continue
+                px = self._precio_de(exp_c, c.strike, c.right)
+                if px["bid"] is None and px["ask"] is None and px["last"] is None:
+                    continue          # sin cotizacion: no se crea una fila vacia
+                self.db.execute(
+                    "INSERT INTO premium_minute(fecha,hora,expiry,strike,right,"
+                    "bid,ask,mid,last,spread) VALUES(?,?,?,?,?,?,?,?,?,?) "
+                    "ON CONFLICT(fecha,hora,expiry,strike,right) "
+                    "DO UPDATE SET bid=excluded.bid, ask=excluded.ask, mid=excluded.mid, "
+                    "last=excluded.last, spread=excluded.spread",
+                    (fecha, hora, exp_c, c.strike, c.right,
+                     px["bid"], px["ask"], px["mid"], px["last"], px["spread"]))
             self.db.commit()
             # --- LOG EXHAUSTIVO POR MINUTO (respaldo completo del dia por si la BD falla) ---
             if sin_ta:
@@ -2989,11 +3117,17 @@ class SpyDirection:
                     # day/cum = BRUTO (solo suma, es actividad: un hecho)
                     # netdia/netcum = NETO firmado por agresor (compras - ventas: inferencia)
                     # net3m = neto de la banda a resolucion 3 min (otra via de calculo)
+                    # PRECIO (2026-08-11): el premium dice cuanto DINERO paso por el strike;
+                    # esto dice cuanto VALE el contrato. '-' cuando no hay cotizacion.
+                    _px = self._precio_de(exp, strike, right)
                     ACT.info("MIN %s | PREM %s %g%s day=%.0f cum=%.0f | netdia=%+.0f "
-                             "netcum=%+.0f | net3m=%+.0f", hora, exp, strike, right, dp,
+                             "netcum=%+.0f | net3m=%+.0f | bid=%s ask=%s mid=%s last=%s sprd=%s",
+                             hora, exp, strike, right, dp,
                              self.accum.get(k, 0.0),
                              self.today_net.get(k, 0.0), self.accum_net.get(k, 0.0),
-                             self.net_prem.get(k, 0.0))
+                             self.net_prem.get(k, 0.0),
+                             _fmt(_px["bid"]), _fmt(_px["ask"]), _fmt(_px["mid"]),
+                             _fmt(_px["last"]), _fmt(_px["spread"]))
         except Exception:
             LOG.exception("Error guardando registro por minuto")
 

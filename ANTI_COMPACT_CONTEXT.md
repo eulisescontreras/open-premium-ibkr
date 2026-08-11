@@ -433,6 +433,46 @@ diferencial y no se toca con el mercado abierto.
 *(Nota: `prem_*_min` en NULL en la PRIMERA fila del día es correcto y no es este gap: el premium por
 vela necesita una vela anterior de referencia y por diseño no se inventa.)*
 
+### 2026-08-11 — PRECIO de los contratos por minuto (implementado, PENDIENTE DE ARRANQUE)
+
+Hasta ahora `premium_minute` guardaba cuánto **dinero pasa** por cada strike pero **no cuánto vale
+el contrato**: el único precio de toda la BD era el del contrato comprado, en `posicion_minuto`, y
+solo mientras la posición estaba abierta.
+
+**No cuesta ni una línea de market data:** los 68 contratos ya están suscritos y `compute_walls` ya
+leía `tk.bid/ask/last` para clasificar el agresor — y luego los tiraba.
+
+- **`premium_minute` +5 columnas:** `bid`, `ask`, `mid`, `last`, `spread` (`ALTER TABLE`, aditivo).
+  `spread` se guarda calculado porque es lo que distingue un strike líquido de uno donde el precio
+  existe pero no es operable.
+- **`_precio_de(expiry, strike, right)` NUEVO**, calcado de `_greeks_de`: busca en **banda →
+  baseline → señal** usando el **objeto exacto** suscrito (ib_insync indexa por `id(objeto)`, no por
+  conId) y con **búsqueda directa, sin índice paralelo** (`band_contracts` se reasigna en 3 sitios).
+  NaN y 0 → `None` → NULL: un contrato no cotiza a cero, es "sin cotización". `mid`/`spread` solo
+  con bid **y** ask.
+- **`_log_minute`** escribe precio de señal + baseline **y recorre también `band_contracts`**,
+  porque la banda **no está en `self.accum`** (`_on_ticks` solo acumula señal+baseline). Antes sus
+  filas solo se tocaban cada 3 min desde `_persist_walls`; ahora **todos los contratos tienen precio
+  por minuto**. Un contrato sin cotización **no** crea fila vacía.
+- **`_persist_walls`** también escribe las 5 columnas: usa `INSERT OR REPLACE`, así que si no las
+  nombrara **borraría el precio** que acaba de poner `_log_minute` en ese mismo minuto.
+- El log (`PREM ...`) lleva ahora `bid= ask= mid= last= sprd=`.
+
+**🔴 REGRESIÓN REAL CAZADA POR EL DIFERENCIAL (y por qué importa):** `spy_walls_coldrun` bajó de
+**58 a 56** checks. Causa: `_precio_de` accedía a `c.lastTradeDateOrContractMonth` directamente, y
+un contrato sin ese atributo lanzaba `AttributeError` **dentro del `try` de `_persist_walls`** → el
+bucle abortaba y **walls se quedaba con CERO filas en `premium_minute`**, sin más aviso que una
+línea en `spy_direction.log`. Arreglado con `getattr(...)` en las 3 rutas (banda, señal,
+`_log_minute`) y **cubierto por el caso 6b** del cold run nuevo.
+*No era solo cosa del test: cualquier contrato sin expiry habría tumbado la persistencia de walls.*
+
+**Verificado:** `coldruns/precio_contratos_coldrun.py`, **27 checks** con `_precio_de`,
+`_log_minute` y `_persist_walls` reales — incluido **el caso crítico en los dos órdenes posibles**
+(que el precio no borre OI/gamma ni al revés) y el coste medido: **1,3 ms por llamada**.
+Diferencial de 20 suites: las 19 previas **idénticas**.
+
+**Coste:** la banda pasa de 40 filas cada 3 min a 40 cada minuto ⇒ **≈ +10.400 filas/día**.
+
 ### DECISIONES YA TOMADAS — no volver a proponerlas
 
 - **Botón de venta manual en la GUI: RECHAZADO por el usuario** (2026-08-10).
