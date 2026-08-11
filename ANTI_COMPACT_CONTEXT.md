@@ -12,19 +12,53 @@
 ## A. QUÉ ESTÁ CORRIENDO AHORA MISMO
 
 ```
-App:      python spy_direction.py  (PID 15276, arrancada 11:48:48)
-Gateway:  IB Gateway paper 4002, clientId 7
+App:      python spy_direction.py  (PID 30272, REARRANCADA 14:36:10)   <- con el TAPE activo
+Gateway:  IB Gateway paper 4002, clientId 7 (reconectado 14:36:12, sin incidencias)
 Monitor:  DETENIDO por orden del usuario (era la task bpolfsz6x)
 Cuenta:   paper, reseteada a $400 al empezar el día
-Posición: trade #6 CALL 773C @1.3486 ABIERTO, en ~-125$ (el contrato vale 0.10)
-Señal:    UP desde las 09:46 — CUATRO HORAS sin girar mientras el SPY caía
+Posición: trade #7 CALL 773C @1.3486 — la MISMA posición, adoptada de IBKR por _sync_pos
+Señal:    UP desde las 09:46 — el reinicio NO la cambia (reset_day no corre a media sesión)
 ```
 
-**El código en disco tiene cambios SIN CARGAR** (entran en el próximo arranque):
-`TAPE` (una fila por operación) y el resto de lo commiteado después de las 11:48.
+## A-bis. ✅ REINICIO 2026-08-11 14:32-14:36 — EL TAPE YA ESTÁ ESCRIBIENDO (autorizado por el usuario)
 
-**PENDIENTE AL CIERRE (16:15):** subir `spy_history.db` y los logs **con la app parada**. Hoy se
-subieron en caliente (commit `6b513e6`) y eso quedó advertido en su mensaje.
+Todo lo commiteado después de las 11:48 estaba en disco pero **no cargado**: la app corría el
+código viejo en memoria. **Prueba de que nunca había corrido: la tabla `tape` ni siquiera existía.**
+
+**Protocolo seguido (el del propio proyecto), en orden:**
+1. Backup `spy_history_backup_pre-reinicio_tape_1424.db` (API `backup()` de sqlite, seguro con la
+   app escribiendo) — `integrity_check: ok`.
+2. **Diferencial de cold runs: 21/21 VERDES, conteos IDÉNTICOS al baseline.**
+   ⚠️ Ojo al contarlos con `grep -c OK`: 3 suites (cuenta, fase1, spy_walls) dan +1 porque su
+   **línea de resumen final** ("FASE 1 OK: todos los checks pasaron") también contiene "OK".
+   Los conteos reales son 8/9/58, no 9/10/59.
+3. Comprobado que **no había ninguna orden viva** (la última actividad era el FILL de las 09:35).
+4. `Stop-Process` del PID 15276.
+5. **Trade #6 cerrado sin inventar precio**: `hora_salida=14:32:00`, `exit_price`/`profit`/`pct`
+   en NULL, razón documentada. 0 trades abiertos.
+6. Commit `62a5254` + push a `main` **con la app parada** (así se sube la BD, como pedía el usuario).
+7. Rearranque 14:36:10.
+
+### ✅✅ RESULTADO: LA ATRIBUCIÓN PASA DEL ~8 % AL 75,8 % — medido en el primer minuto
+
+```
+14:37:03  MIN 14:36 | TAPE 143 operaciones este minuto (mayor=150.00 contratos, media=7.80)
+157 operaciones:  COMPRA 55 · VENTA 64 · MID 38
+MID = 24,2 % por operación   ·   24,5 % por DINERO
+```
+Antes el "no atribuible" era del **92 %** (sección C) y medido por strike daba **95-99,7 %**
+(`atribucion.py`). **Ahora es el 24 %.** Referencia de MarketSnack: 9,7 %. Sigue habiendo margen,
+pero es otro universo: **por primera vez el 76 % del flujo llega con dirección.**
+📌 Y `size` es real: el mayor print del minuto fue de **150 contratos** contra una media de 7,8 —
+exactamente la distinción que la agregación por `dvol` borraba.
+
+### ✅ GAP 20 verificado EN PRODUCCIÓN por primera vez
+`_sync_pos` adoptó la posición y **abrió sola la fila `trade #7`** a las 14:36:22 con el
+`entry_price` del `avgCost` (1.3486). Antes de este arreglo, esa posición no habría dejado rastro.
+
+**PENDIENTE AL CIERRE (16:15):** volver a subir `spy_history.db` y los logs **con la app parada**,
+ya con el tape del día. Y **rehacer el barrido de la sección I sobre la tabla `tape`**, que es lo
+único que puede juzgar de verdad la tesis del Open Premium.
 
 ## B. LO QUE SE HIZO HOY (11 commits, todos en `main`, ya pusheados)
 
