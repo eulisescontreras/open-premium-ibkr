@@ -5,6 +5,145 @@
 > **Carpeta ACTUAL: `C:\Users\eulis\proyectos\open-premium-ibkr`** (antes `C:\Users\17862\...`,
 > otra máquina — los logs viejos del repo tienen esa ruta).
 
+---
+# 🔴 ESTADO AL HACER /clear — MARTES 2026-08-11 ~14:00 ET — LEER ESTO PRIMERO
+---
+
+## A. QUÉ ESTÁ CORRIENDO AHORA MISMO
+
+```
+App:      python spy_direction.py  (PID 15276, arrancada 11:48:48)
+Gateway:  IB Gateway paper 4002, clientId 7
+Monitor:  DETENIDO por orden del usuario (era la task bpolfsz6x)
+Cuenta:   paper, reseteada a $400 al empezar el día
+Posición: trade #6 CALL 773C @1.3486 ABIERTO, en ~-125$ (el contrato vale 0.10)
+Señal:    UP desde las 09:46 — CUATRO HORAS sin girar mientras el SPY caía
+```
+
+**El código en disco tiene cambios SIN CARGAR** (entran en el próximo arranque):
+`TAPE` (una fila por operación) y el resto de lo commiteado después de las 11:48.
+
+**PENDIENTE AL CIERRE (16:15):** subir `spy_history.db` y los logs **con la app parada**. Hoy se
+subieron en caliente (commit `6b513e6`) y eso quedó advertido en su mensaje.
+
+## B. LO QUE SE HIZO HOY (11 commits, todos en `main`, ya pusheados)
+
+`54645a5` OPEN_HHMM/RTH_OPEN_HHMM + `is_rth()` · `73fd848` **no comprar los primeros 5 min**
+(`START_TRADE_HHMM=09:35`) · `92efa00` anti-compact · `a214fdc` **GAP 20** + log tolerante a fallo
+de rotación · `3937b7b` **GAP 21** · `332d106` **SMA 20/50/200** · `619e6ce` `BARS_DURATION="2 D"`
+· `8c6a1f5` scripts de análisis **parametrizados por fecha** · `3de7c24` **precio por minuto de
+todos los contratos** (bid/ask/mid/last/spread) · `1655ac1` aclaración `_band` · `6b513e6` datos.
+
+Verificados EN VIVO hoy: retraso de 5 min (4 giros de apertura sin operar), GAP 20 (adoptó la
+posición en cada reinicio: trades #3-#6), SMA, precio por contrato, y el **GAP 17 se autocorrigió**
+a las 13:43 (IBKR perdió las granjas, el stream volvió en 3 s).
+Pendientes de prueba real: **GAP 21** (mañana 09:30-09:56) y **rotación del log** (medianoche).
+
+## C. 🔴 EL HALLAZGO GRANDE: EL NETO ESTÁ ROTO (VERIFICADO)
+
+```
+premium BRUTO acumulado (expiry de hoy):  165.700.275
+premium NETO  acumulado:                  -11.490.903
+|neto| / bruto = 8,2%
+
+fracción NO atribuible ("Mid"):  91,8%   vs   9,7% de MarketSnack
+```
+
+**Descartamos el 92% del flujo.** `_on_ticks` solo firma cuando `last >= ask` o `last <= bid`; el
+resto va a `signed = 0`. La señal se decide con el 8% del mercado, y ese 8% no es muestra aleatoria.
+
+Consecuencia medible: `773P` nos sale en **−2,7M** (ventas) cuando MarketSnack lo ve en **+1,4M**
+(compras, +914,5%). **Signo opuesto.**
+
+**Causa raíz:** `last × dvol`. `last` es el precio del ÚLTIMO trade y `dvol` el volumen de TODOS los
+del intervalo, comparado contra el bid/ask del momento de la LECTURA, no del trade. Casi nunca
+coincide → "no atribuible". Cuanto más rápido va el mercado, más se descarta.
+
+**La solución ya está implementada y commiteada (`f3514a3`): el TAPE**, que guarda cada operación
+con `lastSize`, bid/ask y agresor **de su propio instante**.
+*(Nota: llegué a escribir que `lastSize` "no se puede con RTVolume (verificado)" — era FALSO y no lo
+había verificado. Comprobado en vivo: `last=0.9 lastSize=2.0`.)*
+
+## D. 🔴 BUG SIN ARREGLAR — PREMIUM FANTASMA EN EL RECENTRADO DE SEÑAL
+
+Observado hoy en vivo:
+```
+12:24:11  SENAL call re-centrada -> 771C
+12:23  net_call=-1.257.061   vela C=   19.159
+12:24  net_call=  +652.900   vela C=1.909.961   <- +1,9M en un minuto: IMPOSIBLE
+```
+`_soltar_mkt()` cancela el market data pero **NO limpia `prev_vol`**, y `refresh_strikes` tampoco al
+sustituir `self.call`/`self.put`. El bloque del baseline **sí** hace `prev_vol.pop(cid)` y documenta
+el motivo. **Falta el mismo `pop` en la ruta de la señal.** Pasa en cada recentrado, varias veces al
+día. **Los datos de hoy posteriores a 12:24 están contaminados.**
+
+## E. ANÁLISIS DE LA SEÑAL: TODO DESCARTADO (2 días, medido contra TASA BASE)
+
+**Regla metodológica nueva y obligatoria: nunca juzgar por % de acierto, sino por LIFT sobre la tasa
+base del día.** Hoy la tasa base fue 63,9% a 10 min y 75,5% a 30 min (día bajista); ayer 54,5%
+(día plano).
+
+| Métrica | lift HOY | lift AYER |
+|---|---|---|
+| **ACUMULADO `netC>netP` (la señal ACTUAL)** | **−29,2** | −3,0 |
+| premium BRUTO por vela | −14,8 | −3,8 |
+| premium NETO por vela | −19,1 | −6,7 |
+| BRUTO ventana 20/30/45/60 min | −12,7 a −22,0 | (sin datos) |
+| NETO ventana 30 min | −40,6 | (n=1) |
+| ratio posicionamiento (OI+vol) contratos | 30,2% acierto | — |
+| TENDENCIA 10 min | −15,6 | **+3,6** (lo único positivo, débil) |
+| precio > sma20 / sma50 | −3,4 / −9,8 | — |
+
+**Ninguna variante del premium supera la tasa base en ninguno de los dos días.**
+
+**La señal actual no es neutra, es CONTRARIA:** lift −3 en día plano, **−29 en día tendencial**.
+Encaja con el "lag −2" medido el 10-ago: el premium va DETRÁS del precio.
+
+### ⚠️ ERROR METODOLÓGICO QUE COMETÍ — no repetirlo
+Presenté un "8/9 = 89% de acierto" del bruto en bloques de 30 min. **Era falso:** comparaba el
+premium DEL bloque contra el movimiento DEL MISMO bloque — concurrencia, no predicción. Al medirlo
+con ventana deslizante contra el movimiento FUTURO, el efecto desaparece (lift −17,8).
+**Señal de alarma: cualquier resultado espectacular con n pequeño y solapamiento temporal entre el
+dato y el resultado.** Los lifts positivos siempre aparecían donde n era diminuto (84% con n=25,
+100% con n=1).
+
+## F. LO QUE PIDIÓ EL USUARIO Y SIGUE ABIERTO
+
+1. **Arreglar el premium fantasma (D)** — prioritario, corrompe los datos. Plan escrito en
+   `~/.claude/plans/ok-quiero-que-hoy-elegant-pond.md`.
+2. **Recalcular el neto con el TAPE** y ver si el "no atribuible" baja del 92% hacia el ~10%.
+   Hasta entonces, **cualquier conclusión sobre el neto es sobre un dato roto**.
+3. Registrar el reparto **compra/venta/mid** como métrica de control permanente.
+4. Su tesis (el Open Premium de MarketSnack como cambio entre barras de 30 min) **no está
+   descartada**: lo que se descartó es medirla sobre el premium agregado por minuto. Con el tape y
+   el neto arreglado hay que volver a probarla.
+5. Idea suya anotada, NO implementada: cuando aparezca un evento fuerte, **añadir un contrato más**
+   (mismo strike o el ATM). Choca con `QTY=1` y la guarda de `_place` (puestas tras el GAP 9).
+
+## G. CÓMO TRABAJAR CON ESTE USUARIO (crítico)
+
+- Exige **honestidad total**. Ha corregido dos afirmaciones mías que eran falsas: *"puede que nunca
+  se puedan determinar las entradas"* (extrapolaba de un día) y *"lastSize no se puede con
+  RTVolume"* (no lo había verificado). **No afirmar sin ejecutar.**
+- Escribe en **mensajes cortos y fragmentados**: unirlos antes de actuar.
+- **No reiniciar la app ni hacer push sin autorización explícita.** En este repo el push está
+  autorizado cuando lo pide; `$env:GITHUB_TOKEN=''` antes de git/gh.
+- Antes de cada reinicio: **backup de la BD** + cerrar el trade abierto **sin inventar precio de
+  salida** (`exit_price`/`profit` a NULL, razón "corte por reinicio").
+- Cada reinicio cuesta **~2 min de premium acumulado** (`SNAPSHOT_SECS=120`).
+
+## H. VERIFICACIÓN — 21 SUITES DE COLD RUN (todas verdes)
+
+`coldruns/`: cuenta 8 · fase1 9 · gap11 10 · gap12 18 · gap13 9 · gap14 10 · gap15 31 · gap3 30 ·
+gap7 6 · gap9 12 · gaps 0 · ventana_horaria 39 · gap20 22 · gap21 27 · sma 27 · bars2d 30 ·
+precio_contratos 27 · tape 20 · y en la raíz: spy_walls 58 · posicion 72 · gapsA 77.
+Correr con `$env:PYTHONPATH="C:\Users\eulis\proyectos\open-premium-ibkr"`.
+**Diferencial obligatorio antes de cualquier reinicio: los conteos previos deben salir IDÉNTICOS.**
+*(Hoy el diferencial cazó una regresión real en `spy_walls` 58→56 por un `AttributeError` en
+`_precio_de` que dejaba walls sin persistir. Por eso se hace.)*
+
+---
+
 ## 0. SESIÓN EN CURSO — LUNES 2026-08-10 (PRIMERA CORRIDA EN VIVO REAL)
 
 Hoy es el "LUNES" que el resto de este documento marca como bloqueador. Estado a las 09:14 ET:
