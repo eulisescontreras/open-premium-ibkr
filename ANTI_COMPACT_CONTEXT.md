@@ -334,6 +334,59 @@ stop_new = ((not in_session)
 `elif app.is_market_open():` de `tick()`. La app **no conecta al arrancar**: lanzarla antes de las
 09:30 es correcto y espera sola. No hay socket hasta la apertura — eso NO es un fallo.
 
+### 2026-08-11 APERTURA — resultados en vivo + GAP 20 y rotación del log
+
+**✅ EL RETRASO DE 5 MIN FUNCIONÓ AL SEGUNDO.** 4 giros en la ventana de espera
+(09:30:14 UP · 09:30:28 DOWN · 09:33:38 UP · 09:34:34 DOWN) y **ninguna orden**. Primera orden:
+`09:35:00,085 BUY PUT x1 LIMIT MID @1.10`. Cuatro rotaciones de spread+theta evitadas.
+
+**✅ `trades` y `posicion_minuto` VERIFICADOS EN VIVO con griegas reales** — era lo único que
+quedaba NO VERIFICADO de todo el trabajo del 10-ago:
+```
+trade #1 CALL 773 @1.34 | delta=0.5034 gamma=0.1245 theta=-1.2794 iv=0.1515
+         spy=773.05 min_sesion=5 GEX=102.8Bn regime=LONG dist_flip=-1.97 CW=-1.95 PW=+0.05
+posicion_minuto: entrada 09:35:54 mid=1.34 -> minuto 09:36:55 mid=1.38 pnl=+4.00
+```
+
+**✅ EL ARREGLO DEL GAP 9 SE AUTOCORRIGIÓ EN VIVO.** La orden 2134 se reportó `Cancelled` con
+`filled=0.0` y **se llenó igual**:
+```
+09:35:08 Cancelled (id=2134 filled=0.0) · 09:35:12 EXEC REAL BOT ...P00773000 x1 @1.10 (id=2134)
+09:35:12 SYNC posicion REAL de IBKR=PUT x1 | la app creia FLAT x0 -> corregido
+09:35:12 Entrada recuperada de IBKR (avgCost=111.04) -> 1.1104
+```
+Detectado y adoptado en **4 s**. El 10-ago ese mismo fallo dejó 3 puts huérfanas y vació la cuenta.
+
+**✅ GAP 5 mejorado:** WARN anticipó al FLIP **20 s** (09:34:14→09:34:34) y **10 s**
+(09:35:05→09:35:15). El 10-ago salían en el mismo milisegundo.
+*(Ojo al leer `transitions`: hay filas `WARN` y `FLIP`; sin mirar la columna `tipo` parecen giros
+duplicados — no lo son.)*
+
+**🔴 GAP 20 NUEVO — ARREGLADO, PENDIENTE DE ACTIVAR (entra en el próximo arranque).**
+La posición adoptada por `_sync_pos` **no abría fila en `trades`**: el PUT 773 comprado a 1.1104 y
+vendido a 1.12 (**+0.96**) no dejó rastro ni en `trades` ni en `posicion_minuto`. Se perdía el
+recorrido de TODA posición recuperada de un fill fantasma.
+- **Arreglo:** en `_sync_pos`, si `real in (CALL,PUT)` y `trade_id is None` → `_trade_abrir()` con
+  el contrato adoptado y el `entry_price` del `avgCost`. Es el **simétrico exacto** del cierre
+  `"externa"` que ya existía. Si no hay ni avgCost ni MID, **no se abre fila y no se inventa precio**.
+- **La operación perdida se insertó A MANO** en `trades` (`trade_id=2`, cronológicamente anterior
+  al #1). Solo con datos verificados del log; greeks, contexto y mfe/mae quedan **NULL a propósito**
+  y `razon_salida` lo declara: **no usar esa fila para estadísticas de recorrido**.
+
+**🔴 ROTACIÓN DEL LOG — ARREGLADA, PENDIENTE DE ACTIVAR.** En Windows no se puede renombrar un
+fichero que otro proceso tiene abierto: `doRollover()` lanzaba `PermissionError`, el handler dejaba
+el stream cerrado y **el logging quedaba mudo en silencio**. Pasó hoy de 09:00 a 09:32 (32 min de
+traza perdidos) porque **el monitor de Claude tenía abierto `spy_activity.log`**. La BD no se vio
+afectada.
+- **Arreglo:** clase `_RotacionTolerante(TimedRotatingFileHandler)`: si la rotación falla, reabre el
+  fichero, sigue escribiendo y **deja constancia del fallo en el propio log**.
+- **Lección para monitorizar en Windows:** abrir, leer y **cerrar** en cada pasada. Nunca mantener
+  el handle abierto sobre un log que alguien rota.
+
+**Verificación de ambos:** `coldruns/gap20_coldrun.py` (23 checks, funciones reales: `_sync_pos`,
+`_trade_abrir`, `_pos_snapshot`, `doRollover`) · **diferencial 16 suites, las 15 previas con
+conteos IDÉNTICOS**.
+
 ### DECISIONES YA TOMADAS — no volver a proponerlas
 
 - **Botón de venta manual en la GUI: RECHAZADO por el usuario** (2026-08-10).

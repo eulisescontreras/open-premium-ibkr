@@ -294,6 +294,50 @@ def _app_dir():
     return os.path.dirname(os.path.abspath(__file__))
 
 
+class _RotacionTolerante(TimedRotatingFileHandler):
+    """TimedRotatingFileHandler que NO se queda mudo si la rotacion falla.
+
+    Por que existe (2026-08-11, medido en vivo): en Windows, renombrar un fichero que otro
+    proceso tiene ABIERTO lanza PermissionError. Basta un `tail`, un editor o un script de
+    monitorizacion leyendolo para que `doRollover()` reviente. El handler estandar deja
+    entonces el stream cerrado y **todos los registros posteriores se pierden en silencio**:
+    la app parece funcionar, la BD se llena, y el log no vuelve a escribir una linea.
+    Ocurrio hoy entre las 09:00 y las 09:32 (32 minutos de traza perdidos) porque el monitor
+    tenia abierto spy_activity.log.
+
+    Aqui, si la rotacion falla: se avisa EN EL PROPIO LOG, se reabre el fichero actual y se
+    sigue escribiendo. Se pierde la rotacion de ese dia (el fichero crece de mas), que es un
+    problema muchisimo menor que quedarse ciego. Se reintentara en el proximo rollover.
+    """
+
+    def doRollover(self):
+        try:
+            super().doRollover()
+        except Exception as e:
+            # reabrir el fichero actual: sin esto el stream queda cerrado y no se escribe mas
+            try:
+                if self.stream:
+                    self.stream.close()
+            except Exception:
+                pass
+            self.stream = self._open()
+            # calcular el proximo intento para no reintentar en cada linea
+            try:
+                self.rolloverAt = self.computeRollover(int(time.time()))
+            except Exception:
+                pass
+            try:
+                self.stream.write(
+                    "%s WARNING ROTACION DEL LOG FALLIDA (%s: %s). Alguien tiene el fichero "
+                    "ABIERTO (tail/editor/monitor). Se SIGUE escribiendo en el fichero actual; "
+                    "el log de ayer no se archivo. Cierra ese proceso.\n"
+                    % (datetime.now().strftime("%Y-%m-%d %H:%M:%S,%f")[:-3],
+                       type(e).__name__, e))
+                self.stream.flush()
+            except Exception:
+                pass
+
+
 def _make_logger(name, filename):
     lg = logging.getLogger(name)
     if lg.handlers:
@@ -301,8 +345,8 @@ def _make_logger(name, filename):
     lg.setLevel(logging.INFO)
     lg.propagate = False
     try:
-        h = TimedRotatingFileHandler(os.path.join(_app_dir(), filename),
-                                     when="midnight", backupCount=120, encoding="utf-8")
+        h = _RotacionTolerante(os.path.join(_app_dir(), filename),
+                               when="midnight", backupCount=120, encoding="utf-8")
     except Exception:
         h = logging.StreamHandler()
     h.setFormatter(logging.Formatter("%(asctime)s %(levelname)s %(message)s"))
@@ -2367,6 +2411,27 @@ class SpyDirection:
                 self._adoptar_posicion(pos_obj, real)
             self.pos = real
             self.pos_qty = qty
+            if real in ("CALL", "PUT") and self.trade_id is None and pos_obj is not None:
+                # GAP 20 (2026-08-11): posicion ADOPTADA de IBKR sin pasar por _on_filled -> nadie
+                # abria su fila en 'trades' y la operacion entera quedaba sin registrar.
+                # Ocurrio en vivo hoy: la orden 2134 se reporto Cancelled con filled=0 y se lleno
+                # igual (09:35:12); _sync_pos corrigio la posicion pero el PUT 773 se compro a 1.11
+                # y se vendio a 1.12 (+0.96) SIN dejar rastro en trades ni en posicion_minuto.
+                # Es el simetrico exacto del cierre "externa" de abajo: si al desaparecer una
+                # posicion se CIERRA el registro, al aparecer una hay que ABRIRLO.
+                cont = self.buy_call if real == "CALL" else self.buy_put
+                if cont is None:
+                    cont = pos_obj.contract
+                # entry_price lo acaba de recuperar _adoptar_posicion desde avgCost (dato REAL de
+                # IBKR). Si no hubiera, se usa el MID; y si tampoco, NO se inventa: no se abre.
+                px = self.entry_price or self._mid(cont)
+                if px:
+                    ACT.info("TRADE: posicion %s x%g adoptada de IBKR sin registro -> abriendo "
+                             "fila en trades @ %.4f (GAP 20)", real, qty, px)
+                    self._trade_abrir(cont, px, qty)
+                else:
+                    ACT.info("TRADE: posicion %s x%g adoptada pero SIN precio (ni avgCost ni MID) "
+                             "-> no se abre fila, no se inventa un precio (GAP 20)", real, qty)
             if real == "FLAT":
                 # La posicion desaparecio de IBKR sin pasar por _on_filled (venta llenada
                 # mientras la app estaba parada, o cerrada a mano en TWS). Cerrar el trade
