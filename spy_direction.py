@@ -88,6 +88,19 @@ REPRICE_SECS = 4.0          # re-precia al mid si no llena en este tiempo
 MAX_FILL_SECS = 60.0        # tiempo maximo intentando llenar una entrada
 FLATTEN_HHMM = "15:45"      # ET: cerrar cualquier opcion abierta
 STOP_NEW_HHMM = "15:40"     # ET: no abrir nuevas cerca del cierre
+START_TRADE_HHMM = "09:35"  # ET: NO abrir posiciones antes de esta hora (2026-08-11, peticion del
+                            # usuario). Motivo con datos del 2026-08-10: en los primeros 90 s hubo
+                            # 5 GIROS (09:30:06 UP, :13 DOWN, :30 UP, :37 DOWN, 09:31:14 UP). El
+                            # umbral es adaptativo -thr = ADAPT_FRAC*(|net_call|+|net_put|)- y con
+                            # el acumulado casi vacio cae al piso SIGNAL_THRESHOLD=5000, ~100x
+                            # menor que el umbral maduro del dia (llego a 1,2 M): cualquier tick lo
+                            # cruza y con 0DTE cada rotacion paga el spread.
+                            # Es el gap M6 de MEJORAS.md atacado por la via barata: en vez de
+                            # rediseñar el umbral, no operar mientras no sea fiable.
+                            # OJO - solo frena ABRIR: las VENTAS no pasan por stop_new, asi que una
+                            # posicion heredada se puede cerrar igual durante la espera. Y la SEÑAL
+                            # se sigue acumulando desde las 09:30 (_on_ticks es independiente de
+                            # trade_poll): la idea es justamente VER como se forma el acumulado.
 OPEN_HHMM = "09:30"         # desde que hora se RECOLECTA.
                             # 2026-08-11 09:00-09:07: se PROBO bajarlo a "09:00" para ver si el
                             # pre-market daba algo guardable. MEDIDO CON DATOS REALES -> NO:
@@ -2546,7 +2559,12 @@ class SpyDirection:
             if self.target != "FLAT":
                 self.exit_reason = "eod"
             self.target = "FLAT"
-        stop_new = (not in_session) or (weekday and hhmm >= STOP_NEW_HHMM)
+        # 3 motivos para no ABRIR: fuera de sesion, cerca del cierre (EOD) o aun en los primeros
+        # minutos de la apertura. Se separan para poder decirle al usuario CUAL es (ver trade_msg).
+        espera_apertura = in_session and hhmm < START_TRADE_HHMM
+        stop_new = ((not in_session)
+                    or (weekday and hhmm >= STOP_NEW_HHMM)
+                    or (weekday and hhmm < START_TRADE_HHMM))
 
         now = time.monotonic()
         # ---- orden activa: gestionar fill / re-precio ----
@@ -2608,8 +2626,15 @@ class SpyDirection:
                 self.trade_msg = (f"ARMADO - en {self.pos} {self.pos_qty:g}, "
                                   f"esperando giro a {'DOWN' if self.pos == 'CALL' else 'UP'}")
             else:
-                self.trade_msg = ("ARMADO - FLAT, sin abrir nuevas (EOD)" if stop_new
-                                  else "ARMADO - FLAT, esperando senal")
+                if espera_apertura:
+                    # el motivo importa: a las 09:31 decir "(EOD)" era MENTIRA y cuesta tiempo de
+                    # diagnostico (el 2026-08-10 el panel decia "trading OFF" estando ARMADO)
+                    self.trade_msg = (f"ARMADO - FLAT, sin abrir hasta las {START_TRADE_HHMM} "
+                                      f"(dejando que el acumulado se forme)")
+                elif stop_new:
+                    self.trade_msg = "ARMADO - FLAT, sin abrir nuevas (EOD)"
+                else:
+                    self.trade_msg = "ARMADO - FLAT, esperando senal"
         if self.pos != self.target:
             if self.pos in ("CALL", "PUT"):
                 # GUARDA DURA ANTES DE VENDER: confirmar contra IBKR que la posicion SIGUE

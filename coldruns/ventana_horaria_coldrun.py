@@ -155,12 +155,43 @@ for hhmm_actual in ("09:00", "09:15", "09:29"):
           f"trade_poll() a las {hhmm_actual} ET (pre-market): NO coloca orden "
           f"[colocadas={app._colocadas}] | msg='{app.trade_msg}'")
 
-for hhmm_actual in ("09:30", "10:00", "15:39"):
+ST = S.START_TRADE_HHMM
+check(RTH <= ST < S.STOP_NEW_HHMM,
+      f"constantes coherentes: RTH({RTH}) <= START_TRADE({ST}) < STOP_NEW({S.STOP_NEW_HHMM})")
+
+# --- lo NUEVO (2026-08-11): no abrir en los primeros minutos de la apertura ---
+for hhmm_actual in (RTH, "09:31", menos1(ST)):
+    set_et(hhmm_actual)
+    preparar()
+    app.trade_poll()
+    check(not app._colocadas,
+          f"trade_poll() a las {hhmm_actual} ET (espera de apertura, antes de {ST}): NO compra "
+          f"[colocadas={app._colocadas}] | msg='{app.trade_msg}'")
+    # el mensaje del panel solo se escribe cuando pos == target; con target=CALL no entra en esa
+    # rama y quedaria vacio -> el check pasaria TRIVIALMENTE. Hay que forzar pos==target==FLAT.
+    preparar()
+    app.target = "FLAT"
+    app.trade_poll()
+    check(ST in app.trade_msg and "EOD" not in app.trade_msg,
+          f"  ...panel a las {hhmm_actual} dice la espera y NO miente con EOD: '{app.trade_msg}'")
+
+# CRITICO: durante la espera se tiene que poder SALIR de una posicion heredada
+set_et("09:31")
+preparar()
+app.pos = "CALL"
+app.pos_qty = 1
+app.target = "FLAT"
+app.trade_poll()
+check(len(app._colocadas) == 1 and app._colocadas[0][0] == "SELL",
+      f"trade_poll() a las 09:31 con posicion y target=FLAT: SI VENDE (la espera no encierra) "
+      f"[colocadas={app._colocadas}]")
+
+for hhmm_actual in (ST, "10:00", "15:39"):
     set_et(hhmm_actual)
     preparar()
     app.trade_poll()
     check(len(app._colocadas) == 1 and app._colocadas[0][0] == "BUY",
-          f"trade_poll() a las {hhmm_actual} ET (RTH): SI compra "
+          f"trade_poll() a las {hhmm_actual} ET (RTH, ya pasada la espera): SI compra "
           f"[colocadas={app._colocadas}]")
 
 for hhmm_actual in ("15:40", "15:44"):
