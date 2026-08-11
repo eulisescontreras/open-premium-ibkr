@@ -32,10 +32,12 @@ DB = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
                   "spy_history.db")
 
 
-def main():
-    args = [a for a in sys.argv[1:] if not a.startswith("--")]
-    solo_itm = "--todos" not in sys.argv
+def serie_por_minuto(F=None, solo_itm=True):
+    """Agrega el tape por minuto. Devuelve (F, por_min, spy, cobertura, fuera, total).
 
+    Extraido para que `matriz_minuto.py` use EXACTAMENTE la misma agregacion y no
+    aparezcan dos versiones que se puedan desincronizar (regla 9).
+    """
     db = sqlite3.connect("file:%s?mode=ro" % DB.replace("\\", "/"), uri=True)
     c = db.cursor()
     fechas = [x[0] for x in c.execute(
@@ -43,7 +45,7 @@ def main():
     if not fechas:
         print("La tabla `tape` esta vacia.")
         sys.exit(2)
-    F = args[0] if args else fechas[-1]
+    F = F or fechas[-1]
     if F not in fechas:
         print("Sin tape para %s. Hay: %s" % (F, ", ".join(fechas)))
         sys.exit(2)
@@ -53,33 +55,19 @@ def main():
     spy = {x[0]: x[1] for x in c.execute(
         "SELECT hora, spy FROM ta_minute WHERE fecha=? AND spy IS NOT NULL",
         (F,)).fetchall()}
-
-    # ---------------- cobertura real, antes de ningun numero
-    print("=" * 100)
-    print("PREMIUM POR MINUTO desde `tape` — %s — expiry 0DTE %s" % (F, EXP))
-    print("=" * 100)
     cob = c.execute("SELECT strike, right, COUNT(*) FROM tape WHERE fecha=? AND expiry=? "
                     "GROUP BY strike, right ORDER BY strike, right", (F, EXP)).fetchall()
-    print("COBERTURA REAL: %d strikes distintos de la 0DTE en el tape -> %s"
-          % (len(cob), ", ".join("%g%s" % (s, r) for s, r, _ in cob)))
-    print("   (la BANDA de 40 strikes NO entra en el tape: `_on_ticks:1817` solo trata")
-    print("    SENAL y BASELINE. Esto NO es 'todos los ITM/ATM'.)")
-    print("   Filtro moneyness: %s" % ("ITM/ATM (call<=spy, put>=spy)" if solo_itm
-                                       else "NINGUNO (--todos)"))
-
     filas = c.execute(
         "SELECT substr(hora,1,5) AS minuto, strike, right, agresor, premium, premium_dvol, size "
         "FROM tape WHERE fecha=? AND expiry=? ORDER BY hora", (F, EXP)).fetchall()
+    db.close()
 
     por_min = {}
     fuera = 0
     for minuto, strike, right, agresor, prem, prem_dv, size in filas:
         px = spy.get(minuto)
         if solo_itm and px is not None:
-            if right == "C" and strike > px:
-                fuera += 1
-                continue
-            if right == "P" and strike < px:
+            if (right == "C" and strike > px) or (right == "P" and strike < px):
                 fuera += 1
                 continue
         d = por_min.setdefault(minuto, {
@@ -87,7 +75,7 @@ def main():
             "mid": 0, "size": 0.0})
         d["ops"] += 1
         d["size"] += size or 0
-        val = prem_dv or 0.0                      # dinero completo del intervalo
+        val = prem_dv or 0.0
         if right == "C":
             d["cC"] += val
             d["nC"] += val if agresor == "COMPRA" else (-val if agresor == "VENTA" else 0.0)
@@ -96,9 +84,29 @@ def main():
             d["nP"] += val if agresor == "COMPRA" else (-val if agresor == "VENTA" else 0.0)
         if agresor == "MID":
             d["mid"] += 1
+    return F, por_min, spy, cob, fuera, len(filas)
+
+
+def main():
+    args = [a for a in sys.argv[1:] if not a.startswith("--")]
+    solo_itm = "--todos" not in sys.argv
+    F, por_min, spy, cob, fuera, n_filas = serie_por_minuto(
+        args[0] if args else None, solo_itm)
+    EXP = F.replace("-", "")
+
+    # ---------------- cobertura real, antes de ningun numero
+    print("=" * 100)
+    print("PREMIUM POR MINUTO desde `tape` — %s — expiry 0DTE %s" % (F, EXP))
+    print("=" * 100)
+    print("COBERTURA REAL: %d strikes distintos de la 0DTE en el tape -> %s"
+          % (len(cob), ", ".join("%g%s" % (s, r) for s, r, _ in cob)))
+    print("   (la BANDA de 40 strikes NO entra en el tape: `_on_ticks:1817` solo trata")
+    print("    SENAL y BASELINE. Esto NO es 'todos los ITM/ATM'.)")
+    print("   Filtro moneyness: %s" % ("ITM/ATM (call<=spy, put>=spy)" if solo_itm
+                                       else "NINGUNO (--todos)"))
 
     print("   Operaciones descartadas por el filtro de moneyness: %d de %d"
-          % (fuera, len(filas)))
+          % (fuera, n_filas))
     print()
     print("%-6s %8s %5s %7s | %12s %12s | %12s %12s | %12s %6s" %
           ("hora", "spy", "ops", "contr", "BRUTO call", "BRUTO put",
@@ -125,7 +133,6 @@ def main():
     print("BRUTO = todo el dinero que paso (direccionalmente CIEGO).")
     print("NETO  = firmado por agresor: +COMPRA, -VENTA, 0 si se cruzo en MID.")
     print("MID%%  = fraccion de operaciones NO atribuibles. Es la medida de lo que no sabemos.")
-    db.close()
 
 
 if __name__ == "__main__":
