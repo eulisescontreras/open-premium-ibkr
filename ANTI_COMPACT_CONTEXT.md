@@ -387,6 +387,52 @@ afectada.
 `_trade_abrir`, `_pos_snapshot`, `doRollover`) · **diferencial 16 suites, las 15 previas con
 conteos IDÉNTICOS**.
 
+### ✅ GAP 21 (2026-08-11) — **ARREGLADO Y VERIFICADO. Entra en el PRÓXIMO ARRANQUE.**
+
+> **Arreglo (2 puntos, radio mínimo):**
+> 1. `ta_poll`: antes del `if len(rows) < 26: return` se detecta el cierre de minuto y se llama a
+>    `_log_minute(None, ...)`. Efecto lateral bueno: `last_bar_time` ya queda inicializado, así que
+>    **tampoco se pierde el minuto de transición** al cruzar las 26 barras.
+> 2. `_log_minute`: acepta `vals=None` (`v = vals or {}`, `sin_ta`). Usa `v.get(...)` en el INSERT
+>    -> las columnas de TA van a **NULL** y el bloque de premium se guarda igual. El `spy` sale de
+>    `self.spy_price`, que `ta_poll` actualiza **antes** del corte de 26. En el log, una línea
+>    explícita *"TA todavia sin 26 barras -> se registra el PREMIUM igualmente"* en vez de la de TA:
+>    así al releer el log no parece que el sistema estuviera caído.
+>
+> **Verificado:** `coldruns/gap21_coldrun.py`, 27 checks con funciones reales (`_log_minute` y
+> `ta_poll`), comprobando **BD y LOG** por separado + que el caso CON TA no cambia. Diferencial de
+> 17 suites: las 16 previas con conteos IDÉNTICOS.
+> ⚠️ Aviso: 6 checks salieron FAIL al principio por un bug **del propio test** (el handler de
+> captura hacía `record.getMessage() % record.args`, y `getMessage()` ya aplica los args → reventaba
+> con los `%` literales del mensaje y guardaba el texto sin formatear). El código estaba bien.
+
+**Descripción original del gap:**
+
+**El neto de premium POR MINUTO no existe durante los primeros 26 minutos de sesión.**
+Verificado hoy en vivo: a las 09:56 `ta_minute` tenía **2 filas** (09:55 y 09:56), mientras
+`_on_ticks` llevaba acumulando desde las 09:30 (a las 09:55 el acumulado ya valía −2,6 M).
+
+Causa: el premium por vela (`prem_call_min`, `prem_put_min`, `net_call_min`, `net_put_min`) y las
+ventanas móviles (`net_*_1m/5m/15m`) viven en **`ta_minute`**, y esa tabla no se escribe hasta que
+el TA tiene sus **26 barras** (09:30 + 26 = 09:56). El dato de premium existe desde el primer
+segundo; lo que falta es la fila que lo transporta. **Un dato de flujo bloqueado por una
+dependencia de análisis técnico que no tiene nada que ver con él.**
+
+Lo que sí hay entre 09:30 y 09:55: `premium_minute` cada 3 min (`compute_walls`), con `cum_prem`,
+`day_prem`, `net_prem`, OI y gamma **por strike**. O sea, hay neto por strike a resolución de 3 min,
+pero no el neto agregado por minuto de los strikes de señal.
+
+**Por qué importa:** choca de frente con la **hipótesis H2** de `HIPOTESIS_2026-08-10.md` (usar
+flujo nuevo en vez del acumulado desde 09:30). Sin neto por minuto en la apertura no se puede
+evaluar la ventana móvil justo en la franja más activa — la de los giros de apertura y los
+episodios de mayor flujo.
+
+**Arreglo propuesto (NO aplicado):** que `_log_minute` escriba las columnas de premium aunque el TA
+no esté listo, dejando en NULL solo las de TA. Es cambio de lógica → exige corrida en frío
+diferencial y no se toca con el mercado abierto.
+*(Nota: `prem_*_min` en NULL en la PRIMERA fila del día es correcto y no es este gap: el premium por
+vela necesita una vela anterior de referencia y por diseño no se inventa.)*
+
 ### DECISIONES YA TOMADAS — no volver a proponerlas
 
 - **Botón de venta manual en la GUI: RECHAZADO por el usuario** (2026-08-10).

@@ -2801,6 +2801,18 @@ class SpyDirection:
             if _px is not None and not math.isnan(_px) and _px > 0:
                 self.spy_price = float(_px)
         if len(rows) < 26:
+            # GAP 21 (2026-08-11): el TA necesita 26 barras, pero el PREMIUM existe desde el
+            # primer segundo (_on_ticks acumula desde las 09:30). Antes se hacia `return` aqui
+            # y el flujo por minuto de los ~26 primeros minutos NO se guardaba ni en ta_minute
+            # ni en el log -> justo la franja mas activa del dia (giros de apertura) quedaba
+            # sin foto minuto a minuto. Ahora se registra igual, con el TA en NULL.
+            if len(rows) >= 2:
+                last_time = rows[-1]["date"]
+                if self.last_bar_time is None:
+                    self.last_bar_time = last_time
+                elif last_time != self.last_bar_time:
+                    self._log_minute(None, rows[-2]["date"])
+                    self.last_bar_time = last_time
             return
         df = pd.DataFrame(rows)
         self.ta_vals = self.ta.compute(df)          # en vivo (para la pantalla)
@@ -2815,8 +2827,14 @@ class SpyDirection:
             self.last_bar_time = last_time
 
     def _log_minute(self, vals, bar_dt):
-        if not vals:
-            return
+        """Registro por minuto: TA + señal + premium (BD y log).
+
+        GAP 21: `vals` puede venir en None cuando el TA aun no tiene sus 26 barras. En ese caso
+        NO se sale: se guarda igual el PREMIUM (que ya existe) y las columnas de TA quedan en
+        NULL, que es la verdad. Antes se hacia `return` y se perdia el flujo por minuto de la
+        media hora mas activa del dia."""
+        v = vals or {}
+        sin_ta = not vals
         try:
             if hasattr(bar_dt, "strftime"):
                 fecha = bar_dt.strftime("%Y-%m-%d"); hora = bar_dt.strftime("%H:%M")
@@ -2837,10 +2855,14 @@ class SpyDirection:
                 "net_call_1m,net_put_1m,net_call_5m,net_put_5m,"
                 "net_call_15m,net_put_15m) "
                 "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-                (fecha, hora, vals["close"], vals["rsi"], vals["ema8"], vals["ema21"],
-                 vals["ema50"], vals["macd_line"], vals["macd_signal"], vals["macd_hist"],
-                 vals["bb_up"], vals["bb_mid"], vals["bb_low"], vals["atr"], vals["atr_pct"],
-                 vals["vwap"], vals["obv_trend"], vals["score"], vals["dir"],
+                # GAP 21: v.get(...) y no vals[...]: sin TA todas estas columnas van a NULL,
+                # pero el spy y TODO el bloque de premium se guardan igual. El precio no falta
+                # aunque no haya TA: ta_poll actualiza self.spy_price ANTES del corte de 26.
+                (fecha, hora, v.get("close", self.spy_price),
+                 v.get("rsi"), v.get("ema8"), v.get("ema21"),
+                 v.get("ema50"), v.get("macd_line"), v.get("macd_signal"), v.get("macd_hist"),
+                 v.get("bb_up"), v.get("bb_mid"), v.get("bb_low"), v.get("atr"), v.get("atr_pct"),
+                 v.get("vwap"), v.get("obv_trend"), v.get("score"), v.get("dir"),
                  self.net_call, self.net_put, self.state,
                  # lo que DECIDE hoy (acumulado desde 09:30) ...
                  self.last_diff, self.last_thr, self.last_momentum,
@@ -2862,13 +2884,22 @@ class SpyDirection:
                     (fecha, hora, exp, strike, right, cp, dp))
             self.db.commit()
             # --- LOG EXHAUSTIVO POR MINUTO (respaldo completo del dia por si la BD falla) ---
-            ACT.info("MIN %s | SPY=%.2f | TA dir=%s score=%+d rsi=%.1f macd=%.3f/%.3f/%+.3f "
-                     "ema8/21/50=%.2f/%.2f/%.2f bb=%.2f/%.2f/%.2f atr=%.2f(%.2f%%) vwap=%.2f obv=%s",
-                     hora, vals["close"], vals["dir"], vals["score"], vals["rsi"],
-                     vals["macd_line"], vals["macd_signal"], vals["macd_hist"],
-                     vals["ema8"], vals["ema21"], vals["ema50"],
-                     vals["bb_up"], vals["bb_mid"], vals["bb_low"],
-                     vals["atr"], vals["atr_pct"], vals["vwap"], vals["obv_trend"])
+            if sin_ta:
+                # GAP 21: sin 26 barras no hay TA que imprimir, pero el minuto SI se registra.
+                # Se dice explicitamente por que faltan los indicadores, para que al leer el log
+                # no parezca que el sistema estaba caido.
+                ACT.info("MIN %s | SPY=%.2f | TA todavia sin 26 barras (faltan indicadores) "
+                         "-> se registra el PREMIUM igualmente", hora,
+                         v.get("close", self.spy_price) or 0.0)
+            else:
+                ACT.info("MIN %s | SPY=%.2f | TA dir=%s score=%+d rsi=%.1f macd=%.3f/%.3f/%+.3f "
+                         "ema8/21/50=%.2f/%.2f/%.2f bb=%.2f/%.2f/%.2f atr=%.2f(%.2f%%) "
+                         "vwap=%.2f obv=%s",
+                         hora, v["close"], v["dir"], v["score"], v["rsi"],
+                         v["macd_line"], v["macd_signal"], v["macd_hist"],
+                         v["ema8"], v["ema21"], v["ema50"],
+                         v["bb_up"], v["bb_mid"], v["bb_low"],
+                         v["atr"], v["atr_pct"], v["vwap"], v["obv_trend"])
             ACT.info("MIN %s | SENAL netC=%.0f netP=%.0f diff=%.0f thr=%.0f mom=%.0f(%.0fs) "
                      "-> estado=%s pos=%s",
                      hora, self.net_call, self.net_put, self.last_diff, self.last_thr,
