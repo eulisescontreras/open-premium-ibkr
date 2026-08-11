@@ -242,8 +242,16 @@ margen de error a 1/3/5/10/15 min.** El mejor z de todo el barrido en horizontes
    ahora, pero se negoció antes) es correcta pero **empíricamente irrelevante aquí**: el SPY se
    mueve **< medio strike en el 99,4 %** de los intervalos. Probado con 3 referencias de spot
    (cierre/inicio/media del intervalo): los lifts no se mueven.
-5. **GAP 7 confirmado sobre datos reales:** 1.428 filas el 08-10 y 2.355 el 08-11 tienen `day_prem`
-   pero `net_prem` en NULL — la colisión `INSERT OR REPLACE` de `_log_minute` sobre `_persist_walls`.
+5. ⛔ **RETRACTADO — "GAP 7 confirmado sobre datos reales" era FALSO.** Afirmé que las 1.428 filas
+   del 08-10 y 2.355 del 08-11 con `day_prem` pero `net_prem` en NULL probaban la colisión
+   `INSERT OR REPLACE`. **No prueban nada: son el comportamiento correcto.** `net_prem` solo lo
+   escribe `_persist_walls`, y solo para los **40 contratos de la BANDA**; el resto de strikes
+   (señal + baseline) nunca lo tienen. Verificado por dos vías: (a) `_log_minute:3154` usa
+   `INSERT … ON CONFLICT … DO UPDATE SET` nombrando **solo sus columnas**, así que no pisa
+   `net_prem`/`open_interest`/`gamma`; (b) aritmética exacta — 08-11: **109 snapshots de walls
+   × 40 = 4.360** y hay **exactamente 4.360** filas con `net_prem`, con **0** filas que tengan
+   `net_prem` sin `open_interest`. El GAP 7 estaba arreglado y su suite (`gap7_coldrun`) lo cubre.
+   *(El commit `62a5254` lleva la afirmación errónea en su mensaje; queda corregida aquí.)*
 
 ### ⚠️ TRAMPAS QUE CAZÉ EN MI PROPIO ANÁLISIS (documentadas para no repetirlas)
 
