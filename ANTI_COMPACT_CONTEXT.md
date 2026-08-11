@@ -52,6 +52,18 @@ pero es otro universo: **por primera vez el 76 % del flujo llega con dirección.
 📌 Y `size` es real: el mayor print del minuto fue de **150 contratos** contra una media de 7,8 —
 exactamente la distinción que la agregación por `dvol` borraba.
 
+### ⚠️ MATIZ MEDIDO (corrige "una fila por operación", que decía yo y es INEXACTO)
+`_on_ticks` va con `pendingTickersEvent` e ib_insync **agrupa** operaciones en una sola
+actualización: `lastSize` es el tamaño de la ÚLTIMA, `dvol` el de TODAS. Sobre 5.383 filas:
+**`size==dvol` 63,8 %** (1 fila = 1 operación exacta) · `size<dvol` 30,8 % (agrupa) ·
+`size>dvol` 5,4 % (**sin explicar**, HIPÓTESIS: `lastSize` repetido o volumen con retraso).
+**Σ`size` 34.840 vs Σ`dvol` 118.948 ⇒ `size` cubre el 29,3 % del volumen.**
+⇒ El tape es una **MUESTRA con atribución exacta del 29 % del dinero**, no un registro completo.
+Analizar `premium` = 29 % con atribución exacta; `premium_dvol` = 100 % del dinero pero
+reasignando el bloque entero al agresor del último trade.
+📌 No es arreglable con código: `reqTickByTickData("AllLast")` no está soportado para opciones
+(error 10189, §7). Es el techo del feed de IBKR.
+
 ### ✅ GAP 20 verificado EN PRODUCCIÓN por primera vez
 `_sync_pos` adoptó la posición y **abrió sola la fila `trade #7`** a las 14:36:22 con el
 `entry_price` del `avgCost` (1.3486). Antes de este arreglo, esa posición no habría dejado rastro.

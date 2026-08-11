@@ -8,7 +8,7 @@ Estado al 2026-08-11 ~14:55 (2 sesiones: 08-10 completa, 08-11 en curso).
 
 | Tabla | Filas | Cadencia | La escribe | Qué es |
 |---|---|---|---|---|
-| [`tape`](#tape) | 4.350 | **por operación** | `_flush_tape:2228` | Cada trade con su tamaño y su agresor |
+| [`tape`](#tape) | 5.383 | **por tick con volumen nuevo** | `_flush_tape:2228` | Flujo con tamaño y agresor del instante (≈64 % son 1 operación exacta) |
 | [`premium_minute`](#premium_minute) | 43.125 | 1 min (+3 min) | `_persist_walls:1544` · `_log_minute:3154/3180` | Dinero y precio **por strike** |
 | [`ta_minute`](#ta_minute) | 613 | 1 min | `_log_minute:3118` | Precio del SPY, TA y estado de la señal |
 | [`posicion_minuto`](#posicion_minuto) | 308 | 1 min con posición | `_pos_snapshot:1719` | Recorrido del contrato comprado |
@@ -45,9 +45,32 @@ Estado al 2026-08-11 ~14:55 (2 sesiones: 08-10 completa, 08-11 en curso).
 ---
 
 ## `tape`
-**Una fila por operación.** La tabla más granular; entró en producción el 2026-08-11 14:36.
-Existe porque al agregar por minuto, un print institucional de 3.038 contratos y 50
+**Una fila por ACTUALIZACIÓN DE TICKER que traía volumen nuevo** — que no es exactamente lo
+mismo que "una fila por operación". La tabla más granular; entró en producción el 2026-08-11
+14:36. Existe porque al agregar por minuto, un print institucional de 3.038 contratos y 50
 operaciones de 60 quedaban **idénticos**: mismo volumen, mismo premium.
+
+### ⚠️ LÍMITE MEDIDO: el tape es una MUESTRA, no un registro completo
+`_on_ticks` se dispara con `pendingTickersEvent`, y ib_insync **agrupa** varias operaciones en
+una sola actualización. `tk.lastSize` trae el tamaño de la **última** de ellas; `dvol` trae el
+volumen de **todas**. Medido sobre las 5.383 filas del 2026-08-11:
+
+| | filas | % |
+|---|---|---|
+| `size == dvol` → la fila **es** 1 operación exacta | 3.435 | **63,8 %** |
+| `size < dvol` → la fila **agrupa varias**; solo se guarda el tamaño de la última | 1.657 | 30,8 % |
+| `size > dvol` | 291 | 5,4 % |
+
+**Σ`size` = 34.840 contratos frente a Σ`dvol` = 118.948 ⇒ `size` solo cubre el 29,3 % del
+volumen negociado.** Consecuencia práctica: analizar la columna `premium` es analizar el ~29 %
+del dinero con atribución exacta; analizar `premium_dvol` es tener el 100 % del dinero pero
+volviendo a asignar todo el bloque al agresor del último trade.
+
+📌 No es un bug arreglable con más código: `reqTickByTickData("AllLast")` **no está soportado
+para opciones** (IBKR error 10189, ver anti-compact §7), por eso se usa RTVolume `"233"`. Es el
+techo del feed. *(Ese punto viene documentado de antes; no lo he re-verificado yo.)*
+📌 Las 291 filas con `size > dvol` **no están explicadas** — hipótesis: `lastSize` repetido entre
+actualizaciones o el contador de volumen llegando con retraso. **NO VERIFICADO.**
 
 | Columna | Qué es |
 |---|---|
