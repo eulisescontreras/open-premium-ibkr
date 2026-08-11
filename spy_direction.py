@@ -387,6 +387,19 @@ class TAEngine:
         macd_line = e12 - e26
         macd_sig = macd_line.ewm(span=9, adjust=False).mean()
         ml = float(macd_line.iloc[-1]); ms = float(macd_sig.iloc[-1]); mh = ml - ms
+        # --- SMA 20/50/200 (2026-08-11, peticion del usuario). Solo se REGISTRAN. ---
+        # rolling() y NO ewm(): con menos de N barras devuelve NaN, y aqui se convierte a None
+        # -> la columna queda NULL, que es la verdad. Con ewm(span=200) sobre 52 barras saldria
+        # un numero que PARECE valido y contaminaria la BD en silencio.
+        # Con "1 D" (max 390 barras de RTH) la SMA200 no existe hasta ~12:50; es correcto que
+        # falte. Para tenerla desde el minuto 1 habria que pedir "2 D", pero eso cambiaria los
+        # valores de ema8/21/50 y obv (arrastran desde el inicio de la serie) y rompe la
+        # comparabilidad con lo ya guardado. Decision: preferir NULL a un dato incomparable.
+        def _sma(n):
+            v = close.rolling(n).mean().iloc[-1]
+            return None if pd.isna(v) else float(v)
+
+        sma20, sma50, sma200 = _sma(20), _sma(50), _sma(200)
         sma = close.rolling(20).mean(); sd = close.rolling(20).std()
         bb_up = float((sma + 2 * sd).iloc[-1]); bb_mid = float(sma.iloc[-1])
         bb_low = float((sma - 2 * sd).iloc[-1])
@@ -432,6 +445,9 @@ class TAEngine:
         bear = sum(1 for v in sc.values() if v < 0)
         dirn = "BULL" if total > 0 else ("BEAR" if total < 0 else "NEUTRAL")
         return {"close": price, "rsi": rsi, "ema8": ema8, "ema21": ema21, "ema50": ema50,
+                # SMA 20/50/200: SOLO se registran, NO entran en `sc` ni en el score/dir. La
+                # decision de compra/venta sigue siendo unicamente el premium.
+                "sma20": sma20, "sma50": sma50, "sma200": sma200,
                 "macd_line": ml, "macd_signal": ms, "macd_hist": mh,
                 "bb_up": bb_up, "bb_mid": bb_mid, "bb_low": bb_low,
                 "atr": atr, "atr_pct": atr_pct, "vwap": vwap, "obv_trend": obv_trend,
@@ -742,7 +758,10 @@ class SpyDirection:
                      "net_call_min REAL", "net_put_min REAL",
                      "net_call_1m REAL", "net_put_1m REAL",
                      "net_call_5m REAL", "net_put_5m REAL",
-                     "net_call_15m REAL", "net_put_15m REAL"):
+                     "net_call_15m REAL", "net_put_15m REAL",
+                     # SMA 20/50/200 (2026-08-11): SOLO registro, NO deciden nada. La 200 queda
+                     # NULL hasta que haya 200 barras (~12:50 con "1 D"), que es la verdad.
+                     "sma20 REAL", "sma50 REAL", "sma200 REAL"):
             try:
                 c.execute("ALTER TABLE ta_minute ADD COLUMN " + _col)
             except Exception:
@@ -2853,8 +2872,9 @@ class SpyDirection:
                 "obv_trend,ta_score,ta_dir,net_call,net_put,prem_state,"
                 "diff,thr,momentum,prem_call_min,prem_put_min,net_call_min,net_put_min,"
                 "net_call_1m,net_put_1m,net_call_5m,net_put_5m,"
-                "net_call_15m,net_put_15m) "
-                "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                "net_call_15m,net_put_15m,sma20,sma50,sma200) "
+                "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,"
+                "?,?,?)",
                 # GAP 21: v.get(...) y no vals[...]: sin TA todas estas columnas van a NULL,
                 # pero el spy y TODO el bloque de premium se guardan igual. El precio no falta
                 # aunque no haya TA: ta_poll actualiza self.spy_price ANTES del corte de 26.
@@ -2869,7 +2889,9 @@ class SpyDirection:
                  # ... el premium de ESTA vela (estacionario, cruzable con el precio) ...
                  vc, vp, vnc, vnp,
                  # ... y las mismas magnitudes en ventana movil, solo para comparar despues
-                 c1m[0], c1m[1], c5m[0], c5m[1], c15m[0], c15m[1]))
+                 c1m[0], c1m[1], c5m[0], c5m[1], c15m[0], c15m[1],
+                 # SMA 20/50/200: None (NULL) mientras no haya N barras. Ver TAEngine.compute.
+                 v.get("sma20"), v.get("sma50"), v.get("sma200")))
             for (exp, strike, right), cp in self.accum.items():
                 dp = self.today_prem.get((exp, strike, right), 0.0)
                 # NO usar INSERT OR REPLACE: esta fila puede haberla escrito _persist_walls
@@ -2900,6 +2922,16 @@ class SpyDirection:
                          v["ema8"], v["ema21"], v["ema50"],
                          v["bb_up"], v["bb_mid"], v["bb_low"],
                          v["atr"], v["atr_pct"], v["vwap"], v["obv_trend"])
+            # SMA 20/50/200: se loguean aparte de las EMAs para no tocar la linea de TA de arriba
+            # (que el usuario ya lee a diario). "-" cuando aun no hay N barras: la SMA200 no
+            # existe hasta ~12:50 con "1 D", y decirlo es mejor que imprimir un numero inventado.
+            if not sin_ta:
+                _p = v.get("close")
+                _rel = lambda s: (f"{_p - s:+.2f}" if (s is not None and _p is not None) else "-")
+                ACT.info("MIN %s | SMA 20/50/200 = %s/%s/%s | precio-SMA: %s/%s/%s "
+                         "(informativo, NO decide)", hora,
+                         _fmt(v.get("sma20")), _fmt(v.get("sma50")), _fmt(v.get("sma200")),
+                         _rel(v.get("sma20")), _rel(v.get("sma50")), _rel(v.get("sma200")))
             ACT.info("MIN %s | SENAL netC=%.0f netP=%.0f diff=%.0f thr=%.0f mom=%.0f(%.0fs) "
                      "-> estado=%s pos=%s",
                      hora, self.net_call, self.net_put, self.last_diff, self.last_thr,
