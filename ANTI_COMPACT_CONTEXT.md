@@ -303,6 +303,37 @@ a `_load_accum():1009`, que carga `strike_accum` entero en `self.accum`/`self.ac
 - Higiene menor: `strike_accum` conserva la expiry 20260810 ya vencida (8 strikes, 132 M). No
   molesta pero crece indefinidamente.
 
+### 2026-08-11 — NO SE ABRE EN LOS PRIMEROS 5 MIN (`START_TRADE_HHMM = "09:35"`)
+
+Petición del usuario: que el sistema **espere 5 min tras la apertura** antes de comprar, para ver
+cómo se forma el acumulado y no reaccionar al ruido. **Respaldado por los datos del 10-ago:** en los
+primeros 90 s hubo **5 giros** (09:30:06 UP · :13 DOWN · :30 UP · :37 DOWN · 09:31:14 UP), porque
+`thr = ADAPT_FRAC*(|net_call|+|net_put|)` cae al piso `SIGNAL_THRESHOLD=5000` con el acumulado
+vacío — ~100x menos que el umbral maduro (1,2 M). Es el gap **M6** por la vía barata: en vez de
+rediseñar el umbral, no operar mientras no sea fiable.
+
+```python
+START_TRADE_HHMM = "09:35"                      # junto a STOP_NEW_HHMM
+stop_new = ((not in_session)
+            or (weekday and hhmm >= STOP_NEW_HHMM)
+            or (weekday and hhmm < START_TRADE_HHMM))   # <- el termino nuevo
+```
+- **NO se tocó `in_session`** a propósito: significa "el mercado está en sesión", no "puedo abrir".
+- **Las VENTAS no pasan por `stop_new`** → una posición se puede cerrar durante la espera
+  (verificado: *"09:31 con posición y target=FLAT → SÍ VENDE"*).
+- **La señal y la recolección siguen desde las 09:30** (`_on_ticks` es independiente de
+  `trade_poll`): el acumulado se forma igual, solo no se opera sobre él todavía.
+- `trade_msg` ahora distingue la espera del EOD (antes habría dicho "(EOD)" a las 09:31, mentira).
+- **Verificado:** 15/15 suites, las 14 originales con conteos IDÉNTICOS al baseline;
+  `ventana_horaria` 31 → 39 checks.
+- ⚠️ Aviso metodológico: 3 de esos checks pasaban **trivialmente** (`msg=''`) porque el mensaje solo
+  se escribe cuando `pos == target`. Corregido forzando `pos==target==FLAT`. **Un verde sin dato
+  observable impreso es indistinguible de un verde vacío** — que los checks impriman el valor real.
+
+**Nota de arranque (VERIFICADO):** `try_connect` se llama SOLO desde `:3062`, dentro de la rama
+`elif app.is_market_open():` de `tick()`. La app **no conecta al arrancar**: lanzarla antes de las
+09:30 es correcto y espera sola. No hay socket hasta la apertura — eso NO es un fallo.
+
 ### DECISIONES YA TOMADAS — no volver a proponerlas
 
 - **Botón de venta manual en la GUI: RECHAZADO por el usuario** (2026-08-10).
