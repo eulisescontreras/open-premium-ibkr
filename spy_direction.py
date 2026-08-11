@@ -2457,12 +2457,31 @@ class SpyDirection:
         return c if getattr(c, "conId", None) else None
 
     def _soltar_mkt(self, contract):
-        """Libera la suscripcion de market data de un contrato que ya no se sigue."""
+        """Libera la suscripcion de market data de un contrato que ya no se sigue.
+
+        GAP D (2026-08-11): al soltar hay que OLVIDAR tambien su volumen previo.
+        `prev_vol`/`band_prev_vol` guardan el volumen ACUMULADO DEL DIA de cada conId.
+        Si el contrato se vuelve a seguir mas tarde (el SPY se mueve y regresa), el
+        primer tick calcularia dvol = volumen_de_ahora - volumen_de_cuando_se_solto,
+        metiendo de golpe TODO lo que se negocio mientras no mirabamos: un premium
+        FANTASMA de millones en un solo minuto.
+        El bloque de la LINEA BASE ya lo hacia (`prev_vol.pop` mas abajo), pero las
+        rutas de SENAL, EJECUCION y BANDA llamaban aqui sin olvidar nada. Se hace en
+        este embudo porque es el punto por el que pasan las 6.
+        Coste de olvidar: se pierde el delta de UN tick al re-suscribir (el primero
+        solo siembra). Se prefiere perder un tick a inventar millones."""
+        if contract is None:
+            return
+        # Olvidar PRIMERO, fuera del try: si `cancelMktData` lanza (IB caido) el
+        # except se tragaria los pop y quedaria el volumen viejo — y es justo tras
+        # una caida cuando se re-suscribe todo. Estas dos lineas no pueden fallar.
+        cid = getattr(contract, "conId", None)
+        if cid is not None:
+            self.prev_vol.pop(cid, None)
+            self.band_prev_vol.pop(cid, None)
         try:
-            if contract is None:
-                return
             self.ib.cancelMktData(contract)
-            self._mkt_subs.discard(getattr(contract, "conId", None))
+            self._mkt_subs.discard(cid)
         except Exception:
             pass
 

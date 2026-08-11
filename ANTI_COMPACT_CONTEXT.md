@@ -98,7 +98,36 @@ con `lastSize`, bid/ask y agresor **de su propio instante**.
 *(Nota: llegué a escribir que `lastSize` "no se puede con RTVolume (verificado)" — era FALSO y no lo
 había verificado. Comprobado en vivo: `last=0.9 lastSize=2.0`.)*
 
-## D. 🔴 BUG SIN ARREGLAR — PREMIUM FANTASMA EN EL RECENTRADO DE SEÑAL
+## D. ✅ ARREGLADO 2026-08-11 14:5x — PREMIUM FANTASMA (GAP D). PENDIENTE DE ARRANQUE.
+
+**Arreglo (1 punto, radio mínimo):** los `pop` de `prev_vol`/`band_prev_vol` se hacen dentro de
+**`_soltar_mkt`**, que es el embudo por el que pasan las **6** rutas que sueltan un contrato
+(señal call `:2490`, señal put `:2497`, ejecución ×2 `:2509`/`:2517`, baseline `:2545`, banda
+`:2587`). Antes solo el bloque de baseline lo hacía, y lo hacía por su cuenta.
+Van **FUERA del `try`**: si `cancelMktData` lanza (IB caído) el `except` se tragaría los `pop`, y es
+justo tras una caída cuando se re-suscribe todo. `_mkt_subs.discard` se queda donde estaba, dentro
+del `try`, para no cambiar comportamiento ajeno a la tarea. Diff: **+23/−4, un solo método.**
+
+**VERIFICADO por corrida en frío DIFERENCIAL A/B** (`coldruns/gapD_coldrun.py`, 15 checks, funciones
+REALES: `_soltar_mkt`, `_on_ticks`, `refresh_strikes`, `_flush_tape`):
+| | baseline (`git show HEAD`) | con el arreglo |
+|---|---|---|
+| premium fantasma inyectado | **8.880.000** | **0** |
+| filas del tape tras re-suscribir | 2 (una fantasma) | 1 |
+| mayor `dvol` en el tape | **78.900** | 100 |
+| checks fallados | **8** | 0 |
+**El test falla contra el código viejo** — si no, no probaría nada.
+Diferencial de las 21 suites previas: **conteos IDÉNTICOS**, 0 FAIL.
+
+⚠️ **CORRIGE UNA HIPÓTESIS MÍA:** llegué a decir que la columna `premium` del tape (`last×size×100`)
+sería inmune al fantasma. **FALSO, y ahora medido:** el bloque del tape está **DENTRO** del guard
+`if dvol <= 0: continue` (`_on_ticks:1828`), así que el fantasma no corrompe solo `premium_dvol`:
+**crea filas que no corresponden a ninguna operación real.**
+
+🔴 **NO ACTIVO todavía**: la app corriendo (PID 30272) arrancó a las 14:36, antes de este cambio.
+Entra en el próximo arranque.
+
+### (histórico) descripción del bug
 
 Observado hoy en vivo:
 ```
