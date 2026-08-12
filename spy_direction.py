@@ -156,7 +156,14 @@ TAKE_PROFIT_USD = 0.0
 TRAIL_ACTIVAR_USD = 10.0
 TRAIL_DEVOLVER_USD = 5.0
 
-ENTRADA_RETROCESO = True    # ACTIVO (paper). False -> comportamiento identico al anterior.
+# ⚠️ 2026-08-12, MISMO DIA: se APAGA. El discriminador que la gobierna (ER_UMBRAL sobre el
+# efficiency ratio) NO separa regimen: medido, no distingue el dia lateral del dia con tendencia,
+# asi que la compuerta se abria y se cerraba sin relacion con lo que hacia el precio. Al no
+# cancelar nunca (tope de RETRO_MAX_MIN), no hacia dano -- solo retrasaba hasta 10 min -- pero
+# tampoco aportaba, y un parametro que no aporta es ruido que estorba al juzgar el resto.
+# La tabla `entrada_minute` SIGUE registrando er/regimen/impulso con activo=0: se conserva la
+# medicion del "que habria hecho" sin dejar que actue.
+ENTRADA_RETROCESO = False   # APAGADO. True -> compuerta de retroceso activa (ver arriba).
 RETRO_FRAC = 0.50           # retroceso exigido, como fraccion del impulso previo
 RETRO_MAX_MIN = 10          # TOPE de espera en minutos: si no llega el retroceso, SE ENTRA IGUAL
 ER_UMBRAL = 0.30            # efficiency ratio: < umbral = REVERSION (esperar); >= = TENDENCIA

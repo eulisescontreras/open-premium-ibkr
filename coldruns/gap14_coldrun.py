@@ -215,6 +215,13 @@ def _compras(a):
     return [t for t in a.ib.placed if t.order.action == "BUY"]
 
 
+# T5 fija su propia variable en vez de heredar el default del modulo: el 2026-08-12
+# ENTRADA_RETROCESO paso a False en produccion y 5.1/5.2 se cayeron sin que la logica hubiera
+# cambiado -- probaban la compuerta ACTIVA leyendo un flag que ya estaba apagado. Un test A/B
+# que hereda el valor que quiere probar mide el default, no el comportamiento.
+_RETRO_ORIG = S.ENTRADA_RETROCESO
+S.ENTRADA_RETROCESO = True                     # 5.1-5.5 y 5.9 prueban la compuerta ACTIVA
+
 _a = _con_ancla(er=0.15)                       # REVERSION, precio SIN retroceder
 _a.trade_poll()                                # metodo REAL
 check(len(_compras(_a)) == 0,
@@ -244,7 +251,7 @@ check(len(_compras(_d)) == 1,
 _e = _con_ancla(er=0.15)
 S.ENTRADA_RETROCESO = False                    # interruptor A/B
 _e.trade_poll()
-S.ENTRADA_RETROCESO = True
+S.ENTRADA_RETROCESO = True                     # vuelve al valor de trabajo de T5, no al del modulo
 check(len(_compras(_e)) == 1,
       f"5.6 con ENTRADA_RETROCESO=False -> comportamiento de siempre ({len(_compras(_e))})")
 
@@ -260,6 +267,8 @@ check(len(_compras(_g)) == 1, "5.8 sin ER -> compra ya (None no se interpreta co
 _h = _con_ancla(er=0.15, lado="PUT", imp=-0.50, spy=773.95)
 _h.trade_poll()
 check(len(_compras(_h)) == 0, "5.9 tambien retrasa en el lado PUT (impulso bajista)")
+
+S.ENTRADA_RETROCESO = _RETRO_ORIG              # se deja el modulo como estaba
 
 print()
 if FAILS:
