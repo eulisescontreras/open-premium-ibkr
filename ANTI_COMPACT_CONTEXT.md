@@ -6,7 +6,79 @@
 > otra máquina — los logs viejos del repo tienen esa ruta).
 
 ---
-# 🔴 ESTADO AL HACER /clear — MARTES 2026-08-11 ~14:00 ET — LEER ESTO PRIMERO
+# 🟢 ESTADO — MIÉRCOLES 2026-08-12 09:25 ET — LEER ESTO PRIMERO
+---
+
+## APP CORRIENDO
+```
+PID 12668, arrancada 09:25:03  (mercado abre 09:30; la app NO conecta hasta entonces:
+try_connect solo se llama dentro de la rama is_market_open() de tick(). Es correcto.)
+Backup previo: spy_history_backup_pre-arranque_20260812.db
+Repo: acc1077 en origin/main, working tree limpio.
+```
+
+## LO QUE SE HIZO HOY (4 commits, todos pusheados)
+
+| commit | qué |
+|---|---|
+| `64ce519` | `START_TRADE_HHMM` 09:35 → **09:30** (el usuario quita el retardo de 5 min) |
+| `b594390` | Los 4 métodos (M1/M2/CLASICO/CONFIRMACION) **escriben en el log** + la línea de GIRO dice por qué giró |
+| `b9c5168` | `_persist_accum` deja constancia al guardar **y al fallar** |
+| `acc1077` | Las capturas fallidas del TAPE dejan de perderse en silencio |
+
+**Las 15 tablas tienen ya log.** Se eliminaron **3 `except: pass`** que hacían invisibles
+fallos reales de escritura (`_persist_accum`, la captura del tape, y el resumen del tape).
+
+### ⚠️ LOS DOS RETARDOS SON DISTINTOS — no confundirlos
+- `START_TRADE_HHMM = 09:30` — ya NO bloquea (era 09:35).
+- **`RETARDO_M1_MIN = 20`** — M1 usa el estado de hace 20 min. `reset_day:1001` vacía
+  `m1_hist` y `_log_minute` la rellena 1 vez/minuto ⇒ **la primera entrada no llega hasta
+  ~09:50**, no a las 09:30. Quitar `START_TRADE` NO adelanta eso.
+- Con `START_TRADE == RTH`, la rama `espera_apertura` de `trade_poll` **queda muerta**
+  (`in_session and hhmm < "09:30"` es imposible). No se tocó (regla 15).
+
+### 2 SUITES DE COLD RUN FALLAN Y ES POR TESTS DESFASADOS, NO POR PRODUCCIÓN
+- **`gapsA_coldrun` 77 → 75 OK / 2 FAIL.** Ya venía así del commit `018a526` de AYER,
+  antes de tocar nada hoy. El test del GAP 18 mete `net_call=-10640, net_put=0` y espera
+  `DOWN`: eso era el criterio `diff/thr`. Con `USAR_M1=True`, `_update_signal:2066` lee
+  `m1_hist` (vacía en el test) ⇒ correctamente **no gira**.
+- **`ventana_horaria_coldrun` 39 → 34 OK / 5 FAIL.** Recorre `(RTH, "09:31", START-1)`
+  esperando "NO compra" antes de `START_TRADE`. Con `START_TRADE=09:30` ya **sí compra** a
+  las 09:30 — que es lo pedido — y el tercer caso pasa de 09:34 (en sesión) a 09:29
+  (fuera), donde el panel usa otra rama y dice "(EOD)".
+- **PENDIENTE: actualizar esos dos tests** para que codifiquen las reglas nuevas.
+
+### LÍNEAS DE LOG NUEVAS (para monitorizar)
+```
+MIN hh:mm | METODOS  M1=..(rN) <-MANDA  M2=..  CLASICO=..  CONFIRMA=..(sen .. rN/5)
+          | efectivos(-20min) M1=.. M2=.. CL=.. CONF=..  | MANDA M1
+MIN hh:mm | M1 contadores up=N down=N marcador=+N | M2 usd_up=.. | abs C=.. P=..
+          | hist m1=N (necesita >=20 min para decidir) | recentrados=N
+MIN hh:mm | TAPE N operaciones ... | capturas_fallidas=0
+PERSIST accum=N strikes | daily=N | intradia=SI netC=.. netP=.. estado=.. ops=W/T
+GIRO -> UP por M1 (efectivo de hace 20 min; M1 ahora=DOWN) | ... | thr=.. NO decide
+```
+🔑 **`hist m1=N` es lo que hay que mirar si M1 no gira cuando debería.** Mientras sea < 20,
+M1 no puede decidir y `target` se queda en FLAT: **no es un fallo**.
+
+### QUÉ VIGILAR HOY
+1. `hist m1` sube de 1 en 1 cada minuto.
+2. Hacia las ~09:50 aparece el primer `efectivos(-20min) M1=UP/DOWN`.
+3. Las 4 tablas nuevas se llenan 1 fila/minuto igual que `ta_minute`.
+4. El primer `GIRO` dice **"por M1"**, no el mensaje viejo del umbral.
+5. No aparece `PERSIST FALLO` ni `capturas_fallidas>0`.
+
+### Notificaciones (verificado, siguen activas)
+`ENABLE_TOAST=True`. FLIP → "SPY: CAMBIO DE DIRECCION" (`_raise_alert:2143`, **solo FLIP,
+no WARN**). Fills → "SPY: COMPRA/VENTA … LLENADA" (`_on_filled:2958/2963`, en el **fill
+real**, no al enviar la orden).
+
+### Subida de la BD
+El código se sube durante el día. **`spy_history.db` y los logs se suben UNA VEZ, al
+cierre (16:15) y con la app PARADA.** Ayer se subió una vez en caliente y quedó advertido.
+
+---
+# 🔴 ESTADO AL HACER /clear — MARTES 2026-08-11 ~14:00 ET
 ---
 
 ## A. QUÉ ESTÁ CORRIENDO AHORA MISMO
