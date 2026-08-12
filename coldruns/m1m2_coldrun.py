@@ -60,6 +60,10 @@ def nueva_app():
     app.m2_up = 0.0; app.m2_down = 0.0
     app.m1_estado = None; app.m2_estado = None
     app.m1_racha = 0; app.m2_racha = 0
+    app.m1_hist = []; app.m1_efectivo = None
+    app.m2_hist = []; app.m2_efectivo = None
+    app.cl_hist = []; app.cl_efectivo = None
+    app.cl_estado = None; app.cl_racha = 0
     app.m_recentrado = 0
     app.state = "-"
     app.transitions = []
@@ -81,11 +85,13 @@ def crea_tablas(app):
               "fecha TEXT, hora TEXT, spy REAL, net_call REAL, net_put REAL, "
               "abs_call REAL, abs_put REAL, dif REAL, senal_min TEXT, "
               "n_up INTEGER, n_down INTEGER, marcador INTEGER, m1 TEXT, racha INTEGER, "
+              "m1_efectivo TEXT, retardo_min INTEGER, "
               "recentrado INTEGER, PRIMARY KEY(fecha,hora))")
     c.execute("CREATE TABLE IF NOT EXISTS m2_minute ("
               "fecha TEXT, hora TEXT, spy REAL, net_call REAL, net_put REAL, "
               "abs_call REAL, abs_put REAL, dif REAL, senal_min TEXT, "
               "usd_up REAL, usd_down REAL, acumulado REAL, m2 TEXT, racha INTEGER, "
+              "m2_efectivo TEXT, retardo_min INTEGER, "
               "recentrado INTEGER, PRIMARY KEY(fecha,hora))")
     app.db.commit()
 
@@ -109,16 +115,18 @@ def un_minuto(app, fecha, hora, nc, np_):
     app.m1_estado = _m1; app.m2_estado = _m2
     app.db.execute(
         "INSERT OR REPLACE INTO m1_minute(fecha,hora,spy,net_call,net_put,abs_call,"
-        "abs_put,dif,senal_min,n_up,n_down,marcador,m1,racha,recentrado) "
-        "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+        "abs_put,dif,senal_min,n_up,n_down,marcador,m1,racha,m1_efectivo,retardo_min,"
+        "recentrado) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
         (fecha, hora, app.spy_price, app.net_call, app.net_put, _ac, _ap, _dif, _sen,
-         app.m1_up, app.m1_down, app.m1_up - app.m1_down, _m1, app.m1_racha, app.m_recentrado))
+         app.m1_up, app.m1_down, app.m1_up - app.m1_down, _m1, app.m1_racha,
+         app.m1_efectivo, S.RETARDO_M1_MIN, app.m_recentrado))
     app.db.execute(
         "INSERT OR REPLACE INTO m2_minute(fecha,hora,spy,net_call,net_put,abs_call,"
-        "abs_put,dif,senal_min,usd_up,usd_down,acumulado,m2,racha,recentrado) "
-        "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+        "abs_put,dif,senal_min,usd_up,usd_down,acumulado,m2,racha,m2_efectivo,retardo_min,"
+        "recentrado) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
         (fecha, hora, app.spy_price, app.net_call, app.net_put, _ac, _ap, _dif, _sen,
-         app.m2_up, app.m2_down, app.m2_up - app.m2_down, _m2, app.m2_racha, app.m_recentrado))
+         app.m2_up, app.m2_down, app.m2_up - app.m2_down, _m2, app.m2_racha,
+         app.m2_efectivo, S.RETARDO_M1_MIN, app.m_recentrado))
     app.m_recentrado = 0
 
 
@@ -178,15 +186,17 @@ app.m1_estado = None
 S.SpyDirection._update_signal(app)
 check(app.state == "UP", "con m1_estado=None el estado se mantiene en UP")
 
-print("\n[7] Con USAR_M1=True el FLIP sigue a M1")
+print("\n[7] Con USAR_M1=True el FLIP sigue a M1 (una vez cumplido el retardo)")
+import time as _t0
 app.m1_estado = "DOWN"
+app.m1_hist = [(_t0.monotonic() - (S.RETARDO_M1_MIN + 5) * 60, "DOWN")]
 S.SpyDirection._update_signal(app)
-check(app.state == "DOWN", "m1_estado=DOWN -> state=DOWN (era UP)")
+check(app.state == "DOWN", "m1 lleva DOWN mas del retardo -> state=DOWN (era UP)")
 check(app.target == "PUT", "target=PUT tras el giro a DOWN")
 
 print("\n[8] Con USAR_M1=False vuelve EXACTAMENTE al criterio antiguo diff/thr")
 S.USAR_M1 = False
-app.state = "UP"; app.m1_estado = "DOWN"          # M1 dice DOWN...
+app.state = "UP"; app.m1_estado = "DOWN"; app.m1_hist = []   # M1 dice DOWN...
 app.net_call = 1_000_000.0; app.net_put = 0.0     # ...pero diff es MUY positivo
 S.SpyDirection._update_signal(app)
 check(app.state == "UP", "M1 dice DOWN pero manda diff/thr -> state sigue UP")
@@ -258,6 +268,36 @@ check(src.count("metodos_lbl") >= 3, "el panel se crea, se empaqueta y se actual
 
 print("\n[15] USAR_M1 esta ACTIVO (True) en el codigo entregado")
 check(S.USAR_M1 is True, "USAR_M1 = True")
+
+print("\n[16] RETARDO de M1")
+check(hasattr(S, "RETARDO_M1_MIN"), "existe RETARDO_M1_MIN")
+check(S.RETARDO_M1_MIN == 20, "RETARDO_M1_MIN = 20 (valor acordado)")
+check("m1_efectivo TEXT" in src, "m1_minute guarda m1_efectivo")
+check(src.count("retardo_min INTEGER") == 3, "LAS TRES tablas guardan retardo_min")
+check("m2_efectivo TEXT" in src, "m2_minute guarda m2_efectivo")
+check("clasico_efectivo TEXT" in src, "clasico_minute guarda clasico_efectivo")
+check("RETARDO_M1_MIN * 60.0" in src, "_update_signal calcula el limite del retardo")
+
+print("\n[17] El retardo FUNCIONA: M1 gira pero el sistema espera")
+import time as _t
+app3, path3 = nueva_app()
+app3.state = "UP"
+_now = _t.monotonic()
+# historia: hace 30 min decia UP, hace 5 min paso a DOWN
+app3.m1_hist = [(_now - 1800, "UP"), (_now - 300, "DOWN")]
+app3.m1_estado = "DOWN"
+S.SpyDirection._update_signal(app3)
+check(app3.state == "UP", "M1 dice DOWN hace 5 min pero el retardo es 20 -> sigue UP")
+check(app3.m1_efectivo == "UP", "m1_efectivo = UP (lo que decia hace 20 min)")
+# ahora el DOWN ya tiene 25 minutos
+app3.m1_hist = [(_now - 3000, "UP"), (_now - 1500, "DOWN")]
+S.SpyDirection._update_signal(app3)
+check(app3.state == "DOWN", "el DOWN cumple 25 min > 20 -> ahora si gira")
+check(app3.m1_efectivo == "DOWN", "m1_efectivo = DOWN")
+try:
+    os.unlink(path3)
+except Exception:
+    pass
 
 print("\n" + "=" * 78)
 print("FALLOS: %d" % len(FAILS))

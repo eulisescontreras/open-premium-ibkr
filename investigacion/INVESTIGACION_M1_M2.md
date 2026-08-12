@@ -247,3 +247,102 @@ real del usuario (CALL 773 a 1,34 a las 09:35 → IV 6,94%).
    están garantizados de lucir bien.
 5. Perseguir el *cruce durante zona de convergencia* (§4.4), que es el único caso con
    antelación real.
+
+---
+
+## 7. EL RETARDO — lo que se aplicó y por qué hay que desconfiar
+
+Se midió el tiempo entre la señal y el **giro real del SPY** (pivote zigzag 0,45):
+
+```
+M1:  n=7   mediana 34 min | media 31 | rango 5-54   | cuartiles 12 y 52
+M2:  n=9   mediana 44 min | media 34 | rango 5-56   | cuartiles 20 y 50
+CONTROL (minuto y direccion al azar):  mediana 25 min
+```
+
+⚠️ **Los dos métodos tardan MÁS que el azar, no menos.** Y de las 7 señales de M1, tres
+apuntan al mismo pivote de las 10:47 (solapamiento §3.3): son **4 giros distintos**, no 7.
+
+⚠️ **La ventana no acota nada.** El SPY gira cada 20-28 min de media. Desde un minuto al azar,
+la probabilidad de que ocurra un giro entre +20 y +50 min es del **84%** (55% en la dirección
+que digas). Decir "el giro llegará en 20-50 min" es casi una tautología en este mercado.
+
+### Barrido de retardos (NETO de las 2 sesiones, 1 contrato)
+
+```
+retardo     SENAL        M1          M2
+  0 min    +67,17$    +131,45$     +14,07$
+  5 min   +133,88$    +324,26$     +98,42$
+ 10 min     -4,57$    +221,42$    +103,89$
+ 15 min    -68,83$    +245,78$    +112,93$
+ 20 min    +43,88$    +355,82$    +301,84$   <- APLICADO
+ 25 min   +174,55$    +261,28$    +206,20$
+ 30 min   +163,15$    +133,17$     +84,31$
+ 40 min   +289,84$    +165,51$    +114,18$
+ 50 min   +192,76$    +267,18$    +277,00$
+ 60 min   +281,37$    +157,40$    +179,10$
+```
+
+⚠️ **La curva es dentada, no suave.** SEÑAL va +133 → −4 → −68 → +43 → +174 moviendo el
+retardo de 5 en 5. Una relación real daría valores parecidos para retardos parecidos. Aquí
+el resultado lo decide en qué minuto exacto cae cada entrada, con n=7 operaciones.
+
+⚠️ **El retardo mejora también a M2**, que en los giros acierta 48% (peor que la moneda).
+Si capturara anticipación no debería arreglar un método sin capacidad predictiva.
+
+### Por qué gana el 20, de verdad
+
+Detalle flip a flip con retardo 20:
+```
+08-11  09:55 DOWN -> entra 10:15 SPY 773,88 @1,25 -> sale 15:45 SPY 770,47 @3,50  +223,87$
+08-10  10:25 DOWN -> entra 10:45 SPY 774,94 @1,10 -> sale 14:45 SPY 772,91 @2,13  +101,15$
+```
+Sin retardo entraba a las 09:55 con SPY 773,06. **Con retardo entra 0,82 MÁS ARRIBA.**
+Las dos operaciones que sostienen los +355$ ganan porque el retardo hizo comprar los puts
+más arriba **en dos días bajistas**. Los otros cuatro trades de M1 suman +36,80$ entre todos.
+
+📌 **CONCLUSIÓN: `RETARDO_M1_MIN = 20` es una HIPÓTESIS, no un resultado.** Se aplicó por
+decisión del usuario, sabiendo que es el mejor de 12 valores sobre 7 operaciones en dos días
+que bajaron. El primer día alcista es el examen. Si se ajusta el valor DESPUÉS de ver los
+datos nuevos, se vuelve al punto de partida.
+
+---
+
+## 8. SIMULACIÓN DE LOS TRES MÉTODOS (IV totalmente calibrada, reglas reales)
+
+```
+                     08-10                 08-11              TOTAL
+SENAL    20 ops,  6 gan,  -60,18$    1 op, +127,34$        +67,17$
+M1        6 ops,  2 gan,   +4,11$    1 op, +127,34$       +131,45$
+M2        8 ops,  2 gan, -113,27$    1 op, +127,34$        +14,07$
+```
+
+⚠️ **El 08-11 los tres hacen la MISMA operación** (put ATM a las 09:55 hasta las 15:45):
+ese día no compara nada. El único día con decisiones distintas es el 08-10, y ahí los tres
+pierden o quedan planos.
+
+⚠️ **M1 no acierta más: opera menos.** SEÑAL acierta 6/20 = 30%; M1 acierta 2/6 = 33%.
+Mismo ratio. La diferencia entera es el spread cruzado 20 veces contra 6.
+Un filtro que impidiera a SEÑAL rotar más de una vez cada 30 min se parecería a M1.
+
+📌 Lo que sí está establecido: **operar menos cuesta menos.** Es una lección sobre costes
+de transacción, no sobre el premium.
+
+---
+
+## 9. Estado del código tras esta sesión
+
+- `USAR_M1 = True` — el disparador de flips es M1.
+- `RETARDO_M1_MIN = 20` — se aplica a entrada Y salida (la posición anterior se mantiene
+  20 min de más). No es un filtro de confirmación: no descarta flips, los ejecuta tarde.
+- Tres tablas: `m1_minute`, `m2_minute`, `clasico_minute`. Cada una con las columnas de SU
+  cálculo, más `spy`, `<metodo>_efectivo` (lo que decía hace `retardo_min`), `retardo_min`
+  y `recentrado`.
+- Panel en la GUI con los tres métodos y cuál manda.
+- M1 solo puede girar al cambiar de minuto (los contadores avanzan en `ta_poll`).
+- Cold run: `coldruns/m1m2_coldrun.py`, 40 checks, 0 fallos. Falla contra el código sin parche.
+- Diferencial de las 19 suites previas: conteos idénticos.
+
+**Sin medir todavía:** el **filtro de confirmación** (exigir que la señal aguante D minutos
+antes de actuar, descartando los flips que no aguantan). Es distinto del retardo y
+probablemente mejor: mataría las rotaciones de 4 minutos de SEÑAL. Queda propuesto.

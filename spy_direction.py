@@ -87,6 +87,13 @@ QTY = 1                     # contratos por señal (cuenta pequeña)
 REPRICE_SECS = 4.0          # re-precia al mid si no llena en este tiempo
 MAX_FILL_SECS = 60.0        # tiempo maximo intentando llenar una entrada
 USAR_M1 = True              # 2026-08-11: disparador de flips = M1. False -> criterio diff/thr.
+RETARDO_M1_MIN = 20         # 2026-08-11: minutos de RETARDO al aplicar M1. El sistema se
+                            # posiciona segun lo que M1 decia hace RETARDO_M1_MIN minutos, en
+                            # entrada Y en salida. 0 = sin retardo (aplicar al instante).
+                            # OJO (medido, investigacion/INVESTIGACION_M1_M2.md §7): con n=7
+                            # operaciones el 20 fue el mejor de 12 valores probados, y la mejora
+                            # viene de comprar puts mas arriba en dos dias BAJISTAS, no de
+                            # anticipacion. Es una hipotesis a comprobar, no un resultado.
 FLATTEN_HHMM = "15:45"      # ET: cerrar cualquier opcion abierta
 STOP_NEW_HHMM = "15:40"     # ET: no abrir nuevas cerca del cierre
 START_TRADE_HHMM = "09:35"  # ET: NO abrir posiciones antes de esta hora (2026-08-11, peticion del
@@ -500,6 +507,10 @@ class SpyDirection:
         self.m1_racha = 0; self.m2_racha = 0
         self.m_recentrado = 0                   # 1 si hubo re-centrado en el minuto en curso
         self.cl_estado = None; self.cl_racha = 0   # metodo ANTIGUO (diff/thr), solo registro
+        self.m1_hist = []             # [(monotonic, estado)] para aplicar M1 con RETARDO_M1_MIN
+        self.m1_efectivo = None       # lo que M1 decia hace RETARDO_M1_MIN minutos
+        self.m2_hist = []; self.m2_efectivo = None   # igual para M2 (solo registro)
+        self.cl_hist = []; self.cl_efectivo = None   # igual para el CLASICO (solo registro)
         self.prev_vol = {}            # conId -> volumen acumulado previo (delta)
         self.state = "-"
         self.transitions = []
@@ -673,6 +684,7 @@ class SpyDirection:
                   "fecha TEXT, hora TEXT, spy REAL, net_call REAL, net_put REAL, "
                   "abs_call REAL, abs_put REAL, dif REAL, senal_min TEXT, "
                   "n_up INTEGER, n_down INTEGER, marcador INTEGER, m1 TEXT, racha INTEGER, "
+                  "m1_efectivo TEXT, retardo_min INTEGER, "
                   "recentrado INTEGER, PRIMARY KEY(fecha,hora))")
         # METODO ANTIGUO (diff/thr): se sigue calculando y registrando aunque NO decida,
         # para poder comparar los tres metodos por tipo de mercado (bull/bear/lateral).
@@ -680,11 +692,13 @@ class SpyDirection:
                   "fecha TEXT, hora TEXT, spy REAL, net_call REAL, net_put REAL, "
                   "diff REAL, thr REAL, banda REAL, momentum REAL, mom_min REAL, "
                   "clasico TEXT, estado_real TEXT, warn_side TEXT, racha INTEGER, "
+                  "clasico_efectivo TEXT, retardo_min INTEGER, "
                   "recentrado INTEGER, PRIMARY KEY(fecha,hora))")
         c.execute("CREATE TABLE IF NOT EXISTS m2_minute ("
                   "fecha TEXT, hora TEXT, spy REAL, net_call REAL, net_put REAL, "
                   "abs_call REAL, abs_put REAL, dif REAL, senal_min TEXT, "
                   "usd_up REAL, usd_down REAL, acumulado REAL, m2 TEXT, racha INTEGER, "
+                  "m2_efectivo TEXT, retardo_min INTEGER, "
                   "recentrado INTEGER, PRIMARY KEY(fecha,hora))")
         # migracion para BD existentes: agregar columnas nuevas si faltan
         for col in ("net_prem REAL", "open_interest REAL", "gamma REAL"):
@@ -970,6 +984,9 @@ class SpyDirection:
         self.m1_racha = 0; self.m2_racha = 0
         self.m_recentrado = 0
         self.cl_estado = None; self.cl_racha = 0
+        self.m1_hist = []; self.m1_efectivo = None
+        self.m2_hist = []; self.m2_efectivo = None
+        self.cl_hist = []; self.cl_efectivo = None
         self.today_prem = {}; self.net_prem = {}; self.today_vol = {}
         self.today_net = {}          # el NETO del dia se reinicia; accum_net NO (es persistente)
         self.prev_vol = {}; self.band_prev_vol = {}; self.prev_gamma = {}
@@ -2036,9 +2053,19 @@ class SpyDirection:
             # 2026-08-11: el disparador pasa a M1 (dominancia en VALOR ABSOLUTO, contador
             # de MINUTOS). m1_estado lo actualiza ta_poll una vez por minuto, asi que M1
             # solo puede girar en el cambio de minuto: eso elimina los flips en rafaga.
+            # RETARDO: se usa lo que M1 decia hace RETARDO_M1_MIN minutos, no lo de ahora.
+            # Se aplica a entrada Y salida: la posicion anterior se mantiene ese rato de mas.
             # NEUTRAL o None -> no se toca el estado (no se inventa direccion).
-            if self.m1_estado in ("UP", "DOWN"):
-                new = self.m1_estado
+            limite = ahora - RETARDO_M1_MIN * 60.0
+            efec = None
+            for _ts, _st in self.m1_hist:
+                if _ts <= limite:
+                    efec = _st
+                else:
+                    break
+            self.m1_efectivo = efec
+            if efec in ("UP", "DOWN"):
+                new = efec
         elif diff > thr:
             new = "UP"
         elif diff < -thr:
@@ -3198,21 +3225,40 @@ class SpyDirection:
             self.m1_racha = self.m1_racha + 1 if _m1 == self.m1_estado else 1
             self.m2_racha = self.m2_racha + 1 if _m2 == self.m2_estado else 1
             self.m1_estado = _m1; self.m2_estado = _m2
+            # historia con sello de tiempo para el RETARDO (se poda a 2x el retardo)
+            _tnow = time.monotonic()
+            _corte = _tnow - max(120.0, RETARDO_M1_MIN * 120.0)
+            self.m1_hist.append((_tnow, _m1))
+            self.m1_hist[:] = [r for r in self.m1_hist if r[0] >= _corte] or self.m1_hist[-1:]
+            self.m2_hist.append((_tnow, _m2))
+            self.m2_hist[:] = [r for r in self.m2_hist if r[0] >= _corte] or self.m2_hist[-1:]
+            # el efectivo de M2 y del CLASICO se calcula igual que el de M1, pero SOLO
+            # se registra: ninguno de los dos decide nada (manda M1 via USAR_M1).
+            _lim = _tnow - RETARDO_M1_MIN * 60.0
+            def _efec(hist):
+                r = None
+                for _ts, _st in hist:
+                    if _ts <= _lim:
+                        r = _st
+                    else:
+                        break
+                return r
+            self.m2_efectivo = _efec(self.m2_hist)
             _spy_m = v.get("close", self.spy_price)
             self.db.execute(
                 "INSERT OR REPLACE INTO m1_minute(fecha,hora,spy,net_call,net_put,abs_call,"
-                "abs_put,dif,senal_min,n_up,n_down,marcador,m1,racha,recentrado) "
-                "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                "abs_put,dif,senal_min,n_up,n_down,marcador,m1,racha,m1_efectivo,"
+                "retardo_min,recentrado) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                 (fecha, hora, _spy_m, self.net_call, self.net_put, _ac, _ap, _dif, _sen,
                  self.m1_up, self.m1_down, self.m1_up - self.m1_down, _m1,
-                 self.m1_racha, self.m_recentrado))
+                 self.m1_racha, self.m1_efectivo, RETARDO_M1_MIN, self.m_recentrado))
             self.db.execute(
                 "INSERT OR REPLACE INTO m2_minute(fecha,hora,spy,net_call,net_put,abs_call,"
-                "abs_put,dif,senal_min,usd_up,usd_down,acumulado,m2,racha,recentrado) "
-                "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                "abs_put,dif,senal_min,usd_up,usd_down,acumulado,m2,racha,m2_efectivo,"
+                "retardo_min,recentrado) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                 (fecha, hora, _spy_m, self.net_call, self.net_put, _ac, _ap, _dif, _sen,
                  self.m2_up, self.m2_down, self.m2_up - self.m2_down, _m2,
-                 self.m2_racha, self.m_recentrado))
+                 self.m2_racha, self.m2_efectivo, RETARDO_M1_MIN, self.m_recentrado))
             # METODO ANTIGUO (diff/thr): NO decide, pero se registra igual para comparar.
             _diff = self.net_call - self.net_put
             if ADAPTIVE:
@@ -3222,13 +3268,18 @@ class SpyDirection:
             _cl = "UP" if _diff > _thr else "DOWN" if _diff < -_thr else "NEUTRAL"
             self.cl_racha = self.cl_racha + 1 if _cl == self.cl_estado else 1
             self.cl_estado = _cl
+            self.cl_hist.append((_tnow, _cl))
+            self.cl_hist[:] = [r for r in self.cl_hist if r[0] >= _corte] or self.cl_hist[-1:]
+            self.cl_efectivo = _efec(self.cl_hist)
             self.db.execute(
                 "INSERT OR REPLACE INTO clasico_minute(fecha,hora,spy,net_call,net_put,"
                 "diff,thr,banda,momentum,mom_min,clasico,estado_real,warn_side,racha,"
-                "recentrado) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                "clasico_efectivo,retardo_min,recentrado) "
+                "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                 (fecha, hora, _spy_m, self.net_call, self.net_put, _diff, _thr,
                  _thr * WARN_BAND_FRAC, self.last_momentum, MOM_FRAC * _thr, _cl,
-                 self.state, self.last_warn_side, self.cl_racha, self.m_recentrado))
+                 self.state, self.last_warn_side, self.cl_racha, self.cl_efectivo,
+                 RETARDO_M1_MIN, self.m_recentrado))
             self.m_recentrado = 0
             for (exp, strike, right), cp in self.accum.items():
                 dp = self.today_prem.get((exp, strike, right), 0.0)
@@ -3683,7 +3734,9 @@ def run_gui(app):
             metodos_lbl.config(
                 text=(f"M1 {_m1:>7} ({app.m1_up}-{app.m1_down})   "
                       f"M2 {_m2:>7} ({app.m2_up - app.m2_down:+,.0f}$)   "
-                      f"CLASICO {_cl:>7}   |  MANDA: {_mand}"),
+                      f"CLASICO {_cl:>7}   |  MANDA: {_mand}"
+                      + (f"  [retardo {RETARDO_M1_MIN}m -> {app.m1_efectivo or '-'}]"
+                         if USAR_M1 and RETARDO_M1_MIN else "")),
                 fg=_col.get(app.m1_estado, "#9ca3af"))
             ta_lbl.config(text=(f"TA 1m: {v['dir']}  RSI {v['rsi']:.0f}  "
                                 f"MACDh {v['macd_hist']:+.2f}  EMA8/21 {v['ema8']:.2f}/{v['ema21']:.2f}"
