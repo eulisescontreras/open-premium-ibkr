@@ -2124,6 +2124,11 @@ class SpyDirection:
         self.net_put = 2000.0 + max(0.0, -diff) + t * 4
         self.spy_price = 773.0 + math.sin(t / 6.0) * 0.8
         self.status = "MODO DEMO - entradas simuladas (no es dato real)"
+        # demo: en vivo m1_hist lo puebla ta_poll cada minuto; aqui lo alimentamos con el estado
+        # sintetico y un timestamp que YA cumplio el retardo, para VER la rotacion sin esperar 20 min.
+        if USAR_M1:
+            self.m1_estado = "UP" if self.net_call >= self.net_put else "DOWN"
+            self.m1_hist = [(time.monotonic() - (RETARDO_M1_MIN * 60.0 + 5.0), self.m1_estado)]
         self._update_signal()
         self._demo_walls(t)
 
