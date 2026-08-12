@@ -567,6 +567,14 @@ print("== GAP 18: sin restaurar el estado NO se evalua la senal ==")
 app = nueva_app()
 app.call = FakeContract(773, "C", 5001)
 app.put = FakeContract(773, "P", 5002)
+# El GIRO se provoca por la via REAL de produccion: M1 con su retardo. Antes se provocaba con
+# net_call=-10640 (diff < -thr), pero desde USAR_M1=True esa rama de _update_signal esta MUERTA
+# (el `elif diff < -thr` va detras de `if USAR_M1:`), asi que el test giraba por un camino que
+# el sistema ya no usa y desde el 08-12 fallaba sin que la logica tuviera nada roto. El flujo se
+# deja igual: sigue siendo el caso REAL del 14:52:29, y ahora ademas demuestra que NO gira por
+# el.  m1_hist se alimenta igual que en modo demo (spy_direction.py:2535): un sello que YA
+# cumplio el retardo, para no esperar RETARDO_M1_MIN minutos reales.
+app.m1_hist = [(time.monotonic() - (S.RETARDO_M1_MIN * 60.0 + 5.0), "DOWN")]
 app._intradia_ok = False              # como en los ~4 s del arranque
 app.state = "UP"
 app.net_call, app.net_put = -10640.0, 0.0     # el caso REAL del 14:52:29

@@ -160,20 +160,56 @@ check(RTH <= ST < S.STOP_NEW_HHMM,
       f"constantes coherentes: RTH({RTH}) <= START_TRADE({ST}) < STOP_NEW({S.STOP_NEW_HHMM})")
 
 # --- lo NUEVO (2026-08-11): no abrir en los primeros minutos de la apertura ---
-for hhmm_actual in (RTH, "09:31", menos1(ST)):
-    set_et(hhmm_actual)
-    preparar()
-    app.trade_poll()
-    check(not app._colocadas,
-          f"trade_poll() a las {hhmm_actual} ET (espera de apertura, antes de {ST}): NO compra "
-          f"[colocadas={app._colocadas}] | msg='{app.trade_msg}'")
-    # el mensaje del panel solo se escribe cuando pos == target; con target=CALL no entra en esa
-    # rama y quedaria vacio -> el check pasaria TRIVIALMENTE. Hay que forzar pos==target==FLAT.
-    preparar()
-    app.target = "FLAT"
-    app.trade_poll()
-    check(ST in app.trade_msg and "EOD" not in app.trade_msg,
-          f"  ...panel a las {hhmm_actual} dice la espera y NO miente con EOD: '{app.trade_msg}'")
+# LAS HORAS SE CALCULAN DE LAS CONSTANTES, NO SE ESCRIBEN A MANO. Estaban a dedo
+# (RTH, "09:31", ...) de cuando START_TRADE_HHMM valia 09:35. El 2026-08-12 08:53 el usuario
+# pidio quitar ese retardo (09:35 -> 09:30) y este bucle siguio exigiendo "a las 09:30 NO
+# compra", que es EXACTAMENTE lo contrario de lo pedido: 4 de los 5 fallos de esta suite eran
+# eso, un test viejo acusando a un codigo correcto. Mismo patron que el `if OPEN != RTH` de
+# mas arriba: con START_TRADE == RTH la ventana DENTRO de RTH es VACIA y no hay nada que
+# comprobar; si algun dia se vuelven a separar, estas horas reaparecen solas.
+def _minutos_entre(desde, hasta):
+    """Todos los HH:MM de [desde, hasta). Lista vacia si desde >= hasta."""
+    ini = int(desde[:2]) * 60 + int(desde[3:])
+    fin = int(hasta[:2]) * 60 + int(hasta[3:])
+    return ["%02d:%02d" % (x // 60, x % 60) for x in range(ini, fin)]
+
+
+_espera = _minutos_entre(RTH, ST)
+if _espera:
+    for hhmm_actual in _espera:
+        set_et(hhmm_actual)
+        preparar()
+        app.trade_poll()
+        check(not app._colocadas,
+              f"trade_poll() a las {hhmm_actual} ET (espera de apertura, antes de {ST}): NO compra "
+              f"[colocadas={app._colocadas}] | msg='{app.trade_msg}'")
+        # el mensaje del panel solo se escribe cuando pos == target; con target=CALL no entra en
+        # esa rama y quedaria vacio -> el check pasaria TRIVIALMENTE. Forzar pos==target==FLAT.
+        preparar()
+        app.target = "FLAT"
+        app.trade_poll()
+        check(ST in app.trade_msg and "EOD" not in app.trade_msg,
+              f"  ...panel a las {hhmm_actual} dice la espera y NO miente con EOD: '{app.trade_msg}'")
+else:
+    check(True, f"START_TRADE({ST}) == RTH({RTH}) -> no hay espera DENTRO de RTH que comprobar: "
+                f"se opera desde el primer minuto (peticion del usuario, 2026-08-12 08:53)")
+
+# EL PANEL EN PRE-MARKET NO PUEDE DECIR "EOD". Caso REAL, no teorico: hasta el 2026-08-12
+# `espera_apertura` era `in_session and hhmm < START_TRADE_HHMM`, y como in_session ya exige
+# hhmm >= RTH, pedia hhmm >= 09:30 Y hhmm < 09:30 -> False SIEMPRE, con su rama INALCANZABLE.
+# Resultado: a las 09:29 el panel decia "sin abrir nuevas (EOD)" -- fin de dia a las nueve de
+# la manana. Este check es el que ancla ese arreglo y evita que vuelva.
+set_et(menos1(ST))
+preparar()
+app.trade_poll()
+check(not app._colocadas,
+      f"trade_poll() a las {menos1(ST)} ET (antes de {ST}): NO compra "
+      f"[colocadas={app._colocadas}] | msg='{app.trade_msg}'")
+preparar()
+app.target = "FLAT"
+app.trade_poll()
+check(ST in app.trade_msg and "EOD" not in app.trade_msg,
+      f"  ...panel a las {menos1(ST)} NO miente con EOD en pre-market: '{app.trade_msg}'")
 
 # CRITICO: durante la espera se tiene que poder SALIR de una posicion heredada
 set_et("09:31")

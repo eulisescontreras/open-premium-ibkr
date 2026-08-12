@@ -136,25 +136,30 @@ CONFIRMACION_MIN = 5        # 2026-08-12: filtro de confirmacion (SOLO REGISTRO,
 # que es ajustar al dia que se esta usando para juzgarlo (INVESTIGACION_M1_M2 §7).
 # 0 o None lo desactiva y el comportamiento vuelve a ser el anterior.
 #
-# ⚠️ 2026-08-12, MISMO DIA: el objetivo FIJO se sustituye por un TRAILING y queda a 0.
-# POR QUE: el objetivo fijo PONE TECHO. El 08-11 una sola operacion llego a +122.36 y con
-# objetivo +10 se habrian cobrado 10. Medido sobre un recorrido que sube a +122 y devuelve la
-# mitad:  fijo+10 -> +10.00  |  aguantar -> +61.00  |  trailing(10,5) -> +115.00.
-# Y en las 4 operaciones REALES de hoy el trailing tambien gana al fijo: +37.50 vs +28.00.
-# Gana en LOS DOS escenarios, que es lo que hace falta: no cortar las tendencias largas y no
-# devolver lo ganado en las laterales.
+# ⚠️ 2026-08-12, MISMO DIA: el objetivo fijo queda a 0 (DESACTIVADO) y NO se sustituye por
+# nada. El objetivo fijo PONE TECHO: el 08-11 una sola operacion llego a +122.36 y con
+# objetivo +10 se habrian cobrado 10.
 TAKE_PROFIT_USD = 0.0
 
-# --- TRAILING (2026-08-12) ----------------------------------------------------------------
-# Deja correr la posicion mientras siga haciendo maximos y solo vende cuando DEVUELVE parte de
-# lo ganado. Reutiliza `self.mfe`, que ya se sigue a 1 Hz: no hace falta estado nuevo.
-#   se ACTIVA cuando el beneficio llega a TRAIL_ACTIVAR_USD
-#   a partir de ahi vende si cae TRAIL_DEVOLVER_USD por debajo de su MAXIMO
-# Medido hoy: las variantes (10,5), (10,10) y (15,8) dan las tres +37.50 en las 4 operaciones
-# reales -> el resultado NO depende de acertar el numero exacto, que es lo que se busca (§7).
-# 0 lo desactiva.
-TRAIL_ACTIVAR_USD = 10.0
-TRAIL_DEVOLVER_USD = 5.0
+# --- SALIDA POR OBJETIVO / TRAILING: MEDIDO Y **NO IMPLEMENTADO** --------------------------
+# Aqui vivian TRAIL_ACTIVAR_USD=10.0 y TRAIL_DEVOLVER_USD=5.0. Se eliminan el 2026-08-12
+# porque NINGUN punto del codigo las leia: no habia trailing, solo dos numeros que hacian
+# creer que lo habia. Un parametro que nadie consume es peor que no tenerlo -- se lee como
+# configuracion vigente y las decisiones que salen de leerlo salen torcidas.
+# COMPROBADO ese mismo dia: las 3 operaciones cerradas salieron las tres con
+# razon_salida='giro'. La UNICA salida que existe hoy es el giro de la senal (mas el EOD).
+#
+# LO QUE SE MIDIO (se conserva: costo medirlo, y es el punto de partida si algun dia se
+# implementa). Sobre un recorrido que sube a +122 y devuelve la mitad:
+#     fijo+10 -> +10.00  |  aguantar -> +61.00  |  trailing(10,5) -> +115.00
+# Y en las 4 operaciones REALES del 08-12: trailing +37.50 vs fijo +28.00. Las variantes
+# (10,5), (10,10) y (15,8) daban las tres +37.50 -> el resultado no dependia de acertar el
+# numero exacto, que es la propiedad que se buscaba (INVESTIGACION_M1_M2 §7).
+#
+# POR QUE NO ESTA PUESTO, decision explicita del usuario: con opciones el trailing salta con
+# el RUIDO del mid (un spread de 0.01 es 1$ por tick). Lo que se quiere es salir cuando la
+# tendencia se ACABA, no cuando el mid tiembla. Si se implementa algun dia, reutilizar
+# `self.mfe`, que ya se sigue a 1 Hz: no hace falta estado nuevo.
 
 # ⚠️ 2026-08-12, MISMO DIA: se APAGA. El discriminador que la gobierna (ER_UMBRAL sobre el
 # efficiency ratio) NO separa regimen: medido, no distingue el dia lateral del dia con tendencia,
@@ -1443,15 +1448,27 @@ class SpyDirection:
             # Sin esto, tras un reinicio la operacion nunca se cerraria en 'trades' y su MFE
             # quedaria a medias. Si resulta que ya no hay posicion real, _sync_pos la cierra.
             r = self.db.execute(
-                "SELECT trade_id,hora_entrada,mfe,mae,hora_mfe,spy_mfe FROM trades "
+                "SELECT trade_id,hora_entrada,mfe,mae,hora_mfe,spy_mfe,entry_price FROM trades "
                 "WHERE fecha=? AND hora_salida IS NULL ORDER BY trade_id DESC LIMIT 1",
                 (hoy,)).fetchone()
             if r:
                 self.trade_id = r[0]
                 self.trade_open = {"hora": r[1]}
                 self.mfe, self.mae, self.hora_mfe, self.spy_mfe = r[2], r[3], r[4], r[5]
-                ACT.info("TRADE #%s readoptado tras el reinicio (entrada %s, MFE=%s)",
-                         r[0], r[1], _fmt(r[2]))
+                # PRECIO DE ENTRADA: el de la fila es el avgFillPrice REAL de la compra, que es
+                # lo que _on_filled guardo. Sin reponerlo aqui, _adoptar_posicion lo recupera de
+                # avgCost, y avgCost INCLUYE LA COMISION -> el profit saldria ya neto de la
+                # comision de compra Y esa misma comision se guarda ademas en la columna
+                # `comision`, o sea DESCONTADA DOS VECES. Peor: el significado de `profit`
+                # dependeria de si hubo reinicio o no, que es lo que hace incomparables los dias.
+                # MEDIDO el 2026-08-12 en la #12: fill 1.13, avgCost 114.44 -> 1.1444; la
+                # diferencia de 1.44$ es exactamente la comision de compra.
+                # avgCost sigue siendo el ultimo recurso en _adoptar_posicion (guard
+                # `if not self.entry_price`) para una posicion huerfana que no tiene fila.
+                if r[6]:
+                    self.entry_price = r[6]
+                ACT.info("TRADE #%s readoptado tras el reinicio (entrada %s, MFE=%s, "
+                         "entry_price=%s)", r[0], r[1], _fmt(r[2]), _fmt(r[6]))
             # 3) lista de giros en memoria (la pantalla usa recent(), pero se deja coherente)
             for hora, estado in self.db.execute(
                     "SELECT hora,estado FROM transitions WHERE fecha=? AND tipo='FLIP' "
@@ -3450,7 +3467,15 @@ class SpyDirection:
             self.target = "FLAT"
         # 3 motivos para no ABRIR: fuera de sesion, cerca del cierre (EOD) o aun en los primeros
         # minutos de la apertura. Se separan para poder decirle al usuario CUAL es (ver trade_msg).
-        espera_apertura = in_session and hhmm < START_TRADE_HHMM
+        # `in_session and hhmm < START_TRADE_HHMM` era INALCANZABLE desde el 2026-08-12 08:53:
+        # ese commit bajo START_TRADE_HHMM de 09:35 a 09:30, y como in_session ya exige
+        # hhmm >= RTH_OPEN_HHMM (09:30), la condicion pedia hhmm >= 09:30 Y hhmm < 09:30 a la
+        # vez -> False SIEMPRE. Efecto real: a las 09:29 el panel decia "sin abrir nuevas (EOD)"
+        # -- fin de dia a las nueve de la manana -- que es justo la mentira que esta variable
+        # existe para evitar. Se quita el `in_session`: lo que importa es que aun no ha llegado
+        # la hora de operar, no si el mercado ya abrio. No cambia NINGUNA decision de operar
+        # (eso lo gobierna stop_new, que no se toca): cambia solo lo que se le dice al usuario.
+        espera_apertura = weekday and hhmm < START_TRADE_HHMM
         stop_new = ((not in_session)
                     or (weekday and hhmm >= STOP_NEW_HHMM)
                     or (weekday and hhmm < START_TRADE_HHMM))

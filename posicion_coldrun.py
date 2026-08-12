@@ -468,6 +468,44 @@ check(app.trade_open and app.trade_open.get("hora") == "12:20:44",
 segs = app._segs_desde("12:20:44")
 check(segs is not None, "_segs_desde funciona con la hora restaurada -> %s" % segs)
 
+# EL PRECIO DE ENTRADA TAMBIEN SE REPONE, Y NO PUEDE PISARLO avgCost -------------------------
+# Caso REAL del 2026-08-12 (trade #12): la app se reinicio 5 veces con la CALL 773 abierta.
+# La fila decia entry_price=1.13 (el avgFillPrice que guardo _on_filled) pero _load_estado_dia
+# no lo reponia, asi que self.entry_price quedaba en None y _adoptar_posicion lo recuperaba de
+# avgCost: "Entrada recuperada de IBKR (avgCost=114.44) -> 1.1444".
+# POR QUE IMPORTA, EN DINERO: avgCost INCLUYE LA COMISION. Con entry_price=1.1444 el profit de
+# _on_filled sale YA NETO de la comision de compra, y esa MISMA comision se guarda ademas en la
+# columna `comision` para restarla -> DESCONTADA DOS VECES. Y el significado de `profit` pasaba
+# a depender de si hubo reinicio o no, que es lo que hace incomparables dos dias.
+# La diferencia medida fue 114.44 - 113.00 = 1.44$ en UNA operacion.
+check(app.entry_price == 0.80,
+      "el precio de entrada se repone de la FILA (avgFillPrice), no queda en None -> %s"
+      % app.entry_price)
+
+
+class _PosAvgCost:
+    """Posicion de IBKR cuyo avgCost trae la comision dentro (0.80 pagado + 1.44 de comision)."""
+    def __init__(self, contract):
+        self.contract = contract
+        self.position = 1.0
+        self.avgCost = 94.44          # /100 -> 0.9444, distinto del 0.80 real
+
+
+_con = S.Option(S.SYMBOL, "20260814", 773, "P", "SMART", tradingClass=S.SYMBOL)
+app._ensure_mkt = lambda c: None      # se neutraliza SOLO la suscripcion (I/O al broker)
+app._adoptar_posicion(_PosAvgCost(_con), "PUT")        # <-- FUNCION REAL
+check(app.entry_price == 0.80,
+      "avgCost NO pisa el precio de la fila: la comision no se descuenta dos veces -> %s"
+      % app.entry_price)
+
+# ...pero avgCost SIGUE siendo el ultimo recurso cuando NO hay precio (posicion huerfana sin
+# fila en trades). Ahi es el mejor dato que existe y se usa: el arreglo no puede cargarselo.
+app.entry_price = None
+app._adoptar_posicion(_PosAvgCost(_con), "PUT")        # <-- FUNCION REAL
+check(abs(app.entry_price - 0.9444) < 1e-9,
+      "sin precio conocido, avgCost sigue siendo el ultimo recurso -> %s" % app.entry_price)
+app.entry_price = 0.80                                 # se deja como estaba para el resto del test
+
 # y si la posicion ya no existe en IBKR, el trade se cierra en vez de quedar abierto para siempre
 app.pos = "PUT"
 app.pos_qty = 1
