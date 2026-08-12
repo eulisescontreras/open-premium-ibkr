@@ -2799,7 +2799,14 @@ class SpyDirection:
                             self._soltar_mkt(c)
                         self.band_contracts = nuevos
                         for c in nuevos:
-                            self.ib.reqMktData(c, "100,101,106", False, False)
+                            # 233 OBLIGATORIO, igual que en setup_contracts (:1259). Sin el, en
+                            # cuanto el precio deriva >3 strikes la banda se re-suscribe SIN
+                            # RTVolume y el tape se queda ciego otra vez, EN SILENCIO: no hay
+                            # error, simplemente dejan de llegar `last`/`lastSize` y esos 40
+                            # contratos desaparecen del tape hasta el siguiente reinicio.
+                            # Son DOS sitios de suscripcion de la banda: si se cambia uno hay
+                            # que cambiar el otro.
+                            self.ib.reqMktData(c, "100,101,106,233", False, False)
                         ACT.info("BANDA walls re-centrada en %.2f: %g-%g (%d contratos)",
                                  px, nb[0], nb[-1], len(nuevos))
         except Exception:

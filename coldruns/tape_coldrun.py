@@ -339,6 +339,70 @@ check(a95.today_prem.get(KEY, 0.0) > 0,
       f"9.5 CONTROL: sin _on_ticks, walls SIGUE contando (el dato no se pierde) -> "
       f"{a95.today_prem.get(KEY, 0.0):,.0f}")
 
+# ============================================================ 9.6
+# LA BANDA SE SUSCRIBE EN DOS SITIOS. Si uno pide 233 y el otro no, el tape se queda ciego
+# EN SILENCIO en cuanto el precio deriva >3 strikes y `refresh_strikes` re-suscribe la banda.
+# No hay error, no hay log: simplemente dejan de llegar `last`/`lastSize`.
+# Ocurrio de verdad el 2026-08-12: se arreglo `setup_contracts` (:1259) y se dejo el espejo de
+# `refresh_strikes` con la lista vieja. Esta prueba ejercita el re-centrado REAL.
+print()
+print("=" * 78)
+print("9.6) LA BANDA SIGUE PIDIENDO RTVolume TRAS UN RE-CENTRADO")
+print("=" * 78)
+
+
+class IBRec:
+    """FakeIB que APUNTA cada reqMktData con su lista de ticks genericos."""
+    def __init__(self):
+        self.subs = []          # [(strike, right, genericTickList)]
+        self._n = 5000
+
+    def qualifyContracts(self, *cs):
+        for c in cs:
+            if not getattr(c, "conId", None):
+                self._n += 1
+                c.conId = self._n
+        return list(cs)
+
+    def reqMktData(self, c, gen, *a, **k):
+        self.subs.append((getattr(c, "strike", None), getattr(c, "right", None), gen))
+
+    def cancelMktData(self, c):
+        pass
+
+    def isConnected(self):
+        return True
+
+    def ticker(self, c):
+        return None
+
+
+a96 = nueva()
+a96.ib = IBRec()
+a96.expiry = "20260811"
+a96.strikes = [765.0 + i for i in range(21)]          # 765..785
+# banda centrada en 770 y precio en 780 -> deriva > 3 strikes => obliga a re-centrar
+a96.band_contracts = [opt(s, r, expiry="20260811", conId=int(s * 10 + (1 if r == "C" else 2)))
+                      for s in (768.0, 769.0, 770.0, 771.0, 772.0) for r in ("C", "P")]
+a96.spy_price = 780.0
+a96.pos_qty = 0
+a96.order = None
+_ban_antes = sorted({c.strike for c in a96.band_contracts})
+a96.refresh_strikes()                                  # <-- FUNCION REAL
+_ban_despues = sorted({c.strike for c in a96.band_contracts})
+check(_ban_antes != _ban_despues,
+      f"9.6 el re-centrado REAL ocurrio: {_ban_antes[0]:g}-{_ban_antes[-1]:g} -> "
+      f"{_ban_despues[0]:g}-{_ban_despues[-1]:g}")
+
+_band_str = set(_ban_despues)
+_subs_banda = [(s, r, g) for (s, r, g) in a96.ib.subs if s in _band_str and "100" in (g or "")]
+check(len(_subs_banda) > 0, f"9.6 se re-suscribio la banda -> {len(_subs_banda)} contratos")
+_sin_233 = [(s, r, g) for (s, r, g) in _subs_banda if "233" not in (g or "")]
+check(not _sin_233,
+      f"9.6 TODAS las suscripciones de la banda piden 233 -> "
+      f"{len(_subs_banda) - len(_sin_233)}/{len(_subs_banda)}"
+      + (f"  *** SIN 233: {_sin_233[:3]} ***" if _sin_233 else ""))
+
 print()
 print("=" * 78)
 print(("TODO VERDE" if not FAILS else f"{len(FAILS)} FALLOS: " + " | ".join(FAILS)))
