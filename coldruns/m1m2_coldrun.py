@@ -64,6 +64,8 @@ def nueva_app():
     app.m2_hist = []; app.m2_efectivo = None
     app.cl_hist = []; app.cl_efectivo = None
     app.cl_estado = None; app.cl_racha = 0
+    app.sen_estado = None; app.sen_racha = 0
+    app.conf_estado = None; app.conf_hist = []; app.conf_efectivo = None
     app.m_recentrado = 0
     app.state = "-"
     app.transitions = []
@@ -93,6 +95,11 @@ def crea_tablas(app):
               "usd_up REAL, usd_down REAL, acumulado REAL, m2 TEXT, racha INTEGER, "
               "m2_efectivo TEXT, retardo_min INTEGER, "
               "recentrado INTEGER, PRIMARY KEY(fecha,hora))")
+    c.execute("CREATE TABLE IF NOT EXISTS confirmacion_minute ("
+              "fecha TEXT, hora TEXT, spy REAL, net_call REAL, net_put REAL, "
+              "abs_call REAL, abs_put REAL, dif REAL, senal_min TEXT, racha INTEGER, "
+              "confirmado TEXT, confirmado_efectivo TEXT, confirmacion_min INTEGER, "
+              "retardo_min INTEGER, recentrado INTEGER, PRIMARY KEY(fecha,hora))")
     app.db.commit()
 
 
@@ -127,6 +134,18 @@ def un_minuto(app, fecha, hora, nc, np_):
         (fecha, hora, app.spy_price, app.net_call, app.net_put, _ac, _ap, _dif, _sen,
          app.m2_up, app.m2_down, app.m2_up - app.m2_down, _m2, app.m2_racha,
          app.m2_efectivo, S.RETARDO_M1_MIN, app.m_recentrado))
+    # CONFIRMACION (replica del bloque real de ta_poll): _sen solo "confirma" si aguanta D min
+    app.sen_racha = app.sen_racha + 1 if _sen == app.sen_estado else 1
+    app.sen_estado = _sen
+    if app.sen_racha >= S.CONFIRMACION_MIN:
+        app.conf_estado = _sen
+    app.db.execute(
+        "INSERT OR REPLACE INTO confirmacion_minute(fecha,hora,spy,net_call,net_put,abs_call,"
+        "abs_put,dif,senal_min,racha,confirmado,confirmado_efectivo,confirmacion_min,retardo_min,"
+        "recentrado) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+        (fecha, hora, app.spy_price, app.net_call, app.net_put, _ac, _ap, _dif, _sen,
+         app.sen_racha, app.conf_estado, app.conf_efectivo, S.CONFIRMACION_MIN,
+         S.RETARDO_M1_MIN, app.m_recentrado))
     app.m_recentrado = 0
 
 
@@ -273,7 +292,7 @@ print("\n[16] RETARDO de M1")
 check(hasattr(S, "RETARDO_M1_MIN"), "existe RETARDO_M1_MIN")
 check(S.RETARDO_M1_MIN == 20, "RETARDO_M1_MIN = 20 (valor acordado)")
 check("m1_efectivo TEXT" in src, "m1_minute guarda m1_efectivo")
-check(src.count("retardo_min INTEGER") == 3, "LAS TRES tablas guardan retardo_min")
+check(src.count("retardo_min INTEGER") == 4, "LAS CUATRO tablas guardan retardo_min (m1/m2/clasico/confirmacion)")
 check("m2_efectivo TEXT" in src, "m2_minute guarda m2_efectivo")
 check("clasico_efectivo TEXT" in src, "clasico_minute guarda clasico_efectivo")
 check("RETARDO_M1_MIN * 60.0" in src, "_update_signal calcula el limite del retardo")
@@ -296,6 +315,37 @@ check(app3.state == "DOWN", "el DOWN cumple 25 min > 20 -> ahora si gira")
 check(app3.m1_efectivo == "DOWN", "m1_efectivo = DOWN")
 try:
     os.unlink(path3)
+except Exception:
+    pass
+
+print("\n[18] CONFIRMACION (SOLO REGISTRO): la senal rapida debe aguantar D min")
+check(hasattr(S, "CONFIRMACION_MIN"), "existe CONFIRMACION_MIN")
+check(S.CONFIRMACION_MIN == 5, "CONFIRMACION_MIN = 5 (valor acordado)")
+check("CREATE TABLE IF NOT EXISTS confirmacion_minute" in src, "_init_db crea confirmacion_minute")
+check("INSERT OR REPLACE INTO confirmacion_minute" in src, "ta_poll llena confirmacion_minute")
+# el disparador NO cambio: sigue siendo M1, la confirmacion NO decide
+check("if self.sen_racha >= CONFIRMACION_MIN" in src, "la confirmacion usa la racha de la SEÑAL")
+check(src.count("if USAR_M1:") >= 1 and "USAR_CONFIRMACION" not in src,
+      "la confirmacion NO es disparador (no hay USAR_CONFIRMACION): sigue mandando M1")
+# la REGLA: una serie donde la senal aguanta o no
+appc, pathc = nueva_app(); crea_tablas(appc)
+UP = (1000.0, 0.0); DOWN = (0.0, 1000.0)
+for i in range(3):    # 3 min UP -> racha 1,2,3 < 5 -> aun NO confirma
+    un_minuto(appc, "2026-08-12", "10:%02d" % i, *UP)
+check(appc.conf_estado is None, "3 min UP (racha<5): confirmado sigue vacio (no opero nada)")
+for i in range(3, 5):  # completa 5 min UP -> confirma UP
+    un_minuto(appc, "2026-08-12", "10:%02d" % i, *UP)
+check(appc.conf_estado == "UP", "al aguantar 5 min UP -> confirmado = UP")
+for i in range(5, 8):  # 3 min DOWN -> racha DOWN 1,2,3 < 5 -> NO cambia (rotacion corta descartada)
+    un_minuto(appc, "2026-08-12", "10:%02d" % i, *DOWN)
+check(appc.conf_estado == "UP", "3 min DOWN (rotacion corta) NO cambia el confirmado: sigue UP")
+for i in range(8, 10):  # completa 5 min DOWN -> ahora si confirma DOWN
+    un_minuto(appc, "2026-08-12", "10:%02d" % i, *DOWN)
+check(appc.conf_estado == "DOWN", "al aguantar 5 min DOWN -> confirmado = DOWN")
+nfilas = appc.db.execute("SELECT COUNT(*) FROM confirmacion_minute").fetchone()[0]
+check(nfilas == 10, "confirmacion_minute registro las 10 filas (una por minuto)")
+try:
+    os.unlink(pathc)
 except Exception:
     pass
 

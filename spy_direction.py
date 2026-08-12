@@ -87,6 +87,9 @@ QTY = 1                     # contratos por señal (cuenta pequeña)
 REPRICE_SECS = 4.0          # re-precia al mid si no llena en este tiempo
 MAX_FILL_SECS = 60.0        # tiempo maximo intentando llenar una entrada
 USAR_M1 = True              # 2026-08-11: disparador de flips = M1. False -> criterio diff/thr.
+CONFIRMACION_MIN = 5        # 2026-08-12: filtro de confirmacion (SOLO REGISTRO, no decide): la SEÑAL
+                            # del minuto debe aguantar N min seguidos para "confirmar". D=5 mata las
+                            # rotaciones de <=4 min medidas. HIPOTESIS ajustable con mas datos.
 RETARDO_M1_MIN = 20         # 2026-08-11: minutos de RETARDO al aplicar M1. El sistema se
                             # posiciona segun lo que M1 decia hace RETARDO_M1_MIN minutos, en
                             # entrada Y en salida. 0 = sin retardo (aplicar al instante).
@@ -507,6 +510,9 @@ class SpyDirection:
         self.m1_racha = 0; self.m2_racha = 0
         self.m_recentrado = 0                   # 1 si hubo re-centrado en el minuto en curso
         self.cl_estado = None; self.cl_racha = 0   # metodo ANTIGUO (diff/thr), solo registro
+        self.sen_estado = None; self.sen_racha = 0   # SEÑAL del minuto (para la confirmacion)
+        self.conf_estado = None                      # SEÑAL CONFIRMADA (aguanto CONFIRMACION_MIN), solo registro
+        self.conf_hist = []; self.conf_efectivo = None
         self.m1_hist = []             # [(monotonic, estado)] para aplicar M1 con RETARDO_M1_MIN
         self.m1_efectivo = None       # lo que M1 decia hace RETARDO_M1_MIN minutos
         self.m2_hist = []; self.m2_efectivo = None   # igual para M2 (solo registro)
@@ -700,6 +706,12 @@ class SpyDirection:
                   "usd_up REAL, usd_down REAL, acumulado REAL, m2 TEXT, racha INTEGER, "
                   "m2_efectivo TEXT, retardo_min INTEGER, "
                   "recentrado INTEGER, PRIMARY KEY(fecha,hora))")
+        # CONFIRMACION (2026-08-12): SEÑAL del minuto que aguanto CONFIRMACION_MIN min. SOLO REGISTRO.
+        c.execute("CREATE TABLE IF NOT EXISTS confirmacion_minute ("
+                  "fecha TEXT, hora TEXT, spy REAL, net_call REAL, net_put REAL, "
+                  "abs_call REAL, abs_put REAL, dif REAL, senal_min TEXT, racha INTEGER, "
+                  "confirmado TEXT, confirmado_efectivo TEXT, confirmacion_min INTEGER, "
+                  "retardo_min INTEGER, recentrado INTEGER, PRIMARY KEY(fecha,hora))")
         # migracion para BD existentes: agregar columnas nuevas si faltan
         for col in ("net_prem REAL", "open_interest REAL", "gamma REAL"):
             try:
@@ -984,6 +996,8 @@ class SpyDirection:
         self.m1_racha = 0; self.m2_racha = 0
         self.m_recentrado = 0
         self.cl_estado = None; self.cl_racha = 0
+        self.sen_estado = None; self.sen_racha = 0
+        self.conf_estado = None; self.conf_hist = []; self.conf_efectivo = None
         self.m1_hist = []; self.m1_efectivo = None
         self.m2_hist = []; self.m2_efectivo = None
         self.cl_hist = []; self.cl_efectivo = None
@@ -3285,6 +3299,23 @@ class SpyDirection:
                  _thr * WARN_BAND_FRAC, self.last_momentum, MOM_FRAC * _thr, _cl,
                  self.state, self.last_warn_side, self.cl_racha, self.cl_efectivo,
                  RETARDO_M1_MIN, self.m_recentrado))
+            # --- CONFIRMACION (SOLO REGISTRO, no decide): la SEÑAL del minuto (_sen) solo se
+            # "confirma" si aguanta CONFIRMACION_MIN minutos seguidos. Se compara con el resto
+            # de metodos, con su mismo efectivo por retardo. NO toca _update_signal ni la ejecucion.
+            self.sen_racha = self.sen_racha + 1 if _sen == self.sen_estado else 1
+            self.sen_estado = _sen
+            if self.sen_racha >= CONFIRMACION_MIN:
+                self.conf_estado = _sen
+            self.conf_hist.append((_tnow, self.conf_estado))
+            self.conf_hist[:] = [r for r in self.conf_hist if r[0] >= _corte] or self.conf_hist[-1:]
+            self.conf_efectivo = _efec(self.conf_hist)
+            self.db.execute(
+                "INSERT OR REPLACE INTO confirmacion_minute(fecha,hora,spy,net_call,net_put,"
+                "abs_call,abs_put,dif,senal_min,racha,confirmado,confirmado_efectivo,"
+                "confirmacion_min,retardo_min,recentrado) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                (fecha, hora, _spy_m, self.net_call, self.net_put, _ac, _ap, _dif, _sen,
+                 self.sen_racha, self.conf_estado, self.conf_efectivo,
+                 CONFIRMACION_MIN, RETARDO_M1_MIN, self.m_recentrado))
             self.m_recentrado = 0
             for (exp, strike, right), cp in self.accum.items():
                 dp = self.today_prem.get((exp, strike, right), 0.0)
@@ -3735,11 +3766,13 @@ def run_gui(app):
         if v:
             _col = {"UP": "#22c55e", "DOWN": "#ef4444", "NEUTRAL": "#9ca3af", None: "#9ca3af"}
             _m1 = app.m1_estado or "-"; _m2 = app.m2_estado or "-"; _cl = app.cl_estado or "-"
+            _conf = app.conf_estado or "-"
             _mand = "M1" if USAR_M1 else "CLASICO"
             metodos_lbl.config(
                 text=(f"M1 {_m1:>7} ({app.m1_up}-{app.m1_down})   "
                       f"M2 {_m2:>7} ({app.m2_up - app.m2_down:+,.0f}$)   "
-                      f"CLASICO {_cl:>7}   |  MANDA: {_mand}"
+                      f"CLASICO {_cl:>7}   CONF {_conf:>7} (r{app.sen_racha}/{CONFIRMACION_MIN})"
+                      f"  |  MANDA: {_mand}"
                       + (f"  [retardo {RETARDO_M1_MIN}m -> {app.m1_efectivo or '-'}]"
                          if USAR_M1 and RETARDO_M1_MIN else "")),
                 fg=_col.get(app.m1_estado, "#9ca3af"))
