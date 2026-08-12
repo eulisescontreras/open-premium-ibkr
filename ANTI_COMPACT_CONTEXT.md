@@ -215,6 +215,63 @@ Los máximos a favor llegan **enseguida**: trades #9, #10, #11 tocaron su MFE a 
 esperar más, es **cobrarlo**. Con la entrada por régimen el MFE disponible pasa de +3 a +9 y el
 P&L sigue negativo ⇒ la pieza que falta es la **regla de salida**, como ya decía §5.1.
 
+## 💰 EL CAMBIO QUE MÁS VALE DE TODO EL DÍA: se compra ITM, no ATM (`551ffc4`)
+
+Medido con precios reales. Con el **SPY QUIETO 5 horas** (773.53 → 773.56), lo que perdió cada
+strike **solo por el paso del tiempo**:
+```
+765C ITM   8.57 -> 8.59    -0.1%      773C ATM   1.71 -> 0.82   -51.8%   <- lo que se compraba
+770C ITM   3.91 -> 3.57    -8.7%      775C OTM   0.79 -> 0.12   -85.4%
+```
+Y la operación #12 **con la misma entrada y la misma salida**, solo cambiando el strike:
+```
+769C ITM  +53.00 (406$)    770C ITM  +39.00 (318$)    773C ATM  -27.00 (110$)
+```
+Con los 400$ de la cuenta el **770C cabía y convertía −27.00 en +39.00**.
+
+`_strike_ejecucion()` coge el **ITM más profundo que quepa en `acct_avail * 0.80`**. Cae al ATM
+—y lo dice en el log— si falta capital, precio o no cabe ninguno. `EJECUCION_ITM=False` restaura
+el comportamiento anterior.
+
+⇒ Esto es lo que hace **viable aguantar una tendencia** en un 0DTE: si el contrato no se
+desangra, no hace falta cobrar rápido.
+
+## ❌❌❌ TRES FALSOS POSITIVOS DE LA TARDE — NO REPETIRLOS
+
+Los tres parecían hallazgos y los tres murieron con el control correcto. **Está documentado el
+test que los mata; aplicarlo antes de creerse cualquiera de ellos otra vez.**
+
+| candidato | parecía | lo que lo mató |
+|---|---|---|
+| **Paridad put-call** `(C−P)−(S−K)` | r=+0.397 / +0.348, p=0.000, nula por shift, **replicaba fuera de muestra** | La señal vive entera en t→t+1 y **cae a ~0 en t+1→t+2**. Es desfase de reloj: el mid de opciones se lee más fresco que `ta_minute.spy`. Contra el precio implícito por paridad, el nivel cae a **+0.009**. |
+| **Efficiency ratio como lector de régimen** | ER de Kaufman, discriminaría lateral vs tendencia | **Separación ~0 en TODOS los umbrales**: el \|recorrido futuro\| es idéntico clasifique como clasifique. Y con 0.30, el 87% de los minutos cae en un solo lado. El ER a 1 min no distingue nada en este activo. |
+| **Agotamiento del flujo** | el flujo pica antes que el precio en 27/37 pivotes (73%) y **nunca después** | Al convertirlo en condición aplicable en vivo (\|flujo\| N min bajando y −X%), **TODAS las celdas quedan por debajo de la tasa base** (31-32% vs 36%). El 73% es artefacto de comparar máximos de dos series con distinto ruido. |
+
+**La lección común: los tres fallaban por medir contra la referencia equivocada** — un reloj
+desfasado, sin comparar el futuro entre clases, y sin tasa base. El patrón siempre "aparece"
+hasta que se le pone el control.
+
+## 📏 CUÁNTO DURA UNA TENDENCIA (medido, 3 días)
+
+```
+umbral      tramos/día   duración MEDIANA   p90    máximo
+0.20 pts       46             5 min          15      44
+0.30 pts       27             9 min          27      44
+0.45 pts       14            14 min          43      87
+```
+**Ningún tramo de 0.20/0.30 llegó a 60 min. Ni uno de 137.** Y `RETARDO_M1_MIN = 20` es **mayor
+que la duración mediana del tramo entero**: el sistema espera más de lo que dura el movimiento
+que quiere capturar. Ese es el desajuste de fondo, y no se arregla afinando el 20.
+
+## 🗄️ BACKFILL: las 4 tablas de métodos + `entrada_minute` ya tienen 08-10 y 08-11
+
+3.410 filas nuevas, marcadas **`origen='reconstruido'`**. Validado al 100% (325/325 en señal,
+M1, M2 y CONFIRMACION) reconstruyendo el 08-12, que sí tiene datos vivos.
+⚠️ Los contadores **acumulados** de esos días arrancan en 09:55 (no 09:30) porque `ta_minute`
+empieza ahí: `senal_min` es exacta, `M1`/`M2`/`marcador` NO son los que producción habría tenido.
+Scripts: `analisis/backfill_metodos.py` (solo informa; escribe con `--escribir`) y
+`analisis/backfill_valida.py`.
+
 ## ⚠️ LO QUE HAY QUE VERIFICAR EN EL PRÓXIMO ARRANQUE
 
 1. **Que IBKR acepte `233` en los 40 contratos de la banda.** Es el ÚNICO punto no verificable
