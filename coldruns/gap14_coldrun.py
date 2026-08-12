@@ -192,6 +192,75 @@ print("\n== T6: reset_day limpia el cupo ==")
 e.reset_day()
 check(e.buys_pend == 0 and e.last_buy_ts == 0.0, "tras reset_day el cupo queda limpio")
 
+print("\n== T5: COMPUERTA DEL RETROCESO (2026-08-12) ==")
+# POR QUE: medido este dia, los MFE llegan a los 62-545 s de entrar; entrar en el impulso es
+# comprar el maximo local. En regimen de REVERSION se espera a que el precio devuelva
+# RETRO_FRAC del impulso. INVARIANTE: solo RETRASA. Nunca cancela, nunca cambia de direccion.
+# Lo que hay que demostrar, y en especial el 5.5: el peor caso tiene que ser "como antes".
+import time as _t                                              # noqa: E402
+
+
+def _con_ancla(er, imp=0.50, edad_min=0.0, lado="CALL", spy=773.95):
+    a = nueva()
+    a.pos = "FLAT"; a.pos_qty = 0.0; a.target = lado
+    a.last_sync = 9e9; a.order = None; a.open_deadline = 0.0
+    a.spy_price = spy
+    a.er_actual = er
+    a.retro_ancla = {"t": _t.monotonic() - edad_min * 60.0, "spy": 773.95, "imp": imp,
+                     "objetivo": 773.95 - imp * S.RETRO_FRAC, "er": er, "lado": lado}
+    return a
+
+
+def _compras(a):
+    return [t for t in a.ib.placed if t.order.action == "BUY"]
+
+
+_a = _con_ancla(er=0.15)                       # REVERSION, precio SIN retroceder
+_a.trade_poll()                                # metodo REAL
+check(len(_compras(_a)) == 0,
+      f"5.1 REVERSION y sin retroceso -> NO compra ({len(_compras(_a))} ordenes)")
+check("espera" in (_a.trade_msg or "").lower(),
+      f"5.1 y el panel DICE por que espera -> '{_a.trade_msg}'")
+check(_a.open_deadline == 0.0,
+      f"5.2 NO toca open_deadline mientras espera (si no, MAX_FILL_SECS correria durante la "
+      f"espera y abandonaria la entrada) -> {_a.open_deadline}")
+
+_b = _con_ancla(er=0.60)                       # TENDENCIA -> no se espera
+_b.trade_poll()
+check(len(_compras(_b)) == 1,
+      f"5.3 TENDENCIA (ER>={S.ER_UMBRAL}) -> compra YA ({len(_compras(_b))} ordenes)")
+
+_c = _con_ancla(er=0.15, spy=773.95 - 0.50 * S.RETRO_FRAC - 0.01)   # ya retrocedio
+_c.trade_poll()
+check(len(_compras(_c)) == 1,
+      f"5.4 el retroceso LLEGO -> compra ({len(_compras(_c))} ordenes)")
+
+_d = _con_ancla(er=0.15, edad_min=S.RETRO_MAX_MIN + 1)              # tope superado
+_d.trade_poll()
+check(len(_compras(_d)) == 1,
+      f"5.5 TOPE de {S.RETRO_MAX_MIN} min -> ENTRA IGUAL, la operacion NUNCA se pierde "
+      f"({len(_compras(_d))} ordenes)   <-- INVARIANTE CLAVE")
+
+_e = _con_ancla(er=0.15)
+S.ENTRADA_RETROCESO = False                    # interruptor A/B
+_e.trade_poll()
+S.ENTRADA_RETROCESO = True
+check(len(_compras(_e)) == 1,
+      f"5.6 con ENTRADA_RETROCESO=False -> comportamiento de siempre ({len(_compras(_e))})")
+
+_f = _con_ancla(er=0.15)
+_f.retro_ancla = None                          # sin ancla (giro anterior al cambio, reinicio...)
+_f.trade_poll()
+check(len(_compras(_f)) == 1, "5.7 sin ancla -> compra ya (ante la duda, como antes)")
+
+_g = _con_ancla(er=None)                       # ER desconocido
+_g.trade_poll()
+check(len(_compras(_g)) == 1, "5.8 sin ER -> compra ya (None no se interpreta como reversion)")
+
+_h = _con_ancla(er=0.15, lado="PUT", imp=-0.50, spy=773.95)
+_h.trade_poll()
+check(len(_compras(_h)) == 0, "5.9 tambien retrasa en el lado PUT (impulso bajista)")
+
 print()
 if FAILS:
     print("GAP 14 NO CERRADO: %d checks fallaron" % len(FAILS))

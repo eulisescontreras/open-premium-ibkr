@@ -90,6 +90,28 @@ USAR_M1 = True              # 2026-08-11: disparador de flips = M1. False -> cri
 CONFIRMACION_MIN = 5        # 2026-08-12: filtro de confirmacion (SOLO REGISTRO, no decide): la SEÑAL
                             # del minuto debe aguantar N min seguidos para "confirmar". D=5 mata las
                             # rotaciones de <=4 min medidas. HIPOTESIS ajustable con mas datos.
+# --- ENTRADA POR RETROCESO segun REGIMEN (2026-08-12) -------------------------------------
+# POR QUE: medido este dia, los maximos a favor llegan ENSEGUIDA (trades #9/#10/#11 tocaron su
+# MFE a los 88s, 62s y 545s de entrar; la CALL #12 al minuto siguiente). Entrar en el impulso es
+# comprar el maximo local. Y la reversion a la media es REAL -- aparece con la misma magnitud en
+# las barras del SPY y en el precio implicito por paridad, o sea que no es rebote bid-ask -- pero
+# depende del REGIMEN: r=-0.35 el 08-12 (dia lateral) frente a r=-0.06 el 08-11 (con tendencia).
+# Por eso NINGUN parametro fijo de espera sirve: lo que hay que hacer dinamico es leer el regimen.
+#
+# ⚠️ NO VERIFICADO que mejore el sistema REAL. La medicion es sobre 138 entradas/dia simuladas
+# con un disparador de momentum, NO sobre los flips de M1 (n=4 el 08-12; el 08-11 tiene 7 flips
+# pero todos antes de las 11:48 y ese dia no hay precios de opcion hasta las 11:48). Se activa en
+# cuenta PAPER por decision explicita del usuario para medirlo en vivo.
+#
+# INVARIANTES: solo RETRASA. Nunca cancela (al llegar al tope entra igual), nunca cambia de
+# direccion, nunca anade operaciones. Con ENTRADA_RETROCESO=False el comportamiento es el de antes.
+ENTRADA_RETROCESO = True    # ACTIVO (paper). False -> comportamiento identico al anterior.
+RETRO_FRAC = 0.50           # retroceso exigido, como fraccion del impulso previo
+RETRO_MAX_MIN = 10          # TOPE de espera en minutos: si no llega el retroceso, SE ENTRA IGUAL
+ER_UMBRAL = 0.30            # efficiency ratio: < umbral = REVERSION (esperar); >= = TENDENCIA
+ER_VENTANA = 30             # minutos de la ventana del efficiency ratio
+IMPULSO_VENTANA = 5         # minutos sobre los que se mide el impulso previo al giro
+
 RETARDO_M1_MIN = 20         # 2026-08-11: minutos de RETARDO al aplicar M1. El sistema se
                             # posiciona segun lo que M1 decia hace RETARDO_M1_MIN minutos, en
                             # entrada Y en salida. 0 = sin retardo (aplicar al instante).
@@ -661,6 +683,11 @@ class SpyDirection:
         self.last_pos_log = 0.0          # ultimo muestreo por minuto del recorrido
         self._prem_snap = None           # totales call/put de la vela anterior (premium POR VELA)
         self._sello_arranque = None      # hora de este arranque en sesion_config (PK del sello)
+        # --- ENTRADA POR RETROCESO (2026-08-12). SOLO se llenan en ta_poll; None = "no lo se"
+        self.er_actual = None            # efficiency ratio de ER_VENTANA min: <ER_UMBRAL = reversion
+        self.impulso_actual = None       # recorrido del SPY en IMPULSO_VENTANA min
+        self.retro_ancla = None          # dict del giro: t, spy, imp, objetivo, er, lado
+        self.retro_espero_min = None     # minutos que se acabo esperando (para el registro)
         self._com_entrada = None         # comision de la pata de COMPRA, hasta que la venta
                                          # cierre la fila y se guarde el coste de las dos juntas
         self.exit_reason = None          # por que se vende: giro / eod / exceso. Se fija donde
@@ -739,6 +766,16 @@ class SpyDirection:
         c.execute("CREATE TABLE IF NOT EXISTS bars_minute ("
                   "fecha TEXT, hora TEXT, open REAL, high REAL, low REAL, close REAL, "
                   "volume REAL, PRIMARY KEY(fecha,hora))")
+        # REGIMEN Y COMPUERTA DE ENTRADA (2026-08-12). Una fila por minuto con lo que la regla
+        # VE y lo que HACE, para poder juzgarla despues con datos en vez de con opiniones:
+        # el efficiency ratio, el regimen que implica, el impulso, el objetivo de retroceso y
+        # si en ese minuto se estaba esperando. Es lo que permitira comparar "lo que hizo" con
+        # "lo que habria hecho" sin volver a simular nada.
+        c.execute("CREATE TABLE IF NOT EXISTS entrada_minute ("
+                  "fecha TEXT, hora TEXT, spy REAL, er REAL, regimen TEXT, impulso REAL, "
+                  "objetivo REAL, esperando INTEGER, min_esperando REAL, target TEXT, "
+                  "pos TEXT, activo INTEGER, er_umbral REAL, retro_frac REAL, "
+                  "retro_max_min INTEGER, PRIMARY KEY(fecha,hora))")
         # migracion para BD existentes: agregar columnas nuevas si faltan
         for col in ("net_prem REAL", "open_interest REAL", "gamma REAL"):
             try:
@@ -2317,6 +2354,21 @@ class SpyDirection:
             self._save(new, "FLIP")
             # objetivo de posicion segun la nueva direccion
             self.target = "CALL" if new == "UP" else "PUT"
+            # ANCLA DEL RETROCESO: se fija AQUI, en el instante del giro, porque es el unico
+            # momento en que se sabe cual fue el impulso que precedio a la senal. Guarda el
+            # reloj, el precio y el objetivo al que tiene que retroceder para poder entrar.
+            # Si no hay impulso medible se deja en None -> la compuerta no espera (entra ya).
+            self.retro_ancla = None
+            try:
+                _imp = self.impulso_actual
+                if (ENTRADA_RETROCESO and _imp is not None and abs(_imp) > 1e-9
+                        and self.spy_price is not None and not math.isnan(self.spy_price)):
+                    self.retro_ancla = {
+                        "t": time.monotonic(), "spy": self.spy_price, "imp": _imp,
+                        "objetivo": self.spy_price - _imp * RETRO_FRAC,
+                        "er": self.er_actual, "lado": self.target}
+            except Exception:
+                self.retro_ancla = None
             self.exit_reason = "giro"    # la venta que provoque este giro se marca como tal
             # 2026-08-12: decir POR QUE giro. Antes imprimia `thr` siempre, y con USAR_M1
             # el umbral ya NO interviene en la decision: al releer el log parecia que el
@@ -3352,6 +3404,17 @@ class SpyDirection:
                 contract = self.buy_call if self.pos == "CALL" else self.buy_put
                 self._place(contract, "SELL", self.pos, qty=(self.pos_qty or QTY))
             elif self.target in ("CALL", "PUT") and not stop_new:
+                # COMPUERTA DEL RETROCESO (2026-08-12): en regimen de REVERSION no se compra en
+                # el impulso; se espera a que el precio devuelva RETRO_FRAC de lo recorrido.
+                # VA ANTES de tocar `open_deadline` A PROPOSITO: si se fijara aqui, MAX_FILL_SECS
+                # correria DURANTE la espera y la entrada se abandonaria sola. Solo retrasa: al
+                # llegar a RETRO_MAX_MIN `_retroceso_pendiente` devuelve False y se compra igual.
+                _esperar, _motivo = self._retroceso_pendiente()
+                if _esperar:
+                    self.trade_msg = f"ARMADO - {self.target} en espera: {_motivo}"
+                    return
+                if self.retro_ancla and self.retro_ancla.get("lado") == self.target:
+                    self.retro_espero_min = (time.monotonic() - self.retro_ancla["t"]) / 60.0
                 # ABRIR: comprar al MID, con limite de tiempo (si no llena, abandona -> FLAT)
                 if not self.open_deadline:
                     self.open_deadline = now + MAX_FILL_SECS
@@ -3472,6 +3535,68 @@ class SpyDirection:
             self._bars_err = getattr(self, "_bars_err", 0) + 1
             self._bars_err_last = "%s: %s" % (type(_e).__name__, _e)
 
+    def _calc_regimen(self, rows):
+        """EFFICIENCY RATIO (Kaufman) + impulso, desde las velas que ya estan en memoria.
+
+            ER = |close(t) - close(t-N)| / suma de |close(i) - close(i-1)| en esos N minutos
+
+        ER cerca de 1 -> el precio fue RECTO: TENDENCIA. Cerca de 0 -> mucho ir y venir:
+        REVERSION. Es el discriminante que salio de medir la reversion en dos dias: -0.35 el
+        08-12 (lateral) frente a -0.06 el 08-11 (con tendencia). Sin el, un retroceso fijo
+        ayuda un dia y estorba el otro.
+
+        Se calcula aqui y NO leyendo bars_minute de la BD: `rows` ya esta en memoria y esto
+        corre cada segundo. None cuando no hay historia suficiente, que es la verdad.
+        Nunca puede romper ta_poll.
+        """
+        try:
+            cl = [r.get("close") for r in rows[-(ER_VENTANA + 1):]
+                  if r.get("close") is not None]
+            if len(cl) >= max(5, ER_VENTANA // 2):
+                bruto = sum(abs(cl[i] - cl[i - 1]) for i in range(1, len(cl)))
+                self.er_actual = (abs(cl[-1] - cl[0]) / bruto) if bruto > 0 else None
+            else:
+                self.er_actual = None
+            cl2 = [r.get("close") for r in rows[-(IMPULSO_VENTANA + 1):]
+                   if r.get("close") is not None]
+            self.impulso_actual = (cl2[-1] - cl2[0]) if len(cl2) >= 2 else None
+        except Exception:
+            self.er_actual = None
+            self.impulso_actual = None
+
+    def _retroceso_pendiente(self):
+        """La compuerta de entrada. Devuelve (esperar: bool, motivo: str).
+
+        Solo RETRASA. Al llegar a RETRO_MAX_MIN devuelve False y se entra igual: la operacion
+        NUNCA se pierde. Ante cualquier duda (sin ancla, sin ER, sin precio, excepcion) devuelve
+        False -> comportamiento de siempre. Es deliberado: el peor caso de esta funcion tiene
+        que ser 'como antes', nunca 'no entra'.
+        """
+        try:
+            if not ENTRADA_RETROCESO:
+                return False, ""
+            a = self.retro_ancla
+            if not a or a.get("lado") != self.target:
+                return False, ""
+            esperado = (time.monotonic() - a["t"]) / 60.0
+            if esperado >= RETRO_MAX_MIN:
+                return False, ""                      # TOPE: se entra igual
+            er = a.get("er")
+            if er is None or er >= ER_UMBRAL:
+                return False, ""                      # TENDENCIA -> no esperar
+            px = self.spy_price
+            if px is None or math.isnan(px):
+                return False, ""
+            imp, obj = a["imp"], a["objetivo"]
+            llego = (px <= obj) if imp > 0 else (px >= obj)
+            if llego:
+                return False, ""
+            return True, (f"esperando retroceso a {obj:.2f} (SPY {px:.2f}, impulso {imp:+.2f}, "
+                          f"ER {er:.2f}<{ER_UMBRAL} = reversion) "
+                          f"{esperado:.1f}/{RETRO_MAX_MIN:.0f} min")
+        except Exception:
+            return False, ""
+
     def ta_poll(self):
         if self.demo or self.bars is None or not HAVE_PD:
             return
@@ -3488,6 +3613,7 @@ class SpyDirection:
             return
         self._chequear_barras(rows)
         self._guardar_barras(rows)
+        self._calc_regimen(rows)
         # PRECIO EN VIVO: self.spy_price solo se fijaba en setup_contracts (1 vez por sesion),
         # asi que quedaba CONGELADO todo el dia -> transitions.spy, walls_snapshot.spot, el GEX
         # (factor spot^2) y la Ladder usaban el precio de la apertura. Las barras ya llegan en
@@ -3689,6 +3815,38 @@ class SpyDirection:
                 (fecha, hora, _spy_m, self.net_call, self.net_put, _ac, _ap, _dif, _sen,
                  self.sen_racha, self.conf_estado, self.conf_efectivo,
                  CONFIRMACION_MIN, RETARDO_M1_MIN, self.m_recentrado))
+            # --- REGIMEN Y COMPUERTA DE ENTRADA (2026-08-12) ---
+            # Se registra SIEMPRE, este activa o no la compuerta: con ENTRADA_RETROCESO=False
+            # esta tabla es exactamente el "que habria hecho" que hace falta para juzgarla.
+            # Se guardan tambien los parametros de esa fila: si manana se cambian, las filas
+            # viejas siguen siendo interpretables (§7: el criterio se fija ANTES, no despues).
+            # se inicializan FUERA del try: la linea de log de mas abajo los usa, y si el try
+            # fallara quedarian sin definir -> NameError que tumbaria el registro del minuto
+            # entero (premium por strike incluido). Con valores neutros, el peor caso es que
+            # la linea diga "-".
+            _esp, _anc, _reg, _minesp = False, {}, "-", None
+            # getattr y NO self.er_actual: `_log_minute` se invoca en cold runs con objetos app
+            # MINIMOS que no tienen estos atributos, y un AttributeError aqui se propaga al try
+            # exterior y se lleva por delante el registro del minuto ENTERO (premium por strike
+            # incluido). Lo cazo la cold run diferencial: logs_metodos perdio 28 lineas.
+            # Es el mismo fallo que `b.open` en ta_poll: no dar por hecho que el atributo existe.
+            _er = getattr(self, "er_actual", None)
+            _imp = getattr(self, "impulso_actual", None)
+            try:
+                _esp, _ = self._retroceso_pendiente()
+                _anc = getattr(self, "retro_ancla", None) or {}
+                _reg = ("-" if _er is None
+                        else ("REVERSION" if _er < ER_UMBRAL else "TENDENCIA"))
+                _minesp = ((time.monotonic() - _anc["t"]) / 60.0) if _anc.get("t") else None
+                self.db.execute(
+                    "INSERT OR REPLACE INTO entrada_minute(fecha,hora,spy,er,regimen,impulso,"
+                    "objetivo,esperando,min_esperando,target,pos,activo,er_umbral,retro_frac,"
+                    "retro_max_min) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                    (fecha, hora, _spy_m, _er, _reg, _imp,
+                     _anc.get("objetivo"), 1 if _esp else 0, _minesp, self.target, self.pos,
+                     1 if ENTRADA_RETROCESO else 0, ER_UMBRAL, RETRO_FRAC, RETRO_MAX_MIN))
+            except Exception:
+                LOG.exception("Error registrando entrada_minute")
             # --- LOG de los 4 metodos (2026-08-12, peticion del usuario) ---
             # Hasta ahora M1/M2/CLASICO/CONFIRMACION solo escribian en sus tablas y en el
             # panel: 0 lineas en spy_activity.log. Como M1 es el que DECIDE (USAR_M1), un
@@ -3704,6 +3862,18 @@ class SpyDirection:
                      RETARDO_M1_MIN, self.m1_efectivo or "-", self.m2_efectivo or "-",
                      self.cl_efectivo or "-", self.conf_efectivo or "-",
                      "M1" if USAR_M1 else "CLASICO")
+            # REGIMEN: en el log tambien, no solo en la BD. Si la compuerta retrasa una entrada
+            # hay que poder verlo leyendo el log, sin consultar entrada_minute.
+            ACT.info("MIN %s | REGIMEN ER=%s (%s, umbral %.2f) | impulso(%dmin)=%s | "
+                     "compuerta=%s%s",
+                     hora, ("%.3f" % _er) if _er is not None else "-",
+                     _reg, ER_UMBRAL, IMPULSO_VENTANA,
+                     ("%+.2f" % _imp) if _imp is not None else "-",
+                     "ON" if ENTRADA_RETROCESO else "OFF",
+                     (f" | ESPERANDO retroceso a {_anc.get('objetivo'):.2f} "
+                      f"({_minesp:.1f}/{RETRO_MAX_MIN} min)"
+                      if (_esp and _anc.get("objetivo") is not None and _minesp is not None)
+                      else ""))
             # contadores crudos: es lo que hay que mirar si M1 no gira cuando deberia
             ACT.info("MIN %s | M1 contadores up=%d down=%d marcador=%+d | M2 usd_up=%.0f "
                      "usd_down=%.0f acum=%+.0f | abs C=%.0f P=%.0f dif=%+.0f senal_min=%s"
