@@ -40,6 +40,58 @@ no contabilizados**.
 | `e61393d` | `ta_minute` guarda `spy_high`/`spy_low` (gap C1: sin ellos no hay MFE/MAE contrafactual) | solo registro |
 | `8498df0` | `trades.comision` de las dos patas (`profit` seguía siendo BRUTO) | solo registro |
 | `3323618` | **BUG**: la fila del minuto llevaba la hora de una vela y el cierre de la siguiente (5 tablas) | corrige dato |
+| `9e0cd5f` | **BUG propio**: la banda perdía el RTVolume al re-centrarse (el espejo de `refresh_strikes`) | corrige el anterior |
+
+## 🔁 LA BANDA SE SUSCRIBE EN **DOS** SITIOS — si tocas uno, toca el otro
+
+`9e0cd5f` arregla un bug que yo mismo introduje en `52dcf4e`: puse el `233` solo en
+`setup_contracts` (`:1259`) y dejé `refresh_strikes` (`:2808`) con la lista vieja. Al primer
+re-centrado (deriva > 3 strikes) la banda **volvía a quedarse sin RTVolume y el tape ciego, en
+silencio** — sin excepción ni log. Ese día la banda se re-centró varias veces antes del mediodía.
+
+**Auditoría de los 12 `reqMktData`, por parejas setup/re-centrado:**
+
+| contrato | setup | re-centrado | ¿coherente? |
+|---|---|---|---|
+| SPY spot | `""` (`:1115`) | — | ✔ |
+| SEÑAL | `"233"` (`:1205/06`) | `"233"` (`:2702/10`) | ✔ |
+| EJECUCIÓN | `""` (`:1216/17`) | `""` (`:2723/31`) | ✔ |
+| BASELINE | `"233"` (`:1235`) | `"233"` (`:2774`) | ✔ |
+| **BANDA** | `...,233` (`:1259`) | `...,233` (`:2808`) | ✔ **(era el único roto)** |
+| posición | `""` (`:2828`) | — | ✔ |
+
+Guardado por el check **9.6 de `coldruns/tape_coldrun.py`**, que ejercita `refresh_strikes` REAL
+y comprueba que las 30 suscripciones piden 233. **Validado reintroduciendo el bug**: da 0/30 y
+falla; sin el bug, 30/30.
+
+## ❌ CORRECCIÓN A `52dcf4e`: los análisis NO filtran por `grupo`
+
+En ese commit escribí que la etiqueta `BANDA` hacía falta porque *"todos los análisis filtran por
+grupo"*. **Es falso** — confundí `cobertura.py` (script mío de scratchpad) con scripts del repo.
+Ningún script de `analisis/` ni `investigacion/` menciona `grupo`.
+
+**El impacto real es otro y mayor:** `analisis/premium_por_minuto.py:58,62` y
+`analisis/neto_por_strike.py:58` consultan `FROM tape WHERE fecha=? AND expiry=?` — filtran por
+**EXPIRY**. Como la banda es la misma expiry 0DTE, desde el próximo arranque pasarán de agregar
+**4-8 strikes a ~40**, sin ningún aviso. **Sus series de antes y de después no son comparables.**
+
+⇒ `WHERE grupo='SENAL'` reproduce el comportamiento histórico. La etiqueta resulta más útil de lo
+que dije, no menos.
+
+## ✅ LA DECISIÓN NO CAMBIA — grafo seguido hasta el final
+
+Con la banda dentro de `_on_ticks`, `today_prem`/`accum`/`today_net` pasan de 2 strikes a 40.
+Consumidores rastreados uno a uno:
+```
+today_prem -> _prem_totales -> _prem_de_la_vela -> columnas prem_*_min de ta_minute  (registro)
+today_prem -> gross[s] -> prem_center -> dist_prem_center_entrada en trades          (registro)
+today_prem -> ladder rows / max_prem -> dibujo del panel                             (visual)
+today_prem -> strike_daily / premium_minute.day_prem                                 (registro)
+```
+`_update_signal` **no lee `today_prem` en ningún punto**: usa `net_call`, `net_put` y
+`m1_efectivo`. Y `net_call`/`net_put` solo suman bajo `if is_signal`.
+⇒ walls/GEX/premium por strike **sí cambiarán de valor** (más precisos, por tick en vez de por
+ventanas de 3 min), pero la señal UP/DOWN no depende de ellos.
 
 ## ⚠️ LO QUE HAY QUE VERIFICAR EN EL PRÓXIMO ARRANQUE
 
