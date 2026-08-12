@@ -1415,8 +1415,24 @@ class SpyDirection:
                     (hoy, ts, self.net_call, self.net_put, self.pnl_realizado,
                      self.n_trades, self.n_wins, self.acct_net_open, self.state))
             self.db.commit()
+            # 2026-08-12 (peticion del usuario: TODO tiene que quedar en el log).
+            # Estas 3 tablas eran las unicas que se escribian sin dejar traza. No es
+            # cosmetico: `estado_intradia` es lo que evita que un reinicio a media sesion
+            # empiece de cero, y si dejara de escribirse solo se notaria AL REINICIAR
+            # -restaurando valores viejos-, que es el peor momento para enterarse.
+            ACT.info("PERSIST accum=%d strikes (cum) | daily=%d strikes (hoy) | "
+                     "intradia=%s netC=%.0f netP=%.0f estado=%s pnl=%.2f ops=%d/%d",
+                     len(self.accum), len(self.today_prem),
+                     "SI" if self._intradia_ok else "NO (aun sin restaurar)",
+                     self.net_call, self.net_put, self.state,
+                     self.pnl_realizado, self.n_wins, self.n_trades)
         except Exception:
-            pass
+            # ANTES: `pass` a secas. Un fallo aqui era INVISIBLE: ni log, ni excepcion,
+            # ni fila en la BD. Se sigue sin propagar (persistir no debe tumbar la sesion)
+            # pero ahora deja constancia.
+            LOG.exception("PERSIST FALLO: no se pudo guardar accum/daily/intradia")
+            ACT.warning("PERSIST FALLO: no se guardo el acumulado ni el estado intradia "
+                        "(ver spy_direction.log). Un reinicio ahora empezaria con datos viejos")
 
     def _load_intradia(self):
         """Restaura el estado del dia tras un REINICIO a media sesion.

@@ -195,7 +195,55 @@ if gir:
     else:
         check("por CLASICO" in gir[0], "dice que lo disparo el CLASICO")
 
-app.db.close()
+print()
+print("=" * 78)
+print("4) `_persist_accum` deja constancia: al guardar Y al fallar")
+print("=" * 78)
+cap.lineas.clear()
+cap.errores = 0
+app.accum = {("20260812", 773.0, "C"): 1000.0, ("20260812", 773.0, "P"): 2000.0}
+app.accum_net = {}
+app.today_prem = dict(app.accum)
+app.today_net = {}
+app._intradia_ok = True
+app.n_trades = 2
+app.n_wins = 1
+app.pnl_realizado = -3.5
+S.SpyDirection._persist_accum(app)
+per = [l for l in cap.lineas if l.startswith("PERSIST")]
+check(len(per) == 1, "al guardar deja UNA linea PERSIST -> %d" % len(per))
+if per:
+    print("   >> %s" % per[0][:150])
+    check("accum=2" in per[0] and "daily=2" in per[0],
+          "cuenta los strikes guardados -> accum=2 daily=2")
+    check("intradia=SI" in per[0], "dice si escribio el estado intradia")
+n = app.db.execute("select count(*) from strike_accum").fetchone()[0]
+check(n == 2, "y de verdad escribio en strike_accum -> %d filas" % n)
+n = app.db.execute("select count(*) from estado_intradia").fetchone()[0]
+check(n == 1, "y en estado_intradia -> %d fila" % n)
+
+# EL CASO QUE IMPORTA: antes el `except` era `pass` y un fallo era INVISIBLE
+cap.lineas.clear()
+_warn = []
+S.LOG.handlers = [_lg.NullHandler()]
+_real_exc = S.LOG.exception
+S.LOG.exception = lambda *a, **k: _warn.append("LOG.exception")
+
+
+class CapWarn(_lg.Handler):
+    def emit(self, record):
+        _warn.append(record.getMessage())
+
+
+S.ACT.handlers = [cap, CapWarn()]
+app.db.close()          # fuerza el fallo: la conexion esta cerrada
+S.SpyDirection._persist_accum(app)
+check(any("PERSIST FALLO" in w for w in _warn),
+      "si falla, AVISA en el log (antes era `except: pass`, invisible) -> %s"
+      % [w[:40] for w in _warn][:2])
+check("LOG.exception" in _warn, "y deja el traceback en spy_direction.log")
+S.LOG.exception = _real_exc
+
 try:
     os.unlink(path)
 except Exception:
