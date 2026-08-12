@@ -39,6 +39,7 @@ no contabilizados**.
 | `52dcf4e` | La BANDA entra en el tape (233 + filtro de `_on_ticks` + anti doble conteo + `grupo='BANDA'`) | toca `_on_ticks`, hilo de la GUI |
 | `e61393d` | `ta_minute` guarda `spy_high`/`spy_low` (gap C1: sin ellos no hay MFE/MAE contrafactual) | solo registro |
 | `8498df0` | `trades.comision` de las dos patas (`profit` seguía siendo BRUTO) | solo registro |
+| `3323618` | **BUG**: la fila del minuto llevaba la hora de una vela y el cierre de la siguiente (5 tablas) | corrige dato |
 
 ## ⚠️ LO QUE HAY QUE VERIFICAR EN EL PRÓXIMO ARRANQUE
 
@@ -61,17 +62,32 @@ estática, compilaba, y **estaba mal**: la cold run diferencial lo cazó
 `_on_ticks`, excluirlo por lista deja su premium en **CERO en vez de aproximado** — el dato no
 se degrada, desaparece. Y `prem_center` alimenta `dist_prem_center_entrada` en `trades`.
 
-## 🔴 BUG PREEXISTENTE ENCONTRADO — DOCUMENTADO, **NO CORREGIDO** (decisión del usuario)
+## 🔴 BUG PREEXISTENTE — **YA CORREGIDO** (`3323618`), pero LOS DATOS VIEJOS SIGUEN MAL
 
-Durante los ~26 primeros minutos `vals` es `None` (GAP 21) y `spy` cae a `self.spy_price`, que
-`ta_poll` acaba de fijar con `rows[-1]` — **la vela EN FORMACIÓN**. La fila lleva la HORA de la
-vela cerrada pero el CIERRE de la siguiente. Medido: fila `hora='09:42'` con `spy=773.6` cuando
-09:42 cerró en 773.40 y 09:43 en 773.60.
+> ⚠️ **LEER ANTES DE ANALIZAR CUALQUIER SESIÓN ANTERIOR AL 2026-08-12.**
 
-⇒ En esa franja **NO se cumple `spy_low <= spy <= spy_high`**. Cruzar `spy` con los nuevos
-`spy_high`/`spy_low` mezcla dos minutos distintos. Con ≥26 barras no ocurre.
-Queda como check explícito **5.4 en `coldruns/gap21_coldrun.py`**. El arreglo, si se aprueba, es
-una línea: usar el cierre de la barra cuando `vals` es `None`.
+Durante los **~26 primeros minutos de cada día** (aprox. 09:30-09:56), la fila del minuto
+llevaba la **HORA de una vela y el CIERRE de la siguiente**. `vals` es `None` en esa franja
+(GAP 21) y `spy` caía a `self.spy_price`, que `ta_poll` acaba de fijar con `rows[-1]` — la vela
+**EN FORMACIÓN** — mientras `hora` sale de `rows[-2]`, la cerrada.
+
+**Afectaba a 5 tablas:** `ta_minute`, `m1_minute`, `m2_minute`, `clasico_minute`,
+`confirmacion_minute` (las 4 últimas vía `_spy_m`, la misma expresión).
+
+Medido: fila `hora='09:42'` con `spy=773.6` cuando 09:42 cerró en **773.40** y 09:43 en 773.60.
+
+**Qué significa para los análisis ya hechos:** en esa franja el precio iba **medio paso por
+delante** del resto de la fila. Cruzar precio con flujo del mismo minuto comparaba el flujo del
+minuto N contra el precio del minuto N+1 ⇒ **cualquier medición de lead/lag sobre la apertura
+está sesgada a favor de "el precio se adelanta"**. Los datos ya escritos **NO se han corregido**:
+quedan así. Desde el próximo arranque el dato es correcto.
+
+Arreglado con un único `_cierre` resuelto una vez y usado por las 5 tablas.
+⚠️ **Se llama `_cierre` y NO `_cl`**: `_cl` ya está cogido en esa función (`:3458`) por el estado
+del método CLASICO, que es un TEXTO. El primer intento usó `_cl`, lo pisó, y el log del minuto
+reventaba con `TypeError: must be real number, not str` perdiendo las líneas VELA/VENTANAS/PREM
+(la BD seguía bien porque sus usos son anteriores a la reasignación). Lo cazó `gap21_coldrun`.
+Guardado por los checks **5.4 y 5.5** de `coldruns/gap21_coldrun.py`.
 
 ## VERIFICACIÓN HECHA (regla 3 y 8)
 
