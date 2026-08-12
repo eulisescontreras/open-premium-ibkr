@@ -1457,12 +1457,19 @@ class SpyDirection:
                 self.mfe, self.mae, self.hora_mfe, self.spy_mfe = r[2], r[3], r[4], r[5]
                 # PRECIO DE ENTRADA: el de la fila es el avgFillPrice REAL de la compra, que es
                 # lo que _on_filled guardo. Sin reponerlo aqui, _adoptar_posicion lo recupera de
-                # avgCost, y avgCost INCLUYE LA COMISION -> el profit saldria ya neto de la
-                # comision de compra Y esa misma comision se guarda ademas en la columna
-                # `comision`, o sea DESCONTADA DOS VECES. Peor: el significado de `profit`
-                # dependeria de si hubo reinicio o no, que es lo que hace incomparables los dias.
-                # MEDIDO el 2026-08-12 en la #12: fill 1.13, avgCost 114.44 -> 1.1444; la
-                # diferencia de 1.44$ es exactamente la comision de compra.
+                # avgCost, y avgCost INCLUYE LA COMISION.
+                # VERIFICADO el 2026-08-12 con el trade #12 cerrado en el FLATTEN:
+                #   trades.entry_price 1.13 | profit guardado -83.44 | recalculado desde la
+                #   fila (0.31-1.13)x100 = -82.00 | entry_price implicito 1.144395 = avgCost.
+                # La fila se CONTRADICE A SI MISMA en 1.44$: quien recalcule el dia desde
+                # `trades` no obtiene el profit que la propia tabla guarda. Y el significado de
+                # `profit` pasa a depender de si hubo reinicio (con -> neto de la comision de
+                # compra; sin -> bruto), que es lo que hace incomparables dos dias.
+                # RIESGO ADICIONAL, NO VERIFICADO: si la columna `comision` trae las DOS patas,
+                # restarla al profit descuenta la comision de compra por segunda vez. En la #12
+                # NO llego a pasar porque el reinicio perdio `_com_entrada` y solo se guardo la
+                # pata de venta ("COMISION PARCIAL ... entrada=- salida=0.86"). Hace falta una
+                # operacion con las dos patas y un reinicio de por medio para comprobarlo.
                 # avgCost sigue siendo el ultimo recurso en _adoptar_posicion (guard
                 # `if not self.entry_price`) para una posicion huerfana que no tiene fila.
                 if r[6]:

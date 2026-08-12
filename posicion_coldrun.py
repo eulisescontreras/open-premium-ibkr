@@ -473,11 +473,15 @@ check(segs is not None, "_segs_desde funciona con la hora restaurada -> %s" % se
 # La fila decia entry_price=1.13 (el avgFillPrice que guardo _on_filled) pero _load_estado_dia
 # no lo reponia, asi que self.entry_price quedaba en None y _adoptar_posicion lo recuperaba de
 # avgCost: "Entrada recuperada de IBKR (avgCost=114.44) -> 1.1444".
-# POR QUE IMPORTA, EN DINERO: avgCost INCLUYE LA COMISION. Con entry_price=1.1444 el profit de
-# _on_filled sale YA NETO de la comision de compra, y esa MISMA comision se guarda ademas en la
-# columna `comision` para restarla -> DESCONTADA DOS VECES. Y el significado de `profit` pasaba
-# a depender de si hubo reinicio o no, que es lo que hace incomparables dos dias.
-# La diferencia medida fue 114.44 - 113.00 = 1.44$ en UNA operacion.
+# POR QUE IMPORTA, EN DINERO: avgCost INCLUYE LA COMISION, asi que el profit sale ya neto de la
+# comision de compra mientras que la FILA sigue guardando el avgFillPrice limpio.
+# VERIFICADO al cerrar la #12 en el FLATTEN: profit guardado -83.44, pero recalcular desde la
+# fila da (0.31-1.13)x100 = -82.00. La fila se contradice a si misma en 1.44$, y el significado
+# de `profit` pasa a depender de si hubo reinicio (con -> neto; sin -> bruto): dos dias dejan
+# de ser comparables.
+# RIESGO ADICIONAL, NO VERIFICADO: con las DOS patas en la columna `comision`, restarla
+# descontaria la comision de compra por segunda vez. En la #12 no llego a pasar (el reinicio
+# perdio `_com_entrada` y solo se guardo la venta: "COMISION PARCIAL ... entrada=- salida=0.86").
 check(app.entry_price == 0.80,
       "el precio de entrada se repone de la FILA (avgFillPrice), no queda en None -> %s"
       % app.entry_price)
