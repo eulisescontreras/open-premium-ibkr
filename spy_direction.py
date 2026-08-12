@@ -2102,8 +2102,19 @@ class SpyDirection:
             # objetivo de posicion segun la nueva direccion
             self.target = "CALL" if new == "UP" else "PUT"
             self.exit_reason = "giro"    # la venta que provoque este giro se marca como tal
-            ACT.info("GIRO -> %s (net_call=%.0f net_put=%.0f thr=%.0f)",
-                     new, self.net_call, self.net_put, thr)
+            # 2026-08-12: decir POR QUE giro. Antes imprimia `thr` siempre, y con USAR_M1
+            # el umbral ya NO interviene en la decision: al releer el log parecia que el
+            # giro venia del umbral cuando lo disparo M1 con RETARDO_M1_MIN de retraso.
+            if USAR_M1:
+                ACT.info("GIRO -> %s por M1 (efectivo de hace %d min; M1 ahora=%s) "
+                         "| net_call=%.0f net_put=%.0f abs C=%.0f P=%.0f | thr=%.0f NO decide",
+                         new, RETARDO_M1_MIN, self.m1_estado or "-",
+                         self.net_call, self.net_put,
+                         abs(self.net_call), abs(self.net_put), thr)
+            else:
+                ACT.info("GIRO -> %s por CLASICO diff/thr (net_call=%.0f net_put=%.0f "
+                         "diff=%.0f thr=%.0f)",
+                         new, self.net_call, self.net_put, diff, thr)
 
     def _raise_alert(self, kind, text, sound):
         self.alert_kind = kind
@@ -3324,6 +3335,29 @@ class SpyDirection:
                 (fecha, hora, _spy_m, self.net_call, self.net_put, _ac, _ap, _dif, _sen,
                  self.sen_racha, self.conf_estado, self.conf_efectivo,
                  CONFIRMACION_MIN, RETARDO_M1_MIN, self.m_recentrado))
+            # --- LOG de los 4 metodos (2026-08-12, peticion del usuario) ---
+            # Hasta ahora M1/M2/CLASICO/CONFIRMACION solo escribian en sus tablas y en el
+            # panel: 0 lineas en spy_activity.log. Como M1 es el que DECIDE (USAR_M1), un
+            # fallo suyo era invisible en el log y solo se podia ver consultando la BD.
+            # Se registra el estado del minuto, la racha, y el EFECTIVO (el que de verdad
+            # se aplica, con RETARDO_M1_MIN de retraso). MANDA marca cual decide.
+            ACT.info("MIN %s | METODOS  M1=%s(r%d)%s  M2=%s(r%d)  CLASICO=%s(r%d)  "
+                     "CONFIRMA=%s(sen %s r%d/%d) | efectivos(-%dmin) M1=%s M2=%s CL=%s CONF=%s"
+                     " | MANDA %s",
+                     hora, _m1, self.m1_racha, "  <-MANDA" if USAR_M1 else "",
+                     _m2, self.m2_racha, _cl, self.cl_racha,
+                     self.conf_estado or "-", _sen, self.sen_racha, CONFIRMACION_MIN,
+                     RETARDO_M1_MIN, self.m1_efectivo or "-", self.m2_efectivo or "-",
+                     self.cl_efectivo or "-", self.conf_efectivo or "-",
+                     "M1" if USAR_M1 else "CLASICO")
+            # contadores crudos: es lo que hay que mirar si M1 no gira cuando deberia
+            ACT.info("MIN %s | M1 contadores up=%d down=%d marcador=%+d | M2 usd_up=%.0f "
+                     "usd_down=%.0f acum=%+.0f | abs C=%.0f P=%.0f dif=%+.0f senal_min=%s"
+                     " | hist m1=%d (necesita >=%d min para decidir) | recentrados=%d",
+                     hora, self.m1_up, self.m1_down, self.m1_up - self.m1_down,
+                     self.m2_up, self.m2_down, self.m2_up - self.m2_down,
+                     _ac, _ap, _dif, _sen, len(self.m1_hist), RETARDO_M1_MIN,
+                     self.m_recentrado)
             self.m_recentrado = 0
             for (exp, strike, right), cp in self.accum.items():
                 dp = self.today_prem.get((exp, strike, right), 0.0)
