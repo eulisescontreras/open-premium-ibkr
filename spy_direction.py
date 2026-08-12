@@ -86,6 +86,7 @@ TRADING_ENABLED = True      # ARRANCA ARMADO (2026-08-10, orden del usuario). Bo
 QTY = 1                     # contratos por señal (cuenta pequeña)
 REPRICE_SECS = 4.0          # re-precia al mid si no llena en este tiempo
 MAX_FILL_SECS = 60.0        # tiempo maximo intentando llenar una entrada
+USAR_M1 = True              # 2026-08-11: disparador de flips = M1. False -> criterio diff/thr.
 FLATTEN_HHMM = "15:45"      # ET: cerrar cualquier opcion abierta
 STOP_NEW_HHMM = "15:40"     # ET: no abrir nuevas cerca del cierre
 START_TRADE_HHMM = "09:35"  # ET: NO abrir posiciones antes de esta hora (2026-08-11, peticion del
@@ -492,6 +493,13 @@ class SpyDirection:
         self.put = None               # ATM/ITM put (señal)
         self.net_call = 0.0
         self.net_put = 0.0
+        # --- M1 / M2: contadores de la investigacion (2026-08-11) ---
+        self.m1_up = 0; self.m1_down = 0        # contador de MINUTOS
+        self.m2_up = 0.0; self.m2_down = 0.0    # contador de DOLARES
+        self.m1_estado = None; self.m2_estado = None
+        self.m1_racha = 0; self.m2_racha = 0
+        self.m_recentrado = 0                   # 1 si hubo re-centrado en el minuto en curso
+        self.cl_estado = None; self.cl_racha = 0   # metodo ANTIGUO (diff/thr), solo registro
         self.prev_vol = {}            # conId -> volumen acumulado previo (delta)
         self.state = "-"
         self.transitions = []
@@ -660,6 +668,24 @@ class SpyDirection:
                   "fecha TEXT, hora TEXT, expiry TEXT, strike REAL, right TEXT, "
                   "cum_prem REAL, day_prem REAL, net_prem REAL, open_interest REAL, gamma REAL, "
                   "PRIMARY KEY(fecha,hora,expiry,strike,right))")
+        # M1 / M2 (2026-08-11): una tabla por metodo, con las columnas de SU calculo
+        c.execute("CREATE TABLE IF NOT EXISTS m1_minute ("
+                  "fecha TEXT, hora TEXT, spy REAL, net_call REAL, net_put REAL, "
+                  "abs_call REAL, abs_put REAL, dif REAL, senal_min TEXT, "
+                  "n_up INTEGER, n_down INTEGER, marcador INTEGER, m1 TEXT, racha INTEGER, "
+                  "recentrado INTEGER, PRIMARY KEY(fecha,hora))")
+        # METODO ANTIGUO (diff/thr): se sigue calculando y registrando aunque NO decida,
+        # para poder comparar los tres metodos por tipo de mercado (bull/bear/lateral).
+        c.execute("CREATE TABLE IF NOT EXISTS clasico_minute ("
+                  "fecha TEXT, hora TEXT, spy REAL, net_call REAL, net_put REAL, "
+                  "diff REAL, thr REAL, banda REAL, momentum REAL, mom_min REAL, "
+                  "clasico TEXT, estado_real TEXT, warn_side TEXT, racha INTEGER, "
+                  "recentrado INTEGER, PRIMARY KEY(fecha,hora))")
+        c.execute("CREATE TABLE IF NOT EXISTS m2_minute ("
+                  "fecha TEXT, hora TEXT, spy REAL, net_call REAL, net_put REAL, "
+                  "abs_call REAL, abs_put REAL, dif REAL, senal_min TEXT, "
+                  "usd_up REAL, usd_down REAL, acumulado REAL, m2 TEXT, racha INTEGER, "
+                  "recentrado INTEGER, PRIMARY KEY(fecha,hora))")
         # migracion para BD existentes: agregar columnas nuevas si faltan
         for col in ("net_prem REAL", "open_interest REAL", "gamma REAL"):
             try:
@@ -938,6 +964,12 @@ class SpyDirection:
     def reset_day(self):
         """Nuevo dia de mercado: limpiar acumuladores intradia (la senal arranca en 0)."""
         self.net_call = 0.0; self.net_put = 0.0
+        self.m1_up = 0; self.m1_down = 0
+        self.m2_up = 0.0; self.m2_down = 0.0
+        self.m1_estado = None; self.m2_estado = None
+        self.m1_racha = 0; self.m2_racha = 0
+        self.m_recentrado = 0
+        self.cl_estado = None; self.cl_racha = 0
         self.today_prem = {}; self.net_prem = {}; self.today_vol = {}
         self.today_net = {}          # el NETO del dia se reinicia; accum_net NO (es persistente)
         self.prev_vol = {}; self.band_prev_vol = {}; self.prev_gamma = {}
@@ -2000,7 +2032,14 @@ class SpyDirection:
                 self.last_warn_side = "UP"
 
         new = self.state
-        if diff > thr:
+        if USAR_M1:
+            # 2026-08-11: el disparador pasa a M1 (dominancia en VALOR ABSOLUTO, contador
+            # de MINUTOS). m1_estado lo actualiza ta_poll una vez por minuto, asi que M1
+            # solo puede girar en el cambio de minuto: eso elimina los flips en rafaga.
+            # NEUTRAL o None -> no se toca el estado (no se inventa direccion).
+            if self.m1_estado in ("UP", "DOWN"):
+                new = self.m1_estado
+        elif diff > thr:
             new = "UP"
         elif diff < -thr:
             new = "DOWN"
@@ -2510,6 +2549,7 @@ class SpyDirection:
                         self.call = nc
                         self.ib.reqMktData(nc, "233", False, False)
                         ACT.info("SENAL call re-centrada -> %gC (precio %.2f)", cs, px)
+                        self.m_recentrado = 1   # GAP D: minuto contaminado
                 if self.put is None or self.put.strike != ps:
                     np_ = self._nuevo_opt(ps, "P")
                     if np_ is not None:
@@ -2517,6 +2557,7 @@ class SpyDirection:
                         self.put = np_
                         self.ib.reqMktData(np_, "233", False, False)
                         ACT.info("SENAL put re-centrada -> %gP (precio %.2f)", ps, px)
+                        self.m_recentrado = 1   # GAP D: minuto contaminado
 
             # ---- 2) EJECUCION: ATM REAL (strike mas cercano al precio) ----
             # Solo con la cuenta plana: con posicion abierta se venderia otro contrato.
@@ -3140,6 +3181,55 @@ class SpyDirection:
                  c1m[0], c1m[1], c5m[0], c5m[1], c15m[0], c15m[1],
                  # SMA 20/50/200: None (NULL) mientras no haya N barras. Ver TAEngine.compute.
                  v.get("sma20"), v.get("sma50"), v.get("sma200")))
+            # --- M1 / M2 (2026-08-11): se registran cada minuto. M1 ademas DECIDE (USAR_M1).
+            # Los contadores avanzan aqui y solo aqui: M1 es un contador de MINUTOS, no puede
+            # sumar 1 por segundo. Efecto: los flips solo pueden ocurrir al cambiar de minuto.
+            _ac = abs(self.net_call); _ap = abs(self.net_put)
+            _dif = _ac - _ap
+            _sen = "UP" if _dif > 0 else "DOWN"
+            if _dif > 0:
+                self.m1_up += 1; self.m2_up += _dif
+            else:
+                self.m1_down += 1; self.m2_down += -_dif
+            _m1 = ("UP" if self.m1_up > self.m1_down else
+                   "DOWN" if self.m1_down > self.m1_up else "NEUTRAL")
+            _m2 = ("UP" if self.m2_up > self.m2_down else
+                   "DOWN" if self.m2_down > self.m2_up else "NEUTRAL")
+            self.m1_racha = self.m1_racha + 1 if _m1 == self.m1_estado else 1
+            self.m2_racha = self.m2_racha + 1 if _m2 == self.m2_estado else 1
+            self.m1_estado = _m1; self.m2_estado = _m2
+            _spy_m = v.get("close", self.spy_price)
+            self.db.execute(
+                "INSERT OR REPLACE INTO m1_minute(fecha,hora,spy,net_call,net_put,abs_call,"
+                "abs_put,dif,senal_min,n_up,n_down,marcador,m1,racha,recentrado) "
+                "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                (fecha, hora, _spy_m, self.net_call, self.net_put, _ac, _ap, _dif, _sen,
+                 self.m1_up, self.m1_down, self.m1_up - self.m1_down, _m1,
+                 self.m1_racha, self.m_recentrado))
+            self.db.execute(
+                "INSERT OR REPLACE INTO m2_minute(fecha,hora,spy,net_call,net_put,abs_call,"
+                "abs_put,dif,senal_min,usd_up,usd_down,acumulado,m2,racha,recentrado) "
+                "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                (fecha, hora, _spy_m, self.net_call, self.net_put, _ac, _ap, _dif, _sen,
+                 self.m2_up, self.m2_down, self.m2_up - self.m2_down, _m2,
+                 self.m2_racha, self.m_recentrado))
+            # METODO ANTIGUO (diff/thr): NO decide, pero se registra igual para comparar.
+            _diff = self.net_call - self.net_put
+            if ADAPTIVE:
+                _thr = max(SIGNAL_THRESHOLD, ADAPT_FRAC * (_ac + _ap))
+            else:
+                _thr = SIGNAL_THRESHOLD
+            _cl = "UP" if _diff > _thr else "DOWN" if _diff < -_thr else "NEUTRAL"
+            self.cl_racha = self.cl_racha + 1 if _cl == self.cl_estado else 1
+            self.cl_estado = _cl
+            self.db.execute(
+                "INSERT OR REPLACE INTO clasico_minute(fecha,hora,spy,net_call,net_put,"
+                "diff,thr,banda,momentum,mom_min,clasico,estado_real,warn_side,racha,"
+                "recentrado) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                (fecha, hora, _spy_m, self.net_call, self.net_put, _diff, _thr,
+                 _thr * WARN_BAND_FRAC, self.last_momentum, MOM_FRAC * _thr, _cl,
+                 self.state, self.last_warn_side, self.cl_racha, self.m_recentrado))
+            self.m_recentrado = 0
             for (exp, strike, right), cp in self.accum.items():
                 dp = self.today_prem.get((exp, strike, right), 0.0)
                 # NO usar INSERT OR REPLACE: esta fila puede haberla escrito _persist_walls
@@ -3436,6 +3526,11 @@ def run_gui(app):
                          fg="#67e8f9", bg="#111111", wraplength=520, justify="center")
     walls_lbl.pack(pady=(0, 2))
 
+    # PANEL DE LOS 3 METODOS (2026-08-11). Los tres se ven; SOLO M1 decide (USAR_M1).
+    metodos_lbl = tk.Label(root, text="Metodos: (esperando el primer minuto...)",
+                           font=("Consolas", 10, "bold"), fg="#fcd34d", bg="#111111")
+    metodos_lbl.pack(pady=(0, 2))
+
     # Gamma Ladder (solo lectura, estilo MarketSnack): premium $ por strike
     tk.Label(root, text="Gamma Ladder - premium $ por strike (verde>precio / rojo<precio):",
              font=("Consolas", 8, "bold"), fg="#67e8f9", bg="#111111").pack()
@@ -3582,6 +3677,14 @@ def run_gui(app):
 
         v = app.ta_vals
         if v:
+            _col = {"UP": "#22c55e", "DOWN": "#ef4444", "NEUTRAL": "#9ca3af", None: "#9ca3af"}
+            _m1 = app.m1_estado or "-"; _m2 = app.m2_estado or "-"; _cl = app.cl_estado or "-"
+            _mand = "M1" if USAR_M1 else "CLASICO"
+            metodos_lbl.config(
+                text=(f"M1 {_m1:>7} ({app.m1_up}-{app.m1_down})   "
+                      f"M2 {_m2:>7} ({app.m2_up - app.m2_down:+,.0f}$)   "
+                      f"CLASICO {_cl:>7}   |  MANDA: {_mand}"),
+                fg=_col.get(app.m1_estado, "#9ca3af"))
             ta_lbl.config(text=(f"TA 1m: {v['dir']}  RSI {v['rsi']:.0f}  "
                                 f"MACDh {v['macd_hist']:+.2f}  EMA8/21 {v['ema8']:.2f}/{v['ema21']:.2f}"
                                 f"  score {v['score']:+d}"))

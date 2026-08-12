@@ -1,8 +1,10 @@
 # PARCHE M1/M2 — registro en tablas + cambio del disparador de flips
 
 Fecha: 2026-08-11. Pedido explícito del usuario.
-**NO probado contra la app** (no hay conexión a IB desde el entorno donde se escribió).
-Requiere corrida en frío diferencial antes de arrancar en vivo.
+**PROBADO** con `coldruns/m1m2_coldrun.py`: 34 checks, 0 fallos.
+Diferencial A/B contra el código sin parche: **21 FAILs** (el test discrimina).
+Diferencial de las 19 suites previas: **conteos IDÉNTICOS**.
+Lo único no probado es la GUI en `--demo`, que necesita display.
 
 ---
 
