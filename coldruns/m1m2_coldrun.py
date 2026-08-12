@@ -349,6 +349,128 @@ try:
 except Exception:
     pass
 
+# =============================================================== 7  (2026-08-12)
+print("\n[7] REINICIO A MITAD DE SESION: los 4 metodos se reponen ENTEROS (A vs B)")
+# POR QUE: `estado_intradia` solo repone net_call/net_put/pnl/estado. Los contadores de los
+# metodos vivian SOLO en memoria y las 4 tablas del minuto NUNCA se leian, asi que un reinicio
+# los dejaba en CERO. Medido en produccion el 2026-08-12: marcador +90 tras 163 minutos, y un
+# reinicio lo mandaba a 0 con `m1_hist` vacia => ~20 min sin poder aplicar el retardo y
+# despues decidiendo desde cero (bastaban 1-2 minutos para invertir la direccion).
+# A "vive" la sesion; B arranca en blanco y repone desde la MISMA BD. Tienen que quedar
+# IDENTICOS, incluida la direccion EFECTIVA, que es la que decide los trades.
+from datetime import datetime as _dt, timedelta as _td       # noqa: E402
+import time as _time                                          # noqa: E402
+
+_N = 30
+_ahora = _dt.now()
+if _ahora.hour == 0 and _ahora.minute < _N + 5:
+    print("     (omitido: a esta hora las %d horas de prueba cruzarian la medianoche)" % _N)
+else:
+    appA, pathA = nueva_app()
+    crea_tablas(appA)
+    # `crea_tablas` no crea clasico_minute (el parche M1/M2 no la incluia): se crea aqui para
+    # cubrir los CUATRO metodos, que es lo que hay que demostrar.
+    appA.db.execute("CREATE TABLE IF NOT EXISTS clasico_minute ("
+                    "fecha TEXT, hora TEXT, spy REAL, net_call REAL, net_put REAL, "
+                    "diff REAL, thr REAL, banda REAL, momentum REAL, mom_min REAL, "
+                    "clasico TEXT, estado_real TEXT, warn_side TEXT, racha INTEGER, "
+                    "clasico_efectivo TEXT, retardo_min INTEGER, "
+                    "recentrado INTEGER, PRIMARY KEY(fecha,hora))")
+    FECHA = _ahora.strftime("%Y-%m-%d")
+    # horas REALES ya pasadas: `_load_metodos` reconstruye el reloj desde la hora de cada fila
+    horas = [(_ahora - _td(minutes=_N - i)).strftime("%H:%M") for i in range(_N)]
+    for i, h in enumerate(horas):
+        if i < 12:
+            un_minuto(appA, FECHA, h, 100000.0, 400000.0)     # |P|>|C| -> DOWN
+        else:
+            un_minuto(appA, FECHA, h, 500000.0, 120000.0)     # |C|>|P| -> UP
+        appA.db.execute(
+            "INSERT OR REPLACE INTO clasico_minute(fecha,hora,spy,net_call,net_put,diff,thr,"
+            "banda,momentum,mom_min,clasico,estado_real,warn_side,racha,clasico_efectivo,"
+            "retardo_min,recentrado) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            (FECHA, h, 773.0, 0, 0, 0, 0, 0, 0, 0,
+             "DOWN" if i < 12 else "UP", "UP", None,
+             (i + 1) if i < 12 else (i - 11), None, S.RETARDO_M1_MIN, 0))
+    appA.cl_estado = "UP"; appA.cl_racha = _N - 12
+    appA.db.commit()
+
+    ESTADO = ("m1_up", "m1_down", "m1_estado", "m1_racha",
+              "m2_up", "m2_down", "m2_estado", "m2_racha",
+              "cl_estado", "cl_racha", "sen_estado", "sen_racha", "conf_estado")
+    A = {k: getattr(appA, k) for k in ESTADO}
+    print("     A (sesion viva)   -> marcador=%+d m1=%s r=%d m2=%s conf=%s cl=%s r=%d"
+          % (A["m1_up"] - A["m1_down"], A["m1_estado"], A["m1_racha"], A["m2_estado"],
+             A["conf_estado"], A["cl_estado"], A["cl_racha"]))
+
+    appB, pathB = nueva_app()
+    appB.db.close()                                  # se descarta su BD temporal (no se borra)
+    appB.db = sqlite3.connect(pathA)                 # el proceso nuevo abre la MISMA BD
+    check(appB.m1_up == 0 and appB.m1_down == 0 and not appB.m1_hist,
+          "7.1 B arranca en blanco, como un proceso recien lanzado")
+
+    S.SpyDirection._load_metodos(appB, FECHA)        # <-- FUNCION REAL
+    B = {k: getattr(appB, k) for k in ESTADO}
+    print("     B (tras reinicio) -> marcador=%+d m1=%s r=%d m2=%s conf=%s cl=%s r=%d"
+          % (B["m1_up"] - B["m1_down"], B["m1_estado"], B["m1_racha"], B["m2_estado"],
+             B["conf_estado"], B["cl_estado"], B["cl_racha"]))
+
+    _difs = [k for k in ESTADO if A[k] != B[k]]
+    check(not _difs, "7.2 las %d variables de los 4 metodos quedan IDENTICAS%s"
+          % (len(ESTADO), "" if not _difs else
+             "  *** DIFIEREN: %s ***" % [(k, A[k], B[k]) for k in _difs]))
+    check(len(appB.m1_hist) == _N and len(appB.m2_hist) == _N
+          and len(appB.cl_hist) == _N and len(appB.conf_hist) == _N,
+          "7.3 las CUATRO historias se reconstruyen enteras -> m1=%d m2=%d cl=%d conf=%d"
+          % (len(appB.m1_hist), len(appB.m2_hist), len(appB.cl_hist), len(appB.conf_hist)))
+    # FIDELIDAD: `conf_hist` lleva entradas con estado None a proposito (:3603 appendea
+    # `conf_estado` SIEMPRE, y vale None hasta que la senal aguanta CONFIRMACION_MIN minutos).
+    # Si al reponer se saltaran, la historia quedaria DESPLAZADA y `_efec` devolveria un estado
+    # anterior donde el sistema vivo dice None. Se comprueba que estan y en su sitio.
+    _nones = [i for i, (_t, _e) in enumerate(appB.conf_hist) if _e is None]
+    check(_nones == list(range(S.CONFIRMACION_MIN - 1)),
+          "7.3-bis conf_hist conserva los %d None iniciales EN SU POSICION -> %s"
+          % (S.CONFIRMACION_MIN - 1, _nones))
+
+    # LO QUE DE VERDAD DECIDE: la direccion EFECTIVA con el retardo. Se aplica la MISMA regla
+    # que `_efec` dentro de `_log_minute` y se contrasta contra lo que dice la BD para esa hora.
+    def _efec_de(hist, retardo_min):
+        lim = _time.monotonic() - retardo_min * 60.0
+        r = None
+        for ts, st in hist:
+            if ts <= lim:
+                r = st
+            else:
+                break
+        return r
+
+    _eB = _efec_de(appB.m1_hist, S.RETARDO_M1_MIN)
+    _lim_hora = (_ahora - _td(minutes=S.RETARDO_M1_MIN)).strftime("%H:%M")
+    _row = appB.db.execute(
+        "SELECT m1 FROM m1_minute WHERE fecha=? AND hora<=? ORDER BY hora DESC LIMIT 1",
+        (FECHA, _lim_hora)).fetchone()
+    _esperado = _row[0] if _row else None
+    check(_eB == _esperado,
+          "7.4 la DIRECCION EFECTIVA tras el reinicio es la del minuto -%d: %s (BD dice %s)"
+          % (S.RETARDO_M1_MIN, _eB, _esperado))
+    check(_eB is not None,
+          "7.5 hay direccion efectiva DESDE EL PRIMER INSTANTE (antes: None durante ~%d min)"
+          % S.RETARDO_M1_MIN)
+
+    # primer arranque del dia: NO debe inventarse nada
+    appC, pathC = nueva_app()
+    crea_tablas(appC)
+    S.SpyDirection._load_metodos(appC, FECHA)
+    check(appC.m1_up == 0 and appC.m1_down == 0 and not appC.m1_hist
+          and appC.m1_estado is None,
+          "7.6 sin filas de hoy (primer arranque) NO se toca nada: contadores en cero")
+    # solo se cierran las conexiones. NO se borra ningun fichero: las BD son temporales
+    # (tempfile.mkstemp) y este cold run NUNCA toca spy_history.db.
+    for _a in (appA, appB, appC):
+        try:
+            _a.db.close()
+        except Exception:
+            pass
+
 print("\n" + "=" * 78)
 print("FALLOS: %d" % len(FAILS))
 for f in FAILS:

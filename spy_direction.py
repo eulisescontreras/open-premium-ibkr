@@ -1354,6 +1354,8 @@ class SpyDirection:
                     "ORDER BY id DESC LIMIT 8", (hoy,)).fetchall():
                 self.transitions.append((hora, estado))
             self.transitions.reverse()
+            # 3-bis) LOS CUATRO METODOS: sin esto un reinicio les borra la memoria del dia.
+            self._load_metodos(hoy)
             if self.today_prem or n_np or self.transitions:
                 ACT.info("ESTADO DEL DIA repuesto: %d strikes con premium, %d con net_prem, "
                          "%d con volumen, %d giros | prev_vol/band_prev_vol/buys_pend "
@@ -1361,6 +1363,124 @@ class SpyDirection:
                          len(self.today_prem), n_np, n_vol, len(self.transitions))
         except Exception:
             LOG.exception("Error repoblando el estado del dia")
+
+    def _load_metodos(self, hoy):
+        """Repone en memoria el estado de los CUATRO metodos (M1, M2, CLASICO, CONFIRMACION)
+        cuando la sesion se reinicia a mitad del dia.
+
+        POR QUE HACE FALTA: las cuatro tablas del minuto se escriben desde el 2026-08-11 pero
+        NUNCA se leian (verificado con grep: cero SELECT sobre ellas). `_load_intradia` solo
+        repone net_call/net_put/pnl/estado, asi que tras un reinicio los contadores arrancaban
+        en CERO. Medido el 2026-08-12: el marcador de M1 iba por +75 tras 141 minutos y un
+        reinicio lo dejaba en 0. Peor aun, `m1_hist` quedaba vacia, con lo que M1 no podia
+        aplicar el retardo hasta juntar RETARDO_M1_MIN minutos NUEVOS (~20 min sin poder
+        girar) y despues decidia con contadores desde cero: bastaban 1-2 minutos de dominancia
+        contraria para invertir la direccion. Un reinicio no puede cambiar lo que el sistema
+        opina; eso no es recuperarse, es empezar otra sesion distinta con la misma posicion.
+
+        LAS HISTORIAS Y EL RELOJ: `m1_hist`/`m2_hist`/`cl_hist`/`conf_hist` llevan sellos de
+        `time.monotonic()`, que se reinicia con el proceso y NO sirve entre arranques. Se
+        reconstruyen desplazando el reloj: a la fila de las HH:MM le corresponde
+        `monotonic_ahora - (minutos transcurridos desde HH:MM) * 60`. Asi `_efec` sigue
+        comparando contra RETARDO_M1_MIN exactamente igual que si no se hubiera reiniciado.
+
+        Si no hay filas de HOY no se toca nada: es el primer arranque del dia y los contadores
+        en cero son la verdad (regla 13).
+
+        `m1_efectivo` NO se calcula aqui: lo recalcula `_log_minute` en el primer minuto, y
+        hasta entonces `_update_signal` mantiene `self.state`, que `_load_intradia` ya repuso.
+        La ventana ciega pasa de ~20 minutos a como mucho 1.
+        """
+        try:
+            ahora = datetime.now()
+            t_now = time.monotonic()
+            ahora_min = ahora.hour * 60 + ahora.minute
+
+            def _ts(hhmm):
+                """monotonic sintetico para una hora HH:MM de hoy. None si no es utilizable."""
+                try:
+                    mins = ahora_min - (int(hhmm[:2]) * 60 + int(hhmm[3:5]))
+                except Exception:
+                    return None
+                return (t_now - mins * 60.0) if mins >= 0 else None
+
+            def _hist(filas):
+                """[(ts, estado)] en orden cronologico, FIEL a lo que hace el codigo vivo.
+
+                OJO: se conservan las entradas con estado None. `conf_hist` las tiene a
+                proposito (`:3603` appendea `self.conf_estado` SIEMPRE, y vale None hasta que
+                la senal aguanta CONFIRMACION_MIN minutos). Saltarlas desplazaria la historia
+                y `_efec` devolveria un estado anterior donde el sistema vivo dice None.
+                Lo unico que se descarta es la fila cuyo sello de tiempo no se puede
+                reconstruir (hora futura respecto a ahora: cruce de medianoche).
+                """
+                out = []
+                for h, est in filas:
+                    ts = _ts(h)
+                    if ts is not None:
+                        out.append((ts, est))
+                return out
+
+            n1 = n2 = ncl = nco = 0
+
+            f1 = self.db.execute(
+                "SELECT hora,n_up,n_down,m1,racha,senal_min FROM m1_minute "
+                "WHERE fecha=? ORDER BY hora", (hoy,)).fetchall()
+            if f1:
+                self.m1_hist = _hist([(r[0], r[3]) for r in f1])
+                _u, _d, _m, _r, _s = f1[-1][1], f1[-1][2], f1[-1][3], f1[-1][4], f1[-1][5]
+                self.m1_up = int(_u or 0)
+                self.m1_down = int(_d or 0)
+                self.m1_estado = _m or None
+                self.m1_racha = int(_r or 0)
+                self.sen_estado = _s or None
+                n1 = len(f1)
+
+            f2 = self.db.execute(
+                "SELECT hora,usd_up,usd_down,m2,racha FROM m2_minute "
+                "WHERE fecha=? ORDER BY hora", (hoy,)).fetchall()
+            if f2:
+                self.m2_hist = _hist([(r[0], r[3]) for r in f2])
+                self.m2_up = float(f2[-1][1] or 0.0)
+                self.m2_down = float(f2[-1][2] or 0.0)
+                self.m2_estado = f2[-1][3] or None
+                self.m2_racha = int(f2[-1][4] or 0)
+                n2 = len(f2)
+
+            fcl = self.db.execute(
+                "SELECT hora,clasico,racha FROM clasico_minute "
+                "WHERE fecha=? ORDER BY hora", (hoy,)).fetchall()
+            if fcl:
+                self.cl_hist = _hist([(r[0], r[1]) for r in fcl])
+                self.cl_estado = fcl[-1][1] or None
+                self.cl_racha = int(fcl[-1][2] or 0)
+                ncl = len(fcl)
+
+            fco = self.db.execute(
+                "SELECT hora,confirmado,racha FROM confirmacion_minute "
+                "WHERE fecha=? ORDER BY hora", (hoy,)).fetchall()
+            if fco:
+                self.conf_hist = _hist([(r[0], r[1]) for r in fco])
+                self.conf_estado = fco[-1][1] or None
+                self.sen_racha = int(fco[-1][2] or 0)
+                nco = len(fco)
+
+            if n1 or n2 or ncl or nco:
+                ACT.info("METODOS repuestos tras el reinicio: M1 up=%d down=%d marcador=%+d "
+                         "estado=%s racha=%d hist=%d | M2 acum=%+.0f estado=%s | CLASICO=%s "
+                         "r=%d | CONFIRMA=%s r=%d | filas leidas %d/%d/%d/%d",
+                         self.m1_up, self.m1_down, self.m1_up - self.m1_down,
+                         self.m1_estado or "-", self.m1_racha, len(self.m1_hist),
+                         self.m2_up - self.m2_down, self.m2_estado or "-",
+                         self.cl_estado or "-", self.cl_racha,
+                         self.conf_estado or "-", self.sen_racha,
+                         n1, n2, ncl, nco)
+            else:
+                ACT.info("METODOS: no hay filas de hoy -> primer arranque del dia, "
+                         "los contadores se quedan en cero (correcto)")
+        except Exception:
+            # nunca puede impedir el arranque: sin reponer se opera como hasta ahora
+            LOG.exception("Error reponiendo el estado de los metodos")
 
     def _sellar_sesion(self):
         """SELLO DE CONFIGURACION: deja constancia de QUE codigo y QUE parametros generaron
