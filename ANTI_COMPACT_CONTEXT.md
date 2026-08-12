@@ -6,6 +6,99 @@
 > otra máquina — los logs viejos del repo tienen esa ruta).
 
 ---
+# 🔵 MIÉRCOLES 2026-08-12 ~11:45 ET — 3 COMMITS NUEVOS, **PENDIENTES DE ARRANQUE**
+---
+
+> **NADA DE ESTO ESTÁ ACTIVO TODAVÍA.** La app (PID 12668) cargó `spy_direction.py` en memoria
+> a las 09:25 y editar el `.py` no le afecta. Los 3 cambios entran **en el próximo arranque**.
+> La sesión de hoy NO se tocó: ni la app, ni la BD, ni ningún parámetro de decisión.
+
+## EL HALLAZGO QUE LO ORIGINA TODO: el tape veía el 15% del mercado
+
+Medido sobre la BD viva (copia consistente, no estimación):
+```
+Volumen 0DTE del día:      1.916.463 contratos
+Visto por el `tape`:         290.319  =  15,1%
+Strikes con CERO ops:         32 de 40
+Volumen en esos strikes:   1.171.856  =  61,1%
+```
+`net_call`/`net_put` → M1 → la dirección que se opera, salían de 2 strikes rotatorios. Los seis
+mayores focos de volumen del día (772P 218k, 770P 191k, 774C 180k, 775C 160k, 771P 159k,
+769P 140k) eran **invisibles**.
+
+**Causa raíz:** la banda se suscribía con `"100,101,106"` — **sin RTVolume (233)**. Señal y
+baseline sí lo pedían, y eran justo los únicos que el tape veía. El mismo agujero explica que
+el poll de walls leyera `tk.volume` **obsoleto**: entre 09:48 y 09:51, con el tape registrando
+842 operaciones reales, el poll leyó delta CERO en 772C/773C/773P/774P → **612.615 $ de premium
+no contabilizados**.
+
+## LOS 3 COMMITS
+
+| commit | qué | riesgo |
+|---|---|---|
+| `52dcf4e` | La BANDA entra en el tape (233 + filtro de `_on_ticks` + anti doble conteo + `grupo='BANDA'`) | toca `_on_ticks`, hilo de la GUI |
+| `e61393d` | `ta_minute` guarda `spy_high`/`spy_low` (gap C1: sin ellos no hay MFE/MAE contrafactual) | solo registro |
+| `8498df0` | `trades.comision` de las dos patas (`profit` seguía siendo BRUTO) | solo registro |
+
+## ⚠️ LO QUE HAY QUE VERIFICAR EN EL PRÓXIMO ARRANQUE
+
+1. **Que IBKR acepte `233` en los 40 contratos de la banda.** Es el ÚNICO punto no verificable
+   sin reiniciar. Si lo rechazara por límite de líneas, saldría en el log por el `except` de la
+   suscripción de walls. Rollback = revertir solo ese punto.
+   *(Razón por la que no debería fallar: añadir un tick genérico a un contrato **ya suscrito**
+   no consume línea nueva; la línea es por contrato.)*
+2. **Que el tape crezca y no ahogue la GUI.** Pasará de ~34k filas/día a varias veces más. El
+   volcado por lotes ya existe (`TAPE_FLUSH_N=400`). Interruptor: `TAPE_ENABLED=False`.
+3. **Que aparezcan filas con `grupo='BANDA'`** en `tape` y que `spy_high`/`spy_low` dejen de ser
+   NULL en `ta_minute`.
+
+## 🧠 DECISIÓN DE DISEÑO QUE NO HAY QUE "SIMPLIFICAR"
+
+La exclusión anti doble conteo es **DINÁMICA** (`self._tick_prem_ids`: conIds que `_on_ticks` ha
+contado **de verdad**), no una lista estática de señal+baseline+banda. El primer intento SÍ era
+estática, compilaba, y **estaba mal**: la cold run diferencial lo cazó
+(`prem_center -> -`, `strike 780 tiene premium>0` FAIL). Si un contrato no llega nunca a
+`_on_ticks`, excluirlo por lista deja su premium en **CERO en vez de aproximado** — el dato no
+se degrada, desaparece. Y `prem_center` alimenta `dist_prem_center_entrada` en `trades`.
+
+## 🔴 BUG PREEXISTENTE ENCONTRADO — DOCUMENTADO, **NO CORREGIDO** (decisión del usuario)
+
+Durante los ~26 primeros minutos `vals` es `None` (GAP 21) y `spy` cae a `self.spy_price`, que
+`ta_poll` acaba de fijar con `rows[-1]` — **la vela EN FORMACIÓN**. La fila lleva la HORA de la
+vela cerrada pero el CIERRE de la siguiente. Medido: fila `hora='09:42'` con `spy=773.6` cuando
+09:42 cerró en 773.40 y 09:43 en 773.60.
+
+⇒ En esa franja **NO se cumple `spy_low <= spy <= spy_high`**. Cruzar `spy` con los nuevos
+`spy_high`/`spy_low` mezcla dos minutos distintos. Con ≥26 barras no ocurre.
+Queda como check explícito **5.4 en `coldruns/gap21_coldrun.py`**. El arreglo, si se aprueba, es
+una línea: usar el cierre de la barra cuando `vals` es `None`.
+
+## VERIFICACIÓN HECHA (regla 3 y 8)
+
+- **Baseline capturada por DUPLICADO antes de tocar nada** para descartar no-determinismo. Solo
+  variaban relojes y micro-benchmarks (4 suites). ⚠️ El conteo `grep -c "^  OK"` es válido, pero
+  **`^  FAIL` NO detecta los fallos**: `gapsA` los emite en columna 0 (`^FAIL`) y
+  `ventana_horaria` solo en una línea-resumen `5 FALLOS:`. Comparar **salidas completas**.
+- **Diferencial de las 24 suites, nodo por nodo:** idénticas salvo `tape_coldrun`,
+  `gap21_coldrun` y `cuenta_coldrun`, que son donde se añaden los checks nuevos.
+- Fallos declarados: siguen siendo **`gapsA` (2)** y **`ventana_horaria` (5)**, los dos
+  conocidos y ajenos. Siguen PENDIENTES de actualizar.
+
+## LO QUE LA INVESTIGACIÓN DE HOY DESCARTÓ (no repetirlo)
+
+- **El tape NO anticipa la magnitud del movimiento.** 5 métricas × 15 horizontes, nula por
+  desplazamiento circular. Mejor p≈0,065 con 5 métricas probadas ⇒ nada sobrevive.
+  ⚠️ Un primer resultado dio `ops p=0.000`: era falso por dos trampas — (a) los minutos de
+  **re-centrado** (el strike rota cuando el precio se mueve ⇒ circularidad), y (b) comparar un
+  **máximo sobre 15 lags** contra una nula de un solo lag. Corregido → p=0.179.
+- **El theta NO es el problema.** Descomposición con griegas reales: theta −2,80 $ en todo el
+  día frente a ±16,71 $ de dirección y ~3,50 $ de spread. Además el theta por minuto está **por
+  debajo del tick de 0.01** (1,00 $/min), o sea que ni se puede medir a esa granularidad.
+- **La selección de contrato es un dial simétrico**, sin ganador: la columna "% ganado por punto"
+  y la de "% perdido" son la una la mitad de la otra. El 773 ATM da +29,7%/punto sobre 108 $;
+  el 776 OTM +40,6% sobre 22 $, pero solo captura 7,89 $/punto frente a 37 $/punto.
+
+---
 # 🟢 ESTADO — MIÉRCOLES 2026-08-12 09:25 ET — LEER ESTO PRIMERO
 ---
 
@@ -67,6 +160,102 @@ M1 no puede decidir y `target` se queda en FLAT: **no es un fallo**.
 3. Las 4 tablas nuevas se llenan 1 fila/minuto igual que `ta_minute`.
 4. El primer `GIRO` dice **"por M1"**, no el mensaje viejo del umbral.
 5. No aparece `PERSIST FALLO` ni `capturas_fallidas>0`.
+
+### ✅ APERTURA 09:30 VERIFICADA (sesion 09:36, no reiniciada — PID 12668 sigue)
+Arranque limpio: `Conectado 09:30:01` · `WALLS banda lista: 40 contratos` ·
+`SETUP OK SPY=774.35 senal C774/P775` · `TRADE ARMADO - FLAT`. `PERSIST` OK,
+`capturas_fallidas=0`, 0 trades abiertos, `NetLiquidation=400.00`.
+**Las 4 tablas nuevas SI escriben** (comprobado leyendo la BD, no el log): a las 09:36
+`m1_minute/m2_minute/clasico_minute/confirmacion_minute/ta_minute` = 6 filas cada una,
+`tape`=2472, `premium_minute`=533. `posicion_minuto`=0 y `transitions`=0, correcto:
+`state` sigue en `"-"`.
+
+### 🔑 EL RETARDO ES TEMPORAL, NO POR CONTEO DE FILAS (verificado en codigo)
+`_update_signal:2108` hace `limite = ahora - RETARDO_M1_MIN*60` y recorre `m1_hist`
+quedandose con la ULTIMA entrada cuyo `_ts <= limite`. `m1_hist` usa `time.monotonic()`
+(3294-3297), no reloj de pared. `reset_day:1011` la vacio a las 09:30:00 y `ta_poll` mete
+1 entrada/minuto; **la primera entro a las 09:31:04 ⇒ primera decision posible ~09:51:04.**
+`reset_day:1017` deja `state="-"`, y la condicion de giro es `new != self.state` ⇒ el
+primer efectivo UP/DOWN dispara GIRO seguro. `NEUTRAL` NO gira: `if efec in ("UP","DOWN")`
+(2116) significa **mantener la posicion**, no cerrarla.
+
+### 📉 M1 DE LA APERTURA — 3 GIROS EN 5 MINUTOS YA DETERMINADOS (dato en BD, inmutable)
+| MIN | abs C | abs P | dif | marc | M1 | se aplica |
+|---|---|---|---|---|---|---|
+| 09:30 | 27.752 | 57.303 | −29.551 | −1 | DOWN | ~09:51 → **1er GIRO, compra PUT** |
+| 09:31 | 147.234 | 17.551 | +129.683 | 0 | NEUTRAL | ~09:52 → no toca |
+| 09:32 | 162.795 | 77.283 | +85.512 | +1 | UP | ~09:53 → **GIRO a CALL** |
+| 09:33 | 89.241 | 214.303 | −125.062 | 0 | NEUTRAL | ~09:54 → no toca |
+| 09:34 | 58.018 | 200.783 | −142.765 | −1 | DOWN | ~09:55 → **GIRO a PUT** |
+| 09:35 | 13.302 | 123.342 | −110.040 | −2 | DOWN | ~09:56 → no toca |
+
+Caso de libro para el **pendiente 5 (filtrar por MAGNITUD, ratio |P|/|C| ≥ 3)**: 09:31 da UP
+con `dif=+129.683` y 09:33 da DOWN con `dif=−125.062`; M1 los cuenta igual que un minuto de
+`dif=−1` porque solo cuenta MINUTOS ganados, no tamaño. **El usuario decidio (09:37) NO tocar
+nada hoy y juzgar con los datos del dia completo.** No implementar sin su orden.
+
+### ⛔ LA CONFUSION Nº1: RETARDO ≠ FILTRO DE CONFIRMACION (zanjado con la investigacion)
+El usuario pregunto (09:56) por que vendio la PUT y compro la CALL a los 2 minutos, si
+"se supone que tarda 20 min entre flips". **No es asi, y la investigacion lo dice literal.**
+
+`INVESTIGACION_M1_M2.md` §9, linea 337:
+> "`RETARDO_M1_MIN = 20` — se aplica a entrada Y salida. **NO es un filtro de confirmacion:
+> no descarta flips, LOS EJECUTA TARDE.**"
+
+El retardo reproduce la pelicula de hace 20 min **a la misma velocidad**. Si hace 20 min
+hubo 3 giros en 5 minutos, ahora hay 3 giros en 5 minutos. NO hay cooldown entre flips en
+el codigo (verificado: `_update_signal:2108-2117` solo compara sellos de tiempo).
+
+Lo que el usuario esperaba SI esta en el documento, pero **como propuesta NO implementada**
+(§9, ultimas lineas): *"Sin medir todavia: el FILTRO DE CONFIRMACION (exigir que la señal
+aguante D minutos antes de actuar, descartando los flips que no aguantan). Es distinto del
+retardo y probablemente mejor: mataria las rotaciones de 4 minutos. Queda propuesto."*
+
+| | que hace | ¿en el codigo? |
+|---|---|---|
+| Retardo 20 min | ejecuta tarde, no descarta nada | SI |
+| Filtro de confirmacion | descarta flips que no aguantan D min | **NO, solo propuesto** |
+
+### ✅ CORRECCION: el `abs()` de M1 es DELIBERADO, no un fallo
+Se llego a señalar como sospechoso que M1 use `abs(net_call)` vs `abs(net_put)` (borra el
+signo; 19 de 22 minutos discrepan del signo crudo). **Retirado:** `INVESTIGACION_M1_M2.md`
+§1 lo define asi a proposito (`|CALL|` vs `|PUT|`), y §2.2 tumba la objecion de raiz:
+*"El agresor dice quien CRUZO EL SPREAD, no si la posicion se ABRE o se CIERRA. Comprar un
+put para cerrar un put corto es alcista y deja la misma huella que abrir un put largo."*
+Con OI que no se actualiza intradia, **el signo tampoco da direccion fiable**. No proponer
+"usar el signo crudo" sin resolver antes la ceguera apertura/cierre.
+Idem: "los 4 metodos no son independientes" YA estaba en §3.1 (*"tres transformaciones de
+los mismos dos numeros"*, 0 de 256 reglas aciertan los 7 eventos). No es hallazgo nuevo.
+
+### 📊 PRIMEROS 3 TRADES REALES DE HOY (los 3 giros previstos, en el minuto exacto)
+| # | tipo | entrada | salida | P&L | dur | nota |
+|---|---|---|---|---|---|---|
+| 9 | PUT 773P | 1.20 (09:51:08) | 1.62 (09:53:07) | **+42.00 (+35,0%)** | 119s | vendio en el MFE exacto |
+| 10 | CALL 773C | 1.27 (09:53:11) | 1.25 (09:55:20) | **−2.00 (−1,6%)** | 129s | MFE 1.38, dejo 13.00$ |
+| 11 | PUT 773P | 1.60 (09:55:53) | abierto | — | — | sin mas giros en cola |
+
+Neto realizado **+40.00 BRUTO**. Giros a las 09:51:05, 09:53:04 y 09:55:04, todos
+predichos al minuto desde `m1_minute`. **Rotaciones de ~2 min: el caso de laboratorio
+exacto del filtro de confirmacion no implementado.**
+⚠️ §7 avisa: elegir `D` (o retocar el 20) MIRANDO los datos de hoy invalida la medicion.
+
+La demora de 16 s en la venta del #10 NO es un fallo: la orden a MID no se lleno, se
+cancelo y el codigo **bloquea 10 s** antes de recolocar porque *"IBKR puede llenar una
+orden que ya reporto como cancelada"*.
+
+### ⚠️ GAP: la direccion depende del hilo de TICKS, no de un temporizador
+`_update_signal()` se llama en **`spy_direction.py:1981`, al final de `_on_ticks`** (1 vez por
+tick de los strikes de senal). Si el feed de market data se corta, `ta_poll` sigue llenando
+`m1_hist` cada minuto pero **nadie evalua el retardo**: la direccion se congela y NO aparece
+ningun error de direccion en el log. Por eso el monitor vigila tambien `Desconectado|
+disconnect|Peer closed`.
+
+### Monitor de la sesion (solo LEE log y BD; no toca app, BD ni repo)
+`scratchpad/monitor_m1.sh` (task `befx0655e`, persistente). Dos vias: `tail -F` para
+`GIRO ->|LLENADA|ORDEN|PERSIST FALLO|capturas_fallidas=[1-9]|Traceback|ERROR|desconexion`,
+y un poll de 60 s que emite **solo cuando M1 cambia** + latido cada 15 min con guardia de
+`hist m1` clavado. `tail -F` (no `-f`) a proposito: el log rota y con `-f` el monitor
+enmudeceria en silencio.
 
 ### Notificaciones (verificado, siguen activas)
 `ENABLE_TOAST=True`. FLIP → "SPY: CAMBIO DE DIRECCION" (`_raise_alert:2143`, **solo FLIP,
