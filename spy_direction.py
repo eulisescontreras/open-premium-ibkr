@@ -661,6 +661,8 @@ class SpyDirection:
         self.last_pos_log = 0.0          # ultimo muestreo por minuto del recorrido
         self._prem_snap = None           # totales call/put de la vela anterior (premium POR VELA)
         self._sello_arranque = None      # hora de este arranque en sesion_config (PK del sello)
+        self._com_entrada = None         # comision de la pata de COMPRA, hasta que la venta
+                                         # cierre la fila y se guarde el coste de las dos juntas
         self.exit_reason = None          # por que se vende: giro / eod / exceso. Se fija donde
                                          # se DECIDE (target=FLAT), no se infiere en _on_filled:
                                          # inferirla por la hora daria 'eod' a un giro legitimo
@@ -859,7 +861,15 @@ class SpyDirection:
                      "gex_entrada REAL", "regime_entrada TEXT", "dist_flip_entrada REAL",
                      "dist_prem_center_entrada REAL", "dist_call_wall_entrada REAL",
                      "dist_put_wall_entrada REAL", "diff_entrada REAL", "thr_entrada REAL",
-                     "momentum_entrada REAL", "minuto_sesion_entrada INTEGER"):
+                     "momentum_entrada REAL", "minuto_sesion_entrada INTEGER",
+                     # COMISION real de las DOS patas (2026-08-12). `profit` es BRUTO: se
+                     # comprobo que (exit-entry)*qty*100 reproduce el valor guardado con
+                     # diferencia 0.00 en las 3 operaciones cerradas de ese dia. Sin este dato
+                     # no se puede saber si un +7.00 bruto es en realidad positivo o negativo,
+                     # y con permanencias medianas de decenas de segundos la comision pesa.
+                     # NULL cuando IBKR no ha entregado el commissionReport (llega asincrono):
+                     # NULL es la verdad, un 0 seria mentira.
+                     "comision REAL"):
             try:
                 c.execute("ALTER TABLE trades ADD COLUMN " + _col)
             except Exception:
@@ -1793,7 +1803,7 @@ class SpyDirection:
         except Exception:
             LOG.exception("Error abriendo trade en la BD")
 
-    def _trade_cerrar(self, px, profit, pct, razon):
+    def _trade_cerrar(self, px, profit, pct, razon, comision=None):
         """Cierra la fila de 'trades' al llenarse una VENTA. Vuelca MFE/MAE, que es el dato
         que responde 'cuanto deje sobre la mesa': el 2026-08-10 un PUT comprado a 0.80 llego
         a 2.10 (+130$) y se vendio a 1.25 (+45$), 18 min despues del maximo."""
@@ -1805,10 +1815,11 @@ class SpyDirection:
             segs = self._segs_desde(self.trade_open.get("hora")) if self.trade_open else None
             self.db.execute(
                 "UPDATE trades SET hora_salida=?, segundos=?, exit_price=?, profit=?, pct=?, "
-                "spy_salida=?, mfe=?, mae=?, hora_mfe=?, spy_mfe=?, razon_salida=? "
-                "WHERE trade_id=?",
+                "spy_salida=?, mfe=?, mae=?, hora_mfe=?, spy_mfe=?, razon_salida=?, "
+                "comision=? WHERE trade_id=?",
                 (now.strftime("%H:%M:%S"), segs, px, profit, pct, self.spy_price,
-                 self.mfe, self.mae, self.hora_mfe, self.spy_mfe, razon, self.trade_id))
+                 self.mfe, self.mae, self.hora_mfe, self.spy_mfe, razon,
+                 comision, self.trade_id))
             self.db.commit()
             ACT.info("TRADE #%s CERRADO @ %s (%s) | dur=%ss | MFE=%s (a las %s) MAE=%s "
                      "| dejado sobre la mesa=%s",
@@ -2983,12 +2994,39 @@ class SpyDirection:
             self.order = None
             LOG.exception("Error colocando orden %s %s", action, side)
 
+    def _comision_de_orden(self):
+        """Comision REAL de la orden recien llenada, sumando sus fills. None si IBKR todavia
+        no ha entregado el commissionReport (llega asincrono, puede tardar mas que el fill).
+
+        None NO es 0: significa 'no lo se'. Devolver 0 haria que un P&L neto pareciera igual
+        al bruto y esa es justo la confusion que esta columna viene a resolver."""
+        try:
+            tot = None
+            for f in (getattr(self.order, "fills", None) or []):
+                cr = getattr(f, "commissionReport", None)
+                com = getattr(cr, "commission", None) if cr is not None else None
+                if com is None or (isinstance(com, float) and math.isnan(com)):
+                    continue
+                tot = (tot or 0.0) + float(com)
+            return tot
+        except Exception:
+            return None
+
     def _on_filled(self):
         act, side = self.order_action, self.order_side
         try:
             px = self.order.orderStatus.avgFillPrice
         except Exception:
             px = 0.0
+        # comision de ESTA pata. La de la compra se guarda hasta que la venta cierre la fila:
+        # la columna `comision` es el coste de las DOS patas, que es lo que hay que restar al
+        # `profit` bruto para saber si la operacion gano dinero de verdad.
+        _com = self._comision_de_orden()
+        if act == "BUY":
+            self._com_entrada = _com
+            if _com is None:
+                ACT.info("COMISION de la compra NO disponible todavia (commissionReport "
+                         "asincrono) -> se guardara NULL si tampoco llega en la venta")
         # cantidad REALMENTE llenada (puede no ser QTY: fills parciales / venta de varios lotes)
         try:
             nq = float(self.order.orderStatus.filled) or float(QTY)
@@ -3024,7 +3062,19 @@ class SpyDirection:
         # CERRAR el registro de la operacion ANTES de limpiar pos/entry_price: _pos_snapshot
         # necesita los dos vivos para grabar la fila 'salida'.
         if act != "BUY":
-            self._trade_cerrar(px, profit, pct, self.exit_reason or "giro")
+            # coste de las DOS patas. Si solo se conoce una, se guarda esa y se DICE en el log
+            # que es parcial: mejor un dato marcado como incompleto que un NULL que borra lo
+            # unico que si se sabe. Si no se conoce ninguna -> None (no lo se), nunca 0.
+            _ce = getattr(self, "_com_entrada", None)
+            _com_tot = None
+            if _ce is not None or _com is not None:
+                _com_tot = (_ce or 0.0) + (_com or 0.0)
+                if _ce is None or _com is None:
+                    ACT.info("COMISION PARCIAL en el trade #%s: entrada=%s salida=%s -> se "
+                             "guarda %.2f (falta una pata)", self.trade_id,
+                             _fmt(_ce), _fmt(_com), _com_tot)
+            self._trade_cerrar(px, profit, pct, self.exit_reason or "giro", _com_tot)
+            self._com_entrada = None
             self.exit_reason = None
         # actualizar posicion/entrada DESPUES de calcular el profit
         # (valor PROVISIONAL: _sync_pos lo corrige contra IBKR, que es la fuente de verdad)
