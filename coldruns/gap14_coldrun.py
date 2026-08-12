@@ -25,6 +25,14 @@ except Exception:
 sys.path.insert(0, r"C:\Users\eulis\proyectos\open-premium-ibkr")
 import spy_direction as S
 
+# 2026-08-12: esta suite ejercita el disparador ANTERIOR (M1 / diff-thr) o el flujo generico de
+# compra. Desde hoy el default es USAR_MEDIA=True, que exige `ta_vals["vwap"]`, y las apps
+# minimas de las cold runs no lo tienen -> `_senal_media()` devuelve None, el target se queda
+# en FLAT y NADA compra. Sin esta linea fallan 7 suites por una sola causa.
+# Un test A/B tiene que FIJAR la variable que prueba, no heredarla del default (misma leccion
+# que ENTRADA_RETROCESO en gap14 el mismo dia).
+S.USAR_MEDIA = False
+
 S.ENABLE_TOAST = False
 import logging as _lg
 for _l in (S.ACT, S.LOG):

@@ -35,6 +35,14 @@ BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, BASE)
 import spy_direction as S
 
+# 2026-08-12: esta suite ejercita el disparador ANTERIOR (M1 / diff-thr) o el flujo generico de
+# compra. Desde hoy el default es USAR_MEDIA=True, que exige `ta_vals["vwap"]`, y las apps
+# minimas de las cold runs no lo tienen -> `_senal_media()` devuelve None, el target se queda
+# en FLAT y NADA compra. Sin esta linea fallan 7 suites por una sola causa.
+# Un test A/B tiene que FIJAR la variable que prueba, no heredarla del default (misma leccion
+# que ENTRADA_RETROCESO en gap14 el mismo dia).
+S.USAR_MEDIA = False
+
 # NO se importa m1m2_coldrun: ese script llama a sys.exit() al final y mataria este
 # proceso antes de llegar a los checks. Las tablas se crean con el `_init_db` REAL de
 # produccion, que ademas es mejor que duplicar el DDL en el test (regla 9).

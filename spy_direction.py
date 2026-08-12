@@ -105,6 +105,51 @@ CAPITAL_FRAC_MAX = 0.80     # fraccion maxima del capital disponible en UN contr
 REPRICE_SECS = 4.0          # re-precia al mid si no llena en este tiempo
 MAX_FILL_SECS = 60.0        # tiempo maximo intentando llenar una entrada
 USAR_M1 = True              # 2026-08-11: disparador de flips = M1. False -> criterio diff/thr.
+# --- DISPARADOR POR DISTANCIA A LA MEDIA CORTA (2026-08-12) --------------------------------
+# QUIEN DECIDE A PARTIR DE AHORA. M1/M2/CLASICO/CONFIRMACION siguen calculandose y guardandose
+# en sus 5 tablas EXACTAMENTE igual; solo dejan de decidir, como el 08-11 dejo de decidir
+# diff/thr. Con USAR_MEDIA=False el comportamiento vuelve a ser el de M1 (interruptor A/B).
+#
+# POR QUE SE CAMBIA, medido: M1 no predice a la escala en que se opera. Lift sobre la tasa base
+# del dia = +0.6 / -0.1 / +1.8 / +1.6 a 5/10/15/30 min (n~320 minutos): ruido. Y el 08-12 dijo
+# UP en 353 de 383 minutos SIN GIRAR NUNCA, con el SPY cerrando -2.26: una sola posicion de
+# 5h20m mientras pasaban 15 movimientos fuertes. Ademas RETARDO_M1_MIN=20 es mayor que la
+# duracion MEDIANA de un tramo (10 min): llegar tarde no es mala suerte, es aritmetica.
+#
+# LA REGLA. Es CONTRAINTUITIVA, leerla dos veces:
+#     SPY - media >= +MEDIA_DIST  ->  el precio esta ALTO  ->  PUT  (estado DOWN)
+#     SPY - media <= -MEDIA_DIST  ->  el precio esta BAJO  ->  CALL (estado UP)
+# Se compra HACIA la media, no a favor del movimiento. Seguir el movimiento esta MEDIDO y
+# MUERTO: breakout 0% de 27 combinaciones positivas, zigzag 7%, perdiendo -321 a -398$.
+# Revertir sale 6x mejor (reversor 41%, extremo 44%). Encaja con la reversion a la media ya
+# medida en dos series independientes (r=-0.35 en dia lateral).
+#
+# ⚠️ `ta_vals["vwap"]` NO ES UN VWAP. Es ((high+low+close)/3).rolling(5).mean() -- una SMA de 5
+# periodos del precio tipico, SIN volumen (ver TAEngine.compute). El nombre viene del bot
+# original. Lo que funciona es la MEDIA CORTA; queda pendiente probar el VWAP de verdad.
+#
+# RESULTADO con ejecucion realista (señal de la vela cerrada, se compra al minuto siguiente):
+#     08-11 +109.20$ | 08-12 +222.66$ | 2 dias +331.86$ en 37 operaciones
+#     (el sistema real hizo -76.44$ el 08-12; el techo de ese dia era +947$)
+# Entrar en el mismo minuto daria +468$, pero eso es look-ahead: en vivo el dato de la vela X
+# se conoce en X+1. Se planifica con el suelo, no con el techo.
+#
+# CONTROLES PASADOS (los mismos que mataron a los otros 5 candidatos):
+#   - Tautologia: +6.8/+6.5 contra `extremo del rango 30` +5.3/+4.5, `SMA30` +2.5/+4.5 y
+#     `distancia al medio del dia` +2.3/+1.6. Gana a las 4 lineas base tontas en los DOS dias.
+#   - Nula por desplazamiento circular: 0 de 10 la superan, mediana -4 (sin sesgo estructural).
+#   - AZAR con la MISMA exposicion al mercado: 300 semillas, mediana -127$, solo 25% positivas.
+#     3 de 300 igualan o superan a la señal -> p = 0.0100.
+#   - Direccional: siempre-CALL -360$, siempre-PUT -3$. Ninguna direccion fija gana.
+#   - Robustez (§7): con salida a 8 min, los umbrales 0.20-0.28 son positivos en LOS DOS dias.
+#     Los umbrales bajos (0.12/0.16) dan mas suma pero FALLAN el 08-11: no se cogen.
+#
+# ⚠️ MUESTRA: 2 dias (08-12 completo, 08-11 solo desde las 11:48) y 37 operaciones. p=0.01 es
+# significativo pero NO es una validacion. La confirmacion es la primera sesion nueva.
+USAR_MEDIA = True           # False -> decide M1 (comportamiento anterior, A/B limpio)
+MEDIA_DIST = 0.20           # |SPY - media| que dispara. Region medida valida: 0.20-0.28
+MINUTOS_POS = 8             # minutos en posicion antes de vender. t8 es la UNICA columna que
+                            # aguanta con ejecucion realista (t6/t10/t12/t15 se vuelven erraticas)
 CONFIRMACION_MIN = 5        # 2026-08-12: filtro de confirmacion (SOLO REGISTRO, no decide): la SEÑAL
                             # del minuto debe aguantar N min seguidos para "confirmar". D=5 mata las
                             # rotaciones de <=4 min medidas. HIPOTESIS ajustable con mas datos.
@@ -800,6 +845,17 @@ class SpyDirection:
                   "n_up INTEGER, n_down INTEGER, marcador INTEGER, m1 TEXT, racha INTEGER, "
                   "m1_efectivo TEXT, retardo_min INTEGER, "
                   "recentrado INTEGER, PRIMARY KEY(fecha,hora))")
+        # MEDIA CORTA (2026-08-12): el metodo que DECIDE desde hoy. Se registra minuto a minuto
+        # igual que los otros, y CON SUS PARAMETROS en cada fila: si manana se cambia el umbral
+        # o los minutos, las filas viejas siguen siendo interpretables (mismo criterio que
+        # `entrada_minute`, que guarda er_umbral/retro_frac/retro_max_min).
+        # `dist` va CON SIGNO ademas de en valor absoluto: el hallazgo aparecio justamente al
+        # dejar de mirar el signo, y hace falta el crudo para poder re-analizarlo despues.
+        c.execute("CREATE TABLE IF NOT EXISTS media_minute ("
+                  "fecha TEXT, hora TEXT, spy REAL, media REAL, dist REAL, dist_abs REAL, "
+                  "senal TEXT, estado TEXT, target TEXT, pos TEXT, seg_en_pos REAL, "
+                  "activo INTEGER, media_dist REAL, minutos_pos INTEGER, "
+                  "decide TEXT, origen TEXT, PRIMARY KEY(fecha,hora))")
         # METODO ANTIGUO (diff/thr): se sigue calculando y registrando aunque NO decida,
         # para poder comparar los tres metodos por tipo de mercado (bull/bear/lateral).
         c.execute("CREATE TABLE IF NOT EXISTS clasico_minute ("
@@ -1631,10 +1687,20 @@ class SpyDirection:
                    "GAP2,GAP4,GAP5,M2,M12," \
                    "GAP18,GAP19,GAP17bis,GAP20,GAP21,SMA20-50-200,BARS2D," \
                    "PRECIO-CONTRATOS" + (",TAPE" if TAPE_ENABLED else "")
-            notas = ("momentum_win guarda SEGUNDOS (MOMENTUM_SECS), no numero de muestras: "
+            # QUIEN DECIDE y CON QUE PARAMETROS. Sin esto, dos sesiones con disparadores
+            # distintos son INDISTINGUIBLES en la BD: el 2026-08-12 los arranques posteriores
+            # al commit del ITM quedaron marcados igual que los anteriores y no hubo forma de
+            # atribuir nada. Va en `notas` (columna que ya existe) para no tocar el esquema.
+            _dec = ("MEDIA(dist>=%.2f, %dmin)" % (MEDIA_DIST, MINUTOS_POS) if USAR_MEDIA
+                    else ("M1(retardo=%d)" % RETARDO_M1_MIN if USAR_M1 else "CLASICO diff/thr"))
+            notas = ("DECIDE=%s | EJECUCION_ITM=%s cap_frac=%.2f | USAR_M1=%s retardo=%d | "
+                     "TAKE_PROFIT_USD=%s | ENTRADA_RETROCESO=%s || "
+                     "momentum_win guarda SEGUNDOS (MOMENTUM_SECS), no numero de muestras: "
                      "el GAP 5 cambio la ventana de eventos a tiempo. "
                      "Registra: trades/posicion_minuto, cum_net, premium por vela, "
-                     "ventanas moviles 1/5/15m, contexto de entrada.")
+                     "ventanas moviles 1/5/15m, contexto de entrada."
+                     % (_dec, EJECUCION_ITM, CAPITAL_FRAC_MAX, USAR_M1, RETARDO_M1_MIN,
+                        TAKE_PROFIT_USD, ENTRADA_RETROCESO))
             self.db.execute(
                 "INSERT OR REPLACE INTO sesion_config(fecha,hora,arranque,qty,"
                 "signal_threshold,adapt_frac,mom_frac,momentum_win,reprice_secs,max_fill_secs,"
@@ -1646,18 +1712,20 @@ class SpyDirection:
                  QTY, SIGNAL_THRESHOLD, ADAPT_FRAC, MOM_FRAC, MOMENTUM_SECS,
                  REPRICE_SECS, MAX_FILL_SECS, WALLS_BAND, WALLS_RECALC_SECS,
                  ITM_DEPTH, BASELINE_EXPIRIES,
-                 # descriptivos, NO derivados de constantes: describen el CRITERIO, que es lo
-                 # que cambio a las 11:03 del 2026-08-10 sin dejar ningun rastro.
-                 "ATM real", "gamma",
+                 # 2026-08-12: ANTES era el literal "ATM real", escrito a fuego, que NO leia
+                 # EJECUCION_ITM. Las 17 filas de la tabla decian lo mismo aunque el criterio
+                 # hubiera cambiado -- justo el rastro que esta columna existe para guardar.
+                 ("ITM mas profundo que quepa" if EJECUCION_ITM else "ATM real"), "gamma",
                  1 if self.trading else 0, notas,
                  CROSS_HHMM, BARS_STALE_SECS, POS_LOG_SECS, gaps,
                  BARS_DURATION, START_TRADE_HHMM, OPEN_HHMM))
             self.db.commit()
-            ACT.info("SELLO DE SESION %s: QTY=%d thr=%.0f adapt=%.2f mom=%.2f/%.0fs "
-                     "reprice=%.0fs banda=%d/%.0fs exec=ATM-real walls=gamma trading=%s "
+            ACT.info("SELLO DE SESION %s: DECIDE=%s | QTY=%d thr=%.0f adapt=%.2f mom=%.2f/%.0fs "
+                     "reprice=%.0fs banda=%d/%.0fs exec=%s walls=gamma trading=%s "
                      "cross=%s barras=%s recoleccion>=%s opera>=%s | gaps: %s",
-                     now.strftime("%H:%M:%S"), QTY, SIGNAL_THRESHOLD, ADAPT_FRAC, MOM_FRAC,
+                     now.strftime("%H:%M:%S"), _dec, QTY, SIGNAL_THRESHOLD, ADAPT_FRAC, MOM_FRAC,
                      MOMENTUM_SECS, REPRICE_SECS, WALLS_BAND, WALLS_RECALC_SECS,
+                     "ITM" if EJECUCION_ITM else "ATM-real",
                      "ON" if self.trading else "OFF", CROSS_HHMM,
                      BARS_DURATION, OPEN_HHMM, START_TRADE_HHMM, gaps)
             self._sello_arranque = now.strftime("%H:%M:%S")
@@ -2382,6 +2450,32 @@ class SpyDirection:
         base = min(self.flow_hist, key=lambda r: abs(r[0] - limite))
         return self.net_call - base[1], self.net_put - base[2]
 
+    def _senal_media(self):
+        """Lado a COMPRAR segun la distancia a la media corta. None = no hay señal, estar FLAT.
+
+        UNICO sitio donde vive esta regla (regla 9): la usan `_update_signal` para el estado y
+        `trade_poll` para saber si hay que estar fuera. Si se duplicara, una copia acabaria
+        diciendo lo contrario que la otra.
+
+        OJO, es CONTRAINTUITIVA: se compra HACIA la media, no a favor del movimiento.
+        Ante CUALQUIER duda (sin media, sin precio, excepcion) devuelve None -> no se opera.
+        Nunca se inventa una direccion (regla 13)."""
+        if not USAR_MEDIA:
+            return None
+        try:
+            m = (self.ta_vals or {}).get("vwap")
+            p = self.spy_price
+            if not m or p is None or math.isnan(p):
+                return None
+            d = p - m
+            if d >= MEDIA_DIST:
+                return "PUT"        # precio ALTO respecto a la media -> deberia volver ABAJO
+            if d <= -MEDIA_DIST:
+                return "CALL"       # precio BAJO respecto a la media -> deberia volver ARRIBA
+            return None             # dentro de la banda: no hay nada que capturar
+        except Exception:
+            return None
+
     def _update_signal(self):
         # GAP 18: NO evaluar la senal hasta haber intentado restaurar el estado del dia.
         # setup_contracts suscribe el market data de la senal ANTES de _load_intradia, asi que
@@ -2434,21 +2528,32 @@ class SpyDirection:
                 self.last_warn_side = "UP"
 
         new = self.state
-        if USAR_M1:
-            # 2026-08-11: el disparador pasa a M1 (dominancia en VALOR ABSOLUTO, contador
-            # de MINUTOS). m1_estado lo actualiza ta_poll una vez por minuto, asi que M1
-            # solo puede girar en el cambio de minuto: eso elimina los flips en rafaga.
-            # RETARDO: se usa lo que M1 decia hace RETARDO_M1_MIN minutos, no lo de ahora.
-            # Se aplica a entrada Y salida: la posicion anterior se mantiene ese rato de mas.
-            # NEUTRAL o None -> no se toca el estado (no se inventa direccion).
-            limite = ahora - RETARDO_M1_MIN * 60.0
-            efec = None
-            for _ts, _st in self.m1_hist:
-                if _ts <= limite:
-                    efec = _st
-                else:
-                    break
-            self.m1_efectivo = efec
+        # M1 EFECTIVO: se calcula SIEMPRE, decida o no. Alimenta `m1_efectivo`, que va a
+        # `m1_minute` y al panel. Si esto colgara del `if USAR_M1` (como antes), activar otro
+        # disparador dejaria la columna en NULL y se perderia la serie con la que comparar.
+        # 2026-08-11: dominancia en VALOR ABSOLUTO, contador de MINUTOS. `m1_estado` lo
+        # actualiza ta_poll una vez por minuto, asi que M1 solo puede girar en el cambio de
+        # minuto: eso elimina los flips en rafaga. RETARDO: se usa lo que M1 decia hace
+        # RETARDO_M1_MIN minutos, no lo de ahora. NEUTRAL o None -> no se inventa direccion.
+        limite = ahora - RETARDO_M1_MIN * 60.0
+        efec = None
+        for _ts, _st in self.m1_hist:
+            if _ts <= limite:
+                efec = _st
+            else:
+                break
+        self.m1_efectivo = efec
+
+        if USAR_MEDIA:
+            # DISPARADOR VIGENTE (2026-08-12): distancia a la media corta. Se compra HACIA la
+            # media. Ver el bloque de constantes para los numeros y los controles pasados.
+            # Sin media o sin precio NO se toca el estado: no se inventa direccion (regla 13).
+            _lado = self._senal_media()
+            if _lado == "CALL":
+                new = "UP"
+            elif _lado == "PUT":
+                new = "DOWN"
+        elif USAR_M1:
             if efec in ("UP", "DOWN"):
                 new = efec
         elif diff > thr:
@@ -3472,6 +3577,46 @@ class SpyDirection:
             if self.target != "FLAT":
                 self.exit_reason = "eod"
             self.target = "FLAT"
+        elif USAR_MEDIA:
+            # SALIDA POR PERMANENCIA Y ESTAR FUERA SIN SEÑAL (2026-08-12).
+            # El disparador de la media NO mantiene la posicion hasta el proximo giro: vende a
+            # los MINUTOS_POS minutos y se queda FLAT hasta que vuelva a haber señal. Medido:
+            # con salida a 8 min +331.86$ en los 2 dias; aguantar hasta el giro es lo que hizo
+            # el sistema el 08-12 (una posicion de 5h20m -> -83.44$ en esa sola operacion).
+            # El reloj sale de trade_open["ts"] (monotonic, fijado en _trade_abrir): NO se usa
+            # nada de la fila `trades`, cuyo mfe/mae se corrompe en cada reinicio.
+            if self.pos in ("CALL", "PUT") and self.trade_open:
+                _en_pos = time.monotonic() - self.trade_open.get("ts", time.monotonic())
+                if _en_pos >= MINUTOS_POS * 60.0:
+                    if self.target != "FLAT":
+                        self.exit_reason = "tiempo"
+                        ACT.info("SALIDA POR TIEMPO: %.1f min en %s (tope %d) -> FLAT",
+                                 _en_pos / 60.0, self.pos, MINUTOS_POS)
+                    self.target = "FLAT"
+                else:
+                    # MANTENER hasta cumplir el tiempo, AUNQUE la señal gire. Es lo que se
+                    # midio; salir al invertirse la señal da PEOR resultado (+133/+117 frente
+                    # a +154/+313). Sin esta linea, el flip de `_update_signal` sacaria antes
+                    # y el comportamiento dejaria de ser el validado. Riesgo acotado: 8 min.
+                    self.target = self.pos
+            elif self.pos == "FLAT":
+                # Sin posicion: el objetivo es lo que diga la señal, y FLAT si no dice nada.
+                # Sin este `else` el target se quedaria pegado al ultimo lado y se recompraria
+                # en cuanto se vendiera, ignorando que la señal ya no esta activa.
+                self.target = self._senal_media() or "FLAT"
+                # NO QUEDARSE MUDO EN SILENCIO. Con USAR_MEDIA, si falta la media el sistema no
+                # opera NUNCA -- y sin este aviso pareceria "un dia sin señales". Es el mismo
+                # fallo silencioso que el tape sin RTVolume: no fallaba, solo no veia. Se
+                # distingue "dentro de la banda" (normal) de "no hay dato" (anormal).
+                if in_session and not (self.ta_vals or {}).get("vwap"):
+                    if not getattr(self, "_aviso_sin_media", False):
+                        ACT.info("⚠️ USAR_MEDIA activo pero NO hay media disponible "
+                                 "(ta_vals sin 'vwap'): NO se abrira ninguna posicion hasta "
+                                 "que el TA tenga sus barras. Revisar backfill/GAP 17.")
+                        self._aviso_sin_media = True
+                elif getattr(self, "_aviso_sin_media", False):
+                    ACT.info("media disponible de nuevo: el disparador vuelve a operar")
+                    self._aviso_sin_media = False
         # 3 motivos para no ABRIR: fuera de sesion, cerca del cierre (EOD) o aun en los primeros
         # minutos de la apertura. Se separan para poder decirle al usuario CUAL es (ver trade_msg).
         # `in_session and hhmm < START_TRADE_HHMM` era INALCANZABLE desde el 2026-08-12 08:53:
@@ -3946,6 +4091,27 @@ class SpyDirection:
                 (fecha, hora, _spy_m, self.net_call, self.net_put, _ac, _ap, _dif, _sen,
                  self.m2_up, self.m2_down, self.m2_up - self.m2_down, _m2,
                  self.m2_racha, self.m2_efectivo, RETARDO_M1_MIN, self.m_recentrado))
+            # MEDIA CORTA: el metodo que DECIDE desde el 2026-08-12. Se registra su lectura
+            # cruda (media, distancia con y sin signo), lo que dijo la señal ESE minuto, y el
+            # estado en que quedo el sistema, para poder reconstruir despues por que hizo lo
+            # que hizo. `senal` en NULL significa "dentro de la banda": no habia nada que
+            # capturar, que es distinto de "no habia dato" (ahi la media sale NULL tambien).
+            try:
+                _med = (self.ta_vals or {}).get("vwap")
+                _dst = (_spy_m - _med) if (_med and _spy_m is not None) else None
+                _seg = None
+                if self.pos in ("CALL", "PUT") and self.trade_open:
+                    _seg = time.monotonic() - self.trade_open.get("ts", time.monotonic())
+                self.db.execute(
+                    "INSERT OR REPLACE INTO media_minute(fecha,hora,spy,media,dist,dist_abs,"
+                    "senal,estado,target,pos,seg_en_pos,activo,media_dist,minutos_pos,decide,"
+                    "origen) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                    (fecha, hora, _spy_m, _med, _dst, abs(_dst) if _dst is not None else None,
+                     self._senal_media(), self.state, self.target, self.pos, _seg,
+                     1 if USAR_MEDIA else 0, MEDIA_DIST, MINUTOS_POS,
+                     "MEDIA" if USAR_MEDIA else ("M1" if USAR_M1 else "CLASICO"), None))
+            except Exception:
+                LOG.exception("Error registrando media_minute")
             # METODO ANTIGUO (diff/thr): NO decide, pero se registra igual para comparar.
             _diff = self.net_call - self.net_put
             if ADAPTIVE:
@@ -4025,12 +4191,34 @@ class SpyDirection:
             ACT.info("MIN %s | METODOS  M1=%s(r%d)%s  M2=%s(r%d)  CLASICO=%s(r%d)  "
                      "CONFIRMA=%s(sen %s r%d/%d) | efectivos(-%dmin) M1=%s M2=%s CL=%s CONF=%s"
                      " | MANDA %s",
-                     hora, _m1, self.m1_racha, "  <-MANDA" if USAR_M1 else "",
+                     hora, _m1, self.m1_racha, "  <-MANDA" if (USAR_M1 and not USAR_MEDIA) else "",
                      _m2, self.m2_racha, _cl, self.cl_racha,
                      self.conf_estado or "-", _sen, self.sen_racha, CONFIRMACION_MIN,
                      RETARDO_M1_MIN, self.m1_efectivo or "-", self.m2_efectivo or "-",
                      self.cl_efectivo or "-", self.conf_efectivo or "-",
-                     "M1" if USAR_M1 else "CLASICO")
+                     "MEDIA" if USAR_MEDIA else ("M1" if USAR_M1 else "CLASICO"))
+            # MEDIA CORTA: la lectura cruda del que DECIDE. Se imprime SIEMPRE (aunque no
+            # decida) para poder comparar los cinco metodos sobre el mismo minuto, y porque
+            # sin esta linea un dia entero sin operar seria indistinguible de un fallo mudo.
+            try:
+                _med_l = (self.ta_vals or {}).get("vwap")
+                _dst_l = (_spy_m - _med_l) if (_med_l and _spy_m is not None) else None
+                _sm = self._senal_media()
+                ACT.info("MIN %s | MEDIA  spy=%s media=%s dist=%s (umbral %.2f) -> senal=%s"
+                         "%s | estado=%s target=%s pos=%s%s",
+                         hora,
+                         ("%.2f" % _spy_m) if _spy_m is not None else "-",
+                         ("%.2f" % _med_l) if _med_l else "SIN DATO",
+                         ("%+.3f" % _dst_l) if _dst_l is not None else "-",
+                         MEDIA_DIST, _sm or "-",
+                         "  <-MANDA" if USAR_MEDIA else " (solo registro)",
+                         self.state, self.target, self.pos,
+                         (" | %.1f/%d min en posicion" % (
+                             (time.monotonic() - self.trade_open.get("ts", time.monotonic())) / 60.0,
+                             MINUTOS_POS))
+                         if (self.pos in ("CALL", "PUT") and self.trade_open) else "")
+            except Exception:
+                LOG.exception("Error en la linea de log de MEDIA")
             # REGIMEN: en el log tambien, no solo en la BD. Si la compuerta retrasa una entrada
             # hay que poder verlo leyendo el log, sin consultar entrada_minute.
             ACT.info("MIN %s | REGIMEN ER=%s (%s, umbral %.2f) | impulso(%dmin)=%s | "

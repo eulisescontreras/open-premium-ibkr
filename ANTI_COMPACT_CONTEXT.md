@@ -6,6 +6,127 @@
 > otra máquina — los logs viejos del repo tienen esa ruta).
 
 ---
+# 🟢 MIÉRCOLES 2026-08-12 — CIERRE. LA SEÑAL DEL VWAP (lo primero que pasa TODOS los tests)
+---
+
+> **App PARADA**, sesión cerrada 16:15:01, BD respaldada (`spy_history_backup_CIERRE_20260812.db`,
+> hash verificado). Día real: **−76,44 $ bruto** en 4 operaciones.
+
+## 🎯 EL HALLAZGO: |SPY − VWAP| dispara, y el tramo va SIEMPRE hacia el VWAP
+
+**La regla, entera:**
+```
+ENTRADA  |SPY - VWAP| >= 0.20-0.25  ->  comprar HACIA el vwap
+                                        (precio ARRIBA -> PUT ; ABAJO -> CALL)
+CONTRATO el ITM mas profundo que quepa en acct_avail * 0.80
+SALIDA   a los 8-10 MINUTOS. Sin excepciones. t15/t20 PIERDEN.
+```
+**Resultado en los 2 días con precios reales: +350 a +467 $** (el sistema real hizo −76,44).
+Techo del día 947 $ ⇒ captura **~40 %**.
+
+**LOS 4 TESTS, todos pasados** (es el único candidato de toda la sesión que lo consigue):
+
+| test | resultado |
+|---|---|
+| **Tautología** (el que mató al gamma flip) | +6,8/+6,5 vs `extremo rango30` +5,3/+4,5, `SMA30` +2,5/+4,5, `medio del día` +2,3/+1,6. **Gana a las 4 tontas en los 2 días** (aunque solo por +1,5/+2,0 sobre el extremo de rango: parte del efecto SÍ es "está en un extremo") |
+| **T2 una sola op** | 08-12: sin las 3 mejores **+59,98** ✅ (12/19 ganadoras). 08-11: sin las 3 mejores −38,48 ⚠️ (solo 12 ops) |
+| **T3 robustez §7** | rejilla 36/42 positivas. **Columnas t3-t10 positivas en los 6 umbrales, sin excepción**; t15/t20 se degradan a negativo. Región coherente, NO dentada |
+| **T4 nula circular** | real +349,68 vs 10 nulos (máx +318, **mediana −4**). 0/10 la superan. **La mediana ~0 es la clave**: al romper la relación deja de ganar ⇒ la ganancia viene de la SEÑAL, no de la mecánica |
+
+**LO QUE LO DESBLOQUEÓ:** estaba midiendo `dist_vwap` **CON SIGNO**, lo que parte la señal en dos
+mitades que se anulan. El efecto es **SIMÉTRICO**: solo aparece con **valor absoluto**.
+⚠️ Regla general: si una variable da lift positivo en LOS DOS extremos, la magnitud importa y
+el signo no. `dist_ema8`, `dist_sma20` y `dist_ema21` muestran el mismo patrón (menor).
+
+**Y la dirección se resuelve sola:** de los inicios de tramo fuerte en el top20 % de |dist_vwap|,
+**30 de 30 van CONTRA la desviación** (7/7 y 8/8 con vwap; 6/6 y 9/9 con ema8).
+
+## 📏 EL TECHO REAL DEL DÍA (recalculado bien, con el capital de verdad)
+
+`_strike_ejecucion` usa `tope = acct_avail * CAPITAL_FRAC_MAX(0.80)`. Capital 400 $/día
+(el usuario **reinicia la paper**, las pérdidas NO se arrastran).
+
+```
+15 movimientos fuertes (>=0.60 pts), cada uno con su mejor contrato:
+   tope 228$ (disp 285 real)  mid +987   ejecucion real (ask/bid) +947
+   tope 320$ (400 x 0.80)     mid +1136                          +1079
+por franja:  09:30-10:59 -> 9 movimientos +726$ (60% del dia!)
+             11:00-12:59 -> 3 (+210) | 13:00-14:59 -> 2 (+180) | 15:00+ -> 1 (+84)
+```
+**El SPY recorrió 23,77 pts para acabar en −0,67** (19 tramos arriba, 19 abajo).
+⇒ **La dirección del día no existía; el recorrido sí.** M1/M2 resuelven el problema equivocado.
+
+## ❌ MUERTO HOY (con la prueba). NO RE-PROPONER
+
+| idea | lo que la mató |
+|---|---|
+| **Seguir el movimiento** (zigzag/breakout) | breakout **0 %** de 27 combinaciones positivas; zigzag 7 %. Pierde −321 a −398 $ en los 7 umbrales. **Aritmético**: confirmar cuesta 2C y los tramos son de 0,60-1,38 pts ⇒ el peaje es el 67-100 % del tramo |
+| **Soportes/resistencias por pivotes previos** | rebota **44,2 %** y **47,9 %** — los dos días POR DEBAJO del 50 %. n=224 y n=140 |
+| **Cambiar de modo por régimen** (lateral→revertir, tendencia→seguir) | **0 %** de 9 combinaciones positivas, mediana −372 $. Es lo que intentaba el ER |
+| **Flujo → dirección** | signo contrario entre días (−19,0 vs +25,9), n=7 y n=13 |
+| **Flujo → magnitud del recorrido** (parecía 2,06x) | ⚠️ **ES UN CRONÓMETRO**: `rho(volumen, minuto del día)` = **−0,536 / −0,573**. 10 de 13 picos antes de las 11:00, y la mañana ya se mueve 0,940 vs 0,330 la tarde. **Cuarto falso positivo** |
+| **Tape (agresor/presión/desequilibrio)** | 0,76x-1,11x = no separa NADA. Además solo es fiable desde las 12:25 (antes veía 4-6 strikes de 40) |
+| **28 de las 54 variables de ta_minute** | muertas por el test del cronómetro ANTES de mirar ningún lift (atr −0,78, bb_mid −0,94, ema50 −0,97, diff +0,79...) |
+| **Reversor puro (sin vwap)** | pasa T4 pero **mediana de la nula +62** (sesgo estructural), rejilla dentada (−232 a +426), y T2 lo deja NEGATIVO los 2 días |
+| **Filtro de volatilidad sobre el reversor** | **REDUNDANTE**: `vol>=0.20/0.30/0.40` dan resultado IDÉNTICO. Si la señal ya exige 0,35 en 5 min, el rango de 15 min ya es ≥0,40. Su "+69 % de mejora" era **una sola operación de −59 $** |
+| **Filtro de walls sobre el reversor** | 12/12 positivas pero **NO mejora el dinero**: 137,46/88,90 vs 137,64/85,20 del crudo. Solo opera la mitad de veces |
+
+## ✅ ESTABLECIDO (replica en los 2 días)
+
+- **Revertir bate a seguir ~6x**: reversor 41 % / extremo 44 % vs breakout 0 % / zigzag 7 %.
+- **Salidas cortas (5-10 min) dominan**: las 20 ganadoras del barrido de 261, sin excepción.
+- **Entrar 1 min tarde conserva el 86 %** del movimiento (86 % y 87 %). A 3 min ya es 73/54 %;
+  a 10 min, 41/23 %. ⇒ **No hay que anticipar, hay que confirmar rápido.** `RETARDO_M1_MIN=20`
+  no llega a nada por aritmética.
+- **El ITM es PALANCA, no arreglo**: con buen timing 52 → 162 $; con el timing real solo
+  amortigua (−83 → −37). Aporta ~4 % de la brecha, no la mitad.
+  ⚠️ El **"+39,00 del 770C" del bloque del ITM NO SE REPRODUCE**: con los precios de la BD
+  (10:25 mid 3,18 → 15:45 mid 2,83) da **−36,72 $**. Se calculó sobre otra ventana horaria.
+- **Spread por profundidad** (0DTE, medido): ATM 0,011 → 1,07 $ ida y vuelta; ITM3 0,053 → 5,26 $;
+  ITM5 0,106 → 10,61 $. Con tope 320 $ solo caben ITM de 1-2 pts ⇒ spread barato (1,80-3,36 $).
+
+## 🔬 METODOLOGÍA QUE FUNCIONÓ (usarla siempre, en este orden)
+
+1. **TEST DEL CRONÓMETRO PRIMERO**: `|rho(variable, minuto del día)| >= 0.30` → muerta. Cuesta
+   3 líneas y hoy mató 28 variables + una hipótesis que parecía buena. **Antes que nada.**
+2. **T2 (quitar la mejor operación)** antes que cualquier estadístico fino: un resultado que
+   depende de un trade es una historia, no una estrategia.
+3. **Mirar el nº de OPERACIONES antes que el P&L**: si una variante "mejora" operando menos,
+   casi siempre quitó una operación mala por azar.
+4. **Nula por desplazamiento circular, y mirar su MEDIANA**: si la nula ya gana, hay sesgo
+   estructural (le pasó al reversor: +62).
+5. **Control de multiplicidad**: esperadas por azar = %pos(día1) × %pos(día2) × n.
+6. **Cuidado con filtros lógicamente redundantes** con la señal que filtran.
+
+## 🧰 HERRAMIENTAS DEJADAS (scratchpad de la sesión, read-only, no tocan la BD)
+
+`motor.py` (ejecución única y comparable: capital 400 $/día, tope 80 %, ITM que quepa, mid,
+comisión 1,72 $/op, FLATTEN 15:45, **no obliga a estar en mercado**), `barrido.py` (261 combos),
+`matar.py` / `triple.py` (tests de refutación), `ta_barrido.py` (54 variables con cronómetro),
+`flujo_regimen.py`, `tape_presion.py`.
+
+## 📌 SIGUIENTE, POR ORDEN
+
+1. **Afinar el VWAP**: filtro de la primera hora y media (60 % del dinero), salida por RETORNO
+   al VWAP en vez de por reloj, y umbral adaptativo (¿escalar con el ATR del día?).
+2. **B1 BLOQUEANTE**: `sesion_config.strike_exec` escribe el literal `"ATM real"`
+   (`spy_direction.py:1651`) y NO lee `EJECUCION_ITM`. Las 17 filas dicen "ATM real", incluidos
+   los arranques posteriores al commit del ITM. **Mañana la sesión con ITM será indistinguible
+   de las de hoy en la BD.** Tampoco se registran `EJECUCION_ITM`, `CAPITAL_FRAC_MAX`, `USAR_M1`,
+   `RETARDO_M1_MIN`, `TAKE_PROFIT_USD`.
+3. **B2**: `trades.mfe/mae` se reinician con cada reinicio. La #12 tiene `mfe=0.66` < su entrada
+   1,1358, imposible; `posicion_minuto` da 1,30 a las 10:27. **Fuente de verdad = `posicion_minuto`
+   / `premium_minute`, NUNCA `trades.mfe`.**
+4. Mañana el tape ve los 40 strikes **desde la apertura** (hoy estaba ciego hasta las 12:25).
+   La mañana es donde está el 60 % del dinero: primera sesión con datos buenos de esa franja.
+
+## ⚠️ LÍMITE DE LA MUESTRA (no olvidarlo al leer nada de arriba)
+
+**2 días**: 08-12 completo y 08-11 **desde las 11:48** (antes no hay precios de opción).
+El **08-10 no sirve**: 0 precios de opción y 0 barras OHLC. 12-19 operaciones por día.
+Nada de esto está establecido; es la mejor hipótesis disponible, no un resultado.
+
+---
 # 🔵 MIÉRCOLES 2026-08-12 ~11:45 ET — 3 COMMITS NUEVOS, **PENDIENTES DE ARRANQUE**
 ---
 

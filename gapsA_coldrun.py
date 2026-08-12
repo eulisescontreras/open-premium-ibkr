@@ -21,6 +21,14 @@ except Exception:
 
 import spy_direction as S
 
+# 2026-08-12: esta suite ejercita el disparador ANTERIOR (M1 / diff-thr) o el flujo generico de
+# compra. Desde hoy el default es USAR_MEDIA=True, que exige `ta_vals["vwap"]`, y las apps
+# minimas de las cold runs no lo tienen -> `_senal_media()` devuelve None, el target se queda
+# en FLAT y NADA compra. Sin esta linea fallan 7 suites por una sola causa.
+# Un test A/B tiene que FIJAR la variable que prueba, no heredarla del default (misma leccion
+# que ENTRADA_RETROCESO en gap14 el mismo dia).
+S.USAR_MEDIA = False
+
 S.ENABLE_TOAST = False
 S.ENABLE_SOUND = False
 
@@ -436,8 +444,14 @@ check(r[5] == S.MOMENTUM_SECS,
       "momentum_win guarda los SEGUNDOS de MOMENTUM_SECS -> %s" % r[5])
 check("SEGUNDOS" in (r[15] or ""), "y las notas lo explican, para no leerlo como muestras")
 check(r[6] == S.REPRICE_SECS and r[7] == S.WALLS_BAND, "reprice y banda correctos")
-check(r[8] == "ATM real" and r[9] == "gamma",
-      "sella el CRITERIO (exec=%s walls=%s), que es lo que cambio sin dejar rastro" % (r[8], r[9]))
+# 2026-08-12: el valor esperado se DERIVA de la constante, no se escribe a mano. Antes se
+# comparaba contra el literal "ATM real" -- que era justo el bug: la columna escribia ese texto
+# a fuego sin leer EJECUCION_ITM, y el test lo bendecia. Un test que fija el literal viejo
+# convierte un bug de auditoria en "comportamiento esperado".
+_exec_esperado = "ITM mas profundo que quepa" if S.EJECUCION_ITM else "ATM real"
+check(r[8] == _exec_esperado and r[9] == "gamma",
+      "sella el CRITERIO REAL (exec=%s walls=%s) y no un literal fijo: es lo que cambio el "
+      "2026-08-10 sin dejar rastro" % (r[8], r[9]))
 check(r[11] == S.CROSS_HHMM and r[12] == S.BARS_STALE_SECS and r[13] == S.POS_LOG_SECS,
       "sella los parametros de los arreglos nuevos")
 check(r[14] and "GAP17" in r[14] and "GAP2" in r[14],
