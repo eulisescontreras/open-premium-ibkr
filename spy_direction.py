@@ -84,6 +84,24 @@ MOM_FRAC = 0.6             # momentum minimo = MOM_FRAC * umbral
 # --- EJECUCION AUTOMATICA (rotar 1 opcion) ---
 TRADING_ENABLED = True      # ARRANCA ARMADO (2026-08-10, orden del usuario). Boton = DESARMAR.
 QTY = 1                     # contratos por señal (cuenta pequeña)
+# --- QUE STRIKE SE OPERA (2026-08-12) -----------------------------------------------------
+# EL PROBLEMA, MEDIDO CON PRECIOS REALES DE HOY: el sistema compraba el ATM, que es casi todo
+# valor TEMPORAL, asi que se evapora aunque la direccion acierte. Con el SPY QUIETO 5 horas
+# (773.53 -> 773.56):
+#     765C ITM  8.57 -> 8.59   -0.1%     <- no pierde practicamente nada
+#     770C ITM  3.91 -> 3.57   -8.7%
+#     773C ATM  1.71 -> 0.82  -51.8%     <- lo que se compraba
+#     775C OTM  0.79 -> 0.12  -85.4%
+# Y la MISMA operacion #12 (misma entrada 10:25, misma salida), solo cambiando el strike:
+#     769C ITM  +53.00 (capital 406$)    770C ITM  +39.00 (capital 318$)
+#     773C ATM  -27.00 (capital 110$)    775C OTM  -27.00 (capital  38$)
+# Con 400$ de cuenta, el 770C CABE y convierte -27.00 en +39.00.
+# El ITM tiene valor INTRINSECO, que no se evapora: es lo que hace viable AGUANTAR una
+# tendencia larga en un 0DTE en vez de tener que cobrar rapido.
+# Se compra el ITM MAS PROFUNDO QUE QUEPA en el capital. Si no hay precio o no hay capital
+# conocido, se cae al ATM de siempre (regla 13: no inventar).
+EJECUCION_ITM = True        # False -> ATM, el comportamiento anterior
+CAPITAL_FRAC_MAX = 0.80     # fraccion maxima del capital disponible en UN contrato
 REPRICE_SECS = 4.0          # re-precia al mid si no llena en este tiempo
 MAX_FILL_SECS = 60.0        # tiempo maximo intentando llenar una entrada
 USAR_M1 = True              # 2026-08-11: disparador de flips = M1. False -> criterio diff/thr.
@@ -117,7 +135,26 @@ CONFIRMACION_MIN = 5        # 2026-08-12: filtro de confirmacion (SOLO REGISTRO,
 # minimo fue +11). Por encima, el resultado depende de que una operacion concreta llegue o no,
 # que es ajustar al dia que se esta usando para juzgarlo (INVESTIGACION_M1_M2 §7).
 # 0 o None lo desactiva y el comportamiento vuelve a ser el anterior.
-TAKE_PROFIT_USD = 10.0
+#
+# ⚠️ 2026-08-12, MISMO DIA: el objetivo FIJO se sustituye por un TRAILING y queda a 0.
+# POR QUE: el objetivo fijo PONE TECHO. El 08-11 una sola operacion llego a +122.36 y con
+# objetivo +10 se habrian cobrado 10. Medido sobre un recorrido que sube a +122 y devuelve la
+# mitad:  fijo+10 -> +10.00  |  aguantar -> +61.00  |  trailing(10,5) -> +115.00.
+# Y en las 4 operaciones REALES de hoy el trailing tambien gana al fijo: +37.50 vs +28.00.
+# Gana en LOS DOS escenarios, que es lo que hace falta: no cortar las tendencias largas y no
+# devolver lo ganado en las laterales.
+TAKE_PROFIT_USD = 0.0
+
+# --- TRAILING (2026-08-12) ----------------------------------------------------------------
+# Deja correr la posicion mientras siga haciendo maximos y solo vende cuando DEVUELVE parte de
+# lo ganado. Reutiliza `self.mfe`, que ya se sigue a 1 Hz: no hace falta estado nuevo.
+#   se ACTIVA cuando el beneficio llega a TRAIL_ACTIVAR_USD
+#   a partir de ahi vende si cae TRAIL_DEVOLVER_USD por debajo de su MAXIMO
+# Medido hoy: las variantes (10,5), (10,10) y (15,8) dan las tres +37.50 en las 4 operaciones
+# reales -> el resultado NO depende de acertar el numero exacto, que es lo que se busca (§7).
+# 0 lo desactiva.
+TRAIL_ACTIVAR_USD = 10.0
+TRAIL_DEVOLVER_USD = 5.0
 
 ENTRADA_RETROCESO = True    # ACTIVO (paper). False -> comportamiento identico al anterior.
 RETRO_FRAC = 0.50           # retroceso exigido, como fraccion del impulso previo
@@ -2864,6 +2901,52 @@ class SpyDirection:
         except Exception:
             return []
 
+    def _strike_ejecucion(self, right, px):
+        """Strike que se OPERA: el ITM mas profundo que quepa en el capital disponible.
+
+        POR QUE NO EL ATM. Medido el 2026-08-12 con precios reales. Con el SPY QUIETO 5 horas
+        (773.53 -> 773.56), lo que perdio cada strike solo por el paso del tiempo:
+            765C ITM  8.57 -> 8.59    -0.1%     773C ATM  1.71 -> 0.82   -51.8%
+            770C ITM  3.91 -> 3.57    -8.7%     775C OTM  0.79 -> 0.12   -85.4%
+        El ATM es casi todo valor TEMPORAL y se evapora aunque la direccion acierte. El ITM
+        tiene valor INTRINSECO, que no se evapora: es lo que hace viable AGUANTAR una tendencia
+        larga en un 0DTE en vez de tener que cobrar rapido.
+        La MISMA operacion #12 (misma entrada 10:25, misma salida) daba:
+            773C ATM  -27.00 (110$)      770C ITM  +39.00 (318$)      769C ITM  +53.00 (406$)
+        Con 400$ de cuenta el 770C cabia y convertia -27.00 en +39.00.
+
+        Devuelve (strike, motivo). CAE AL ATM -y lo dice en el motivo- si falta cualquier dato:
+        sin capital conocido, sin precio del strike, o si ningun ITM cabe. Nunca inventa un
+        precio ni asume capital (regla 13). El peor caso es el comportamiento anterior.
+        """
+        atm = min(self.strikes, key=lambda s: abs(s - px))
+        try:
+            if not EJECUCION_ITM:
+                return atm, "ATM (EJECUCION_ITM=False)"
+            cap = self.acct_avail
+            if cap is None or cap <= 0:
+                return atm, "ATM (capital disponible desconocido)"
+            tope = cap * CAPITAL_FRAC_MAX
+            # ITM: la call POR DEBAJO del precio, la put POR ENCIMA. Se prueba del mas profundo
+            # (mas caro, mas intrinseco) al mas superficial, y se coge el primero que quepa.
+            if right == "C":
+                cands = sorted([s for s in self.strikes if s < px])
+            else:
+                cands = sorted([s for s in self.strikes if s > px], reverse=True)
+            for s in cands:
+                p = self._precio_de(self.expiry, s, right) or {}
+                coste = p.get("ask") or p.get("mid")
+                if coste and coste > 0:
+                    total = coste * 100.0 * QTY
+                    if total <= tope:
+                        return s, (f"ITM {abs(s - px):.0f}pts dentro: cuesta {total:.0f}$ de "
+                                   f"{tope:.0f}$ disponibles ({CAPITAL_FRAC_MAX:.0%} de "
+                                   f"{cap:.0f}$)")
+            return atm, f"ATM (ningun ITM cabe en {tope:.0f}$)"
+        except Exception:
+            LOG.exception("Error eligiendo el strike de ejecucion")
+            return atm, "ATM (error al elegir)"
+
     def _nuevo_opt(self, strike, right):
         """Crea+califica un contrato de opcion de la expiracion en curso."""
         c = Option(SYMBOL, self.expiry, strike, right, "SMART", tradingClass=SYMBOL)
@@ -2937,23 +3020,28 @@ class SpyDirection:
             # ---- 2) EJECUCION: ATM REAL (strike mas cercano al precio) ----
             # Solo con la cuenta plana: con posicion abierta se venderia otro contrato.
             if self.pos == "FLAT" and self.order is None:
-                atm = min(self.strikes, key=lambda s: abs(s - px))
-                if self.buy_call is None or self.buy_call.strike != atm:
-                    bc = self._nuevo_opt(atm, "C")
+                # 2026-08-12: el strike ya NO es el ATM fijo. `_strike_ejecucion` elige el ITM
+                # mas profundo que quepa en el capital (el ATM se evapora: -51.8% en 5 h con el
+                # SPY quieto, frente a -0.1% del ITM profundo). Cae al ATM si falta cualquier
+                # dato, asi que el peor caso es el comportamiento anterior.
+                k_c, why_c = self._strike_ejecucion("C", px)
+                k_p, why_p = self._strike_ejecucion("P", px)
+                if self.buy_call is None or self.buy_call.strike != k_c:
+                    bc = self._nuevo_opt(k_c, "C")
                     if bc is not None:
                         self._soltar_mkt(self.buy_call)
                         self.buy_call = bc
                         self.ib.reqMktData(bc, "", False, False)
                         self._mkt_subs.add(bc.conId)
-                        ACT.info("EJECUCION call -> ATM real %gC (precio %.2f)", atm, px)
-                if self.buy_put is None or self.buy_put.strike != atm:
-                    bp = self._nuevo_opt(atm, "P")
+                        ACT.info("EJECUCION call -> %gC (precio %.2f) | %s", k_c, px, why_c)
+                if self.buy_put is None or self.buy_put.strike != k_p:
+                    bp = self._nuevo_opt(k_p, "P")
                     if bp is not None:
                         self._soltar_mkt(self.buy_put)
                         self.buy_put = bp
                         self.ib.reqMktData(bp, "", False, False)
                         self._mkt_subs.add(bp.conId)
-                        ACT.info("EJECUCION put -> ATM real %gP (precio %.2f)", atm, px)
+                        ACT.info("EJECUCION put -> %gP (precio %.2f) | %s", k_p, px, why_p)
 
             # ---- 2-bis) LINEA BASE: los strikes ATM/ITM de las expiraciones FUTURAS ----
             # Tambien tienen que seguir al precio: si no, se acumula premium de contratos

@@ -539,6 +539,95 @@ check(_e.mfe == 1.50 and _e.pos == "CALL",
 S.TAKE_PROFIT_USD = _tp
 
 print()
+print("=" * 78)
+print("QUE STRIKE SE OPERA: ITM que quepa en el capital (2026-08-12)")
+print("=" * 78)
+# EL PROBLEMA, MEDIDO CON PRECIOS REALES: el ATM es casi todo valor temporal. Con el SPY
+# QUIETO 5 h, el 773C ATM perdio 51.8% y el 765C ITM 0.1%. La MISMA operacion #12 daba
+# -27.00 con el ATM y +39.00 con el 770C ITM, que cabia en los 400$ de la cuenta.
+# Se prueba `_strike_ejecucion` REAL, con una banda real para que `_precio_de` funcione.
+
+
+class _TkP:
+    def __init__(self, bid, ask):
+        self.bid, self.ask, self.last = bid, ask, bid
+
+
+class _IBP:
+    def __init__(self, precios, expiry):
+        self._p = precios
+        self._exp = expiry
+
+    def ticker(self, c):
+        v = self._p.get((c.strike, c.right))
+        return _TkP(v[0], v[1]) if v else None
+
+
+def _app_strikes(cap, precios, expiry="20260812", px=773.5):
+    a = nueva_app()
+    a.expiry = expiry
+    a.spy_price = px
+    a.strikes = [float(x) for x in range(765, 786)]
+    a.acct_avail = cap
+    a.band_contracts = [S.Option(S.SYMBOL, expiry, k, r, "SMART", tradingClass=S.SYMBOL)
+                        for (k, r) in precios]
+    for c in a.band_contracts:
+        c.conId = int(c.strike * 10 + (1 if c.right == "C" else 2))
+    a.ib = _IBP(precios, expiry)
+    return a
+
+
+# precios REALES del 2026-08-12 a las 10:25 (los de la operacion #12)
+PRE = {(765.0, "C"): (7.88, 7.92), (766.0, "C"): (6.91, 6.95), (767.0, "C"): (5.93, 5.97),
+       (768.0, "C"): (4.94, 4.98), (769.0, "C"): (4.03, 4.07), (770.0, "C"): (3.16, 3.20),
+       (771.0, "C"): (2.36, 2.40), (772.0, "C"): (1.66, 1.70), (773.0, "C"): (1.07, 1.11),
+       (774.0, "C"): (0.66, 0.70), (775.0, "C"): (0.37, 0.41),
+       (774.0, "P"): (0.90, 0.94), (775.0, "P"): (1.40, 1.44), (776.0, "P"): (2.10, 2.14),
+       (777.0, "P"): (2.95, 2.99), (778.0, "P"): (3.90, 3.94)}
+
+_a = _app_strikes(400.0, PRE)
+_k, _w = _a._strike_ejecucion("C", 773.5)
+check(_k == 770.0,
+      f"con 400$ de cuenta elige el 770C ITM (cuesta 320$ de 320$ tope) -> {_k:g}C  [{_w}]")
+
+_b = _app_strikes(1000.0, PRE)
+_k2, _w2 = _b._strike_ejecucion("C", 773.5)
+check(_k2 == 765.0, f"con 1000$ llega al 765C, mas profundo -> {_k2:g}C")
+
+_c = _app_strikes(150.0, PRE)
+_k3, _w3 = _c._strike_ejecucion("C", 773.5)
+# con 150$ el tope es 120$: el 772C cuesta 170$ y NO cabe; el 773C (que con el SPY en 773.5
+# tambien es ITM, aunque por poco) cuesta 111$ y si. Coge el mas profundo QUE QUEPA, no el mas
+# profundo a secas -- que es justo lo que tiene que hacer con capital corto.
+check(_k3 == 773.0, f"con 150$ solo cabe el 773C -> {_k3:g}C  [{_w3}]")
+check(_k3 >= 773.0 and _k3 < 773.5, "y el elegido sigue siendo ITM (strike < precio)")
+
+_d = _app_strikes(50.0, PRE)
+_k4, _w4 = _d._strike_ejecucion("C", 773.5)
+check(_k4 == 773.0 and "ningun ITM cabe" in _w4,
+      f"con 50$ NINGUN ITM cabe -> cae al ATM {_k4:g}C  [{_w4}]")
+
+_e = _app_strikes(None, PRE)
+_k5, _w5 = _e._strike_ejecucion("C", 773.5)
+check(_k5 == 773.0 and "desconocido" in _w5,
+      f"sin capital conocido -> ATM, no se inventa -> {_k5:g}C  [{_w5}]")
+
+_f = _app_strikes(1000.0, PRE)
+_tp2 = S.EJECUCION_ITM
+S.EJECUCION_ITM = False
+_k6, _w6 = _f._strike_ejecucion("C", 773.5)
+S.EJECUCION_ITM = _tp2
+check(_k6 == 773.0, f"con EJECUCION_ITM=False -> ATM, comportamiento anterior -> {_k6:g}C")
+
+_g = _app_strikes(400.0, PRE)
+_k7, _w7 = _g._strike_ejecucion("P", 773.5)
+check(_k7 > 773.5, f"lado PUT: el ITM esta POR ENCIMA del precio -> {_k7:g}P  [{_w7}]")
+
+_h = _app_strikes(400.0, {})          # sin ningun precio disponible
+_k8, _w8 = _h._strike_ejecucion("C", 773.5)
+check(_k8 == 773.0, f"sin precios de la banda -> ATM -> {_k8:g}C  [{_w8}]")
+
+print()
 if FAILS:
     print("FALLOS (%d):" % len(FAILS))
     for f in FAILS:
