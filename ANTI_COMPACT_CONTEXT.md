@@ -154,6 +154,67 @@ pierde lo que hubiera en `_tape_buf` (hasta `TAPE_FLUSH_N`=400 filas) y el flujo
 futuro se quiere reiniciar sin perder ese minuto, haría falta un cierre ordenado que haga
 `_flush_tape(forzar=True)` + `_persist_accum` antes de salir. **NO está implementado.**
 
+## 🔬 INVESTIGACIÓN 2026-08-12 TARDE — el momento de entrada. LEER ANTES DE REPETIRLO
+
+### ❌ FALSO POSITIVO QUE ALGUIEN VA A REDESCUBRIR: la paridad put-call
+Se probó la **desviación de la paridad** `(C−P) − (S−K)` promediada en los strikes a ±3, con el
+mid por minuto de los 20 strikes 0DTE. Salió **espectacular**: `r=+0.397` (08-12) y `+0.348`
+(08-11), `p=0.000` con nula por desplazamiento circular y penalizando la selección del lag,
+positiva en 7/7 y 6/7 horizontes. **Replicaba fuera de muestra.**
+
+**Y ES UN ARTEFACTO.** La prueba que lo mata (criterio fijado ANTES de verla):
+```
+                         08-11    08-12
+A) PASADO   t-1 -> t    -0.068   -0.038
+B) FUTURO   t   -> t+1  +0.348   +0.397   <- toda la señal
+C) FUTURO   t+1 -> t+2  +0.026   -0.067   <- se desploma
+```
+La señal vive entera en UN paso. Es **desfase de reloj**: el mid de las opciones se lee un
+instante más fresco que `ta_minute.spy`, así que "predecir" `spy(t+1)` es leer el presente.
+Contra el precio implícito por paridad (misma fuente, mismo instante) el nivel cae a **+0.009**
+en el 08-12. **No usar. No re-proponer sin pasar la prueba C.**
+
+### ✅ SÍ ES REAL: reversión a la media, y depende del RÉGIMEN
+`corr(retorno pasado 3min, retorno futuro k)`, medida en **dos series independientes**:
+```
+              k=1     k=3     k=10
+08-12 barras -0.135  -0.259  -0.346     08-12 implícito -0.190  -0.287  -0.384
+08-11 barras -0.101  -0.136  -0.061     08-11 implícito -0.107  -0.076  -0.023
+```
+Está en las dos series con la misma magnitud ⇒ **no es rebote bid-ask**. Y es **mucho más
+fuerte en el día lateral (08-12, rango 1,93 pts) que en el de tendencia (08-11)**.
+
+### 📐 LA REGLA QUE SALIÓ, y su medición
+Entrar tras un **retroceso del 50%** del impulso de 5 min, **solo cuando el régimen es de
+reversión**, medido con el *efficiency ratio* de Kaufman (calculable con `ta_minute.spy` sola):
+```
+ER = |SPY(t) − SPY(t−30)| / Σ|movimientos de 1 min|      ER < 0.30 -> esperar ; >= 0.30 -> entrar ya
+```
+Efecto medido (n=80-138/día, mid real del ATM, los dos días por separado):
+```
+08-12   aguantar 30 min   -2362 -> -990     objetivo +5$   -1071 -> -217   (acierto 62% -> 78%)
+08-11   objetivo +10 / stop -15    -70 -> 0   <- mejor celda de todo el barrido
+```
+⚠️ **TODO sale negativo en total**, y la causa es la FRECUENCIA: la simulación entra en cada
+impulso ≥0.15 pts (80-138 ops/día) cuando el sistema real hace 4. Además usa `mid` en entrada y
+salida, así que la realidad es peor. **Es un MEDIDOR comparativo, no una estrategia.**
+Lo que mide sí es consistente: entrar tras el retroceso en régimen de reversión es mejor que
+entrar en el impulso.
+
+### 🚧 POR QUÉ NO SE PUDO VALIDAR CONTRA M1 (no perder tiempo intentándolo)
+```
+08-11: 7 flips, TODOS entre 09:30 y 09:46  |  precios de opción desde 11:48  -> CERO solapamiento
+08-12: 4 flips
+```
+n=4. El 2026-08-12 es **el primer día con precios desde la apertura**. Hasta tener varios días
+así, la regla solo se puede validar como registro paralelo.
+
+### 📊 Y el dato que sostiene todo esto
+Los máximos a favor llegan **enseguida**: trades #9, #10, #11 tocaron su MFE a los **88s, 62s y
+545s** de entrar, y la CALL #12 al minuto siguiente. El movimiento no tarda: lo que falta no es
+esperar más, es **cobrarlo**. Con la entrada por régimen el MFE disponible pasa de +3 a +9 y el
+P&L sigue negativo ⇒ la pieza que falta es la **regla de salida**, como ya decía §5.1.
+
 ## ⚠️ LO QUE HAY QUE VERIFICAR EN EL PRÓXIMO ARRANQUE
 
 1. **Que IBKR acepte `233` en los 40 contratos de la banda.** Es el ÚNICO punto no verificable
