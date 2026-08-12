@@ -558,7 +558,9 @@ class SpyDirection:
                                       # ticker de buy_call/buy_put NUNCA tiene modelGreeks
                                       # aunque sea el mismo contrato de IBKR.
         self._tape_buf = []           # TAPE: filas pendientes de volcar (ver _flush_tape)
-        self._tape_n = 0              # total de operaciones registradas hoy (para el log)
+        self._tape_n = 0              # total de operaciones registradas hoy
+        self._tape_err = 0            # capturas del tape que fallaron (se reportan por minuto)
+        self._tape_err_last = ""      # ultimo error de captura, para el log del minuto
         self.band_prev_vol = {}       # conId -> volumen previo (delta entre lecturas de 3 min)
         self.prev_gamma = {}          # conId -> gamma previo (detectar dato estancado/viejo)
         self.today_vol = {}           # (expiry,strike,right) -> volumen del dia (banda)
@@ -1020,6 +1022,7 @@ class SpyDirection:
         except Exception:
             pass
         self._tape_buf = []; self._tape_n = 0
+        self._tape_err = 0; self._tape_err_last = ""
         self.flow_hist = []          # ventanas moviles: historia de AYER no vale para hoy
         self._prem_snap = None       # premium por vela: sin referencia del dia anterior
         self.entry_price = None; self.contract_price = None
@@ -1957,8 +1960,16 @@ class SpyDirection:
                         (float(last) * _ls * 100.0) if _ls else None,
                         premium,
                         "SENAL" if is_signal else "BASELINE"))
-                except Exception:
-                    pass          # el tape JAMAS puede romper el procesamiento de la señal
+                except Exception as _e:
+                    # el tape JAMAS puede romper el procesamiento de la señal, asi que NO se
+                    # propaga. Pero antes era `pass` a secas y una captura fallida se perdia
+                    # en silencio: podia estar tirando operaciones sistematicamente sin que
+                    # nada lo indicara. 2026-08-12: se CUENTAN y se reportan una vez por
+                    # minuto en la linea de TAPE. No se loguea aqui a proposito: _on_ticks
+                    # corre a alta frecuencia en el hilo de Tkinter y una linea por tick
+                    # colgaria la GUI y llenaria el fichero.
+                    self._tape_err = getattr(self, "_tape_err", 0) + 1
+                    self._tape_err_last = "%s: %s" % (type(_e).__name__, _e)
                 if len(self._tape_buf) >= TAPE_FLUSH_N:
                     self._flush_tape()
             # LA SENAL NO CAMBIA: net_call/net_put siguen sumando SOLO los strikes de senal.
@@ -3477,11 +3488,21 @@ class SpyDirection:
                     _g = self.db.execute(
                         "SELECT COUNT(*), MAX(size), ROUND(AVG(size),1) FROM tape "
                         "WHERE fecha=? AND hora LIKE ?", (fecha, hora + ":%")).fetchone()
+                    # 2026-08-12: se reportan tambien los fallos de CAPTURA. En _on_ticks
+                    # no se puede loguear por tick (alta frecuencia, hilo de la GUI), asi
+                    # que se cuentan alli y se vuelcan aqui, una vez por minuto. Si sale
+                    # "capturas_fallidas>0" se estan PERDIENDO operaciones del tape.
+                    _te = getattr(self, "_tape_err", 0)
                     ACT.info("MIN %s | TAPE %d operaciones este minuto (mayor=%s contratos, "
-                             "media=%s) | volcadas=%d, total dia=%d",
-                             hora, _g[0] or 0, _fmt(_g[1]), _fmt(_g[2]), _n, self._tape_n)
+                             "media=%s) | volcadas=%d, total dia=%d | capturas_fallidas=%d%s",
+                             hora, _g[0] or 0, _fmt(_g[1]), _fmt(_g[2]), _n, self._tape_n,
+                             _te, (" ULTIMO: " + getattr(self, "_tape_err_last", "")) if _te else "")
+                    if _te:
+                        ACT.warning("TAPE: %d capturas FALLIDAS acumuladas -> se estan "
+                                    "perdiendo operaciones. Ultimo error: %s",
+                                    _te, getattr(self, "_tape_err_last", "?"))
                 except Exception:
-                    pass
+                    LOG.exception("Error componiendo el resumen del TAPE del minuto")
             ACT.info("MIN %s | %s", hora, self.resumen_cuenta())
             if self.pos in ("CALL", "PUT"):
                 en = self.entry_price or 0.0
