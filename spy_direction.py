@@ -99,7 +99,15 @@ RETARDO_M1_MIN = 20         # 2026-08-11: minutos de RETARDO al aplicar M1. El s
                             # anticipacion. Es una hipotesis a comprobar, no un resultado.
 FLATTEN_HHMM = "15:45"      # ET: cerrar cualquier opcion abierta
 STOP_NEW_HHMM = "15:40"     # ET: no abrir nuevas cerca del cierre
-START_TRADE_HHMM = "09:35"  # ET: NO abrir posiciones antes de esta hora (2026-08-11, peticion del
+START_TRADE_HHMM = "09:30"  # ET: NO abrir posiciones antes de esta hora. 2026-08-12: el usuario
+                            # QUITA el retardo (estaba en 09:35) -> se puede abrir desde la
+                            # apertura. Lo que motivo el retardo ya no aplica igual: los 5 giros
+                            # en 90 s del 2026-08-10 venian del umbral adaptativo con el acumulado
+                            # vacio, y desde el 2026-08-11 el disparador es M1 (USAR_M1=True), que
+                            # solo puede girar en el cambio de MINUTO y ademas usa el estado de
+                            # hace RETARDO_M1_MIN. Ese retardo de 20 min sigue vigente y es OTRO:
+                            # en la practica la primera entrada no llega hasta que M1 tiene 20 min
+                            # de historia. Historico del motivo original (2026-08-11, peticion del
                             # usuario). Motivo con datos del 2026-08-10: en los primeros 90 s hubo
                             # 5 GIROS (09:30:06 UP, :13 DOWN, :30 UP, :37 DOWN, 09:31:14 UP). El
                             # umbral es adaptativo -thr = ADAPT_FRAC*(|net_call|+|net_put|)- y con
