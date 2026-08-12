@@ -901,7 +901,16 @@ class SpyDirection:
                      "net_call_15m REAL", "net_put_15m REAL",
                      # SMA 20/50/200 (2026-08-11): SOLO registro, NO deciden nada. La 200 queda
                      # NULL hasta que haya 200 barras (~12:50 con "1 D"), que es la verdad.
-                     "sma20 REAL", "sma50 REAL", "sma200 REAL"):
+                     "sma20 REAL", "sma50 REAL", "sma200 REAL",
+                     # MAXIMO y MINIMO de la vela (2026-08-12). SOLO registro.
+                     # Hasta hoy `ta_minute` guardaba una sola columna de precio, `spy`, que es el
+                     # CIERRE del minuto. Con solo cierres no se puede calcular el MFE/MAE de una
+                     # entrada contrafactual: no se sabe si un stop o un take-profit habrian
+                     # saltado, y el maximo de los cierres es un SUELO del recorrido real. Toda
+                     # conclusion del tipo "con stop en X habria ganado Y" era, como mucho, una
+                     # cota inferior. Las barras ya traen high/low (ta_poll:3229): solo habia que
+                     # guardarlos. Filas anteriores quedan en NULL, que es la verdad.
+                     "spy_high REAL", "spy_low REAL"):
             try:
                 c.execute("ALTER TABLE ta_minute ADD COLUMN " + _col)
             except Exception:
@@ -3251,7 +3260,7 @@ class SpyDirection:
                 if self.last_bar_time is None:
                     self.last_bar_time = last_time
                 elif last_time != self.last_bar_time:
-                    self._log_minute(None, rows[-2]["date"])
+                    self._log_minute(None, rows[-2]["date"], rows[-2])
                     self.last_bar_time = last_time
             return
         df = pd.DataFrame(rows)
@@ -3263,18 +3272,26 @@ class SpyDirection:
         if last_time != self.last_bar_time:
             # se cerro un minuto -> registrar la barra ya cerrada (sin la ultima en formacion)
             closed = self.ta.compute(df.iloc[:-1]) if len(df) > 27 else self.ta_vals
-            self._log_minute(closed, rows[-2]["date"] if len(rows) >= 2 else last_time)
+            self._log_minute(closed, rows[-2]["date"] if len(rows) >= 2 else last_time,
+                             rows[-2] if len(rows) >= 2 else None)
             self.last_bar_time = last_time
 
-    def _log_minute(self, vals, bar_dt):
+    def _log_minute(self, vals, bar_dt, bar=None):
         """Registro por minuto: TA + señal + premium (BD y log).
 
         GAP 21: `vals` puede venir en None cuando el TA aun no tiene sus 26 barras. En ese caso
         NO se sale: se guarda igual el PREMIUM (que ya existe) y las columnas de TA quedan en
         NULL, que es la verdad. Antes se hacia `return` y se perdia el flujo por minuto de la
-        media hora mas activa del dia."""
+        media hora mas activa del dia.
+
+        `bar` (2026-08-12) es la fila de la vela YA CERRADA, para guardar su maximo y su minimo.
+        Se pasa la barra en vez de sacarlo de `vals` A PROPOSITO: `vals` es None durante los ~26
+        primeros minutos (GAP 21) y ahi es justamente donde mas se mueve el precio. Con la barra,
+        high/low se guardan desde las 09:30. Es opcional para no romper a ningun llamador."""
         v = vals or {}
         sin_ta = not vals
+        _hi = bar.get("high") if isinstance(bar, dict) else None
+        _lo = bar.get("low") if isinstance(bar, dict) else None
         try:
             if hasattr(bar_dt, "strftime"):
                 fecha = bar_dt.strftime("%Y-%m-%d"); hora = bar_dt.strftime("%H:%M")
@@ -3293,9 +3310,9 @@ class SpyDirection:
                 "obv_trend,ta_score,ta_dir,net_call,net_put,prem_state,"
                 "diff,thr,momentum,prem_call_min,prem_put_min,net_call_min,net_put_min,"
                 "net_call_1m,net_put_1m,net_call_5m,net_put_5m,"
-                "net_call_15m,net_put_15m,sma20,sma50,sma200) "
+                "net_call_15m,net_put_15m,sma20,sma50,sma200,spy_high,spy_low) "
                 "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,"
-                "?,?,?)",
+                "?,?,?,?,?)",
                 # GAP 21: v.get(...) y no vals[...]: sin TA todas estas columnas van a NULL,
                 # pero el spy y TODO el bloque de premium se guardan igual. El precio no falta
                 # aunque no haya TA: ta_poll actualiza self.spy_price ANTES del corte de 26.
@@ -3312,7 +3329,9 @@ class SpyDirection:
                  # ... y las mismas magnitudes en ventana movil, solo para comparar despues
                  c1m[0], c1m[1], c5m[0], c5m[1], c15m[0], c15m[1],
                  # SMA 20/50/200: None (NULL) mientras no haya N barras. Ver TAEngine.compute.
-                 v.get("sma20"), v.get("sma50"), v.get("sma200")))
+                 v.get("sma20"), v.get("sma50"), v.get("sma200"),
+                 # maximo/minimo de la vela: NULL si el llamador no paso la barra
+                 _hi, _lo))
             # --- M1 / M2 (2026-08-11): se registran cada minuto. M1 ademas DECIDE (USAR_M1).
             # Los contadores avanzan aqui y solo aqui: M1 es un contador de MINUTOS, no puede
             # sumar 1 por segundo. Efecto: los flips solo pueden ocurrir al cambiar de minuto.

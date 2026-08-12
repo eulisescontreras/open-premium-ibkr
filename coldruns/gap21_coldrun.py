@@ -180,6 +180,57 @@ n_desp = app4.db.execute("SELECT COUNT(*) FROM ta_minute").fetchone()[0]
 check(n_desp > n_antes,
       f"al cruzar las 26 barras NO se pierde el minuto de transicion ({n_antes} -> {n_desp})")
 
+# =============================================================== 5  (2026-08-12)
+print()
+print("=" * 78)
+print("5) MAXIMO/MINIMO de la vela en ta_minute")
+print("=" * 78)
+# POR QUE: `ta_minute` tenia UNA sola columna de precio, `spy`, que es el CIERRE del minuto.
+# Con solo cierres no se puede calcular el MFE/MAE de una entrada contrafactual: no se sabe si
+# un stop o un take-profit habrian saltado, y el maximo de los cierres es un SUELO del recorrido
+# real. Las barras ya traian high/low; solo habia que guardarlos.
+# El high/low se pasa por la BARRA y no por `vals` A PROPOSITO: `vals` es None durante los ~26
+# primeros minutos (este mismo GAP 21) y ahi es donde mas se mueve el precio.
+
+app5 = nueva()
+app5._log_minute(None, "2026-08-11 09:35:00",
+                 {"high": 774.20, "low": 772.80, "close": 773.50})
+f5 = app5.db.execute("SELECT spy,spy_high,spy_low FROM ta_minute WHERE hora='09:35'").fetchone()
+check(f5 is not None and f5[1] == 774.20 and f5[2] == 772.80,
+      f"5.1 SIN TA (vals=None) tambien se guardan high/low -> {f5}")
+check(f5 is not None and f5[2] <= f5[0] <= f5[1],
+      f"5.1 coherencia low <= cierre <= high -> {f5}")
+
+app5b = nueva()
+app5b._log_minute(None, "2026-08-11 09:36:00")          # llamador antiguo, sin barra
+f5b = app5b.db.execute("SELECT spy_high,spy_low FROM ta_minute WHERE hora='09:36'").fetchone()
+check(f5b == (None, None),
+      f"5.2 sin barra -> NULL, no se inventa un valor -> {f5b}")
+
+app5c = nueva()
+app5c.bars = [FakeBar("2026-08-11 09:41:00", 773.20), FakeBar("2026-08-11 09:42:00", 773.40)]
+app5c.last_bar_time = None
+app5c.ta_poll()                                          # 1a: solo toma referencia
+app5c.bars.append(FakeBar("2026-08-11 09:43:00", 773.60))
+app5c.ta_poll()                                          # cierra 09:42 -> lo escribe
+f5c = app5c.db.execute("SELECT spy,spy_high,spy_low FROM ta_minute "
+                       "WHERE hora='09:42'").fetchone()
+check(f5c is not None and abs(f5c[1] - 773.50) < 1e-9 and abs(f5c[2] - 773.30) < 1e-9,
+      f"5.3 END-TO-END por ta_poll REAL: high/low de la vela cerrada -> {f5c}")
+
+# 5.4 DESALINEACION PREEXISTENTE, detectada al anadir high/low (2026-08-12). NO se corrige
+# aqui: se deja MEDIDA para que nadie construya un MFE/MAE encima sin saberlo.
+# Durante los ~26 primeros minutos `vals` es None (este mismo GAP 21) y `spy` cae a
+# `self.spy_price`, que ta_poll acaba de fijar con rows[-1] -> la vela EN FORMACION. La fila
+# lleva la hora de la vela CERRADA (rows[-2]) pero el cierre de la SIGUIENTE.
+# Consecuencia: en esa franja NO se cumple spy_low <= spy <= spy_high, y cruzar `spy` con
+# `spy_high`/`spy_low` mezcla dos minutos distintos.
+# Con >=26 barras no ocurre: ahi `closed` trae el cierre de la vela correcta.
+_desalineado = f5c is not None and not (f5c[2] <= f5c[0] <= f5c[1])
+check(_desalineado,
+      f"5.4 CONOCIDO: sin TA, `spy` es el cierre de la vela SIGUIENTE, no la de la fila "
+      f"-> spy={f5c[0]} fuera de [{f5c[2]}, {f5c[1]}]. Documentado, pendiente de decidir.")
+
 print()
 print("=" * 78)
 print(("TODO VERDE" if not FAILS else f"{len(FAILS)} FALLOS: " + " | ".join(FAILS)))
