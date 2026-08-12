@@ -730,6 +730,15 @@ class SpyDirection:
                   "abs_call REAL, abs_put REAL, dif REAL, senal_min TEXT, racha INTEGER, "
                   "confirmado TEXT, confirmado_efectivo TEXT, confirmacion_min INTEGER, "
                   "retardo_min INTEGER, recentrado INTEGER, PRIMARY KEY(fecha,hora))")
+        # VELAS DE 1 MINUTO (2026-08-12). La app pide BARS_DURATION="2 D" de barras en CADA
+        # arranque (medido en los comentarios de :193: "2 D" -> 442 barras) y hasta hoy las
+        # TIRABA: no habia ni una tabla ni un INSERT de barras en todo el fichero. `ta_minute`
+        # solo guardaba el cierre, asi que NO se podian formar velas ni buscar patrones.
+        # Al volcarse con INSERT OR REPLACE toda la ventana en cada ta_poll, el arranque
+        # RELLENA HACIA ATRAS los 2 dias sin ninguna logica extra.
+        c.execute("CREATE TABLE IF NOT EXISTS bars_minute ("
+                  "fecha TEXT, hora TEXT, open REAL, high REAL, low REAL, close REAL, "
+                  "volume REAL, PRIMARY KEY(fecha,hora))")
         # migracion para BD existentes: agregar columnas nuevas si faltan
         for col in ("net_prem REAL", "open_interest REAL", "gamma REAL"):
             try:
@@ -3408,15 +3417,77 @@ class SpyDirection:
                      "fiar -> walls/GEX quedan marcados como stale hasta reponer el stream",
                      time.monotonic() - self.bars_last_advance, ult)
 
+    def _guardar_barras(self, rows):
+        """Persiste las velas de 1 min en `bars_minute`. SOLO REGISTRO: no decide nada.
+
+        POR QUE: `reqHistoricalData(BARS_DURATION="2 D")` entrega ~442 barras en cada arranque y
+        hasta hoy se TIRABAN (no habia ni tabla ni INSERT). `ta_minute` solo guardaba el cierre,
+        asi que no se podian formar velas ni buscar patrones contra el premium que entra.
+
+        La PRIMERA pasada vuelca la ventana ENTERA -> rellena hacia atras los 2 dias sin logica
+        de backfill. Despues solo las 3 ultimas: la que se acaba de cerrar y la que se esta
+        formando (INSERT OR REPLACE la va actualizando), que es barato y deja el dato en vivo.
+
+        Nunca puede romper ta_poll: si falla, se cuenta y se sigue (el TA y la senal no dependen
+        de esto). Se reporta una vez por minuto en la linea de BARRAS, no por tick.
+        """
+        if not rows:
+            return
+        try:
+            primera = not getattr(self, "_bars_backfill_ok", False)
+            # ESCRIBIR 1 VEZ POR MINUTO, no por tick. ta_poll corre cada REFRESH_SECS (1 s) y un
+            # commit por segundo con journal_mode=delete crea y borra el journal 3.600 veces por
+            # hora, compitiendo por el lock con todo lo demas. Se vuelca solo cuando cambia el
+            # minuto de la ultima vela; la que se esta formando se actualiza al cerrarse.
+            _ult = rows[-1].get("date")
+            _clave = _ult.strftime("%Y-%m-%d %H:%M") if hasattr(_ult, "strftime") else str(_ult)[:16]
+            if not primera and _clave == getattr(self, "_bars_last_clave", None):
+                return
+            self._bars_last_clave = _clave
+            lote = rows if primera else rows[-3:]
+            datos = []
+            for r in lote:
+                d = r.get("date")
+                if hasattr(d, "strftime"):
+                    fecha, hora = d.strftime("%Y-%m-%d"), d.strftime("%H:%M")
+                else:
+                    s = str(d)
+                    if len(s) < 16:
+                        continue
+                    fecha, hora = s[:10], s[11:16]
+                datos.append((fecha, hora, r.get("open"), r.get("high"), r.get("low"),
+                              r.get("close"), r.get("volume")))
+            if not datos:
+                return
+            self.db.executemany(
+                "INSERT OR REPLACE INTO bars_minute(fecha,hora,open,high,low,close,volume) "
+                "VALUES(?,?,?,?,?,?,?)", datos)
+            self.db.commit()
+            if primera:
+                self._bars_backfill_ok = True
+                ACT.info("BARRAS: %d velas de 1 min volcadas a bars_minute (backfill de %s). "
+                         "Rango %s -> %s", len(datos), BARS_DURATION,
+                         datos[0][0] + " " + datos[0][1], datos[-1][0] + " " + datos[-1][1])
+        except Exception as _e:
+            self._bars_err = getattr(self, "_bars_err", 0) + 1
+            self._bars_err_last = "%s: %s" % (type(_e).__name__, _e)
+
     def ta_poll(self):
         if self.demo or self.bars is None or not HAVE_PD:
             return
         try:
-            rows = [{"high": b.high, "low": b.low, "close": b.close,
-                     "volume": b.volume, "date": b.date} for b in self.bars]
+            # `open` con getattr y NO con b.open: si un objeto barra no lo trae, `b.open`
+            # lanza AttributeError, el except de abajo hace `return` y ta_poll DEJA DE
+            # FUNCIONAR ENTERA — sin TA, sin precio, sin registro del minuto. Lo cazo la cold
+            # run diferencial (gap21 paso de TODO VERDE a 6 FALLOS). Ausente -> None -> NULL,
+            # que es la verdad, y el resto sigue vivo.
+            rows = [{"open": getattr(b, "open", None), "high": b.high, "low": b.low,
+                     "close": b.close, "volume": b.volume, "date": b.date}
+                    for b in self.bars]
         except Exception:
             return
         self._chequear_barras(rows)
+        self._guardar_barras(rows)
         # PRECIO EN VIVO: self.spy_price solo se fijaba en setup_contracts (1 vez por sesion),
         # asi que quedaba CONGELADO todo el dia -> transitions.spy, walls_snapshot.spot, el GEX
         # (factor spot^2) y la Ladder usaban el precio de la apertura. Las barras ya llegan en

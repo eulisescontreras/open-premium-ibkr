@@ -172,6 +172,66 @@ finally:
     except Exception:
         pass
 
+# ============================================================ (2026-08-12)
+print()
+print("=" * 78)
+print("5) LAS VELAS SE GUARDAN: bars_minute + backfill de la ventana entera")
+print("=" * 78)
+# POR QUE: `reqHistoricalData(BARS_DURATION)` entrega ~442 barras en CADA arranque y hasta hoy
+# se TIRABAN (0 tablas y 0 INSERT de barras en todo el fichero). `ta_minute` solo guardaba el
+# CIERRE, asi que no se podian formar velas ni buscar patrones contra el premium.
+# Al volcar la ventana entera en la primera pasada, el arranque RELLENA HACIA ATRAS 2 dias.
+# LO QUE MAS IMPORTA AQUI (peticion explicita del usuario): esto NO puede tumbar el sistema.
+import sqlite3 as _sq                                          # noqa: E402
+from datetime import datetime as _dt, timedelta as _td         # noqa: E402
+
+
+def _app_mem():
+    a = S.SpyDirection(demo=True)
+    a.db.close()
+    a.db = _sq.connect(":memory:")
+    a._init_db()
+    a.demo = False
+    return a
+
+
+_t0 = _dt(2026, 8, 11, 9, 30)
+_rows = [{"open": 773.0 + i * 0.01, "high": 773.1 + i * 0.01, "low": 772.9 + i * 0.01,
+          "close": 773.05 + i * 0.01, "volume": 100 + i, "date": _t0 + _td(minutes=i)}
+         for i in range(442)]
+_a = _app_mem()
+_a._guardar_barras(_rows)                                       # FUNCION REAL
+_n = _a.db.execute("select count(*) from bars_minute").fetchone()[0]
+check(_n == 442, f"5.1 backfill de la ventana ENTERA -> {_n} velas (esperado 442)")
+_r = _a.db.execute("select fecha,hora,open,high,low,close,volume from bars_minute "
+                   "order by fecha,hora limit 1").fetchone()
+check(_r is not None and _r[4] <= _r[2] <= _r[3] and _r[4] <= _r[5] <= _r[3],
+      f"5.2 OHLC coherente (low<=open,close<=high) -> {_r}")
+_a._guardar_barras(_rows)
+check(_a.db.execute("select count(*) from bars_minute").fetchone()[0] == 442,
+      "5.3 misma vela otra vez -> NO reescribe (1 volcado por minuto, no por tick)")
+_rows.append({"open": 777.0, "high": 777.2, "low": 776.8, "close": 777.1, "volume": 500,
+              "date": _t0 + _td(minutes=442)})
+_a._guardar_barras(_rows)
+check(_a.db.execute("select count(*) from bars_minute").fetchone()[0] == 443,
+      "5.4 vela nueva -> se anade")
+_b = _app_mem()
+_b._guardar_barras([{"open": 1, "high": 2, "low": 0.5, "close": 1.5, "volume": 9,
+                     "date": "2026-08-12 10:00:00"}])
+check(_b.db.execute("select fecha,hora,close from bars_minute").fetchone() ==
+      ("2026-08-12", "10:00", 1.5),
+      "5.5 fecha en formato TEXTO tambien se guarda bien")
+_d = _app_mem()
+_d.db.close()                                                   # BD rota a proposito
+try:
+    _d._guardar_barras(_rows)
+    _vivo = True
+except Exception as _e:
+    _vivo = False
+    print("      excepcion:", type(_e).__name__, _e)
+check(_vivo, "5.6 con la BD ROTA no propaga excepcion: ta_poll y la senal siguen  <-- CLAVE")
+check(getattr(_d, "_bars_err", 0) > 0, "5.7 y el fallo QUEDA CONTADO, no se pierde en silencio")
+
 print()
 print("=" * 78)
 print(("TODO VERDE" if not FAILS else f"{len(FAILS)} FALLOS: " + " | ".join(FAILS)))
