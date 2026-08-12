@@ -240,6 +240,105 @@ for tape in (False, True):
         check(us < 300, f"con tape: {us:.1f} us/tick (2000 ticks)")
 S.TAPE_ENABLED = True
 
+# ============================================================ 9  (2026-08-12)
+print()
+print("=" * 78)
+print("9) LA BANDA ENTRA EN EL TAPE")
+print("=" * 78)
+# POR QUE: hasta el 2026-08-12 `_on_ticks` descartaba todo lo que no fuera SENAL o BASELINE,
+# asi que el tape veia 290.319 de 1.916.463 contratos del 0DTE (15,1%) y 32 de 40 strikes
+# quedaban a CERO operaciones. La direccion (net_call/net_put -> M1) se decidia sobre 2 strikes
+# rotatorios que no son donde esta el volumen.
+# Lo que hay que demostrar aqui:
+#   9.1 una operacion de la BANDA deja su fila, etiquetada BANDA (no BASELINE).
+#   9.2 la SENAL no cambia: solo `is_signal` toca net_call/net_put.
+#   9.3 lo que no es senal/baseline/banda se SIGUE descartando (el filtro sigue filtrando).
+#   9.4 no hay DOBLE CONTEO con la ruta de walls (seria el GAP 2 sobre 40 strikes).
+#   9.5 CONTROL: si _on_ticks nunca cuenta un contrato, walls SI lo cuenta -> el dato no se
+#       pierde en silencio. Este caso lo detecto la cold run diferencial: una exclusion
+#       ESTATICA dejaba `prem_center` en '-' y el premium de la banda a cero.
+
+
+class WTicker:
+    """Ticker para compute_walls: necesita OI y greeks, que TK no trae."""
+    def __init__(self, volume, last=1.0, bid=0.99, ask=1.00, right="C", oi=100.0, gamma=0.05):
+        self.callOpenInterest = oi if right == "C" else float("nan")
+        self.putOpenInterest = oi if right == "P" else float("nan")
+        self.modelGreeks = type("G", (), {"gamma": gamma})()
+        self.volume = volume
+        self.last, self.bid, self.ask = last, bid, ask
+        self.time = "2026-08-11 10:00:00"
+
+
+class WIB:
+    def __init__(self):
+        self._tk = {}
+
+    def isConnected(self):
+        return True
+
+    def ticker(self, c):
+        return self._tk[c.conId]
+
+
+EXPB = "20260811"
+KEY = (EXPB, 776.0, "C")
+
+
+def con_banda():
+    a = nueva()
+    a.expiry = EXPB
+    a.spy_price = 772.0
+    a.ib = WIB()
+    a.band_contracts = [opt(776, "C", expiry=EXPB, conId=7761),
+                        opt(770, "P", expiry=EXPB, conId=7702)]
+    for c in a.band_contracts:
+        a.ib._tk[c.conId] = WTicker(1000.0, right=c.right)
+    return a
+
+
+a9 = con_banda()
+b9 = a9.band_contracts[0]
+a9._on_ticks([TK(b9, 1.00, 1000, 0.99, 1.00)])                    # siembra prev_vol
+a9._on_ticks([TK(b9, 0.80, 1500, 0.79, 0.80, lastSize=500)])
+a9._flush_tape(forzar=True)
+rs9 = a9.db.execute("SELECT strike,right,grupo,size FROM tape").fetchall()
+check(len(rs9) == 1, f"9.1 una operacion de la BANDA deja su fila -> {len(rs9)}")
+check(bool(rs9) and rs9[0][2] == "BANDA",
+      f"9.1 etiquetada BANDA, no BASELINE -> {rs9[0][2] if rs9 else '-'}")
+check(a9.net_call == 0.0 and a9.net_put == 0.0,
+      f"9.2 la BANDA NO altera la senal -> net_call={a9.net_call} net_put={a9.net_put}")
+
+a9b = con_banda()
+x9 = opt(790, "C", expiry=EXPB, conId=7901)      # ni senal, ni baseline, ni banda
+a9b._on_ticks([TK(x9, 1.00, 1000, 0.99, 1.00)])
+a9b._on_ticks([TK(x9, 0.80, 1500, 0.79, 0.80, lastSize=500)])
+a9b._flush_tape(forzar=True)
+check(a9b.db.execute("SELECT COUNT(*) FROM tape").fetchone()[0] == 0,
+      "9.3 un contrato ajeno a senal/baseline/banda SIGUE descartandose")
+
+a94 = con_banda()
+b94 = a94.band_contracts[0]
+a94.compute_walls()                               # 1a: siembra band_prev_vol (prev None)
+a94.ib._tk[b94.conId].volume = 1500.0             # el mismo volumen que vera _on_ticks
+a94._on_ticks([TK(b94, 1.00, 1000, 0.99, 1.00)])
+a94._on_ticks([TK(b94, 0.80, 1500, 0.79, 0.80, lastSize=500)])
+p_tick = a94.today_prem.get(KEY, 0.0)
+check(p_tick > 0, f"9.4 _on_ticks conto el premium de la banda -> {p_tick:,.0f}")
+check(b94.conId in a94._tick_prem_ids, "9.4 y lo marco en _tick_prem_ids")
+a94.compute_walls()                               # 2a: NO debe volver a sumarlo
+check(abs(a94.today_prem.get(KEY, 0.0) - p_tick) < 1e-6,
+      f"9.4 compute_walls NO lo vuelve a sumar (GAP 2) -> {a94.today_prem.get(KEY, 0.0):,.0f}")
+
+a95 = con_banda()
+b95 = a95.band_contracts[0]
+a95.compute_walls()                               # siembra
+a95.ib._tk[b95.conId].volume = 1500.0
+a95.compute_walls()                               # sin _on_ticks de por medio
+check(a95.today_prem.get(KEY, 0.0) > 0,
+      f"9.5 CONTROL: sin _on_ticks, walls SIGUE contando (el dato no se pierde) -> "
+      f"{a95.today_prem.get(KEY, 0.0):,.0f}")
+
 print()
 print("=" * 78)
 print(("TODO VERDE" if not FAILS else f"{len(FAILS)} FALLOS: " + " | ".join(FAILS)))

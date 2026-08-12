@@ -562,6 +562,12 @@ class SpyDirection:
         self._tape_err = 0            # capturas del tape que fallaron (se reportan por minuto)
         self._tape_err_last = ""      # ultimo error de captura, para el log del minuto
         self.band_prev_vol = {}       # conId -> volumen previo (delta entre lecturas de 3 min)
+        self._tick_prem_ids = set()   # conIds cuyo premium YA acumulo _on_ticks al menos una vez.
+                                      # La ruta de walls (_persist_walls) los salta para no contar
+                                      # el mismo premium dos veces. Es DINAMICO a proposito: un
+                                      # contrato que nunca llega a _on_ticks debe seguir contandose
+                                      # alli en vez de quedarse a cero. No se limpia al re-suscribir
+                                      # (_soltar_mkt): re-contarlo seria inflar, perder un tramo no.
         self.prev_gamma = {}          # conId -> gamma previo (detectar dato estancado/viejo)
         self.today_vol = {}           # (expiry,strike,right) -> volumen del dia (banda)
         self.net_prem = {}            # (expiry,strike,right) -> premium neto firmado ('peso' de dinero)
@@ -1014,6 +1020,7 @@ class SpyDirection:
         self.today_prem = {}; self.net_prem = {}; self.today_vol = {}
         self.today_net = {}          # el NETO del dia se reinicia; accum_net NO (es persistente)
         self.prev_vol = {}; self.band_prev_vol = {}; self.prev_gamma = {}
+        self._tick_prem_ids = set()   # dia nuevo: nadie ha contado nada todavia
         self.transitions = []; self.state = "-"
         # TAPE: el contador es del DIA. El buffer se vuelca antes de vaciarlo para no perder
         # las operaciones que quedaran pendientes del dia anterior.
@@ -1222,8 +1229,15 @@ class SpyDirection:
                 self.band_contracts = [c for c in wc if c.conId]
                 # STREAMING persistente: una suscripcion por contrato (NO repite requests -> no satura).
                 # OI(101)+volumen(100)+greeks(106/modelGreeks). Se RECALCULA/guarda cada 3 min.
+                # 233 (RTVolume) 2026-08-12: sin el, la banda NO trae `last`/`lastSize` por
+                # operacion y `tk.volume` solo se refresca por el tick 100 (periodico). Medido ese
+                # dia: el `tape` veia 290.319 de 1.916.463 contratos del 0DTE = 15,1%, con 32 de 40
+                # strikes a CERO operaciones, y el poll de walls leyo volumen OBSOLETO en los
+                # strikes de senal (612.615$ de premium no contabilizados entre 09:48 y 09:51).
+                # Anadir un tick generico a un contrato YA suscrito no consume una linea de
+                # mercado nueva: la linea es por contrato.
                 for c in self.band_contracts:
-                    self.ib.reqMktData(c, "100,101,106", False, False)
+                    self.ib.reqMktData(c, "100,101,106,233", False, False)
                 ACT.info("WALLS banda lista (streaming): %d contratos (%d strikes, +-%d por lado)",
                          len(self.band_contracts), len(below + above), WALLS_BAND)
             except Exception:
@@ -1492,6 +1506,17 @@ class SpyDirection:
 
         # GAP 2: conIds cuyo premium ya cuenta _on_ticks por tick. Aqui NO se vuelven a sumar.
         signal_ids = {c.conId for c in (self.call, self.put) if c is not None}
+        # 2026-08-12: desde que la BANDA tambien entra en _on_ticks (RTVolume 233) hay que
+        # excluirla de aqui o su premium se contaria DOS veces (GAP 2 repitiendose sobre 40
+        # strikes). Pero la exclusion NO puede ser estatica: si un contrato de la banda no
+        # llegara nunca a _on_ticks (RTVolume rechazado, strike sin una sola operacion,
+        # re-suscripcion en curso), excluirlo por lista dejaria su premium en CERO en vez de
+        # aproximado — se pierde el dato en silencio. Medido con la cold run: `prem_center` se
+        # quedaba en '-' y `strike 780 tiene premium>0` fallaba.
+        # Por eso se excluye lo que _on_ticks ha contado DE VERDAD (`_tick_prem_ids`), no lo que
+        # deberia contar. Sin solapamiento posible: cada ruta lleva su propio `prev_vol`, asi que
+        # el tramo anterior al primer tick lo cuenta walls y el posterior _on_ticks.
+        tick_ids = set(signal_ids) | set(self._tick_prem_ids)
         call_oi = {}; put_oi = {}; call_g = {}; put_g = {}
         oi_est_c = {}; oi_est_p = {}; gross = {}
         miss_oi = miss_g = 0
@@ -1536,7 +1561,10 @@ class SpyDirection:
                     # aqui un unico `last` clasifica 3 minutos enteros de volumen.
                     # OJO: today_vol y net_prem SI se siguen contando aqui; a esos dicts no
                     # los escribe nadie mas, no hay colision.
-                    if c.conId not in signal_ids:
+                    # 2026-08-12: la exclusion pasa de `signal_ids` a `tick_ids` porque la banda
+                    # entera la mide ya _on_ticks. Con `signal_ids` los 40 strikes se contarian
+                    # DOS veces: es el mismo GAP 2 repitiendose, ahora sobre toda la banda.
+                    if c.conId not in tick_ids:
                         self.today_prem[key] = self.today_prem.get(key, 0.0) + prem
                     bid = tk.bid if (tk.bid and not math.isnan(tk.bid)) else None
                     ask = tk.ask if (tk.ask and not math.isnan(tk.ask)) else None
@@ -1900,11 +1928,17 @@ class SpyDirection:
     # ---------------- procesamiento de trades ----------------
     def _on_ticks(self, tickers):
         signal_ids = {c.conId for c in (self.call, self.put) if c is not None}
+        # BANDA (2026-08-12): hasta hoy se descartaba aqui, asi que el `tape` solo veia los 2
+        # strikes rotatorios de senal + el baseline = 15,1% del volumen 0DTE, con 32 de 40
+        # strikes a cero. Se recalcula por llamada, igual que `signal_ids`, para no desincronizarse
+        # con `refresh_strikes`, que re-centra la banda en vivo.
+        band_ids = {c.conId for c in (self.band_contracts or []) if c.conId}
         for tk in tickers:
             c = tk.contract
             is_signal = c.conId in signal_ids
             is_base = c.conId in self.info_base
-            if not (is_signal or is_base):
+            is_band = c.conId in band_ids
+            if not (is_signal or is_base or is_band):
                 continue
             vol = tk.volume
             last = tk.last
@@ -1922,6 +1956,9 @@ class SpyDirection:
             key = (c.lastTradeDateOrContractMonth, c.strike, c.right)
             self.accum[key] = self.accum.get(key, 0.0) + premium
             self.today_prem[key] = self.today_prem.get(key, 0.0) + premium
+            # a partir de aqui, la ruta de walls NO debe volver a sumar el premium de este
+            # contrato: ya lo mide esta funcion, por tick y con bid/ask alineados al trade.
+            self._tick_prem_ids.add(c.conId)
             # SIGNO DEL AGRESOR: quien cruzo el spread. Es una INFERENCIA (regla del agresor),
             # no un dato de IBKR: toda opcion negociada tiene comprador Y vendedor. El flujo
             # que se ejecuta DENTRO del spread no se puede atribuir y se descarta (signed=0).
@@ -1959,7 +1996,10 @@ class SpyDirection:
                         # distorsiona la agregacion, sobre todo cuando el mercado va rapido.
                         (float(last) * _ls * 100.0) if _ls else None,
                         premium,
-                        "SENAL" if is_signal else "BASELINE"))
+                        # 2026-08-12: tercer valor BANDA. Sin el, las operaciones de la banda
+                        # entrarian como BASELINE y falsearian todos los analisis que filtran por
+                        # `grupo` (analisis/premium_por_minuto.py, neto_por_strike.py, cobertura).
+                        "SENAL" if is_signal else ("BASELINE" if is_base else "BANDA")))
                 except Exception as _e:
                     # el tape JAMAS puede romper el procesamiento de la señal, asi que NO se
                     # propaga. Pero antes era `pass` a secas y una captura fallida se perdia
