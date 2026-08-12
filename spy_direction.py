@@ -3342,6 +3342,25 @@ class SpyDirection:
         sin_ta = not vals
         _hi = bar.get("high") if isinstance(bar, dict) else None
         _lo = bar.get("low") if isinstance(bar, dict) else None
+        # CIERRE DE LA VELA QUE REPRESENTA ESTA FILA (2026-08-12, arreglo de bug).
+        # Antes era `v.get("close", self.spy_price)`. Con >=26 barras `v["close"]` es el cierre
+        # de la vela CERRADA y todo cuadra; pero con `vals` en None (los ~26 primeros minutos,
+        # GAP 21) caia a `self.spy_price`, que ta_poll acaba de fijar con rows[-1] -> la vela
+        # EN FORMACION. La fila llevaba la HORA de una vela y el CIERRE de la siguiente.
+        # Medido: fila hora='09:42' con spy=773.6 cuando 09:42 cerro en 773.40 y 09:43 en 773.60.
+        # Afectaba a CINCO tablas: ta_minute, m1_minute, m2_minute, clasico_minute y
+        # confirmacion_minute (todas via `_spy_m`), y rompia `spy_low <= spy <= spy_high`.
+        # Se resuelve una sola vez aqui y se usa en todas: el cierre de la barra que se esta
+        # registrando, y solo si no hay barra se cae a self.spy_price (llamadores antiguos).
+        # OJO con el nombre: `_cl` YA ESTA COGIDO mas abajo (:3458) por el estado del metodo
+        # CLASICO, que es un TEXTO. Usarlo aqui lo pisaba y el log de la linea 3565 reventaba
+        # con "TypeError: must be real number, not str". La BD salia bien porque sus dos usos
+        # son ANTERIORES a la reasignacion; solo fallaba el log. Lo cazo gap21_coldrun.
+        _cierre = v.get("close")
+        if _cierre is None and isinstance(bar, dict):
+            _cierre = bar.get("close")
+        if _cierre is None:
+            _cierre = self.spy_price
         try:
             if hasattr(bar_dt, "strftime"):
                 fecha = bar_dt.strftime("%Y-%m-%d"); hora = bar_dt.strftime("%H:%M")
@@ -3366,7 +3385,7 @@ class SpyDirection:
                 # GAP 21: v.get(...) y no vals[...]: sin TA todas estas columnas van a NULL,
                 # pero el spy y TODO el bloque de premium se guardan igual. El precio no falta
                 # aunque no haya TA: ta_poll actualiza self.spy_price ANTES del corte de 26.
-                (fecha, hora, v.get("close", self.spy_price),
+                (fecha, hora, _cierre,
                  v.get("rsi"), v.get("ema8"), v.get("ema21"),
                  v.get("ema50"), v.get("macd_line"), v.get("macd_signal"), v.get("macd_hist"),
                  v.get("bb_up"), v.get("bb_mid"), v.get("bb_low"), v.get("atr"), v.get("atr_pct"),
@@ -3418,7 +3437,8 @@ class SpyDirection:
                         break
                 return r
             self.m2_efectivo = _efec(self.m2_hist)
-            _spy_m = v.get("close", self.spy_price)
+            # mismo cierre que ta_minute: las 5 tablas del minuto tienen que contar lo mismo
+            _spy_m = _cierre
             self.db.execute(
                 "INSERT OR REPLACE INTO m1_minute(fecha,hora,spy,net_call,net_put,abs_call,"
                 "abs_put,dif,senal_min,n_up,n_down,marcador,m1,racha,m1_efectivo,"
@@ -3546,8 +3566,7 @@ class SpyDirection:
                 # Se dice explicitamente por que faltan los indicadores, para que al leer el log
                 # no parezca que el sistema estaba caido.
                 ACT.info("MIN %s | SPY=%.2f | TA todavia sin 26 barras (faltan indicadores) "
-                         "-> se registra el PREMIUM igualmente", hora,
-                         v.get("close", self.spy_price) or 0.0)
+                         "-> se registra el PREMIUM igualmente", hora, _cierre or 0.0)
             else:
                 ACT.info("MIN %s | SPY=%.2f | TA dir=%s score=%+d rsi=%.1f macd=%.3f/%.3f/%+.3f "
                          "ema8/21/50=%.2f/%.2f/%.2f bb=%.2f/%.2f/%.2f atr=%.2f(%.2f%%) "

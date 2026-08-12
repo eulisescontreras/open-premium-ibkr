@@ -218,18 +218,30 @@ f5c = app5c.db.execute("SELECT spy,spy_high,spy_low FROM ta_minute "
 check(f5c is not None and abs(f5c[1] - 773.50) < 1e-9 and abs(f5c[2] - 773.30) < 1e-9,
       f"5.3 END-TO-END por ta_poll REAL: high/low de la vela cerrada -> {f5c}")
 
-# 5.4 DESALINEACION PREEXISTENTE, detectada al anadir high/low (2026-08-12). NO se corrige
-# aqui: se deja MEDIDA para que nadie construya un MFE/MAE encima sin saberlo.
-# Durante los ~26 primeros minutos `vals` es None (este mismo GAP 21) y `spy` cae a
-# `self.spy_price`, que ta_poll acaba de fijar con rows[-1] -> la vela EN FORMACION. La fila
-# lleva la hora de la vela CERRADA (rows[-2]) pero el cierre de la SIGUIENTE.
-# Consecuencia: en esa franja NO se cumple spy_low <= spy <= spy_high, y cruzar `spy` con
-# `spy_high`/`spy_low` mezcla dos minutos distintos.
-# Con >=26 barras no ocurre: ahi `closed` trae el cierre de la vela correcta.
-_desalineado = f5c is not None and not (f5c[2] <= f5c[0] <= f5c[1])
-check(_desalineado,
-      f"5.4 CONOCIDO: sin TA, `spy` es el cierre de la vela SIGUIENTE, no la de la fila "
-      f"-> spy={f5c[0]} fuera de [{f5c[2]}, {f5c[1]}]. Documentado, pendiente de decidir.")
+# 5.4 REGRESION: `spy` tiene que ser el cierre de la vela QUE REPRESENTA LA FILA.
+# Bug arreglado el 2026-08-12: con `vals` en None (los ~26 primeros minutos) `spy` caia a
+# `self.spy_price`, que ta_poll acaba de fijar con rows[-1] -> la vela EN FORMACION, mientras
+# la fila lleva la hora de rows[-2]. La fila tenia la hora de una vela y el cierre de la
+# siguiente. Se manifestaba como spy FUERA del rango [low, high] de su propia fila.
+# Afectaba a CINCO tablas: ta_minute, m1_minute, m2_minute, clasico_minute, confirmacion_minute.
+check(f5c is not None and abs(f5c[0] - 773.40) < 1e-9,
+      f"5.4 `spy` es el cierre de la vela de la FILA (773.40), no el de la siguiente -> {f5c[0]}")
+check(f5c is not None and f5c[2] <= f5c[0] <= f5c[1],
+      f"5.4 y por tanto spy_low <= spy <= spy_high se cumple -> {f5c}")
+
+# 5.5 las CINCO tablas del minuto tienen que contar el MISMO precio para el mismo minuto
+_tablas = ("ta_minute", "m1_minute", "m2_minute", "clasico_minute", "confirmacion_minute")
+_precios = {}
+for _t in _tablas:
+    try:
+        _r = app5c.db.execute(
+            "SELECT spy FROM %s WHERE hora='09:42'" % _t).fetchone()
+        if _r is not None:
+            _precios[_t] = _r[0]
+    except Exception as _e:
+        _precios[_t] = "ERROR %s" % _e
+check(len(set(_precios.values())) == 1 and len(_precios) >= 2,
+      f"5.5 las {len(_precios)} tablas del minuto guardan el MISMO spy -> {_precios}")
 
 print()
 print("=" * 78)
