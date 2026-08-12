@@ -120,6 +120,40 @@ Verificado con corrida **A vs B** (sección [7]): A vive 30 minutos, B arranca e
 desde la misma BD ⇒ las 13 variables **idénticas**, las 4 historias enteras, y la **dirección
 efectiva** correcta desde el primer instante.
 
+## ✅ REINICIO EJECUTADO 12:25:01 → 12:25:34 (35 s) — TODO VERIFICADO EN PRODUCCIÓN
+
+```
+METODOS repuestos: M1 up=137 down=37 marcador=+100 UP racha=140 hist=174
+                   M2 acum=+24201493 UP | CLASICO=UP r=8 | CONFIRMA=UP r=36
+                   filas leidas 174/174/174/174
+TRADE #12 readoptado | WALLS banda lista: 40 contratos | errores: 0
+```
+Coincide **al dígito** con el estado capturado antes de parar. Y el contador **siguió desde ahí**:
+12:23 → +100 (antes) · 12:25 → +101 · 12:29 → +105. Sin salto ni discontinuidad.
+
+**IBKR ACEPTÓ EL TICK 233** — era el último NO VERIFICADO. El tape 0DTE pasó de **2 strikes**
+a **26 combinaciones strike/right** (764P…782C). En los primeros 45 s: 478 ops `grupo='BANDA'`
+frente a 130 de SEÑAL. Los strikes que esta mañana tenían 0% de cobertura (772P, 770P, 769P,
+774C, 775C) ya están dentro.
+
+`spy_high`/`spy_low` poblados y coherentes (`low <= spy <= high`), 0 NULLs tras el reinicio.
+`trades.comision` creada.
+Backup: `spy_history_backup_pre-reinicio_20260812_1225.db` (22,1 MB, integrity ok).
+
+### ⚠️ FALTA EL MINUTO 12:24 EN LAS 5 TABLAS — no es un fallo de recolección
+`ta_minute`, `m1_minute`, `m2_minute`, `clasico_minute` y `confirmacion_minute` **no tienen fila
+de las 12:24**. La fila de un minuto se escribe cuando cierra su vela (~12:25:0x) y el proceso se
+paró a las 12:25:01, justo en esa ventana.
+
+**Es inherente a CUALQUIER reinicio:** no existe cierre ordenado — `WM_DELETE_WINDOW` no está
+definido y no hay `atexit`, así que cerrar la ventana con el ratón produce lo mismo. También se
+pierde lo que hubiera en `_tape_buf` (hasta `TAPE_FLUSH_N`=400 filas) y el flujo desde el último
+`PERSIST` (≤2 min, se restaura desde `estado_intradia`).
+
+⇒ Al analizar el día, **el 12:24 no existe**: no interpolar ni tratarlo como cero. Y si en el
+futuro se quiere reiniciar sin perder ese minuto, haría falta un cierre ordenado que haga
+`_flush_tape(forzar=True)` + `_persist_accum` antes de salir. **NO está implementado.**
+
 ## ⚠️ LO QUE HAY QUE VERIFICAR EN EL PRÓXIMO ARRANQUE
 
 1. **Que IBKR acepte `233` en los 40 contratos de la banda.** Es el ÚNICO punto no verificable
