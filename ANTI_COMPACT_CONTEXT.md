@@ -41,6 +41,7 @@ no contabilizados**.
 | `8498df0` | `trades.comision` de las dos patas (`profit` seguía siendo BRUTO) | solo registro |
 | `3323618` | **BUG**: la fila del minuto llevaba la hora de una vela y el cierre de la siguiente (5 tablas) | corrige dato |
 | `9e0cd5f` | **BUG propio**: la banda perdía el RTVolume al re-centrarse (el espejo de `refresh_strikes`) | corrige el anterior |
+| `3fc5ea3` | **Reinicio sin pérdida**: `_load_metodos` repone los 4 métodos y sus historias | read-only |
 
 ## 🔁 LA BANDA SE SUSCRIBE EN **DOS** SITIOS — si tocas uno, toca el otro
 
@@ -92,6 +93,32 @@ today_prem -> strike_daily / premium_minute.day_prem                            
 `m1_efectivo`. Y `net_call`/`net_put` solo suman bajo `if is_signal`.
 ⇒ walls/GEX/premium por strike **sí cambiarán de valor** (más precisos, por tick en vez de por
 ventanas de 3 min), pero la señal UP/DOWN no depende de ellos.
+
+## ♻️ UN REINICIO YA NO BORRA LA MEMORIA DE LOS MÉTODOS (`3fc5ea3`)
+
+**Antes:** las 4 tablas del minuto se escribían desde el 11-ago pero **nunca se leían** (grep:
+cero `SELECT`). Reiniciar a mitad de día dejaba: marcador de M1 a **0** (iba por +90 tras 163
+min), M2 a 0, y **`m1_hist` vacía** ⇒ ~20 minutos sin poder aplicar el retardo, con posición
+viva, y luego decidiendo desde cero (1-2 minutos bastaban para invertir la dirección).
+Reiniciar no era continuar: era **empezar otra sesión con la misma posición abierta**.
+
+**Ahora:** `_load_metodos(hoy)` repone 13 variables + las 4 historias. Es **read-only** (cuatro
+`SELECT`). Si no hay filas de hoy no toca nada (primer arranque). Va en `try/except`: si fallara,
+se arranca como antes.
+
+**El reloj es la parte no obvia:** las historias llevan sellos `time.monotonic()`, que muere con
+el proceso. Se reconstruyen como `monotonic_ahora − (minutos transcurridos)×60`, así `_efec`
+compara contra `RETARDO_M1_MIN` igual que si nada hubiera pasado.
+
+⚠️ **NO "simplificar" `_hist()`.** Mi primera versión saltaba las filas con estado `None` —
+parece lo sensato y **está mal**: `conf_hist` las lleva a propósito (`:3603` appendea siempre,
+y vale `None` hasta que la señal aguanta `CONFIRMACION_MIN`). Saltarlas **desplaza la historia**
+y `_efec` devuelve un estado anterior donde el sistema vivo dice `None`. Guardado por el check
+**7.3-bis** de `coldruns/m1m2_coldrun.py`.
+
+Verificado con corrida **A vs B** (sección [7]): A vive 30 minutos, B arranca en blanco y repone
+desde la misma BD ⇒ las 13 variables **idénticas**, las 4 historias enteras, y la **dirección
+efectiva** correcta desde el primer instante.
 
 ## ⚠️ LO QUE HAY QUE VERIFICAR EN EL PRÓXIMO ARRANQUE
 
