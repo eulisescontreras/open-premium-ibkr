@@ -481,6 +481,64 @@ check(app.trade_id is None, "y el trade_id queda libre")
 
 # ================================================================
 print()
+print("=" * 78)
+print("OBJETIVO DE BENEFICIO (2026-08-12)")
+print("=" * 78)
+# EL PROBLEMA, EN DINERO: hasta hoy solo se vendia al girar M1 y el beneficio disponible se
+# devolvia entero. Medido sobre las 4 operaciones REALES del 2026-08-12 con el mid real:
+#   MFE alcanzado: +42.00 / +11.00 / +37.00 / +21.50
+#   dia real -44.50  ->  con objetivo +10$: +28.00   (misma entrada, solo cambia la salida)
+# Se comprueba que el objetivo PIDE FLAT y nada mas: la venta la hace trade_poll por el camino
+# de siempre, con sus guardas. No abre nada, no cambia de direccion.
+_tp = S.TAKE_PROFIT_USD
+
+
+def _con_pos(entry=1.00):
+    a = nueva_app()
+    a.trade_id = 99
+    a.entry_price = entry
+    a.target = "CALL"
+    a.pos = "CALL"
+    a.mfe = a.mae = entry
+    a.exit_reason = None
+    return a
+
+
+S.TAKE_PROFIT_USD = 10.0
+_a = _con_pos()
+_a._seguir_extremos(1.09)                      # +9.00 -> aun no
+_ok1 = (_a.target == "CALL" and _a.exit_reason is None)
+check(_ok1, f"por DEBAJO del objetivo no toca nada -> target={_a.target} razon={_a.exit_reason}")
+_a._seguir_extremos(1.10)                      # +10.00 -> justo el objetivo
+check(_a.target == "FLAT", f"al alcanzar +{S.TAKE_PROFIT_USD:.0f}$ pide FLAT -> {_a.target}")
+check(_a.exit_reason == "objetivo",
+      f"y la salida queda marcada como 'objetivo' (no 'giro') -> {_a.exit_reason}")
+
+_b = _con_pos()
+S.TAKE_PROFIT_USD = 0
+_b._seguir_extremos(2.00)                      # +100$, pero desactivado
+check(_b.target == "CALL", f"con TAKE_PROFIT_USD=0 no interviene -> {_b.target}")
+S.TAKE_PROFIT_USD = 10.0
+
+_c = nueva_app()
+_c.trade_id = None                             # sin operacion abierta
+_c.entry_price = 1.00
+_c.target = "CALL"
+_c._seguir_extremos(2.00)
+check(_c.target == "CALL", "sin trade abierto no hace nada")
+
+_d = _con_pos()
+_d.entry_price = None                          # sin precio de entrada conocido
+_d._seguir_extremos(2.00)
+check(_d.target == "CALL", "sin entry_price no inventa nada")
+
+_e = _con_pos()
+_e._seguir_extremos(1.50)
+check(_e.mfe == 1.50 and _e.pos == "CALL",
+      f"el MFE sigue actualizandose y NO se toca la posicion -> mfe={_e.mfe} pos={_e.pos}")
+S.TAKE_PROFIT_USD = _tp
+
+print()
 if FAILS:
     print("FALLOS (%d):" % len(FAILS))
     for f in FAILS:

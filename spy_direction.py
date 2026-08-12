@@ -105,6 +105,20 @@ CONFIRMACION_MIN = 5        # 2026-08-12: filtro de confirmacion (SOLO REGISTRO,
 #
 # INVARIANTES: solo RETRASA. Nunca cancela (al llegar al tope entra igual), nunca cambia de
 # direccion, nunca anade operaciones. Con ENTRADA_RETROCESO=False el comportamiento es el de antes.
+# --- OBJETIVO DE BENEFICIO (2026-08-12) ---------------------------------------------------
+# EL PROBLEMA, EN DINERO: hasta hoy solo se vendia al girar M1, asi que el beneficio disponible
+# se devolvia entero. Medido sobre las 4 operaciones REALES del 2026-08-12, con el mid real
+# minuto a minuto y SIN cambiar ni una entrada:
+#     MFE alcanzado por cada una:  +42.00  +11.00  +37.00  +21.50
+#     dia REAL (como se opero) .....................  -44.50
+#     con objetivo +5$  -> +20.00     +10$ -> +28.00     +15$ -> +43.00     +20$ -> +58.00
+#     con objetivo +25$ -> -3.50  (se cae: la 4a operacion nunca llego a +25)
+# Se elige 10 y NO el que mas da: 10 es el objetivo mas alto que TODAS alcanzaron (el MFE
+# minimo fue +11). Por encima, el resultado depende de que una operacion concreta llegue o no,
+# que es ajustar al dia que se esta usando para juzgarlo (INVESTIGACION_M1_M2 §7).
+# 0 o None lo desactiva y el comportamiento vuelve a ser el anterior.
+TAKE_PROFIT_USD = 10.0
+
 ENTRADA_RETROCESO = True    # ACTIVO (paper). False -> comportamiento identico al anterior.
 RETRO_FRAC = 0.50           # retroceso exigido, como fraccion del impulso previo
 RETRO_MAX_MIN = 10          # TOPE de espera en minutos: si no llega el retroceso, SE ENTRA IGUAL
@@ -2046,7 +2060,11 @@ class SpyDirection:
 
     def _seguir_extremos(self, mid):
         """MFE/MAE a 1 Hz (cada tick), SIN escribir en la BD. Asi toda operacion tiene su
-        recorrido real aunque el muestreo sea por minuto y dure 10 segundos."""
+        recorrido real aunque el muestreo sea por minuto y dure 10 segundos.
+
+        Y desde 2026-08-12, el OBJETIVO DE BENEFICIO: es el unico sitio que ve el precio de la
+        posicion a 1 Hz, asi que es donde se puede cobrar antes de que se devuelva.
+        """
         if mid is None or self.trade_id is None:
             return
         if self.mfe is None or mid > self.mfe:
@@ -2055,6 +2073,30 @@ class SpyDirection:
             self.spy_mfe = self.spy_price
         if self.mae is None or mid < self.mae:
             self.mae = mid
+        # ---- OBJETIVO DE BENEFICIO (2026-08-12) ----
+        # POR QUE: medido sobre las 4 operaciones REALES de hoy, con el mid real minuto a
+        # minuto. El dia acabo en -44.50 y las cuatro tuvieron beneficio disponible que se
+        # devolvio entero, porque hasta ahora SOLO se vendia al girar M1:
+        #     MFE alcanzado: +42.00 / +11.00 / +37.00 / +21.50
+        #     con objetivo +5  -> +20.00   con +10 -> +28.00   con +15 -> +43.00
+        # Se elige +10 y NO el que mas da (+20 -> +58.00) a proposito: 10 es el objetivo mas
+        # alto que TODAS las operaciones alcanzaron (el MFE minimo fue +11). Por encima, el
+        # resultado depende de que una operacion concreta llegue o no -> eso es ajustar al dia
+        # de hoy (INVESTIGACION_M1_M2 §7) y manana falla.
+        # NO cambia la direccion ni abre nada: solo pide FLAT, y la venta la hace `trade_poll`
+        # por el camino de siempre (LimitOrder al MID, con sus guardas contra descubierto).
+        if not TAKE_PROFIT_USD or self.entry_price in (None, 0):
+            return
+        try:
+            if (mid - self.entry_price) * 100.0 >= TAKE_PROFIT_USD and self.target != "FLAT":
+                self.target = "FLAT"
+                self.exit_reason = "objetivo"
+                ACT.info("OBJETIVO alcanzado: mid=%.2f entrada=%.2f -> +%.2f$ >= %.2f$. "
+                         "Se pide FLAT (la venta la hace trade_poll al MID)",
+                         mid, self.entry_price, (mid - self.entry_price) * 100.0,
+                         TAKE_PROFIT_USD)
+        except Exception:
+            LOG.exception("Error evaluando el objetivo de beneficio")
 
     def baseline_summary(self):
         """Por cada expiracion futura: (exp, call_hoy, call_prev, put_hoy, put_prev)."""
