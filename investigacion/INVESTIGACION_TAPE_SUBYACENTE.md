@@ -2,6 +2,13 @@
 
 **Sesión del 2026-08-13** · Datos: 08-12 y 08-13 completos (390 velas cada uno)
 
+> ## ⚠️ LEE PRIMERO EL §11: EL SISTEMA QUE QUEDÓ DEFINIDO
+>
+> El §2 dice que el trailing **por extremo de 20 min** gana al porcentual. **Eso es cierto
+> solo con las entradas que se probaron entonces (flujo/EMA).** Con la entrada por
+> **Supertrend**, que es la que quedó, gana el **porcentual** y por mucho: **+316 $ contra
+> −57 $**. La conclusión final está en el §11.
+
 Todo lo de aquí está medido contra datos reales. Cada afirmación va marcada como
 **VERIFICADO** (medido en los dos días), **REFUTADO** (medido y falla) o
 **NO VERIFICADO** (no se pudo comprobar y por qué).
@@ -385,6 +392,101 @@ no va a salir del tape: el dato que haría falta (quién cruzó el spread) **no 
 4. **Probar el tape para dimensionar la posición** en vez de para entrar. Es lo único que
    predice y no se ha usado para eso.
 5. **Más días.** Con 2 sesiones, el 08-12 pierde en casi todo y el 08-13 gana en casi todo.
+
+---
+
+## 11. EL SISTEMA QUE QUEDÓ DEFINIDO (lo último y lo que vale)
+
+```
+ENTRADA       Supertrend ATR(10) mult 3.0  -> se entra en cada CAMBIO de tendencia
+SALIDA        trail sobre el SPY, 0.11%    (equivale a 1.9% diario escalado a 1 minuto)
+PERMANENCIA   lo que salga del trail       -> NO hay parámetro de tiempo
+CONTRATO      ITM más profundo que quepa en 320$ (80% de 400$)
+MAGNITUD      no interviene
+```
+
+**Resultado, sin ningún oráculo, con spread y theta dentro:**
+
+```
+                salida  08-13 ops   08-13 USD  08-12 ops   08-12 USD      TOTAL
+        extremo 20 min          5     +187.00          6     -244.00     -57.00
+        extremo 30 min          6     +153.00          6     -244.00     -91.00
+    0.096% (1.9%/1min)          6     +491.00          7     -191.00    +300.00
+                 0.11%          6     +491.00          6     -175.00    +316.00
+                 0.14%          6     +491.00          6     -140.00    +351.00
+```
+
+### CORRECCIÓN IMPORTANTE AL §2
+
+El §2 concluye que el trailing **por extremo de 20 min** gana al porcentual. **Eso vale
+solo para las entradas que se probaron allí** (flujo y EMA). **Con entrada por Supertrend
+la conclusión se invierte:** el porcentual da **+316 $** y el de extremo **−57 $**.
+
+La regla de salida no se puede evaluar sin fijar la entrada. Fue un error de método por mi
+parte y así queda anotado.
+
+**El 0,096 %, el 0,11 % y el 0,14 % dan los tres +491 $ en el 08-13**: la meseta es ancha y
+no depende de afinar el número.
+
+### Detalle de las operaciones (trail 0.11%)
+
+```
+2026-08-13:  6 operaciones, 4 ganadoras, +491.00$  (+123% del capital)
+    09:42   10:44    62 min   774C   2.49 -> 4.63   +214.00
+    10:44   12:05    81 min   781P   2.72 -> 4.76   +204.00
+    12:05   13:33    88 min   774C   2.52 -> 2.92    +40.00
+    13:33   14:30    57 min   780P   3.20 -> 2.88    -32.00
+    14:30   15:13    43 min   774C   3.19 -> 3.86    +67.00
+    15:13   15:59    46 min   780P   2.19 -> 2.17     -2.00
+
+2026-08-12:  6 operaciones, 2 ganadoras, -175.00$  (-44% del capital)
+    09:42   09:54    12 min   771C   2.68 -> 2.44    -24.00
+    09:56   10:18    22 min   775P   3.20 -> 2.43    -77.00
+    10:26   10:32     6 min   771C   2.75 -> 2.14    -61.00
+    12:01   13:15    74 min   770C   2.58 -> 2.87    +29.00
+    13:15   14:11    56 min   775P   2.32 -> 1.89    -43.00
+    14:11   14:56    45 min   771C   2.28 -> 2.29     +1.00
+```
+
+**Las tres operaciones que hunden el 08-12 duran 12, 22 y 6 minutos** y se concentran entre
+las 09:42 y las 10:32. Son giros del Supertrend que se desdicen enseguida, dentro de un
+tramo bajista real de 130 minutos. Las de más de 43 minutos dan +29, −43 y +1.
+
+### La magnitud como veto de falsos giros: PROBADO Y NO FUNCIONA
+
+Idea (correcta sobre el papel): si hay magnitud alta, el movimiento no se está
+desvaneciendo, así que el giro del Supertrend es falso y hay que ignorarlo. Base empírica
+del 08-13: con flujo ≥3x solo el 32 % de los casos giran, contra el 41 % en calma.
+
+**Medido, no funciona:**
+
+```
+     0.11%   sin veto      +491.00     -175.00    +316.00
+     0.11%       1.0x      +250.00     -161.00     +89.00   <- pierde 227
+     0.11%       1.5x      +491.00     -185.00    +306.00
+     0.11%       2.0x      +491.00     -175.00    +316.00   <- idéntico, no se activa
+     0.11%       3.0x      +491.00     -175.00    +316.00   <- idéntico, no se activa
+```
+
+Con veto exigente (2x, 3x) **no se activa nunca**: en los giros reales el flujo está en
+0,80x y 1,26x la mediana (ver §7). Con veto laxo (1x) **bloquea un giro bueno** y cuesta
+227 $ en el 08-13.
+
+Y los tres falsos giros del 08-12 ocurren en la primera hora, que tiene volumen alto **por
+ser la primera hora**: un veto por magnitud los dejaría pasar igual. **La magnitud
+correlaciona con la hora del día, no con la calidad del giro.**
+
+Lo que sí separa falsos de buenos es la **duración** (6-22 min contra 43-88), pero eso solo
+se sabe a posteriori.
+
+### ALCANCE
+
+**Dos días. El 08-13 aporta +491 y el 08-12 resta −175: un día bueno tapando uno malo.**
+Con esta muestra NO se puede afirmar que sea rentable. Es la primera configuración que sale
+positiva sin oráculos, con spread y theta dentro, y con meseta ancha de parámetros — nada
+más que eso.
+
+Script: `investigacion/scripts/sistema_definitivo.py` · Salida: `SISTEMA_DEFINITIVO.txt`
 
 ---
 
