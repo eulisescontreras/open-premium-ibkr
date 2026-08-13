@@ -1,0 +1,30 @@
+PRECIO DE LOS CONTRATOS COMO SEÑAL  -  2026-08-13
+====================================================================================================
+minutos con call y put del mismo strike: 355 de 358
+desviacion de paridad (C-P)-(S-K):  media -0.0039  mediana -0.0000  rango -0.160 .. +0.200
+straddle ATM (C+P):                 media 1.580  rango 0.890 .. 2.510
+
+TEST DEL CRONOMETRO (tu regla nº1: |rho| >= 0.30 -> MUERTA)
+----------------------------------------------------------------------------------------------------
+      desviacion paridad: rho con el minuto del dia = +0.056   sobrevive
+            straddle ATM: rho con el minuto del dia = -0.977   MUERTA
+         delta5m paridad: rho = +0.015
+        delta15m paridad: rho = +0.011
+        delta30m paridad: rho = -0.062
+
+1) DESVIACION DE PARIDAD COMO DIRECCION
+----------------------------------------------------------------------------------------------------
+                    filtro     n  acierta +30m  acierta +60m
+         todos los minutos   296         51.0%         54.1%
+       solo con salto >=3x    52         57.7%         61.5%
+       |desviacion| grande    40         45.0%         60.0%
+
+2) STRADDLE ATM COMO AMPLITUD  (¿cobra el mercado el movimiento que viene?)
+----------------------------------------------------------------------------------------------------
+       cuartil de straddle     n  straddle medio  |mov| 30m real
+             Q1 mas barato    81           1.025           0.478
+                        Q2    81           1.391           0.467
+                        Q3    81           1.921           0.944
+               Q4 mas caro    83           2.189           1.287
+
+Si el straddle midiera bien, Q4 deberia tener |mov| claramente mayor que Q1.

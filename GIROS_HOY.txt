@@ -1,0 +1,47 @@
+GIROS DEL SPY DEL 2026-08-13 Y QUE HACIA EL TAPE
+========================================================================================================
+332 minutos (09:30 - 15:01).  ZigZag por CIERRES, umbral $0.75
+net_spy = COMPRA - VENTA del tape del subyacente, en USD de ese minuto
+
+1) TRAMOS LARGOS DEL DIA
+--------------------------------------------------------------------------------------------------------
+  #   desde   hasta   min           precio  recorrido   net_spy total     net_call      net_put
+  1   09:30   10:35    65  774.35-> 779.31      +4.96       +74215424      -134098     +1253767
+  2   10:35   11:59    84  779.31-> 775.49      -3.82        +2889335      -207911     -2054047
+  3   11:59   13:19    80  775.49-> 777.40      +1.91       +97539408      -138499      -376021
+  4   13:19   13:44    25  777.40-> 776.62      -0.78        +2056219      -394745      +245146
+  5   13:44   15:01    77  776.62-> 777.85      +1.23        +4764368      +169846      +305701
+
+2) EL FLUJO POR FASES DEL TRAMO  (tercio inicial / central / final)
+--------------------------------------------------------------------------------------------------------
+   Si el movimiento se amplifica, el net_spy por minuto deberia CRECER del 1er al 2o tercio
+   y CAER en el 3o cuando se agota. Signo alineado = el flujo empuja en la direccion del tramo.
+
+  #   dir        f1/min        f2/min        f3/min                 patron
+  1    UP      +2369090       +532273       +577687              irregular
+  2  DOWN      +1242657      -1147321         +7854   amplifica y se agota
+  3    UP       +661710      +2190643       +834937   amplifica y se agota
+  4  DOWN        +66966        -59508       +221839   amplifica y se agota
+  5    UP       +573639       +455853       -776775 pierde fuerza desde el 1o
+
+3) LOS 10 MINUTOS ANTES Y DESPUES DE CADA GIRO
+--------------------------------------------------------------------------------------------------------
+   ¿El tape cambia de signo ANTES que el precio? Si avisa, el flujo del lado nuevo
+   deberia aparecer ya en los minutos previos al pivote.
+
+   giro       tipo   net_spy -10a-1   net_spy +1a+10    call -10    call +10     put -10     put +10
+  10:35      techo         +1651108        +22572959     -149282     -196433     +126188      -15550
+  11:59      suelo         +3898015         +2140638     +176569     +340124      -45902     -253479
+  13:19      techo         +9116751         -2685885     -172091     -214942     +198704     +159049
+  13:44      suelo         +2511696         +1303735     -102091       +2739      +96009      -58676
+
+4) ¿EL FLUJO ANTICIPA AL PRECIO?  correlacion flujo(ventana) vs movimiento POSTERIOR
+--------------------------------------------------------------------------------------------------------
+       flujo   -> +5min  -> +10min  -> +15min  -> +30min  -> +60min
+  net_spy 5m      0.023      0.041      0.032      0.105     -0.059
+ net_spy 10m      0.044      0.033      0.050      0.107     -0.116
+ net_spy 15m      0.028      0.041      0.084      0.115     -0.168
+ net_call 5m     -0.066      0.048      0.008      0.034      0.057
+  net_put 5m      0.141      0.170      0.183      0.248      0.077
+
+   |r| < 0.10 = nada.  0.10-0.20 = debil.  > 0.30 = merece mirarse en mas dias.

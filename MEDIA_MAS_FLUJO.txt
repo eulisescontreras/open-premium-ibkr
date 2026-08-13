@@ -1,0 +1,41 @@
+MEDIA + FLUJO: ¿confirma el tape la direccion de la media?
+========================================================================================================
+Direccion: EMA8 vs EMA21.  Confirmacion: actividad del tape (sin signo, sin filtrar).
+Verdad: lado del tramo vigente (ZigZag $1.50).
+
+--- 2026-08-13 ---
+   confirmacion por volumen del minuto   (mediana 10,059)
+           nivel de flujo      n  acierta media  vs sin filtro
+                    TODOS    359          76.0%   (referencia)
+                calma <1x    193          74.1%          -2.0
+                    1x-2x    133          84.2%          +8.2
+                     >=2x     33          54.5%         -21.5
+                     >=3x     11          45.5%         -30.6
+
+   confirmacion por mayor bloque   (mediana 1,446)
+           nivel de flujo      n  acierta media  vs sin filtro
+                    TODOS    359          76.0%   (referencia)
+                calma <1x    188          73.9%          -2.1
+                    1x-2x     99          80.8%          +4.8
+                     >=2x     72          75.0%          -1.0
+                     >=3x     36          69.4%          -6.6
+                     >=5x     19          73.7%          -2.4
+
+--- 2026-08-12 ---
+   confirmacion por volumen del minuto   (mediana 40,501)
+           nivel de flujo      n  acierta media  vs sin filtro
+                    TODOS    356          74.2%   (referencia)
+                calma <1x    193          74.6%          +0.5
+                    1x-2x    126          73.0%          -1.1
+                     >=2x     37          75.7%          +1.5
+                     >=3x     21          81.0%          +6.8
+
+   confirmacion por mayor bloque   (mediana 1,512)
+           nivel de flujo      n  acierta media  vs sin filtro
+                    TODOS    356          74.2%   (referencia)
+                calma <1x    187          74.9%          +0.7
+                    1x-2x     80          75.0%          +0.8
+                     >=2x     89          71.9%          -2.2
+                     >=3x     54          68.5%          -5.6
+                     >=5x     19          52.6%         -21.5
+

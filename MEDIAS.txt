@@ -1,0 +1,20 @@
+¿DAN LAS MEDIAS MOVILES LA DIRECCION?
+====================================================================================================
+Verdad = lado del TRAMO vigente (ZigZag $1.50: 3 tramos por dia).
+Un indicador solo cuenta si acierta en LOS DOS dias.
+
+               indicador   08-13 n   08-13 %   08-12 n   08-12 %    peor  rho max
+           EMA8 vs EMA21       359     76.0%       356     74.2%   74.2%    0.107
+         precio vs SMA50       359     73.8%       356     70.8%   70.8%    0.109
+    pendiente SMA20 (5m)       358     77.1%       352     69.3%   69.3%    0.083
+         precio vs SMA20       359     72.1%       356     69.1%   69.1%    0.069
+                  RSI-50       354     72.0%       351     68.1%   68.1%    0.072
+   pendiente SMA50 (10m)       359     74.4%       352     67.3%   67.3%    0.171
+          SMA20 vs SMA50       359     75.5%       356     63.2%   63.2%    0.144
+        precio vs SMA200       359     57.4%       356     59.6%   57.4%    0.469  MUERTA(reloj)
+          precio vs SMA5       358     65.1%       356     55.1%   55.1%    0.056
+               MACD hist       359     49.0%       356     62.9%   49.0%    0.127
+         SMA50 vs SMA200       359     51.0%       356     47.8%   47.8%    0.086
+
+'peor' = el acierto en el dia MENOS favorable. Es lo unico que importa: un indicador que
+acierta 80% un dia y 30% el otro no sirve. 50% = moneda.

@@ -1,0 +1,19 @@
+EL METODO DE LOS DIGITOS: ¿avisa del agotamiento de un movimiento?
+====================================================================================================
+digitos(|net_spy del minuto|) = magnitud logaritmica del flujo. Señal = caida de >=1 nivel
+respecto a la media de los 15 minutos previos.
+Se mide el AVANCE POSTERIOR EN LA DIRECCION VIGENTE: si la señal detecta agotamiento,
+tras ella el avance deberia ser MENOR que la base.
+
+--- 2026-08-13 ---   390 minutos   digitos: min 0  max 9  mediana 7
+                       grupo     n   avance +10m   avance +30m  % que sigue 30m
+                TODOS (base)   342        +0.061        +0.135              58%
+        caida de digitos >=1    19        +0.108        +0.353              68%
+
+--- 2026-08-12 ---   390 minutos   digitos: min 4  max 9  mediana 7
+                       grupo     n   avance +10m   avance +30m  % que sigue 30m
+                TODOS (base)   339        -0.072        -0.052              45%
+        caida de digitos >=1    29        -0.027        -0.052              48%
+
+Si 'caida de digitos' tuviera valor, su avance deberia ser CLARAMENTE menor que la base
+(idealmente negativo: el movimiento no solo se para, se da la vuelta).

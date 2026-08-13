@@ -1,0 +1,35 @@
+A vs B: ¿el patron depende de la columna de premium?  -  2026-08-13
+========================================================================================================
+A) premium      = last * lastSize  -> 22.9% del volumen real (la usada todo el dia)
+B) premium_dvol = last * dvol      -> 129.3% del volumen real
+Misma regla del tick, mismos tramos: lo UNICO que cambia es la magnitud de cada operacion.
+
+--- A size (22.9%) ---   mediana |neto/min| = 1,586,142
+  #   desde   hasta   min   dir   recorr   flujo/min M$
+  1   09:30   10:35    65    UP    +4.96          1.334
+  2   10:35   11:59    84  DOWN    -3.82         -0.555
+  3   11:59   13:19    80    UP    +1.91          0.608
+  4   13:19   13:44    25  DOWN    -0.78         -0.318
+  5   13:44   15:09    85    UP    +1.73         -0.027
+  6   15:09   15:59    50  DOWN    -0.63         -1.551
+    tramos GRANDES (>=1.5 pts): flujo/min medio +0.340  (n=4)
+    tramos pequeños  (<1.5 pts): flujo/min medio -0.935  (n=2)
+    separacion: 0.4x
+
+--- B dvol (129.3%) ---   mediana |neto/min| = 11,089,079
+  #   desde   hasta   min   dir   recorr   flujo/min M$
+  1   09:30   10:35    65    UP    +4.96         20.613
+  2   10:35   11:59    84  DOWN    -3.82        -11.058
+  3   11:59   13:19    80    UP    +1.91         -3.859
+  4   13:19   13:44    25  DOWN    -0.78         -1.471
+  5   13:44   15:09    85    UP    +1.73          3.731
+  6   15:09   15:59    50  DOWN    -0.63         -5.812
+    tramos GRANDES (>=1.5 pts): flujo/min medio +2.356  (n=4)
+    tramos pequeños  (<1.5 pts): flujo/min medio -3.641  (n=2)
+    separacion: 0.6x
+
+¿SIGUE PREDICIENDO AMPLITUD?  P(mover >=0.50 en 30 min) segun el multiplo de la mediana
+--------------------------------------------------------------------------------------------------------
+           columna   calma <2x      >=3x      >=5x     >=10x
+    A size (22.9%)       53%       69%       76%         -
+   B dvol (129.3%)       52%       76%       74%       57%

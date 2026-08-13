@@ -1,0 +1,54 @@
+REGLAS DE SALIDA  -  2026-08-13, 368 minutos
+============================================================================================================
+Entrada fija: flujo/min >= ENT (ventana movil) y direccion del precio a 5 min.
+El objetivo es que los ACIERTOS superen a los FALLOS y que las operaciones duren.
+
+                    salida  vent   ent   ops  gana  pierde  %acierto    puntos  g.medio  p.medio    dur
+  anterior (oscilacion 5m)     5   1.0    34    16      17     47.1%     +1.32    +0.22    -0.13    3.8
+    flujo flojo 3 seguidos     5   1.0    15     8       7     53.3%     +0.89    +0.48    -0.42   13.5
+    flujo flojo 5 seguidos     5   1.0    13     6       7     46.2%     +0.66    +0.68    -0.49   18.7
+      trailing extremo 10m     5   1.0    12     6       6     50.0%     +5.90    +1.11    -0.13   22.7
+      trailing extremo 20m     5   1.0     5     4       1     80.0%     +7.25    +1.86    -0.17   62.4
+    flojo 5 + trailing 20m     5   1.0    18     8      10     44.4%     +3.86    +0.75    -0.22   12.7
+  anterior (oscilacion 5m)     5   1.5    27    14      12     51.9%     +2.10    +0.24    -0.11    3.7
+    flujo flojo 3 seguidos     5   1.5    11     7       4     63.6%     +1.04    +0.52    -0.65   15.9
+    flujo flojo 5 seguidos     5   1.5    11     6       5     54.5%     +1.29    +0.66    -0.53   17.7
+      trailing extremo 10m     5   1.5    12     5       7     41.7%     +5.48    +1.24    -0.11   18.9
+      trailing extremo 20m     5   1.5     7     4       3     57.1%     +6.69    +1.75    -0.10   41.4
+    flojo 5 + trailing 20m     5   1.5    14     7       7     50.0%     +4.93    +0.84    -0.14   13.0
+  anterior (oscilacion 5m)     5   2.0    17     9       7     52.9%     +1.75    +0.31    -0.14    4.4
+    flujo flojo 3 seguidos     5   2.0     8     5       3     62.5%     +0.42    +0.60    -0.86   18.5
+    flujo flojo 5 seguidos     5   2.0     8     3       5     37.5%     +0.77    +1.20    -0.57   20.2
+      trailing extremo 10m     5   2.0     8     4       4     50.0%     +4.74    +1.32    -0.14   23.9
+      trailing extremo 20m     5   2.0     5     3       2     60.0%     +4.43    +1.62    -0.21   43.2
+    flojo 5 + trailing 20m     5   2.0    10     5       5     50.0%     +4.73    +1.09    -0.15   15.8
+  anterior (oscilacion 5m)    10   1.0    28    10      17     35.7%     +1.11    +0.34    -0.13    4.5
+    flujo flojo 3 seguidos    10   1.0     9     4       5     44.4%     -0.78    +0.74    -0.75   22.3
+    flujo flojo 5 seguidos    10   1.0     8     4       4     50.0%     -0.64    +0.85    -1.01   27.6
+      trailing extremo 10m    10   1.0    14     5       9     35.7%     +2.58    +0.93    -0.23   15.6
+      trailing extremo 20m    10   1.0    10     4       6     40.0%     +4.64    +1.53    -0.24   29.0
+    flojo 5 + trailing 20m    10   1.0    15     5      10     33.3%     +3.04    +1.12    -0.26   13.4
+  anterior (oscilacion 5m)    10   1.5    19     9      10     47.4%     +1.05    +0.32    -0.18    4.6
+    flujo flojo 3 seguidos    10   1.5     6     2       4     33.3%     -0.95    +1.11    -0.79   24.2
+    flujo flojo 5 seguidos    10   1.5     6     2       4     33.3%     -1.61    +1.22    -1.01   28.8
+      trailing extremo 10m    10   1.5    10     4       6     40.0%     +2.73    +1.07    -0.26   19.6
+      trailing extremo 20m    10   1.5    10     4       6     40.0%     +3.84    +1.35    -0.26   26.9
+    flojo 5 + trailing 20m    10   1.5    16     5      11     31.2%     +2.86    +1.01    -0.20    9.2
+  anterior (oscilacion 5m)    10   2.0    11     4       6     36.4%     +1.10    +0.59    -0.21    5.1
+    flujo flojo 3 seguidos    10   2.0     4     3       1     75.0%     +3.53    +1.33    -0.47   28.0
+    flujo flojo 5 seguidos    10   2.0     4     3       1     75.0%     +4.36    +1.61    -0.47   34.0
+      trailing extremo 10m    10   2.0    11     3       8     27.3%     +1.40    +1.09    -0.23    9.5
+      trailing extremo 20m    10   2.0    11     3       8     27.3%     +2.63    +1.50    -0.23   15.5
+    flojo 5 + trailing 20m    10   2.0    11     3       8     27.3%     +2.22    +1.36    -0.23    9.1
+
+MEJOR POR % DE ACIERTO (con >=5 operaciones): trailing extremo 20m, ventana 5m, entrada 1.0
+------------------------------------------------------------------------------------------------------------
+  entra    sale   lado   min    puntos
+  09:35   10:43  LARGO    68     +2.98
+  10:44   12:05  CORTO    81     +2.39
+  12:20   13:32  LARGO    72     +1.09
+  14:05   14:06  LARGO     1     -0.17
+  14:07   15:37  LARGO    90     +0.96
+
+OJO: es la mejor celda de UN dia, elegida a posteriori. Lo que vale es si el patron se
+repite en varias filas de la tabla de arriba, no esta combinacion concreta.

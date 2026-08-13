@@ -1,0 +1,32 @@
+TECHO ABSOLUTO: entrada en el PUNTO EXACTO del giro
+========================================================================================================
+capital 400$ | tope 320$ | contrato ITM que quepa | precios ASK/BID
+⚠️ ORACULO: la entrada es perfecta en tiempo Y direccion. NO es operable.
+
+--- 2026-08-13 ---  3 giros
+           [dir REAL] solo trail 20m  3 ops, 3 ganan,  +783.00$ (0 sin precio)
+           [dir EMA]  solo trail 20m  3 ops, 1 ganan,  +345.00$ (0 sin precio)
+       09:30 -> 10:43  C   73 min   +381.00$
+       10:35 -> 10:37  C    2 min    -15.00$
+       11:59 -> 12:00  P    1 min    -21.00$
+           [dir EMA]  solo trail 30m  3 ops, 1 ganan,  +267.00$ (0 sin precio)
+    [dir EMA]  trail20 + mag<0.5x 5m  3 ops, 1 ganan,  +345.00$ (0 sin precio)
+      [dir EMA]  trail20 + mag<1x 5m  3 ops, 1 ganan,  +345.00$ (0 sin precio)
+
+--- 2026-08-12 ---  3 giros
+           [dir REAL] solo trail 20m  2 ops, 2 ganan,  +117.00$ (1 sin precio)
+           [dir EMA]  solo trail 20m  3 ops, 0 ganan,   -77.00$ (0 sin precio)
+       09:30 -> 09:31  C    1 min    -39.00$
+       11:40 -> 11:41  P    1 min    -26.00$
+       14:41 -> 14:44  C    3 min    -12.00$
+           [dir EMA]  solo trail 30m  3 ops, 0 ganan,   -77.00$ (0 sin precio)
+    [dir EMA]  trail20 + mag<0.5x 5m  3 ops, 0 ganan,   -77.00$ (0 sin precio)
+      [dir EMA]  trail20 + mag<1x 5m  3 ops, 0 ganan,   -77.00$ (0 sin precio)
+
+TOTAL DE LOS DOS DIAS
+--------------------------------------------------------------------------------------------------------
+         [dir REAL] solo trail 20m     +900.00$   (+225% del capital)
+         [dir EMA]  solo trail 20m     +268.00$   (+67% del capital)
+         [dir EMA]  solo trail 30m     +190.00$   (+47% del capital)
+  [dir EMA]  trail20 + mag<0.5x 5m     +268.00$   (+67% del capital)
+    [dir EMA]  trail20 + mag<1x 5m     +268.00$   (+67% del capital)

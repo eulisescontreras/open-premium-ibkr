@@ -147,9 +147,19 @@ USAR_M1 = True              # 2026-08-11: disparador de flips = M1. False -> cri
 # ⚠️ MUESTRA: 2 dias (08-12 completo, 08-11 solo desde las 11:48) y 37 operaciones. p=0.01 es
 # significativo pero NO es una validacion. La confirmacion es la primera sesion nueva.
 USAR_MEDIA = True           # False -> decide M1 (comportamiento anterior, A/B limpio)
+INVERTIR_SENAL = False      # 2026-08-13 ~11:10, peticion del usuario: vuelve a como estaba.
+                            # UP -> CALL y DOWN -> PUT, que es lo que dicen las etiquetas.
+                            # Estuvo en True desde ~10:15, pero la inversion se aplicaba en DOS
+                            # sitios (_senal_media y _lado_del_estado) y se ANULABAN: el sistema
+                            # compraba lo mismo que ahora y solo el panel salia al reves. Por eso
+                            # este cambio NO altera que se compra, solo arregla la etiqueta.
 MEDIA_DIST = 0.20           # |SPY - media| que dispara. Region medida valida: 0.20-0.28
-MINUTOS_POS = 8             # minutos en posicion antes de vender. t8 es la UNICA columna que
-                            # aguanta con ejecucion realista (t6/t10/t12/t15 se vuelven erraticas)
+MINUTOS_POS = 0             # 2026-08-13: 0 = NO se vende por reloj. Se aguanta hasta que la
+                            # señal CAMBIE DE LADO, y ahi se gira (vender y comprar el
+                            # contrario), como hacia el sistema con M1.
+                            # Antes valia 8: era la unica columna que aguantaba con ejecucion
+                            # realista. Se desactiva por peticion del usuario para probar el
+                            # sistema INVERTIDO aguantando hasta el giro.
 CONFIRMACION_MIN = 5        # 2026-08-12: filtro de confirmacion (SOLO REGISTRO, no decide): la SEÑAL
                             # del minuto debe aguantar N min seguidos para "confirmar". D=5 mata las
                             # rotaciones de <=4 min medidas. HIPOTESIS ajustable con mas datos.
@@ -316,6 +326,29 @@ TAPE_ENABLED = True         # 2026-08-11: guardar UNA FILA POR OPERACION en la t
                             # operacion (verificado en vivo: last=0.9 lastSize=2.0).
                             # SOLO REGISTRO: no toca la señal ni la ejecucion. Ponerlo a False
                             # desactiva la escritura sin afectar a nada mas.
+# --- TAPE DEL SUBYACENTE (2026-08-13) ------------------------------------------------------
+# Hasta hoy el `tape` era SOLO de opciones: 190.287 filas el 08-12 y CERO filas sin `expiry`.
+# Del SPY unicamente habia `bars_minute` (390 velas de 1 min con el volumen agregado), asi que
+# no se podia saber si un movimiento lo empuja UN bloque grande o el goteo, ni medir quien
+# agrede en el propio subyacente. La señal que sobrevivio a toda la investigacion del 08-12
+# sale del PRECIO del SPY, y del SPY era justo de lo que menos detalle habia.
+#
+# CAUSA de que no se capturara, y es el MISMO bug que la banda tenia el 08-12: el SPY se
+# suscribia SIN el tick generico 233 (RTVolume) -> no llegan las operaciones individuales.
+# Y encima esa suscripcion (`_read_price`) se CANCELA acto seguido, asi que el SPY no tenia
+# ninguna suscripcion viva.
+#
+# ⚠️ NO TOCA LA SEÑAL. En `_on_ticks` el SPY va en una rama PROPIA que termina en `continue`
+# ANTES del filtro de opciones. Si cayera por el camino de las opciones contaminaria
+# accum/today_prem/accum_net/today_net -> premium_minute, strike_daily, los walls y la señal:
+# el `premium` de opciones multiplica por 100 (multiplicador del contrato) y la clave es
+# (expiry, strike, right), que una accion no tiene.
+#
+# ⚠️ TAMAÑO: el SPY negocia ~20M de acciones/dia (medido: bars_minute suma 20.146.826 el 08-12).
+# Cuantas OPERACIONES son, no se sabe hasta medirlo. La BD ya pesa 53 MB y GitHub avisa a
+# partir de 50. La primera sesion se captura TODO para saber el ritmo real (regla 13: no se
+# elige un umbral a ciegas); con ese dato se decide si hace falta filtrar por tamaño.
+TAPE_SPY = True             # False -> no se captura el subyacente, sin afectar a nada mas
 TAPE_FLUSH_N = 400          # volcado por lotes: _on_ticks corre en el hilo de Tkinter y a alta
                             # frecuencia, asi que un INSERT por tick bloquearia la GUI. Se
                             # acumula en memoria y se vuelca con executemany al llegar a este
@@ -1343,6 +1376,27 @@ class SpyDirection:
             return False
         self.spy_price = price
 
+        # TAPE DEL SUBYACENTE: suscripcion PERMANENTE con RTVolume (233), que es lo que hace
+        # llegar las operaciones una a una. VA AQUI Y NO ANTES a proposito: `_read_price` pide
+        # y CANCELA su propia suscripcion en cada intento (cancelMktData), asi que suscribir
+        # antes de esa llamada la dejaria cancelada y el tape del SPY entraria vacio -- sin dar
+        # ningun error, que es la peor forma de fallar.
+        # Se re-suscribe SOLA en cada reconexion: try_connect() vuelve a llamar a
+        # setup_contracts(). Y el guard `prev is None` de _on_ticks descarta el primer tick,
+        # asi que un reinicio NO produce un dvol gigante con el volumen acumulado del dia.
+        if TAPE_SPY:
+            try:
+                self.ib.reqMktData(self.spy_stock, "233", False, False)
+                ACT.info("TAPE SPY: suscrito el SUBYACENTE con RTVolume(233) conId=%s -> se "
+                         "guardara una fila por operacion con grupo='SPY'",
+                         getattr(self.spy_stock, "conId", "?"))
+            except Exception as e:
+                # No puede tumbar el arranque: el tape es SOLO REGISTRO. Pero tampoco puede
+                # quedarse mudo (es la leccion del tape ciego del 08-12).
+                ACT.info("TAPE SPY: NO se pudo suscribir el subyacente (%s: %s). El resto de "
+                         "la sesion sigue con normalidad, pero NO habra tape del SPY",
+                         type(e).__name__, e)
+
         chains = self.ib.reqSecDefOptParams(spy.symbol, "", spy.secType, spy.conId)
         chain = next((c for c in chains
                       if c.exchange == "SMART" and c.tradingClass == SYMBOL), None) \
@@ -2290,6 +2344,63 @@ class SpyDirection:
                 "state": self.state, "max_prem": max_prem, "contract": contract}
 
     # ---------------- procesamiento de trades ----------------
+    def _tape_spy(self, tk, c):
+        """Una fila del tape por operacion del SUBYACENTE. SOLO REGISTRO.
+
+        Deliberadamente NO comparte cuerpo con la ruta de opciones (regla 9 no aplica: no es
+        el mismo calculo). Dos diferencias que hacen que mezclarlas fuera un bug:
+          - el premium de una accion es last*dvol, SIN el x100 del multiplicador del contrato;
+          - no hay expiry/strike/right: van NULL, y el grupo es 'SPY'.
+
+        REINICIOS: `prev_vol` esta indexado por conId, asi que el SPY entra sin colisionar y
+        hereda el guard `prev is None`. `tk.volume` de IBKR es el ACUMULADO del dia: sin ese
+        guard, el primer tick tras arrancar se leeria como una operacion de millones de
+        acciones. Coste real de un reinicio: se pierde UNA operacion. Y en dia nuevo el volumen
+        vuelve a 0 -> dvol negativo -> descartado por `dvol <= 0`.
+        """
+        try:
+            vol = tk.volume
+            last = tk.last
+            if vol is None or math.isnan(vol) or last is None or math.isnan(last):
+                return
+            prev = self.prev_vol.get(c.conId)
+            self.prev_vol[c.conId] = vol
+            if prev is None:
+                return                      # primer tick tras (re)conectar: NO se inventa dvol
+            dvol = vol - prev
+            if dvol <= 0:
+                return                      # sin operaciones nuevas (o dia nuevo: vol reseteado)
+            bid = tk.bid if (tk.bid and not math.isnan(tk.bid)) else None
+            ask = tk.ask if (tk.ask and not math.isnan(tk.ask)) else None
+            # MISMA regla del agresor que en opciones: quien cruza el spread paga por entrar.
+            # Es una INFERENCIA, no un dato de IBKR; lo que se ejecuta dentro del spread no se
+            # puede atribuir y queda como MID.
+            agresor = "MID"
+            if ask is not None and last >= ask:
+                agresor = "COMPRA"
+            elif bid is not None and last <= bid:
+                agresor = "VENTA"
+            _ls = getattr(tk, "lastSize", None)
+            _ls = None if (_ls is None or math.isnan(_ls) or _ls <= 0) else float(_ls)
+            _now = datetime.now()
+            self._tape_buf.append((
+                _now.strftime("%Y-%m-%d"),
+                _now.strftime("%H:%M:%S.") + f"{_now.microsecond // 1000:03d}", time.time(),
+                None, None, None,                       # expiry/strike/right: no aplican
+                float(last), _ls, float(dvol), bid, ask, agresor,
+                (float(last) * _ls) if _ls else None,   # dolares de ESTA operacion (sin x100)
+                float(last) * float(dvol),              # dolares del delta de volumen
+                "SPY"))
+            self._tape_spy_n = getattr(self, "_tape_spy_n", 0) + 1
+            if len(self._tape_buf) >= TAPE_FLUSH_N:
+                self._flush_tape()
+        except Exception as _e:
+            # El tape JAMAS puede romper el procesamiento de la señal. Pero tampoco puede
+            # perderse en silencio: se cuenta en el MISMO contador que ya reporta la linea del
+            # minuto, para que una captura que falla sistematicamente se vea.
+            self._tape_err = getattr(self, "_tape_err", 0) + 1
+            self._tape_err_last = "SPY %s: %s" % (type(_e).__name__, _e)
+
     def _on_ticks(self, tickers):
         signal_ids = {c.conId for c in (self.call, self.put) if c is not None}
         # BANDA (2026-08-12): hasta hoy se descartaba aqui, asi que el `tape` solo veia los 2
@@ -2299,6 +2410,15 @@ class SpyDirection:
         band_ids = {c.conId for c in (self.band_contracts or []) if c.conId}
         for tk in tickers:
             c = tk.contract
+            # --- TAPE DEL SUBYACENTE (2026-08-13) ---
+            # VA AQUI, ANTES DEL FILTRO, Y TERMINA EN `continue`. Es lo que garantiza que el
+            # SPY no toque NADA de la ruta de opciones: accum, today_prem, accum_net,
+            # today_net, net_call, net_put y todo lo que se alimenta de ellos (premium_minute,
+            # strike_daily, walls, la señal). Un dvol del SPY sumado ahi seria premium falso
+            # multiplicado por 100 y con la clave (expiry,strike,right) vacia.
+            if TAPE_SPY and getattr(c, "secType", None) == "STK":
+                self._tape_spy(tk, c)
+                continue
             is_signal = c.conId in signal_ids
             is_base = c.conId in self.info_base
             is_band = c.conId in band_ids
@@ -2468,13 +2588,52 @@ class SpyDirection:
             if not m or p is None or math.isnan(p):
                 return None
             d = p - m
+            lado = None
             if d >= MEDIA_DIST:
-                return "PUT"        # precio ALTO respecto a la media -> deberia volver ABAJO
-            if d <= -MEDIA_DIST:
-                return "CALL"       # precio BAJO respecto a la media -> deberia volver ARRIBA
-            return None             # dentro de la banda: no hay nada que capturar
+                lado = "PUT"        # precio ALTO respecto a la media -> deberia volver ABAJO
+            elif d <= -MEDIA_DIST:
+                lado = "CALL"       # precio BAJO respecto a la media -> deberia volver ARRIBA
+            # ⚠️⚠️ LA INVERSION SE APLICA AQUI **Y** EN `_lado_del_estado()`. SON DOS, Y SE
+            # ANULAN: el efecto NETO es que el sistema NO esta invertido y compra lo mismo que
+            # con la regla original. Esta comprobado con los datos del 2026-08-13:
+            #     09:30 (antes de invertir)  dist +1.165  senal PUT   estado DOWN  ->  PUT
+            #     09:56 (ya "invertido")     dist +0.241  senal CALL  estado UP    ->  PUT
+            # Misma situacion de mercado (precio ARRIBA de la media), misma compra. Lo unico
+            # que cambia es la ETIQUETA del estado en el panel, que sale al reves.
+            #
+            # SE DEJA ASI A PROPOSITO, por decision explicita del usuario el 2026-08-13: el
+            # proceso en vivo ya llevaba las dos inversiones y se prefirio que el fichero
+            # coincidiera con lo que estaba operando antes que reiniciar a mitad de sesion.
+            #
+            # ⚠️ SI ALGUIEN QUIERE INVERTIR DE VERDAD: quitar la inversion de AQUI (no la de
+            # `_lado_del_estado`), y reiniciar. Con una sola, precio ARRIBA -> estado DOWN ->
+            # CALL, que es lo que se pidio originalmente ("DOWN compra CALL").
+            # NO "arreglar" esto sin hablarlo: cambia lo que compra el sistema.
+            if lado and INVERTIR_SENAL:
+                lado = "CALL" if lado == "PUT" else "PUT"
+            return lado             # None = dentro de la banda: no hay nada que capturar
         except Exception:
             return None
+
+    def _lado_del_estado(self):
+        """El lado a comprar segun el ESTADO (UP/DOWN), que es PERSISTENTE.
+
+        DIFERENCIA CLAVE con `_senal_media()`: la señal se apaga cuando el precio vuelve dentro
+        de la banda (devuelve None y el sistema se queda FLAT). El ESTADO no: aguanta hasta el
+        siguiente cruce del umbral. Usar el estado = estar SIEMPRE en mercado, girando en cada
+        cambio de direccion, que es como operaba el sistema con M1.
+
+        Aplica INVERTIR_SENAL en UN SOLO SITIO, para que `_update_signal` y `trade_poll` no
+        puedan discrepar (si cada uno invirtiera por su cuenta, una copia acabaria al reves)."""
+        if self.state == "UP":
+            lado = "CALL"
+        elif self.state == "DOWN":
+            lado = "PUT"
+        else:
+            return None
+        if INVERTIR_SENAL:
+            lado = "PUT" if lado == "CALL" else "CALL"
+        return lado
 
     def _update_signal(self):
         # GAP 18: NO evaluar la senal hasta haber intentado restaurar el estado del dia.
@@ -2567,8 +2726,10 @@ class SpyDirection:
             self.last_warn_side = None
             self._raise_alert("FLIP", f"CAMBIO -> {new}  ({hhmmss})", "flip")
             self._save(new, "FLIP")
-            # objetivo de posicion segun la nueva direccion
-            self.target = "CALL" if new == "UP" else "PUT"
+            # objetivo de posicion segun la nueva direccion. Sale de `_lado_del_estado()` para
+            # que la inversion (INVERTIR_SENAL) viva en UN SOLO SITIO: si aqui se calculara a
+            # mano, este camino y el de trade_poll podrian acabar diciendo lo contrario.
+            self.target = self._lado_del_estado() or ("CALL" if new == "UP" else "PUT")
             # ANCLA DEL RETROCESO: se fija AQUI, en el instante del giro, porque es el unico
             # momento en que se sabe cual fue el impulso que precedio a la senal. Guarda el
             # reloj, el precio y el objetivo al que tiene que retroceder para poder entrar.
@@ -3587,12 +3748,34 @@ class SpyDirection:
             # nada de la fila `trades`, cuyo mfe/mae se corrompe en cada reinicio.
             if self.pos in ("CALL", "PUT") and self.trade_open:
                 _en_pos = time.monotonic() - self.trade_open.get("ts", time.monotonic())
-                if _en_pos >= MINUTOS_POS * 60.0:
-                    if self.target != "FLAT":
-                        self.exit_reason = "tiempo"
-                        ACT.info("SALIDA POR TIEMPO: %.1f min en %s (tope %d) -> FLAT",
-                                 _en_pos / 60.0, self.pos, MINUTOS_POS)
-                    self.target = "FLAT"
+                # EL ESTADO (UP/DOWN del panel), no la señal instantanea: el estado PERSISTE
+                # hasta el siguiente cruce, asi que se aguanta la posicion y se gira cuando
+                # cambia de direccion, en vez de quedarse FLAT al volver el precio a la banda.
+                _lado_ahora = self._lado_del_estado()
+                # DOS MODALIDADES EXCLUYENTES, segun MINUTOS_POS:
+                #   > 0  -> salida por RELOJ. Se mantiene hasta el tope AUNQUE la señal gire
+                #           (es lo que se midio: +154/+313 frente a +133/+117 al salir en el
+                #           giro). La rama del giro NO se evalua aqui.
+                #   = 0  -> no hay reloj: se aguanta hasta que la señal cambie de lado.
+                if MINUTOS_POS > 0:
+                    if _en_pos >= MINUTOS_POS * 60.0:
+                        if self.target != "FLAT":
+                            self.exit_reason = "tiempo"
+                            ACT.info("SALIDA POR TIEMPO: %.1f min en %s (tope %d) -> FLAT",
+                                     _en_pos / 60.0, self.pos, MINUTOS_POS)
+                        self.target = "FLAT"
+                    else:
+                        self.target = self.pos
+                elif _lado_ahora and _lado_ahora != self.pos:
+                    # MINUTOS_POS=0 (2026-08-13, peticion del usuario): NO se vende por reloj.
+                    # Se aguanta hasta que la señal cambie de lado, y entonces se GIRA directo
+                    # (vender lo que hay y comprar el contrario), que es como funcionaba el
+                    # sistema con M1. Con MINUTOS_POS>0 esta rama no se alcanza antes del tope.
+                    if self.target != _lado_ahora:
+                        self.exit_reason = "giro"
+                        ACT.info("GIRO POR SEÑAL: %.1f min en %s -> la media dice %s",
+                                 _en_pos / 60.0, self.pos, _lado_ahora)
+                    self.target = _lado_ahora
                 else:
                     # MANTENER hasta cumplir el tiempo, AUNQUE la señal gire. Es lo que se
                     # midio; salir al invertirse la señal da PEOR resultado (+133/+117 frente
@@ -3603,7 +3786,11 @@ class SpyDirection:
                 # Sin posicion: el objetivo es lo que diga la señal, y FLAT si no dice nada.
                 # Sin este `else` el target se quedaria pegado al ultimo lado y se recompraria
                 # en cuanto se vendiera, ignorando que la señal ya no esta activa.
-                self.target = self._senal_media() or "FLAT"
+                # Sin posicion: se entra YA segun el ESTADO actual del panel, sin esperar a que
+                # el precio vuelva a cruzar el umbral. Con `_senal_media()` el sistema se
+                # quedaba FLAT mientras el precio estuviera dentro de la banda (hoy 09:50:
+                # dist=+0.057 con umbral 0.20 -> no compraba nada pese a marcar DOWN).
+                self.target = self._lado_del_estado() or "FLAT"
                 # NO QUEDARSE MUDO EN SILENCIO. Con USAR_MEDIA, si falta la media el sistema no
                 # opera NUNCA -- y sin este aviso pareceria "un dia sin señales". Es el mismo
                 # fallo silencioso que el tape sin RTVolume: no fallaba, solo no veia. Se
@@ -4346,10 +4533,26 @@ class SpyDirection:
                     # que se cuentan alli y se vuelcan aqui, una vez por minuto. Si sale
                     # "capturas_fallidas>0" se estan PERDIENDO operaciones del tape.
                     _te = getattr(self, "_tape_err", 0)
+                    # DESGLOSE OPCIONES vs SPY (2026-08-13). Sin el, el total no dice si el
+                    # subyacente esta entrando ni en que proporcion -- y el SPY puede ser
+                    # varias veces el volumen de filas de TODAS las opciones juntas, que es el
+                    # riesgo de tamaño que hay que vigilar el primer dia.
+                    _gs = self.db.execute(
+                        "SELECT COUNT(*), MAX(size) FROM tape "
+                        "WHERE fecha=? AND hora LIKE ? AND grupo='SPY'",
+                        (fecha, hora + ":%")).fetchone()
+                    _spy_dia = self.db.execute(
+                        "SELECT COUNT(*) FROM tape WHERE fecha=? AND grupo='SPY'",
+                        (fecha,)).fetchone()[0]
                     ACT.info("MIN %s | TAPE %d operaciones este minuto (mayor=%s contratos, "
                              "media=%s) | volcadas=%d, total dia=%d | capturas_fallidas=%d%s",
                              hora, _g[0] or 0, _fmt(_g[1]), _fmt(_g[2]), _n, self._tape_n,
                              _te, (" ULTIMO: " + getattr(self, "_tape_err_last", "")) if _te else "")
+                    if TAPE_SPY:
+                        ACT.info("MIN %s | TAPE SPY (subyacente) %d operaciones este minuto "
+                                 "(mayor=%s acciones) | opciones=%d | total SPY dia=%d",
+                                 hora, _gs[0] or 0, _fmt(_gs[1]),
+                                 (_g[0] or 0) - (_gs[0] or 0), _spy_dia)
                     if _te:
                         ACT.warning("TAPE: %d capturas FALLIDAS acumuladas -> se estan "
                                     "perdiendo operaciones. Ultimo error: %s",

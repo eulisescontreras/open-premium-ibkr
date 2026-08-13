@@ -1,0 +1,88 @@
+¿QUE DA LA DIRECCION?  -  2026-08-13, 348 minutos
+====================================================================================================
+mediana |net_spy| = 1,028,039
+El flujo ya predice AMPLITUD. Aqui se busca quien acierta el SIGNO del movimiento.
+Se evalua SOLO en los minutos con salto de flujo, que es cuando importa.
+
+SALTO >= 3x mediana,  horizonte 30 min   ->   41 casos
+----------------------------------------------------------------------------------------------------
+               candidato  opina  acierta       %  pts si se sigue
+    acum_call - acum_put     41       27   65.9%           +14.40
+              precio 15m     40       26   65.0%            +9.20
+         precio vs SMA50     41       25   61.0%            +2.66
+         precio vs SMA20     41       25   61.0%            +5.78
+                RSI - 50     41       25   61.0%            +7.88
+           EMA8 vs EMA21     41       24   58.5%            +1.34
+              precio 30m     40       23   57.5%            -0.77
+       net_put invertido     41       23   56.1%            +7.70
+      net_call - net_put     41       23   56.1%            +6.44
+          SMA20 vs SMA50     41       23   56.1%            +0.40
+  precio vs media5(vwap)     41       22   53.7%            +3.50
+               MACD hist     41       22   53.7%            +6.10
+           signo net_spy     41       20   48.8%            -5.48
+               precio 5m     41       20   48.8%            +0.00
+           net_call solo     41       18   43.9%            +0.58
+        precio vs SMA200     41       15   36.6%           -10.20
+
+SALTO >= 3x mediana,  horizonte 60 min   ->   33 casos
+----------------------------------------------------------------------------------------------------
+               candidato  opina  acierta       %  pts si se sigue
+    acum_call - acum_put     33       25   75.8%           +35.56
+               MACD hist     33       25   75.8%           +30.92
+       net_put invertido     33       23   69.7%           +17.42
+      net_call - net_put     33       23   69.7%           +15.94
+  precio vs media5(vwap)     33       21   63.6%            +7.92
+           net_call solo     33       21   63.6%           +10.70
+         precio vs SMA20     33       18   54.5%            +1.76
+               precio 5m     33       18   54.5%            +3.30
+           signo net_spy     33       16   48.5%           -11.14
+                RSI - 50     33       16   48.5%            -3.06
+              precio 15m     32       15   46.9%            -1.76
+           EMA8 vs EMA21     33       13   39.4%           -13.90
+         precio vs SMA50     33       12   36.4%           -18.98
+              precio 30m     33       11   33.3%           -23.42
+          SMA20 vs SMA50     33        9   27.3%           -30.36
+        precio vs SMA200     33        5   15.2%           -36.36
+
+SALTO >= 5x mediana,  horizonte 30 min   ->   14 casos
+----------------------------------------------------------------------------------------------------
+               candidato  opina  acierta       %  pts si se sigue
+      net_call - net_put     14       11   78.6%            +8.29
+         precio vs SMA50     14        9   64.3%            +0.87
+              precio 30m     14        9   64.3%            +0.87
+       net_put invertido     14        9   64.3%            +5.37
+           net_call solo     14        9   64.3%            +5.15
+    acum_call - acum_put     14        9   64.3%            +6.19
+               MACD hist     14        9   64.3%            +4.45
+  precio vs media5(vwap)     14        8   57.1%            +0.59
+              precio 15m     14        8   57.1%            +1.33
+          SMA20 vs SMA50     14        8   57.1%            -0.13
+                RSI - 50     14        8   57.1%            +1.33
+         precio vs SMA20     14        7   50.0%            -0.69
+               precio 5m     14        7   50.0%            -0.69
+           EMA8 vs EMA21     14        7   50.0%            -2.47
+           signo net_spy     14        6   42.9%            -3.01
+        precio vs SMA200     14        4   28.6%            -5.93
+
+SALTO >= 1x mediana,  horizonte 30 min   ->   134 casos
+----------------------------------------------------------------------------------------------------
+               candidato  opina  acierta       %  pts si se sigue
+    acum_call - acum_put    134       92   68.7%           +42.62
+           EMA8 vs EMA21    134       88   65.7%           +33.30
+              precio 30m    133       86   64.7%           +30.81
+         precio vs SMA50    134       86   64.2%           +32.64
+         precio vs SMA20    134       86   64.2%           +32.66
+              precio 15m    132       84   63.6%           +36.05
+               MACD hist    134       85   63.4%           +27.34
+                RSI - 50    133       83   62.4%           +33.20
+          SMA20 vs SMA50    134       81   60.4%           +25.26
+  precio vs media5(vwap)    134       80   59.7%           +14.14
+               precio 5m    134       80   59.7%           +15.94
+       net_put invertido    134       75   56.0%            +6.86
+      net_call - net_put    134       67   50.0%            -4.60
+           signo net_spy    134       66   49.3%           -11.76
+           net_call solo    134       62   46.3%            -2.78
+        precio vs SMA200    134       44   32.8%           -42.72
+
+50% = moneda. Lo que importa es que un candidato repita por encima de 50 en VARIOS
+bloques, no que gane en uno. Con estos n, +-10 puntos es ruido.

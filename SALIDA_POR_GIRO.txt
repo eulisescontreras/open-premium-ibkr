@@ -1,0 +1,17 @@
+MISMA ENTRADA, DISTINTA SALIDA  -  2026-08-13
+========================================================================================================
+7 entradas. Para cada una se aplica cada regla de salida por separado.
+
+ entrada   lado    extremo 20m    extremo 10m   trail 0.096%    trail 0.11%    trail 0.06%
+   09:35  LARGO    +2.98/ 68     +3.20/ 63*    +2.48/ 70     +2.48/ 70     +0.03/  8 
+   10:44  CORTO    +2.39/ 81*    +0.44/ 16     +2.21/101     +2.21/101     +0.62/ 14 
+   12:20  LARGO    +1.09/ 72     +0.31/ 19     +0.64/ 84     +1.48/210*    +0.90/ 73 
+   14:05  LARGO    -0.17/  1     -0.17/  1     +0.45/105     +0.45/105     +0.84/ 68*
+   14:07  LARGO    +0.89/ 97     -0.04/ 16     +0.63/103     +0.63/103     +1.02/ 66*
+   15:45  CORTO    -0.11/  1     -0.11/  1     -0.01/ 14*    -0.01/ 14*    -0.01/ 14*
+   15:47  CORTO    -0.03/ 12*    -0.03/ 12*    -0.03/ 12*    -0.03/ 12*    -0.03/ 12*
+
+   TOTAL                +7.04          +3.60          +6.37          +7.21          +3.37 
+ gana en                 2 giros           2 giros           2 giros           3 giros           4 giros 
+
+* = la mejor salida DE ESE GIRO.  El formato es puntos/minutos dentro.

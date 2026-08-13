@@ -1,0 +1,57 @@
+RPS (Reversal Probability Score) MEDIDO CONTRA EL 2026-08-13 REAL
+====================================================================================================
+objetivo: que el SPY recorra >= $1.50 en la direccion predicha dentro de 60 minutos
+normalizacion: percentil sobre la historia PASADA del dia (min 30 min). Sin futuro.
+
+TASA BASE (todos los minutos): BULL 11.0%   BEAR 19.9%
+
+ACIERTO POR TRAMO DE RPS  (sin exigir ruptura estructural)
+     tramo  n_bear  ac_bear  vs base    n_bull  ac_bull  vs base
+      0-49     182    29.7%    +9.7       180     3.3%    -7.7
+     50-64      84     8.3%   -11.6        75     0.0%   -11.0
+     65-74      12    25.0%    +5.1        19     0.0%   -11.0
+     75-84       0       -       -         4     0.0%   -11.0
+    85-100       0       -       -         0       -       -
+
+LA REGLA COMPLETA: RPS >= 75 **Y** ruptura estructural
+     señal     n  aciertos     tasa     base     lift
+      BEAR     0         -        -    19.9%        -
+      BULL     0         -        -    11.0%        -
+
+DETALLE MINUTO A MINUTO (solo donde RPS>=65)
+   hora       spy  rps_bear  rps_bull  sb_b  sb_u  logro_bear  logro_bull
+  10:33    779.11      74.2      33.8     0     0        True       False
+  10:34    779.22      68.4      26.6     0     0        True       False
+  10:37    779.12      65.1      19.8     0     0        True       False
+  10:48    777.91      22.4      68.3     1     0        True       False
+  10:50    777.60      26.1      75.2     0     0        True       False
+  10:51    777.82      21.6      70.5     0     0        True       False
+  10:52    777.79      18.1      69.7     0     0        True       False
+  10:53    777.73      19.7      69.3     0     0        True       False
+  10:54    777.84      16.9      81.7     0     0        True       False
+  10:55    777.43      27.7      66.2     1     0        True       False
+  10:57    777.81      31.5      67.0     0     0        True       False
+  10:58    777.95      32.2      68.2     0     1        True       False
+  11:00    778.13      18.5      72.2     0     1        True       False
+  11:02    777.88      23.7      73.1     0     0        True       False
+  11:12    777.03      25.2      65.7     0     0        True       False
+  11:13    777.19      27.4      73.7     0     0        True       False
+  11:17    777.04      29.6      68.6     0     0        True       False
+  11:23    776.98      22.7      67.1     0     0       False       False
+  11:25    776.61      25.7      67.0     1     0       False       False
+  11:33    775.99      28.6      75.8     0     0       False       False
+  11:35    776.04      33.6      72.3     0     0       False       False
+  11:36    775.98      32.0      70.2     0     0       False       False
+  11:38    775.80      34.3      71.4     0     0       False       False
+  11:39    775.96      38.9      65.6     0     0       False       False
+  11:44    775.97      25.3      75.1     0     0       False       False
+  11:45    775.91      16.3      71.6     0     0       False       False
+  12:31    776.52      65.6      31.5     0     0       False       False
+  12:35    776.63      68.4      38.3     0     0       False       False
+  12:36    776.51      70.1      29.6     0     0       False       False
+  12:38    776.57      71.7      23.0     0     0       False       False
+  12:39    776.29      69.7      22.7     1     0       False       False
+  12:42    776.51      72.6      26.7     0     0       False       False
+  13:13    777.19      68.9      27.1     0     0       False       False
+  13:15    777.22      69.1      29.1     0     0       False       False
+  14:10    776.89      66.0      28.5     0     0       False       False

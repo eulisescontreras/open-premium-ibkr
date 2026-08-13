@@ -1,0 +1,65 @@
+DIAGNOSTICO TRAMO A TRAMO  -  2026-08-13, 390 minutos (09:30 - 15:59)
+====================================================================================================================
+tramos detectados con ZigZag sobre cierres, umbral $0.40  ->  18 tramos
+sistema: ventana 5m, entrar si flujo/min >= 1.0 M$, direccion 5m, salida trailing extremo 20m
+
+VEREDICTO POR TRAMO
+--------------------------------------------------------------------------------------------------------------------
+  #   desde   hasta  min   dir   recorr  flujo M$/min    que hace el sistema   captura  % tramo
+  1   09:30   09:39    9    UP    +2.09         4.887        A FAVOR 4/9 min     +0.73    34.9%
+  2   09:39   09:44    5  DOWN    -0.73        -1.588      EN CONTRA 5/5 min     -0.73  -100.0%
+  3   09:44   10:35   51    UP    +3.60         0.749      A FAVOR 51/51 min     +3.60   100.0%
+  4   10:35   10:55   20  DOWN    -1.88         1.623      A FAVOR 11/20 min     +0.40    21.3%
+  5   10:55   11:01    6    UP    +0.73         0.475      EN CONTRA 6/6 min     -0.73  -100.0%
+  6   11:01   11:34   33  DOWN    -2.43        -1.243      A FAVOR 33/33 min     +2.43   100.0%
+  7   11:34   11:42    8    UP    +0.58         0.323      EN CONTRA 8/8 min     -0.58  -100.0%
+  8   11:42   11:59   17  DOWN    -0.82         0.352      A FAVOR 17/17 min     +0.82   100.0%
+  9   11:59   12:05    6    UP    +0.69         0.656      EN CONTRA 6/6 min     -0.69  -100.0%
+ 10   12:05   12:16   11  DOWN    -0.55        -0.061       A FAVOR 1/11 min     +0.06    10.9%
+ 11   12:16   12:33   17    UP    +1.05         1.609      A FAVOR 13/17 min     +0.70    66.7%
+ 12   12:33   12:40    7  DOWN    -0.43         4.082      EN CONTRA 7/7 min     -0.43  -100.0%
+ 13   12:40   13:19   39    UP    +1.15         0.983      A FAVOR 39/39 min     +1.15   100.0%
+ 14   13:19   13:44   25  DOWN    -0.78         0.082    EN CONTRA 14/25 min     -0.52   -66.7%
+ 15   13:44   15:09   85    UP    +1.73         0.194      A FAVOR 64/85 min     +1.34    77.5%
+ 16   15:09   15:13    4  DOWN    -0.50        -1.399      EN CONTRA 4/4 min     -0.50  -100.0%
+ 17   15:13   15:24   11    UP    +0.45         1.752      A FAVOR 11/11 min     +0.45   100.0%
+ 18   15:24   15:59   35  DOWN    -0.58        -1.727    EN CONTRA 21/35 min     -0.60  -103.4%
+
+   COMPROBACION: la suma de las capturas por tramo debe dar el total de las operaciones.
+   suma por tramo = +6.90   |   suma de las 7 operaciones = +7.04
+
+RESUMEN
+--------------------------------------------------------------------------------------------------------------------
+  tramos totales            : 18
+  A FAVOR (bien posicionado):  10   aportan  +11.68
+  EN CONTRA (mal colocado)  :   8   cuestan   -4.78
+  FUERA (sin posicion)      :   0   dejando    0.00 puntos sin tocar
+  RESULTADO NETO            :   +6.90 puntos
+
+DONDE FALLA  (tramos en contra o no tocados, ordenados por lo que cuestan)
+--------------------------------------------------------------------------------------------------------------------
+  #               que paso  recorrido     coste  flujo M$/min
+  2      EN CONTRA 5/5 min      -0.73     -0.73        -1.588
+  5      EN CONTRA 6/6 min      +0.73     -0.73         0.475
+  9      EN CONTRA 6/6 min      +0.69     -0.69         0.656
+ 18    EN CONTRA 21/35 min      -0.58     -0.60        -1.727
+  7      EN CONTRA 8/8 min      +0.58     -0.58         0.323
+ 14    EN CONTRA 14/25 min      -0.78     -0.52         0.082
+ 16      EN CONTRA 4/4 min      -0.50     -0.50        -1.399
+ 12      EN CONTRA 7/7 min      -0.43     -0.43         4.082
+
+EL FLUJO COMO FILTRO: ¿separa los tramos donde el sistema esta bien colocado?
+--------------------------------------------------------------------------------------------------------------------
+       a favor: n=10  flujo/min medio=  1.085  min= -1.243  max=  4.887
+     en contra: n= 8  flujo/min medio=  0.113  min= -1.727  max=  4.082
+
+OPERACIONES DEL SISTEMA (todas)
+--------------------------------------------------------------------------------------------------------------------
+  entra    sale   lado   min    puntos
+  09:35   10:43  LARGO    68     +2.98
+  10:44   12:05  CORTO    81     +2.39
+  12:20   13:32  LARGO    72     +1.09
+  14:05   14:06  LARGO     1     -0.17
+  14:07   15:44  LARGO    97     +0.89
+  15:45   15:46  CORTO     1     -0.11
+  15:47   15:59  CORTO    12     -0.03

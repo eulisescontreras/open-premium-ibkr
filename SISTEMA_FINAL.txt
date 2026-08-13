@@ -1,0 +1,48 @@
+EL SISTEMA CON CADA PIEZA EN SU SITIO  -  SIN ORACULO, en dinero
+====================================================================================================
+DIRECCION: SUPERTREND ATR(10) mult 3.0  (sustituye a la EMA: acertaba 1 de 6 pivotes)
+ENTRADA: la dispara el FLUJO | SALIDA: solo el trailing de 20 min
+CONTRATO: ITM que quepa en 320$ | precios ASK/BID (spread dentro)
+
+El FLUJO dispara; en ese minuto el SUPERTREND dice el lado. No abre nada por su cuenta,
+y NO cierra: la unica salida es el trailing.
+
+   disparo flujo  08-13 ops   08-13 USD  08-12 ops   08-12 USD      TOTAL
+      1x mediana          9     +322.00         13     -175.00    +147.00
+      2x mediana          8      -42.00          9     -212.00    -254.00
+      3x mediana          6     -125.00          8     -170.00    -295.00
+      5x mediana          2      -23.00          3     -114.00    -137.00
+      8x mediana          1      -31.00          3     -114.00    -145.00
+
+DETALLE con disparo a 1x la mediana
+----------------------------------------------------------------------------------------------------
+  2026-08-13:
+    entra    sale  lado   min        USD
+    10:00   10:43     C    43     +55.00
+    10:44   12:05     P    81    +204.00
+    12:15   12:16     C     1     -11.00
+    12:17   13:32     C    75    +109.00
+    14:06   14:12     P     6     -23.00
+    14:16   14:30     P    14     -24.00
+    14:31   15:44     C    73     +50.00
+    15:45   15:46     P     1     -18.00
+    15:47   15:59     P    12     -20.00
+     9 ops, 4 ganadoras, +322.00$
+
+  2026-08-12:
+    entra    sale  lado   min        USD
+    10:00   10:18     P    18     -46.00
+    10:19   10:26     P     7     -72.00
+    10:27   10:28     C     1     -17.00
+    10:29   10:31     C     2     -24.00
+    10:32   10:37     P     5     -24.00
+    10:38   10:39     P     1     -26.00
+    10:40   10:44     P     4     -11.00
+    10:45   12:00     P    75     +56.00
+    12:11   13:15     C    64     +25.00
+    13:16   13:20     P     4     -12.00
+    13:27   14:11     P    44     -33.00
+    14:13   14:14     C     1      -8.00
+    14:17   14:56     C    39     +17.00
+     13 ops, 3 ganadoras, -175.00$
+

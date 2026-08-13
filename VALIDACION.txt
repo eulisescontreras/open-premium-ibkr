@@ -1,0 +1,23 @@
+VALIDACION A CIEGAS: parametros calibrados en el 08-13, aplicados al 08-12
+========================================================================================================
+Unico cambio: el umbral de entrada es 1x la MEDIANA DEL PROPIO DIA, no un valor fijo.
+Motivo: el tape en vivo (RTVolume) y el historico (tick-by-tick) no cuentan lo mismo.
+
+2026-08-13  [CALIBRACION]   390 velas   mediana flujo 1,136,355   9 entradas
+--------------------------------------------------------------------------------------------------------
+            salida   ops  gana       %    puntos        USD  sin precio
+    extremo 20 min     9     4   44.4%     +6.83    +506.00           0
+    extremo 10 min     9     4   44.4%     +4.45    +292.00           0
+      trail 0.096%     9     5   55.6%     +4.88    +321.00           0
+       trail 0.11%     9     5   55.6%     +5.72    +398.00           0
+       trail 0.06%     9     5   55.6%     +2.70    +156.00           0
+
+2026-08-12  [VALIDACION (no visto)]   390 velas   mediana flujo 3,889,963   12 entradas
+--------------------------------------------------------------------------------------------------------
+            salida   ops  gana       %    puntos        USD  sin precio
+    extremo 20 min    12     2   16.7%     -2.05    -245.00           1
+    extremo 10 min    12     2   16.7%     -2.02    -245.00           1
+      trail 0.096%    12     2   16.7%     -3.52    -418.00           1
+       trail 0.11%    12     2   16.7%     -4.71    -527.00           1
+       trail 0.06%    12     3   25.0%     -2.25    -257.00           3
+

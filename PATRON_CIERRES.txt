@@ -1,0 +1,62 @@
+PATRON DE CIERRES CONSECUTIVOS  -  teoria del usuario
+================================================================================================
+fuente: spy_velas.db   dias: 2026-08-11, 2026-08-12, 2026-08-13   nula: 300 permutaciones (semilla 20260813)
+delta = close[i] - close[i-1]. Racha = deltas consecutivos del mismo signo.
+
+C) 'VELA VERDE' vs 'CIERRA POR ENCIMA DEL CIERRE ANTERIOR' -- ¿son lo mismo?
+------------------------------------------------------------------------------------------------
+fecha         velas  coinciden       %  verde_pero_baja  roja_pero_sube
+2026-08-11      361        358   99.2%                2               1
+2026-08-12      367        366   99.7%                0               1
+2026-08-13       58         58  100.0%                0               0
+TOTAL           786        782   99.5%                2               2
+
+  verde_pero_baja = vela verde (close>open) que cierra POR DEBAJO del cierre anterior
+  roja_pero_sube  = vela roja  (close<open) que cierra POR ENCIMA del cierre anterior
+
+DIFERENCIAL TOTAL POR DIA (lo que pediste: 'cuanto es el diferencial en todo un dia')
+------------------------------------------------------------------------------------------------
+fecha         velas  suma|delta|      neto  eficien  |d|medio   |d|max   d=0
+2026-08-11      390        40.49     -3.47    0.086    0.1041     0.44    17
+2026-08-12      390        38.73     -1.35    0.035    0.0996     0.81    11
+2026-08-13       62         9.12      4.66    0.511    0.1495     0.51     2
+
+  suma|delta| = recorrido total minuto a minuto (lo que el precio 'anduvo')
+  neto        = close final - close inicial (lo que el precio 'avanzo')
+  eficiencia  = |neto|/suma. 1.0 = linea recta.  ~0 = todo ida y vuelta.
+
+A) DE DOS EN DOS: si esta vela cerro por encima de la anterior, ¿la siguiente tambien?
+------------------------------------------------------------------------------------------------
+   Se compara cada par consecutivo. NO hay parametro k: es la vela actual y la siguiente.
+   P_nula = mismos deltas barajados 300 veces (mediana). Si P_real ~ P_nula -> es azar.
+
+fecha          pares  repite   P_real   P_nula      dif  P(sube|subio)  P(baja|bajo)
+2026-08-11       354     170    0.480    0.501   -0.021          0.445         0.511
+2026-08-12       367     182    0.496    0.499   -0.003          0.486         0.505
+2026-08-13        56      28    0.500    0.518   -0.018          0.600         0.333
+
+   0.500 = moneda. Por debajo de 0.500 = REVERSION (tiende a alternar, no a seguir).
+
+B) ACELERACION Y AGOTAMIENTO: |delta| segun la POSICION dentro de la racha
+------------------------------------------------------------------------------------------------
+   Solo rachas de longitud >=3. Si tu teoria es cierta, |delta| sube y luego cae.
+fecha         rachas>=3     pos1     pos2     pos3     pos4   ultima   penult
+2026-08-11           48   0.1144   0.1119   0.0763   0.1444   0.0952   0.1094
+             rachas donde la ULTIMA vela es menor que la penultima: 27/48 = 56.2%  (azar ~50%)
+2026-08-12           50   0.0938   0.1100   0.1142   0.0861   0.1138   0.1168
+             rachas donde la ULTIMA vela es menor que la penultima: 24/50 = 48.0%  (azar ~50%)
+2026-08-13            7   0.2114   0.1529   0.2214   0.1800   0.1586   0.1843
+             rachas donde la ULTIMA vela es menor que la penultima: 3/7 = 42.9%  (azar ~50%)
+
+  pos1..pos4 = |delta| medio de la 1a, 2a, 3a y 4a vela del tramo. Si tu teoria es
+  cierta, deberian crecer y luego caer en 'ultima'.
+
+TEST DEL CRONOMETRO: |rho(variable, minuto del dia)| >= 0.30 -> variable MUERTA
+------------------------------------------------------------------------------------------------
+fecha                variable   pearson  spearman    veredicto
+2026-08-11      |delta| close    -0.146    -0.097    sobrevive
+2026-08-12      |delta| close    -0.367    -0.309       MUERTA
+2026-08-13      |delta| close    -0.378    -0.343       MUERTA
+
+================================================================================================
+n pequeno: 2 dias completos + 1 parcial. Cualquier resultado es INDICIO, no prueba.
