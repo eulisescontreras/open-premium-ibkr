@@ -13,15 +13,18 @@ REPO = r"C:\Users\eulis\proyectos\open-premium-ibkr"
 SCRIPT = os.path.join(REPO, "analisis", "bajar_bars_year.py")
 PAUSA = "8.0"          # segundos entre peticiones (limite IBKR ~60/10min)
 
-# (simbolo, FIN, INICIO, db, clientId) -- mismos tramos que se usaron para el SPY
-TRAMOS = [
-    ("QQQ", "20260813", "20250801", "qqq_bars_year.db",  "31"),
-    ("QQQ", "20250801", "20240731", "qqq_bars_year2.db", "31"),
-    ("IWM", "20260813", "20250801", "iwm_bars_year.db",  "32"),
-    ("IWM", "20250801", "20240731", "iwm_bars_year2.db", "32"),
-    ("DIA", "20260813", "20250801", "dia_bars_year.db",  "33"),
-    ("DIA", "20250801", "20240731", "dia_bars_year2.db", "33"),
-]
+# SIMBOLOS por argumento; sin argumentos, los tres primeros que se bajaron.
+#   python analisis/descargar_etfs.py TLT GLD UUP
+SIMBOLOS = [s.upper() for s in sys.argv[1:]] or ["QQQ", "IWM", "DIA"]
+
+# dos tramos por simbolo: año1 (reciente) y año2 (reserva OOS), mismos cortes que el SPY.
+# clientId distinto por simbolo para no chocar entre si ni con la app (que usa el 7).
+TRAMOS = []
+for _i, _s in enumerate(SIMBOLOS):
+    _cid = str(31 + _i)
+    _pre = _s.lower()
+    TRAMOS.append((_s, "20260813", "20250801", "%s_bars_year.db" % _pre,  _cid))
+    TRAMOS.append((_s, "20250801", "20240731", "%s_bars_year2.db" % _pre, _cid))
 
 t0 = time.time()
 print("=" * 74, flush=True)
