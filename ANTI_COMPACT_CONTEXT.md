@@ -2049,3 +2049,44 @@ IWM, mismo patron pero mas debil:
   elimina — cambia todas las posteriores del día. Una operación "mala" filtrada puede estar
   sosteniendo la posición que luego se convierte en la buena. Mismo efecto que ya mordió con
   `vol15`. **Validar por operación NO basta; hay que validar el sistema completo.**
+
+## 23. Dos controles ANTES de interpretar el premium real de Massive (2026-08-14)
+Los planteó el agente de investigación y son imprescindibles para que el número final signifique
+algo. Ambos están medidos con datos reales.
+
+**A) ¿Se cuenta el spread DOS VECES?** (`analisis/calibra_ejecutado_vs_mid.py`)
+Los minute_aggs son precios EJECUTADOS (ocurren en bid o ask, no en mid). Si el cierre de la vela
+ya llevara el spread dentro y encima se le aplica el ±1% de `build_tmp`, se cobraría dos veces y
+el premium real parecería PEOR de lo que es — al revés del sesgo que buscamos.
+Medido comparando `close` del minute_agg contra `(bid+ask)/2` real de `premium_minute`:
+```
+dia            n     mediana   media    p10     p90
+2026-08-11    232      0.50     0.57   -1.00    2.50
+2026-08-12    727      0.50     0.52   -1.00    2.00
+2026-08-13   1544      0.50     0.51   -1.00    2.00
+TOTAL        2503      0.50     0.52
+(0 = pegado al BID, 0.5 = MID, 1 = pegado al ASK)
+```
+=> **VERIFICADO: mediana 0.500 los tres días. El ejecutado cae en el MID, NO hay doble conteo.
+   Aplicar el ±1% de build_tmp es CORRECTO.**
+- El 45,5% que cae fuera de [bid,ask] NO son ejecuciones fuera de mercado: se compara un trade de
+  un instante contra un snapshot de bid/ask de otro instante del mismo minuto (la app guarda el
+  bid/ask una vez por minuto). La dispersión es enorme pero SIMÉTRICA, y por eso la mediana es el
+  estadístico que vale. Con sesgo real hacia el ask la mediana estaría en 0,7-0,9, no en 0,50.
+
+**B) ¿Cuántas operaciones caen en un minuto SIN barra?** (`analisis/huecos_minute_aggs.py`)
+```
+cobertura mediana             376 de ~390 minutos (96%)
+minuto de ENTRADA sin barra   5.7%
+minuto de SALIDA  sin barra  14.3%
+media de los extremos        10.0%  -> ALTO
+```
+=> **Los huecos NO son aleatorios.** Las salidas que faltan se concentran en 15:59 (el aplanado
+   de cierre del sistema) y 12:00-12:24 (valle de mediodía). Las entradas fallan menos (5,7%)
+   porque ocurren en flips, que por definición son momentos con movimiento; las salidas ocurren
+   por reloj o por cierre, cuando el contrato puede llevar minutos sin negociarse.
+=> **CONSECUENCIA: descartar esas operaciones NO es neutral** — elimina desproporcionadamente las
+   que cierran al final del día, y el precio de salida es justo el que decide si gana o pierde.
+=> **DECISIÓN PENDIENTE antes de publicar cualquier cifra del gate**: fijar una regla explícita
+   (p.ej. barra previa dentro de N minutos, y descartar si no hay) y reportar cuántas se
+   descartan. Sin eso el resultado no es interpretable.
