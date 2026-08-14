@@ -2090,3 +2090,48 @@ media de los extremos        10.0%  -> ALTO
 => **DECISIÓN PENDIENTE antes de publicar cualquier cifra del gate**: fijar una regla explícita
    (p.ej. barra previa dentro de N minutos, y descartar si no hay) y reportar cuántas se
    descartan. Sin eso el resultado no es interpretable.
+
+## 24. GATE CON PREMIUM REAL: primeros números (30 sesiones del año de reserva)
+`analisis/gate_premium_real.py`. Construye `premium_minute` desde los agregados REALES de 1 min
+de Massive y se lo pasa a `simular()` como `db_velas`, igual que el backtest hace con la
+sintética: lo ÚNICO que cambia entre las dos corridas es la fuente de precios. bid/ask se
+reconstruye como close*0.99 / close*1.01 (el mismo 2% de `build_tmp`), que está VERIFICADO
+correcto porque el ejecutado cae en el MID (sección 23A).
+
+**Tres variantes para los huecos, decididas con el agente de investigación:**
+```
+var           SINTETICO       REAL     diferencia   ops
+A intr+3m     +2822.44$    +818.03$    -2004.41$     67
+B descarta    +2822.44$    +562.73$    -2259.71$     64
+C prev 5m     +2822.44$    +849.71$    -1972.73$     67
+```
+=> **Las tres COINCIDEN (-1973 a -2260). La regla de imputación NO decide el resultado.**
+   (A = intrínseco desde 15:55 + barra previa 3 min; B = descartar toda op con hueco;
+   C = barra previa 5 min sin intrínseco.)
+
+**SUBCONJUNTO LIMPIO — el dato más sólido, no depende de ninguna imputación:**
+```
+18 sesiones de 30, 41 operaciones
+SINTETICO +1464.07$   REAL +997.60$   diferencia -466.47$
+el real es el 68% del sintetico
+```
+
+**⚠️ LA DISCREPANCIA IMPORTANTE:** con la muestra completa el real es el **29%** del sintético,
+pero en el subconjunto limpio es el **68%**. Es decir, **el desplome se concentra en las
+sesiones que tienen huecos**. Interpretación (HIPÓTESIS): los huecos aparecen en contratos poco
+líquidos, y justo ahí el precio real es mucho peor que el sintético, que asume liquidez
+perfecta. La cifra honesta está entre ambas y depende de si esas operaciones eran realmente
+ejecutables.
+
+**¿Se concentran los huecos en un tipo de día? NO:**
+```
+12 de 30 sesiones (40%) tienen hueco
+de esas, 7 cerraron en POSITIVO y 5 en negativo
+P&L sintetico de las sesiones con hueco: +1358$ de +2822$
+```
+=> Se reparten entre días buenos y malos, así que descartarlas **no elimina un tipo de día**
+   completo. Responde la preocupación del agente de investigación.
+
+**NO VERIFICADO / pendiente:** son 30 sesiones de 260 del año de reserva (12%) y 67 operaciones.
+La descarga sigue. Hay que repetir esto con el año completo antes de dar una cifra final, y
+comparar contra los +11.786$ del año de reserva sintético.
