@@ -717,6 +717,23 @@ def _supertrend_dir(hi, lo, cl, per=ST3_PER, mult=ST3_MULT):
     return tend
 
 
+def _metodo_que_manda():
+    """Nombre del metodo que DECIDE el estado. Replica EXACTAMENTE la cadena if/elif de
+    _update_signal (ST3 -> MEDIA -> M1 -> CLASICO), y es la UNICA fuente de verdad para la
+    vista y los logs.
+    2026-08-14: existia la misma cuenta copiada en tres sitios y ninguno conocia USAR_ST3, asi
+    que con el Supertrend decidiendo el log de METODOS anunciaba "MANDA MEDIA", la linea de la
+    MEDIA se marcaba "<-MANDA" y el panel ponia "MANDA: M1". Tres respuestas, las tres falsas.
+    Si se anade otro disparador, se toca AQUI y en _update_signal, no en cada pantalla."""
+    if USAR_ST3:
+        return "ST3"
+    if USAR_MEDIA:
+        return "MEDIA"
+    if USAR_M1:
+        return "M1"
+    return "CLASICO"
+
+
 class SpyDirection:
     def __init__(self, demo=False):
         self.ib = IB()
@@ -4703,15 +4720,21 @@ class SpyDirection:
             # fallo suyo era invisible en el log y solo se podia ver consultando la BD.
             # Se registra el estado del minuto, la racha, y el EFECTIVO (el que de verdad
             # se aplica, con RETARDO_M1_MIN de retraso). MANDA marca cual decide.
-            ACT.info("MIN %s | METODOS  M1=%s(r%d)%s  M2=%s(r%d)  CLASICO=%s(r%d)  "
+            _manda = _metodo_que_manda()
+            # ST-3: el que DECIDE desde 2026-08-14. Antes ni aparecia en esta linea, asi que el
+            # log listaba cuatro metodos que solo registran y omitia justo al que manda.
+            _d3 = getattr(self, "_st3_last", None)
+            _st3_l = "UP" if _d3 == 1 else ("DOWN" if _d3 == -1 else "-")
+            ACT.info("MIN %s | METODOS  ST3=%s%s  M1=%s(r%d)%s  M2=%s(r%d)  CLASICO=%s(r%d)  "
                      "CONFIRMA=%s(sen %s r%d/%d) | efectivos(-%dmin) M1=%s M2=%s CL=%s CONF=%s"
                      " | MANDA %s",
-                     hora, _m1, self.m1_racha, "  <-MANDA" if (USAR_M1 and not USAR_MEDIA) else "",
+                     hora, _st3_l, "  <-MANDA" if _manda == "ST3" else "",
+                     _m1, self.m1_racha, "  <-MANDA" if _manda == "M1" else "",
                      _m2, self.m2_racha, _cl, self.cl_racha,
                      self.conf_estado or "-", _sen, self.sen_racha, CONFIRMACION_MIN,
                      RETARDO_M1_MIN, self.m1_efectivo or "-", self.m2_efectivo or "-",
                      self.cl_efectivo or "-", self.conf_efectivo or "-",
-                     "MEDIA" if USAR_MEDIA else ("M1" if USAR_M1 else "CLASICO"))
+                     _manda)
             # MEDIA CORTA: la lectura cruda del que DECIDE. Se imprime SIEMPRE (aunque no
             # decida) para poder comparar los cinco metodos sobre el mismo minuto, y porque
             # sin esta linea un dia entero sin operar seria indistinguible de un fallo mudo.
@@ -4726,7 +4749,7 @@ class SpyDirection:
                          ("%.2f" % _med_l) if _med_l else "SIN DATO",
                          ("%+.3f" % _dst_l) if _dst_l is not None else "-",
                          MEDIA_DIST, _sm or "-",
-                         "  <-MANDA" if USAR_MEDIA else " (solo registro)",
+                         "  <-MANDA" if _metodo_que_manda() == "MEDIA" else " (solo registro)",
                          self.state, self.target, self.pos,
                          (" | %.1f/%d min en posicion" % (
                              (time.monotonic() - self.trade_open.get("ts", time.monotonic())) / 60.0,
@@ -5231,15 +5254,22 @@ def run_gui(app):
             _col = {"UP": "#22c55e", "DOWN": "#ef4444", "NEUTRAL": "#9ca3af", None: "#9ca3af"}
             _m1 = app.m1_estado or "-"; _m2 = app.m2_estado or "-"; _cl = app.cl_estado or "-"
             _conf = app.conf_estado or "-"
-            _mand = "M1" if USAR_M1 else "CLASICO"
+            _mand = _metodo_que_manda()
+            # ST-3 EN EL PANEL: es el que decide desde 2026-08-14 y no se mostraba; se veian
+            # cuatro metodos que solo registran. El COLOR tambien sigue al que MANDA (antes iba
+            # siempre por M1, asi que la etiqueta se pintaba con la direccion de quien no decide).
+            _d3 = getattr(app, "_st3_last", None)
+            _st3 = "UP" if _d3 == 1 else ("DOWN" if _d3 == -1 else "-")
+            _col_est = _st3 if _mand == "ST3" else app.m1_estado
             metodos_lbl.config(
-                text=(f"M1 {_m1:>7} ({app.m1_up}-{app.m1_down})   "
+                text=(f"ST3 {_st3:>7}   "
+                      f"M1 {_m1:>7} ({app.m1_up}-{app.m1_down})   "
                       f"M2 {_m2:>7} ({app.m2_up - app.m2_down:+,.0f}$)   "
                       f"CLASICO {_cl:>7}   CONF {_conf:>7} (r{app.sen_racha}/{CONFIRMACION_MIN})"
                       f"  |  MANDA: {_mand}"
                       + (f"  [retardo {RETARDO_M1_MIN}m -> {app.m1_efectivo or '-'}]"
                          if USAR_M1 and RETARDO_M1_MIN else "")),
-                fg=_col.get(app.m1_estado, "#9ca3af"))
+                fg=_col.get(_col_est, "#9ca3af"))
             ta_lbl.config(text=(f"TA 1m: {v['dir']}  RSI {v['rsi']:.0f}  "
                                 f"MACDh {v['macd_hist']:+.2f}  EMA8/21 {v['ema8']:.2f}/{v['ema21']:.2f}"
                                 f"  score {v['score']:+d}"))
