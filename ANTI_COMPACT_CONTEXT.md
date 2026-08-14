@@ -1964,3 +1964,43 @@ la reserva OOS.
 profundidad_operada, inventario_premium, buckets_st3_del_dia, monitor_sesion, ver_sello_sesion,
 chequeo_pre_cierre, fix_base_cuenta_dia, descargar_etfs, sondeo_bds, auditoria_premium_synth,
 rehacer_bars_pm, backtest_st3_orb, orb_senal.
+
+## 20. EL GATE, PRIMERA MEDICIÓN: precios REALES vs SINTÉTICOS (2026-08-14)
+`analisis/real_vs_synth.py`. Corre `simular()` DOS veces por sesión con señales IDÉNTICAS,
+cambiando SOLO la fuente de precios: la BD sintética de `build_tmp` (lo que usa el backtest de
+2 años) contra `spy_history_YYYYMMDD.db` con el premium REAL (bid/ask de IBKR). Ambas con
+`mid=False`: compra al ASK, vende al BID.
+
+```
+fecha         ops    SINTETICO        REAL    diferencia
+2026-08-11      1      -97.81$     -96.72$       +1.09$
+2026-08-12      2       -7.86$     -80.44$      -72.58$
+2026-08-13      4      -49.25$     -35.88$      +13.37$
+TOTAL                 -154.92$    -213.04$      -58.12$
+  el real da un -37.5% respecto al sintetico  |  -8.30$ por operacion
+```
+
+**LO QUE DICE (VERIFICADO):**
+- El premium real es **PEOR** que el sintético: −58,12$ en 3 sesiones, **−8,30$ por operación**.
+- **La dirección CONFIRMA la predicción del agente de investigación** (sección 19): el sesgo
+  INFLA el backtest.
+- **Las 3 sesiones son las de CALIBRACIÓN del modelo**: es in-sample, el sintético juega en casa,
+  y aun así pierde contra el real.
+- En estos 3 días el sistema pierde con AMBAS fuentes (−154$ sintético, −213$ real).
+
+**LO QUE NO DICE (NO VERIFICADO, no extrapolar):**
+- 3 sesiones y **7 operaciones** no permiten estimar el efecto sobre 511 sesiones. Multiplicar
+  −8,30$ por las 1.408 operaciones del backtest (daría ≈ −11.700$ sobre +25.769$) es aritmética
+  ilustrativa, NO una medición. Con 7 operaciones el error de muestreo se come cualquier
+  conclusión.
+- Parte de la diferencia **es el spread**: la BD sintética tiene bid=ask por construcción, así que
+  el sintético NO paga spread. Eso no es un defecto del modelo de extrínseco, es una carencia
+  distinta — y en la operativa real el spread se paga siempre.
+- **2026-08-14 NO es evaluable** con esta herramienta: `spy_bars_year.db` llega al 08-13, así que
+  `B.sesiones()` no lo incluye. Para meterlo hay que alimentar las barras desde `bars_minute` de
+  la BD del día.
+
+**CÓMO CERRAR EL GATE DE VERDAD:** acumular sesiones de paper con premium real y volver a correr
+esto. Cada día nuevo suma operaciones fuera de muestra. Hasta tener decenas de operaciones OOS,
+el resultado del backtest sigue siendo **una hipótesis apoyada en un modelo que ya sabemos que se
+degrada en 48 horas** (sección 18).
