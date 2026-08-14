@@ -9,9 +9,17 @@ precios de las opciones:
 Si el sistema gana con precios sinteticos y pierde con reales, el backtest esta inflado y
 ninguna cifra de la spec se sostiene. Es el paso 3 (PRIORITARIO) del documento congelado.
 
-Ambas corridas usan mid=False, o sea COMPRA AL ASK y VENDE AL BID. En la BD sintetica
-bid=ask=mid por construccion, asi que el sintetico NO paga spread: parte de esa diferencia
-es justamente el spread real que el modelo no reproduce, y hay que decirlo.
+Ambas corridas usan mid=False, o sea COMPRA AL ASK y VENDE AL BID.
+
+⚠️ CORRECCION 2026-08-14 (error de una version anterior de este comentario): el sintetico SI
+   PAGA SPREAD. Hay DOS generadores de premium sintetico y es facil confundirlos:
+       synth_premium.genera_synth_db  -> bid = ask = mid   (SIN spread)
+       exp_trail_2min.build_tmp       -> bid = mid*0.99, ask = mid*1.01  (2% de spread)
+   `backtest_st3_orb.py` importa build_tmp (linea 45), y este script usa B.build_tmp, o sea
+   el que SI aplica el 2%. Ademas el spread real medido en los datos es 2,2-2,3%, asi que ese
+   2% esta bien calibrado.
+   CONSECUENCIA: la diferencia real-vs-sintetico NO se explica por spread ausente. Es sesgo
+   del MODELO DE EXTRINSECO casi puro, lo que la hace MAS grave, no menos.
 
 ⚠️ Los dias 08-11, 08-12 y 08-13 son los MISMOS con los que se calibra el modelo. Para esos
    la comparacion es IN-SAMPLE y favorece al sintetico. Se marca en la salida.
@@ -137,8 +145,9 @@ def main():
     print("  ⚠️ %d de esas %d sesiones son las de CALIBRACION del modelo: ahi el sintetico"
           % (n_cal, len(filas)))
     print("     juega en casa, y aun asi conviene mirar si pierde.")
-    print("  ⚠️ El sintetico tiene bid=ask (no paga spread). Parte de la diferencia ES el")
-    print("     spread real, que el modelo no reproduce.")
+    print("  ⚠️ El sintetico SI paga spread: build_tmp genera bid=mid*0.99 / ask=mid*1.01 (2%),")
+    print("     y el spread real medido es 2,2-2,3%. Asi que la diferencia NO es spread")
+    print("     ausente: es sesgo del MODELO DE EXTRINSECO casi puro. Mas grave, no menos.")
     return 0
 
 

@@ -2004,3 +2004,48 @@ TOTAL                 -154.92$    -213.04$      -58.12$
 esto. Cada día nuevo suma operaciones fuera de muestra. Hasta tener decenas de operaciones OOS,
 el resultado del backtest sigue siendo **una hipótesis apoyada en un modelo que ya sabemos que se
 degrada en 48 horas** (sección 18).
+
+## 21. CORRECCIÓN a la sección 20: el sintético SÍ paga spread (el sesgo es PEOR)
+En la sección 20 escribí que "parte de la diferencia es el spread, porque la BD sintética tiene
+bid=ask". **ERA FALSO.** Lo detectó el agente de investigación y lo VERIFIQUÉ contra el código:
+
+```
+synth_premium.genera_synth_db  ->  bid = ask = mid              (SIN spread)
+exp_trail_2min.build_tmp       ->  bid = mid*0.99, ask = mid*1.01  (2% de spread)
+backtest_st3_orb.py:45         ->  from exp_trail_2min import build_tmp, TMP
+```
+`real_vs_synth.py` usa `B.build_tmp`, o sea **el que SÍ aplica el 2%**. Y el spread real medido
+en los datos es 2,2-2,3%: está bien calibrado.
+
+**CONSECUENCIA — la conclusión empeora:** los −58,12$ (−8,30$/op, −37,5%) NO se explican por
+spread ausente. Son **sesgo del modelo de extrínseco casi puro**. La medición vale más de lo que
+dije, no menos.
+
+**ORIGEN DEL ERROR (para no repetirlo):** asumí que la BD sintética la generaba
+`genera_synth_db` porque es la función "natural" de `synth_premium.py`, sin comprobar cuál se
+importaba realmente. Hay DOS generadores de premium sintético con nombres distintos en módulos
+distintos y comportamiento distinto en el spread. Regla 1: verificar el import, no suponerlo.
+
+## 22. QQQ e IWM como confirmación: DESCARTADOS (resultados del agente de investigación)
+Con los datos que se le subieron hoy, corrió la prueba de amplitud. **Reportado por él, no
+re-verificado aquí todavía** — anotar como HIPÓTESIS hasta comprobarlo:
+```
+QQQ, P&L por operacion:        acompaña      NO acompaña
+  AÑO1                       586 ops +9,6$   126 ops +66,5$
+  AÑO2 OOS                   561 ops +3,3$   135 ops +73,7$
+IWM, mismo patron pero mas debil:
+  AÑO1                          +16,5$          +29,7$
+  AÑO2 OOS                       +2,5$          +60,7$
+```
+- **El signo es el CONTRARIO de la hipótesis**: cuando otro índice acompaña el giro, la operación
+  va PEOR. Mismo patrón en ambos años y ambas variantes. Es el mismo hallazgo que con las
+  temporalidades mayores: **confirmación = llegar tarde**. Si el QQQ ya se movió, el movimiento
+  está en marcha y el SPY reacciona, no anticipa.
+- **Pero NO pasa los 4 controles a nivel de sistema.** `no_fuerte` sube el total a +28.438$ y
+  mejora ambos años, pero solo 2 de 4 bloques (el bloque 2 cae de +12.590$ a +7.761$) y el azar
+  lo entierra: p = 0,59 y p = 0,37.
+- **La lección de método:** el contraste por operación era brutal (66,5$ vs 9,6$) y a nivel de
+  sistema no queda nada. Motivo: el sistema es **flip-exit**, así que quitar una operación no la
+  elimina — cambia todas las posteriores del día. Una operación "mala" filtrada puede estar
+  sosteniendo la posición que luego se convierte en la buena. Mismo efecto que ya mordió con
+  `vol15`. **Validar por operación NO basta; hay que validar el sistema completo.**
