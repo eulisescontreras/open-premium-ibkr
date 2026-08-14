@@ -131,6 +131,12 @@ def bajar(minutos):
     esquema(c)
     hechos = {r[0] for r in c.execute("select ticker from hechos")}
     pend = [p for p in plan if p["ticker"] not in hechos]
+    # ORDEN: lo MAS RECIENTE primero. El año 2 (2025-08-01 .. 2026-08-13) es la RESERVA OOS
+    # (+11.786$), que es el numero que de verdad vale, y ademas es el regimen mas parecido al
+    # de ahora. Si la descarga se corta a medias, mejor tener entero el año que importa que la
+    # mitad del año de entrenamiento. (Lo señalo el agente de investigacion; antes iba en orden
+    # cronologico ascendente y gastaba las primeras horas en el año menos util.)
+    pend.sort(key=lambda p: p["fecha"], reverse=True)
     print("=" * 74)
     print("contratos en el plan : %d" % len(plan))
     print("ya descargados       : %d" % len(hechos))

@@ -1,0 +1,10146 @@
+[
+ {
+  "fecha": "2024-08-15",
+  "strike": 547.0,
+  "right": "C",
+  "ticker": "O:SPY240815C00547000",
+  "entrada": "09:41",
+  "salida": "12:48"
+ },
+ {
+  "fecha": "2024-08-15",
+  "strike": 550.0,
+  "right": "C",
+  "ticker": "O:SPY240815C00550000",
+  "entrada": "13:48",
+  "salida": "15:54"
+ },
+ {
+  "fecha": "2024-08-15",
+  "strike": 554.0,
+  "right": "P",
+  "ticker": "O:SPY240815P00554000",
+  "entrada": "12:48",
+  "salida": "13:48"
+ },
+ {
+  "fecha": "2024-08-16",
+  "strike": 554.0,
+  "right": "P",
+  "ticker": "O:SPY240816P00554000",
+  "entrada": "09:40",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-08-19",
+  "strike": 553.0,
+  "right": "C",
+  "ticker": "O:SPY240819C00553000",
+  "entrada": "10:48",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-08-19",
+  "strike": 557.0,
+  "right": "P",
+  "ticker": "O:SPY240819P00557000",
+  "entrada": "10:18",
+  "salida": "10:48"
+ },
+ {
+  "fecha": "2024-08-19",
+  "strike": 558.0,
+  "right": "P",
+  "ticker": "O:SPY240819P00558000",
+  "entrada": "09:42",
+  "salida": "09:48"
+ },
+ {
+  "fecha": "2024-08-20",
+  "strike": 556.0,
+  "right": "C",
+  "ticker": "O:SPY240820C00556000",
+  "entrada": "14:06",
+  "salida": "15:30"
+ },
+ {
+  "fecha": "2024-08-20",
+  "strike": 557.0,
+  "right": "C",
+  "ticker": "O:SPY240820C00557000",
+  "entrada": "12:00",
+  "salida": "13:00"
+ },
+ {
+  "fecha": "2024-08-20",
+  "strike": 560.0,
+  "right": "P",
+  "ticker": "O:SPY240820P00560000",
+  "entrada": "13:00",
+  "salida": "14:06"
+ },
+ {
+  "fecha": "2024-08-20",
+  "strike": 562.0,
+  "right": "P",
+  "ticker": "O:SPY240820P00562000",
+  "entrada": "09:41",
+  "salida": "12:00"
+ },
+ {
+  "fecha": "2024-08-21",
+  "strike": 557.0,
+  "right": "C",
+  "ticker": "O:SPY240821C00557000",
+  "entrada": "12:36",
+  "salida": "15:06"
+ },
+ {
+  "fecha": "2024-08-21",
+  "strike": 559.0,
+  "right": "C",
+  "ticker": "O:SPY240821C00559000",
+  "entrada": "10:39",
+  "salida": "10:51"
+ },
+ {
+  "fecha": "2024-08-21",
+  "strike": 561.0,
+  "right": "P",
+  "ticker": "O:SPY240821P00561000",
+  "entrada": "10:15",
+  "salida": "10:39"
+ },
+ {
+  "fecha": "2024-08-21",
+  "strike": 562.0,
+  "right": "P",
+  "ticker": "O:SPY240821P00562000",
+  "entrada": "10:51",
+  "salida": "12:36"
+ },
+ {
+  "fecha": "2024-08-22",
+  "strike": 554.0,
+  "right": "C",
+  "ticker": "O:SPY240822C00554000",
+  "entrada": "14:30",
+  "salida": "15:24"
+ },
+ {
+  "fecha": "2024-08-22",
+  "strike": 557.0,
+  "right": "C",
+  "ticker": "O:SPY240822C00557000",
+  "entrada": "12:24",
+  "salida": "12:54"
+ },
+ {
+  "fecha": "2024-08-22",
+  "strike": 560.0,
+  "right": "P",
+  "ticker": "O:SPY240822P00560000",
+  "entrada": "12:54",
+  "salida": "14:30"
+ },
+ {
+  "fecha": "2024-08-22",
+  "strike": 564.0,
+  "right": "P",
+  "ticker": "O:SPY240822P00564000",
+  "entrada": "09:51",
+  "salida": "12:24"
+ },
+ {
+  "fecha": "2024-08-23",
+  "strike": 557.0,
+  "right": "C",
+  "ticker": "O:SPY240823C00557000",
+  "entrada": "13:24",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-08-23",
+  "strike": 559.0,
+  "right": "C",
+  "ticker": "O:SPY240823C00559000",
+  "entrada": "10:03",
+  "salida": "10:51"
+ },
+ {
+  "fecha": "2024-08-23",
+  "strike": 561.0,
+  "right": "P",
+  "ticker": "O:SPY240823P00561000",
+  "entrada": "10:51",
+  "salida": "13:24"
+ },
+ {
+  "fecha": "2024-08-26",
+  "strike": 558.0,
+  "right": "C",
+  "ticker": "O:SPY240826C00558000",
+  "entrada": "14:36",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-08-26",
+  "strike": 559.0,
+  "right": "C",
+  "ticker": "O:SPY240826C00559000",
+  "entrada": "12:30",
+  "salida": "13:39"
+ },
+ {
+  "fecha": "2024-08-26",
+  "strike": 563.0,
+  "right": "P",
+  "ticker": "O:SPY240826P00563000",
+  "entrada": "13:39",
+  "salida": "14:36"
+ },
+ {
+  "fecha": "2024-08-26",
+  "strike": 565.0,
+  "right": "P",
+  "ticker": "O:SPY240826P00565000",
+  "entrada": "10:03",
+  "salida": "12:30"
+ },
+ {
+  "fecha": "2024-08-27",
+  "strike": 556.0,
+  "right": "C",
+  "ticker": "O:SPY240827C00556000",
+  "entrada": "09:40",
+  "salida": "11:33"
+ },
+ {
+  "fecha": "2024-08-27",
+  "strike": 559.0,
+  "right": "C",
+  "ticker": "O:SPY240827C00559000",
+  "entrada": "13:21",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-08-27",
+  "strike": 563.0,
+  "right": "P",
+  "ticker": "O:SPY240827P00563000",
+  "entrada": "11:33",
+  "salida": "13:21"
+ },
+ {
+  "fecha": "2024-08-28",
+  "strike": 555.0,
+  "right": "C",
+  "ticker": "O:SPY240828C00555000",
+  "entrada": "14:57",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-08-29",
+  "strike": 557.0,
+  "right": "C",
+  "ticker": "O:SPY240829C00557000",
+  "entrada": "09:44",
+  "salida": "13:12"
+ },
+ {
+  "fecha": "2024-08-29",
+  "strike": 565.0,
+  "right": "P",
+  "ticker": "O:SPY240829P00565000",
+  "entrada": "13:12",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-08-30",
+  "strike": 556.0,
+  "right": "C",
+  "ticker": "O:SPY240830C00556000",
+  "entrada": "12:57",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-08-30",
+  "strike": 564.0,
+  "right": "P",
+  "ticker": "O:SPY240830P00564000",
+  "entrada": "09:41",
+  "salida": "12:57"
+ },
+ {
+  "fecha": "2024-09-03",
+  "strike": 557.0,
+  "right": "C",
+  "ticker": "O:SPY240903C00557000",
+  "entrada": "09:40",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-09-04",
+  "strike": 554.0,
+  "right": "P",
+  "ticker": "O:SPY240904P00554000",
+  "entrada": "09:41",
+  "salida": "15:45"
+ },
+ {
+  "fecha": "2024-09-05",
+  "strike": 547.0,
+  "right": "C",
+  "ticker": "O:SPY240905C00547000",
+  "entrada": "13:45",
+  "salida": "15:15"
+ },
+ {
+  "fecha": "2024-09-05",
+  "strike": 551.0,
+  "right": "P",
+  "ticker": "O:SPY240905P00551000",
+  "entrada": "15:15",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-09-05",
+  "strike": 554.0,
+  "right": "P",
+  "ticker": "O:SPY240905P00554000",
+  "entrada": "10:48",
+  "salida": "13:45"
+ },
+ {
+  "fecha": "2024-09-06",
+  "strike": 542.0,
+  "right": "C",
+  "ticker": "O:SPY240906C00542000",
+  "entrada": "11:03",
+  "salida": "12:21"
+ },
+ {
+  "fecha": "2024-09-06",
+  "strike": 547.0,
+  "right": "C",
+  "ticker": "O:SPY240906C00547000",
+  "entrada": "09:40",
+  "salida": "10:00"
+ },
+ {
+  "fecha": "2024-09-06",
+  "strike": 543.0,
+  "right": "P",
+  "ticker": "O:SPY240906P00543000",
+  "entrada": "12:21",
+  "salida": "13:24"
+ },
+ {
+  "fecha": "2024-09-06",
+  "strike": 550.0,
+  "right": "P",
+  "ticker": "O:SPY240906P00550000",
+  "entrada": "10:00",
+  "salida": "11:03"
+ },
+ {
+  "fecha": "2024-09-09",
+  "strike": 542.0,
+  "right": "C",
+  "ticker": "O:SPY240909C00542000",
+  "entrada": "11:33",
+  "salida": "13:36"
+ },
+ {
+  "fecha": "2024-09-09",
+  "strike": 543.0,
+  "right": "C",
+  "ticker": "O:SPY240909C00543000",
+  "entrada": "15:33",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-09-09",
+  "strike": 546.0,
+  "right": "P",
+  "ticker": "O:SPY240909P00546000",
+  "entrada": "10:33",
+  "salida": "11:33"
+ },
+ {
+  "fecha": "2024-09-09",
+  "strike": 549.0,
+  "right": "P",
+  "ticker": "O:SPY240909P00549000",
+  "entrada": "13:36",
+  "salida": "15:33"
+ },
+ {
+  "fecha": "2024-09-10",
+  "strike": 543.0,
+  "right": "C",
+  "ticker": "O:SPY240910C00543000",
+  "entrada": "13:06",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-09-10",
+  "strike": 550.0,
+  "right": "P",
+  "ticker": "O:SPY240910P00550000",
+  "entrada": "09:51",
+  "salida": "13:06"
+ },
+ {
+  "fecha": "2024-09-11",
+  "strike": 544.0,
+  "right": "C",
+  "ticker": "O:SPY240911C00544000",
+  "entrada": "09:40",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-09-12",
+  "strike": 553.0,
+  "right": "C",
+  "ticker": "O:SPY240912C00553000",
+  "entrada": "10:15",
+  "salida": "14:54"
+ },
+ {
+  "fecha": "2024-09-12",
+  "strike": 560.0,
+  "right": "P",
+  "ticker": "O:SPY240912P00560000",
+  "entrada": "14:54",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-09-13",
+  "strike": 558.0,
+  "right": "C",
+  "ticker": "O:SPY240913C00558000",
+  "entrada": "09:45",
+  "salida": "12:18"
+ },
+ {
+  "fecha": "2024-09-13",
+  "strike": 560.0,
+  "right": "C",
+  "ticker": "O:SPY240913C00560000",
+  "entrada": "13:03",
+  "salida": "14:24"
+ },
+ {
+  "fecha": "2024-09-13",
+  "strike": 563.0,
+  "right": "P",
+  "ticker": "O:SPY240913P00563000",
+  "entrada": "09:43",
+  "salida": "09:45"
+ },
+ {
+  "fecha": "2024-09-13",
+  "strike": 564.0,
+  "right": "P",
+  "ticker": "O:SPY240913P00564000",
+  "entrada": "12:18",
+  "salida": "13:03"
+ },
+ {
+  "fecha": "2024-09-16",
+  "strike": 559.0,
+  "right": "C",
+  "ticker": "O:SPY240916C00559000",
+  "entrada": "12:57",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-09-16",
+  "strike": 560.0,
+  "right": "C",
+  "ticker": "O:SPY240916C00560000",
+  "entrada": "09:54",
+  "salida": "10:33"
+ },
+ {
+  "fecha": "2024-09-16",
+  "strike": 563.0,
+  "right": "P",
+  "ticker": "O:SPY240916P00563000",
+  "entrada": "10:33",
+  "salida": "12:57"
+ },
+ {
+  "fecha": "2024-09-17",
+  "strike": 560.0,
+  "right": "C",
+  "ticker": "O:SPY240917C00560000",
+  "entrada": "14:12",
+  "salida": "14:54"
+ },
+ {
+  "fecha": "2024-09-17",
+  "strike": 563.0,
+  "right": "C",
+  "ticker": "O:SPY240917C00563000",
+  "entrada": "10:09",
+  "salida": "11:42"
+ },
+ {
+  "fecha": "2024-09-17",
+  "strike": 564.0,
+  "right": "P",
+  "ticker": "O:SPY240917P00564000",
+  "entrada": "14:54",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-09-17",
+  "strike": 567.0,
+  "right": "P",
+  "ticker": "O:SPY240917P00567000",
+  "entrada": "11:42",
+  "salida": "14:12"
+ },
+ {
+  "fecha": "2024-09-18",
+  "strike": 560.0,
+  "right": "C",
+  "ticker": "O:SPY240918C00560000",
+  "entrada": "12:18",
+  "salida": "13:54"
+ },
+ {
+  "fecha": "2024-09-18",
+  "strike": 563.0,
+  "right": "C",
+  "ticker": "O:SPY240918C00563000",
+  "entrada": "14:03",
+  "salida": "15:06"
+ },
+ {
+  "fecha": "2024-09-18",
+  "strike": 565.0,
+  "right": "P",
+  "ticker": "O:SPY240918P00565000",
+  "entrada": "15:06",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-09-18",
+  "strike": 566.0,
+  "right": "P",
+  "ticker": "O:SPY240918P00566000",
+  "entrada": "13:54",
+  "salida": "14:03"
+ },
+ {
+  "fecha": "2024-09-19",
+  "strike": 567.0,
+  "right": "C",
+  "ticker": "O:SPY240919C00567000",
+  "entrada": "09:43",
+  "salida": "10:57"
+ },
+ {
+  "fecha": "2024-09-19",
+  "strike": 569.0,
+  "right": "C",
+  "ticker": "O:SPY240919C00569000",
+  "entrada": "12:24",
+  "salida": "14:18"
+ },
+ {
+  "fecha": "2024-09-19",
+  "strike": 573.0,
+  "right": "P",
+  "ticker": "O:SPY240919P00573000",
+  "entrada": "10:57",
+  "salida": "12:24"
+ },
+ {
+  "fecha": "2024-09-19",
+  "strike": 574.0,
+  "right": "P",
+  "ticker": "O:SPY240919P00574000",
+  "entrada": "14:18",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-09-20",
+  "strike": 565.0,
+  "right": "C",
+  "ticker": "O:SPY240920C00565000",
+  "entrada": "14:57",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-09-20",
+  "strike": 570.0,
+  "right": "P",
+  "ticker": "O:SPY240920P00570000",
+  "entrada": "14:03",
+  "salida": "14:57"
+ },
+ {
+  "fecha": "2024-09-23",
+  "strike": 567.0,
+  "right": "C",
+  "ticker": "O:SPY240923C00567000",
+  "entrada": "14:57",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-09-23",
+  "strike": 571.0,
+  "right": "P",
+  "ticker": "O:SPY240923P00571000",
+  "entrada": "12:15",
+  "salida": "14:57"
+ },
+ {
+  "fecha": "2024-09-24",
+  "strike": 567.0,
+  "right": "C",
+  "ticker": "O:SPY240924C00567000",
+  "entrada": "09:40",
+  "salida": "14:33"
+ },
+ {
+  "fecha": "2024-09-24",
+  "strike": 573.0,
+  "right": "P",
+  "ticker": "O:SPY240924P00573000",
+  "entrada": "14:33",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-09-25",
+  "strike": 573.0,
+  "right": "P",
+  "ticker": "O:SPY240925P00573000",
+  "entrada": "11:15",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-09-26",
+  "strike": 569.0,
+  "right": "C",
+  "ticker": "O:SPY240926C00569000",
+  "entrada": "13:51",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-09-27",
+  "strike": 570.0,
+  "right": "C",
+  "ticker": "O:SPY240927C00570000",
+  "entrada": "14:00",
+  "salida": "14:27"
+ },
+ {
+  "fecha": "2024-09-27",
+  "strike": 572.0,
+  "right": "C",
+  "ticker": "O:SPY240927C00572000",
+  "entrada": "10:27",
+  "salida": "11:51"
+ },
+ {
+  "fecha": "2024-09-27",
+  "strike": 574.0,
+  "right": "P",
+  "ticker": "O:SPY240927P00574000",
+  "entrada": "14:27",
+  "salida": "14:57"
+ },
+ {
+  "fecha": "2024-09-27",
+  "strike": 575.0,
+  "right": "P",
+  "ticker": "O:SPY240927P00575000",
+  "entrada": "11:51",
+  "salida": "14:00"
+ },
+ {
+  "fecha": "2024-09-30",
+  "strike": 568.0,
+  "right": "C",
+  "ticker": "O:SPY240930C00568000",
+  "entrada": "14:39",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-09-30",
+  "strike": 574.0,
+  "right": "P",
+  "ticker": "O:SPY240930P00574000",
+  "entrada": "13:12",
+  "salida": "14:39"
+ },
+ {
+  "fecha": "2024-10-01",
+  "strike": 566.0,
+  "right": "C",
+  "ticker": "O:SPY241001C00566000",
+  "entrada": "13:57",
+  "salida": "15:36"
+ },
+ {
+  "fecha": "2024-10-01",
+  "strike": 570.0,
+  "right": "P",
+  "ticker": "O:SPY241001P00570000",
+  "entrada": "12:45",
+  "salida": "13:57"
+ },
+ {
+  "fecha": "2024-10-01",
+  "strike": 572.0,
+  "right": "P",
+  "ticker": "O:SPY241001P00572000",
+  "entrada": "15:36",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-10-02",
+  "strike": 563.0,
+  "right": "C",
+  "ticker": "O:SPY241002C00563000",
+  "entrada": "09:40",
+  "salida": "12:51"
+ },
+ {
+  "fecha": "2024-10-02",
+  "strike": 566.0,
+  "right": "C",
+  "ticker": "O:SPY241002C00566000",
+  "entrada": "13:57",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-10-02",
+  "strike": 571.0,
+  "right": "P",
+  "ticker": "O:SPY241002P00571000",
+  "entrada": "12:51",
+  "salida": "13:57"
+ },
+ {
+  "fecha": "2024-10-03",
+  "strike": 570.0,
+  "right": "P",
+  "ticker": "O:SPY241003P00570000",
+  "entrada": "10:24",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-10-04",
+  "strike": 568.0,
+  "right": "C",
+  "ticker": "O:SPY241004C00568000",
+  "entrada": "12:03",
+  "salida": "13:39"
+ },
+ {
+  "fecha": "2024-10-04",
+  "strike": 569.0,
+  "right": "C",
+  "ticker": "O:SPY241004C00569000",
+  "entrada": "15:00",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-10-04",
+  "strike": 573.0,
+  "right": "P",
+  "ticker": "O:SPY241004P00573000",
+  "entrada": "13:39",
+  "salida": "15:00"
+ },
+ {
+  "fecha": "2024-10-07",
+  "strike": 573.0,
+  "right": "P",
+  "ticker": "O:SPY241007P00573000",
+  "entrada": "09:54",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-10-08",
+  "strike": 569.0,
+  "right": "C",
+  "ticker": "O:SPY241008C00569000",
+  "entrada": "14:03",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-10-08",
+  "strike": 574.0,
+  "right": "P",
+  "ticker": "O:SPY241008P00574000",
+  "entrada": "13:06",
+  "salida": "14:03"
+ },
+ {
+  "fecha": "2024-10-09",
+  "strike": 572.0,
+  "right": "C",
+  "ticker": "O:SPY241009C00572000",
+  "entrada": "10:12",
+  "salida": "12:33"
+ },
+ {
+  "fecha": "2024-10-09",
+  "strike": 574.0,
+  "right": "C",
+  "ticker": "O:SPY241009C00574000",
+  "entrada": "13:24",
+  "salida": "13:54"
+ },
+ {
+  "fecha": "2024-10-09",
+  "strike": 576.0,
+  "right": "P",
+  "ticker": "O:SPY241009P00576000",
+  "entrada": "09:40",
+  "salida": "10:12"
+ },
+ {
+  "fecha": "2024-10-09",
+  "strike": 579.0,
+  "right": "P",
+  "ticker": "O:SPY241009P00579000",
+  "entrada": "12:33",
+  "salida": "13:24"
+ },
+ {
+  "fecha": "2024-10-10",
+  "strike": 574.0,
+  "right": "C",
+  "ticker": "O:SPY241010C00574000",
+  "entrada": "09:57",
+  "salida": "12:45"
+ },
+ {
+  "fecha": "2024-10-10",
+  "strike": 579.0,
+  "right": "P",
+  "ticker": "O:SPY241010P00579000",
+  "entrada": "12:45",
+  "salida": "15:51"
+ },
+ {
+  "fecha": "2024-10-11",
+  "strike": 577.0,
+  "right": "C",
+  "ticker": "O:SPY241011C00577000",
+  "entrada": "15:09",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-10-11",
+  "strike": 581.0,
+  "right": "P",
+  "ticker": "O:SPY241011P00581000",
+  "entrada": "12:21",
+  "salida": "13:45"
+ },
+ {
+  "fecha": "2024-10-11",
+  "strike": 582.0,
+  "right": "P",
+  "ticker": "O:SPY241011P00582000",
+  "entrada": "14:39",
+  "salida": "15:09"
+ },
+ {
+  "fecha": "2024-10-14",
+  "strike": 581.0,
+  "right": "C",
+  "ticker": "O:SPY241014C00581000",
+  "entrada": "12:24",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-10-14",
+  "strike": 584.0,
+  "right": "P",
+  "ticker": "O:SPY241014P00584000",
+  "entrada": "09:43",
+  "salida": "12:24"
+ },
+ {
+  "fecha": "2024-10-15",
+  "strike": 587.0,
+  "right": "P",
+  "ticker": "O:SPY241015P00587000",
+  "entrada": "09:45",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-10-16",
+  "strike": 577.0,
+  "right": "C",
+  "ticker": "O:SPY241016C00577000",
+  "entrada": "09:44",
+  "salida": "10:42"
+ },
+ {
+  "fecha": "2024-10-16",
+  "strike": 578.0,
+  "right": "C",
+  "ticker": "O:SPY241016C00578000",
+  "entrada": "12:33",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-10-16",
+  "strike": 582.0,
+  "right": "P",
+  "ticker": "O:SPY241016P00582000",
+  "entrada": "10:42",
+  "salida": "12:33"
+ },
+ {
+  "fecha": "2024-10-17",
+  "strike": 581.0,
+  "right": "C",
+  "ticker": "O:SPY241017C00581000",
+  "entrada": "11:36",
+  "salida": "14:06"
+ },
+ {
+  "fecha": "2024-10-17",
+  "strike": 586.0,
+  "right": "P",
+  "ticker": "O:SPY241017P00586000",
+  "entrada": "14:06",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-10-18",
+  "strike": 582.0,
+  "right": "C",
+  "ticker": "O:SPY241018C00582000",
+  "entrada": "14:18",
+  "salida": "15:06"
+ },
+ {
+  "fecha": "2024-10-18",
+  "strike": 587.0,
+  "right": "P",
+  "ticker": "O:SPY241018P00587000",
+  "entrada": "15:06",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-10-21",
+  "strike": 580.0,
+  "right": "C",
+  "ticker": "O:SPY241021C00580000",
+  "entrada": "15:15",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-10-21",
+  "strike": 585.0,
+  "right": "P",
+  "ticker": "O:SPY241021P00585000",
+  "entrada": "14:30",
+  "salida": "15:15"
+ },
+ {
+  "fecha": "2024-10-21",
+  "strike": 586.0,
+  "right": "P",
+  "ticker": "O:SPY241021P00586000",
+  "entrada": "10:33",
+  "salida": "11:51"
+ },
+ {
+  "fecha": "2024-10-22",
+  "strike": 579.0,
+  "right": "C",
+  "ticker": "O:SPY241022C00579000",
+  "entrada": "10:00",
+  "salida": "14:15"
+ },
+ {
+  "fecha": "2024-10-22",
+  "strike": 581.0,
+  "right": "C",
+  "ticker": "O:SPY241022C00581000",
+  "entrada": "15:30",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-10-22",
+  "strike": 586.0,
+  "right": "P",
+  "ticker": "O:SPY241022P00586000",
+  "entrada": "14:15",
+  "salida": "15:30"
+ },
+ {
+  "fecha": "2024-10-23",
+  "strike": 574.0,
+  "right": "C",
+  "ticker": "O:SPY241023C00574000",
+  "entrada": "14:33",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-10-23",
+  "strike": 579.0,
+  "right": "C",
+  "ticker": "O:SPY241023C00579000",
+  "entrada": "10:48",
+  "salida": "11:03"
+ },
+ {
+  "fecha": "2024-10-23",
+  "strike": 583.0,
+  "right": "P",
+  "ticker": "O:SPY241023P00583000",
+  "entrada": "11:03",
+  "salida": "14:33"
+ },
+ {
+  "fecha": "2024-10-24",
+  "strike": 576.0,
+  "right": "C",
+  "ticker": "O:SPY241024C00576000",
+  "entrada": "12:33",
+  "salida": "15:03"
+ },
+ {
+  "fecha": "2024-10-24",
+  "strike": 577.0,
+  "right": "C",
+  "ticker": "O:SPY241024C00577000",
+  "entrada": "15:21",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-10-24",
+  "strike": 581.0,
+  "right": "P",
+  "ticker": "O:SPY241024P00581000",
+  "entrada": "15:03",
+  "salida": "15:21"
+ },
+ {
+  "fecha": "2024-10-25",
+  "strike": 577.0,
+  "right": "C",
+  "ticker": "O:SPY241025C00577000",
+  "entrada": "14:51",
+  "salida": "15:57"
+ },
+ {
+  "fecha": "2024-10-25",
+  "strike": 585.0,
+  "right": "P",
+  "ticker": "O:SPY241025P00585000",
+  "entrada": "11:27",
+  "salida": "14:51"
+ },
+ {
+  "fecha": "2024-10-28",
+  "strike": 579.0,
+  "right": "C",
+  "ticker": "O:SPY241028C00579000",
+  "entrada": "09:44",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-10-29",
+  "strike": 578.0,
+  "right": "C",
+  "ticker": "O:SPY241029C00578000",
+  "entrada": "09:57",
+  "salida": "15:51"
+ },
+ {
+  "fecha": "2024-10-30",
+  "strike": 578.0,
+  "right": "C",
+  "ticker": "O:SPY241030C00578000",
+  "entrada": "09:40",
+  "salida": "12:54"
+ },
+ {
+  "fecha": "2024-10-30",
+  "strike": 585.0,
+  "right": "P",
+  "ticker": "O:SPY241030P00585000",
+  "entrada": "12:54",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-10-31",
+  "strike": 569.0,
+  "right": "C",
+  "ticker": "O:SPY241031C00569000",
+  "entrada": "15:09",
+  "salida": "15:57"
+ },
+ {
+  "fecha": "2024-10-31",
+  "strike": 574.0,
+  "right": "P",
+  "ticker": "O:SPY241031P00574000",
+  "entrada": "13:33",
+  "salida": "15:09"
+ },
+ {
+  "fecha": "2024-11-01",
+  "strike": 571.0,
+  "right": "C",
+  "ticker": "O:SPY241101C00571000",
+  "entrada": "13:24",
+  "salida": "13:36"
+ },
+ {
+  "fecha": "2024-11-01",
+  "strike": 573.0,
+  "right": "C",
+  "ticker": "O:SPY241101C00573000",
+  "entrada": "11:30",
+  "salida": "11:54"
+ },
+ {
+  "fecha": "2024-11-01",
+  "strike": 575.0,
+  "right": "P",
+  "ticker": "O:SPY241101P00575000",
+  "entrada": "09:40",
+  "salida": "11:30"
+ },
+ {
+  "fecha": "2024-11-01",
+  "strike": 576.0,
+  "right": "P",
+  "ticker": "O:SPY241101P00576000",
+  "entrada": "11:54",
+  "salida": "13:24"
+ },
+ {
+  "fecha": "2024-11-04",
+  "strike": 567.0,
+  "right": "C",
+  "ticker": "O:SPY241104C00567000",
+  "entrada": "13:24",
+  "salida": "14:09"
+ },
+ {
+  "fecha": "2024-11-04",
+  "strike": 569.0,
+  "right": "C",
+  "ticker": "O:SPY241104C00569000",
+  "entrada": "10:48",
+  "salida": "12:33"
+ },
+ {
+  "fecha": "2024-11-04",
+  "strike": 573.0,
+  "right": "P",
+  "ticker": "O:SPY241104P00573000",
+  "entrada": "12:33",
+  "salida": "13:24"
+ },
+ {
+  "fecha": "2024-11-04",
+  "strike": 574.0,
+  "right": "P",
+  "ticker": "O:SPY241104P00574000",
+  "entrada": "10:03",
+  "salida": "10:48"
+ },
+ {
+  "fecha": "2024-11-05",
+  "strike": 570.0,
+  "right": "C",
+  "ticker": "O:SPY241105C00570000",
+  "entrada": "10:33",
+  "salida": "14:30"
+ },
+ {
+  "fecha": "2024-11-05",
+  "strike": 573.0,
+  "right": "P",
+  "ticker": "O:SPY241105P00573000",
+  "entrada": "10:00",
+  "salida": "10:33"
+ },
+ {
+  "fecha": "2024-11-05",
+  "strike": 578.0,
+  "right": "P",
+  "ticker": "O:SPY241105P00578000",
+  "entrada": "14:30",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-11-06",
+  "strike": 586.0,
+  "right": "C",
+  "ticker": "O:SPY241106C00586000",
+  "entrada": "12:42",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-11-06",
+  "strike": 589.0,
+  "right": "P",
+  "ticker": "O:SPY241106P00589000",
+  "entrada": "11:54",
+  "salida": "12:42"
+ },
+ {
+  "fecha": "2024-11-07",
+  "strike": 591.0,
+  "right": "C",
+  "ticker": "O:SPY241107C00591000",
+  "entrada": "10:30",
+  "salida": "14:12"
+ },
+ {
+  "fecha": "2024-11-07",
+  "strike": 593.0,
+  "right": "C",
+  "ticker": "O:SPY241107C00593000",
+  "entrada": "15:33",
+  "salida": "15:42"
+ },
+ {
+  "fecha": "2024-11-07",
+  "strike": 598.0,
+  "right": "P",
+  "ticker": "O:SPY241107P00598000",
+  "entrada": "14:12",
+  "salida": "15:33"
+ },
+ {
+  "fecha": "2024-11-08",
+  "strike": 594.0,
+  "right": "C",
+  "ticker": "O:SPY241108C00594000",
+  "entrada": "10:27",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-11-11",
+  "strike": 596.0,
+  "right": "C",
+  "ticker": "O:SPY241111C00596000",
+  "entrada": "14:48",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-11-11",
+  "strike": 597.0,
+  "right": "C",
+  "ticker": "O:SPY241111C00597000",
+  "entrada": "11:57",
+  "salida": "13:21"
+ },
+ {
+  "fecha": "2024-11-11",
+  "strike": 602.0,
+  "right": "P",
+  "ticker": "O:SPY241111P00602000",
+  "entrada": "13:21",
+  "salida": "14:48"
+ },
+ {
+  "fecha": "2024-11-12",
+  "strike": 594.0,
+  "right": "C",
+  "ticker": "O:SPY241112C00594000",
+  "entrada": "14:33",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-11-12",
+  "strike": 600.0,
+  "right": "P",
+  "ticker": "O:SPY241112P00600000",
+  "entrada": "11:06",
+  "salida": "14:33"
+ },
+ {
+  "fecha": "2024-11-13",
+  "strike": 595.0,
+  "right": "C",
+  "ticker": "O:SPY241113C00595000",
+  "entrada": "12:27",
+  "salida": "15:21"
+ },
+ {
+  "fecha": "2024-11-13",
+  "strike": 601.0,
+  "right": "P",
+  "ticker": "O:SPY241113P00601000",
+  "entrada": "15:21",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-11-14",
+  "strike": 592.0,
+  "right": "C",
+  "ticker": "O:SPY241114C00592000",
+  "entrada": "15:06",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-11-18",
+  "strike": 584.0,
+  "right": "C",
+  "ticker": "O:SPY241118C00584000",
+  "entrada": "11:06",
+  "salida": "12:51"
+ },
+ {
+  "fecha": "2024-11-18",
+  "strike": 588.0,
+  "right": "P",
+  "ticker": "O:SPY241118P00588000",
+  "entrada": "10:33",
+  "salida": "11:06"
+ },
+ {
+  "fecha": "2024-11-18",
+  "strike": 591.0,
+  "right": "P",
+  "ticker": "O:SPY241118P00591000",
+  "entrada": "12:51",
+  "salida": "15:00"
+ },
+ {
+  "fecha": "2024-11-19",
+  "strike": 583.0,
+  "right": "C",
+  "ticker": "O:SPY241119C00583000",
+  "entrada": "09:40",
+  "salida": "15:33"
+ },
+ {
+  "fecha": "2024-11-19",
+  "strike": 592.0,
+  "right": "P",
+  "ticker": "O:SPY241119P00592000",
+  "entrada": "15:33",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-11-20",
+  "strike": 585.0,
+  "right": "C",
+  "ticker": "O:SPY241120C00585000",
+  "entrada": "12:45",
+  "salida": "13:21"
+ },
+ {
+  "fecha": "2024-11-20",
+  "strike": 588.0,
+  "right": "P",
+  "ticker": "O:SPY241120P00588000",
+  "entrada": "12:30",
+  "salida": "12:45"
+ },
+ {
+  "fecha": "2024-11-20",
+  "strike": 589.0,
+  "right": "P",
+  "ticker": "O:SPY241120P00589000",
+  "entrada": "13:21",
+  "salida": "13:42"
+ },
+ {
+  "fecha": "2024-11-21",
+  "strike": 589.0,
+  "right": "C",
+  "ticker": "O:SPY241121C00589000",
+  "entrada": "11:57",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-11-21",
+  "strike": 595.0,
+  "right": "P",
+  "ticker": "O:SPY241121P00595000",
+  "entrada": "10:33",
+  "salida": "11:57"
+ },
+ {
+  "fecha": "2024-11-22",
+  "strike": 593.0,
+  "right": "C",
+  "ticker": "O:SPY241122C00593000",
+  "entrada": "14:12",
+  "salida": "15:12"
+ },
+ {
+  "fecha": "2024-11-22",
+  "strike": 597.0,
+  "right": "P",
+  "ticker": "O:SPY241122P00597000",
+  "entrada": "11:30",
+  "salida": "14:12"
+ },
+ {
+  "fecha": "2024-11-22",
+  "strike": 598.0,
+  "right": "P",
+  "ticker": "O:SPY241122P00598000",
+  "entrada": "15:12",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-11-25",
+  "strike": 594.0,
+  "right": "C",
+  "ticker": "O:SPY241125C00594000",
+  "entrada": "14:03",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-11-25",
+  "strike": 601.0,
+  "right": "P",
+  "ticker": "O:SPY241125P00601000",
+  "entrada": "10:54",
+  "salida": "14:03"
+ },
+ {
+  "fecha": "2024-11-26",
+  "strike": 597.0,
+  "right": "C",
+  "ticker": "O:SPY241126C00597000",
+  "entrada": "10:51",
+  "salida": "11:18"
+ },
+ {
+  "fecha": "2024-11-26",
+  "strike": 601.0,
+  "right": "P",
+  "ticker": "O:SPY241126P00601000",
+  "entrada": "11:18",
+  "salida": "13:51"
+ },
+ {
+  "fecha": "2024-11-27",
+  "strike": 596.0,
+  "right": "C",
+  "ticker": "O:SPY241127C00596000",
+  "entrada": "14:36",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-11-27",
+  "strike": 603.0,
+  "right": "P",
+  "ticker": "O:SPY241127P00603000",
+  "entrada": "10:33",
+  "salida": "14:36"
+ },
+ {
+  "fecha": "2024-11-29",
+  "strike": 598.0,
+  "right": "C",
+  "ticker": "O:SPY241129C00598000",
+  "entrada": "11:00",
+  "salida": "13:57"
+ },
+ {
+  "fecha": "2024-11-29",
+  "strike": 602.0,
+  "right": "P",
+  "ticker": "O:SPY241129P00602000",
+  "entrada": "10:30",
+  "salida": "11:00"
+ },
+ {
+  "fecha": "2024-11-29",
+  "strike": 605.0,
+  "right": "P",
+  "ticker": "O:SPY241129P00605000",
+  "entrada": "13:57",
+  "salida": "15:57"
+ },
+ {
+  "fecha": "2024-12-02",
+  "strike": 601.0,
+  "right": "C",
+  "ticker": "O:SPY241202C00601000",
+  "entrada": "12:42",
+  "salida": "15:15"
+ },
+ {
+  "fecha": "2024-12-02",
+  "strike": 605.0,
+  "right": "P",
+  "ticker": "O:SPY241202P00605000",
+  "entrada": "12:03",
+  "salida": "12:42"
+ },
+ {
+  "fecha": "2024-12-02",
+  "strike": 606.0,
+  "right": "P",
+  "ticker": "O:SPY241202P00606000",
+  "entrada": "15:15",
+  "salida": "15:57"
+ },
+ {
+  "fecha": "2024-12-03",
+  "strike": 601.0,
+  "right": "C",
+  "ticker": "O:SPY241203C00601000",
+  "entrada": "13:48",
+  "salida": "15:03"
+ },
+ {
+  "fecha": "2024-12-03",
+  "strike": 602.0,
+  "right": "C",
+  "ticker": "O:SPY241203C00602000",
+  "entrada": "09:51",
+  "salida": "09:54"
+ },
+ {
+  "fecha": "2024-12-03",
+  "strike": 606.0,
+  "right": "P",
+  "ticker": "O:SPY241203P00606000",
+  "entrada": "15:03",
+  "salida": "15:42"
+ },
+ {
+  "fecha": "2024-12-04",
+  "strike": 604.0,
+  "right": "C",
+  "ticker": "O:SPY241204C00604000",
+  "entrada": "14:54",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-12-04",
+  "strike": 608.0,
+  "right": "P",
+  "ticker": "O:SPY241204P00608000",
+  "entrada": "11:15",
+  "salida": "11:36"
+ },
+ {
+  "fecha": "2024-12-04",
+  "strike": 609.0,
+  "right": "P",
+  "ticker": "O:SPY241204P00609000",
+  "entrada": "13:42",
+  "salida": "14:54"
+ },
+ {
+  "fecha": "2024-12-05",
+  "strike": 605.0,
+  "right": "C",
+  "ticker": "O:SPY241205C00605000",
+  "entrada": "12:30",
+  "salida": "14:21"
+ },
+ {
+  "fecha": "2024-12-05",
+  "strike": 610.0,
+  "right": "P",
+  "ticker": "O:SPY241205P00610000",
+  "entrada": "11:24",
+  "salida": "12:30"
+ },
+ {
+  "fecha": "2024-12-06",
+  "strike": 605.0,
+  "right": "C",
+  "ticker": "O:SPY241206C00605000",
+  "entrada": "14:09",
+  "salida": "14:36"
+ },
+ {
+  "fecha": "2024-12-06",
+  "strike": 610.0,
+  "right": "P",
+  "ticker": "O:SPY241206P00610000",
+  "entrada": "14:36",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-12-06",
+  "strike": 611.0,
+  "right": "P",
+  "ticker": "O:SPY241206P00611000",
+  "entrada": "12:15",
+  "salida": "14:09"
+ },
+ {
+  "fecha": "2024-12-09",
+  "strike": 603.0,
+  "right": "C",
+  "ticker": "O:SPY241209C00603000",
+  "entrada": "12:54",
+  "salida": "15:03"
+ },
+ {
+  "fecha": "2024-12-09",
+  "strike": 605.0,
+  "right": "C",
+  "ticker": "O:SPY241209C00605000",
+  "entrada": "10:21",
+  "salida": "10:36"
+ },
+ {
+  "fecha": "2024-12-09",
+  "strike": 608.0,
+  "right": "P",
+  "ticker": "O:SPY241209P00608000",
+  "entrada": "15:03",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-12-09",
+  "strike": 610.0,
+  "right": "P",
+  "ticker": "O:SPY241209P00610000",
+  "entrada": "10:36",
+  "salida": "12:54"
+ },
+ {
+  "fecha": "2024-12-10",
+  "strike": 603.0,
+  "right": "C",
+  "ticker": "O:SPY241210C00603000",
+  "entrada": "10:48",
+  "salida": "12:09"
+ },
+ {
+  "fecha": "2024-12-10",
+  "strike": 607.0,
+  "right": "P",
+  "ticker": "O:SPY241210P00607000",
+  "entrada": "12:09",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-12-11",
+  "strike": 610.0,
+  "right": "P",
+  "ticker": "O:SPY241211P00610000",
+  "entrada": "14:57",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-12-12",
+  "strike": 604.0,
+  "right": "C",
+  "ticker": "O:SPY241212C00604000",
+  "entrada": "14:21",
+  "salida": "14:36"
+ },
+ {
+  "fecha": "2024-12-12",
+  "strike": 609.0,
+  "right": "P",
+  "ticker": "O:SPY241212P00609000",
+  "entrada": "14:36",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-12-13",
+  "strike": 601.0,
+  "right": "C",
+  "ticker": "O:SPY241213C00601000",
+  "entrada": "14:30",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-12-13",
+  "strike": 604.0,
+  "right": "C",
+  "ticker": "O:SPY241213C00604000",
+  "entrada": "10:42",
+  "salida": "11:03"
+ },
+ {
+  "fecha": "2024-12-13",
+  "strike": 608.0,
+  "right": "P",
+  "ticker": "O:SPY241213P00608000",
+  "entrada": "11:03",
+  "salida": "14:30"
+ },
+ {
+  "fecha": "2024-12-13",
+  "strike": 609.0,
+  "right": "P",
+  "ticker": "O:SPY241213P00609000",
+  "entrada": "10:03",
+  "salida": "10:42"
+ },
+ {
+  "fecha": "2024-12-16",
+  "strike": 604.0,
+  "right": "C",
+  "ticker": "O:SPY241216C00604000",
+  "entrada": "11:00",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-12-16",
+  "strike": 608.0,
+  "right": "P",
+  "ticker": "O:SPY241216P00608000",
+  "entrada": "10:15",
+  "salida": "11:00"
+ },
+ {
+  "fecha": "2024-12-17",
+  "strike": 602.0,
+  "right": "C",
+  "ticker": "O:SPY241217C00602000",
+  "entrada": "12:09",
+  "salida": "14:21"
+ },
+ {
+  "fecha": "2024-12-17",
+  "strike": 606.0,
+  "right": "P",
+  "ticker": "O:SPY241217P00606000",
+  "entrada": "11:12",
+  "salida": "12:09"
+ },
+ {
+  "fecha": "2024-12-17",
+  "strike": 607.0,
+  "right": "P",
+  "ticker": "O:SPY241217P00607000",
+  "entrada": "14:21",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-12-18",
+  "strike": 602.0,
+  "right": "C",
+  "ticker": "O:SPY241218C00602000",
+  "entrada": "11:03",
+  "salida": "12:15"
+ },
+ {
+  "fecha": "2024-12-18",
+  "strike": 603.0,
+  "right": "C",
+  "ticker": "O:SPY241218C00603000",
+  "entrada": "12:48",
+  "salida": "13:45"
+ },
+ {
+  "fecha": "2024-12-18",
+  "strike": 608.0,
+  "right": "P",
+  "ticker": "O:SPY241218P00608000",
+  "entrada": "13:45",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-12-19",
+  "strike": 588.0,
+  "right": "C",
+  "ticker": "O:SPY241219C00588000",
+  "entrada": "12:27",
+  "salida": "13:27"
+ },
+ {
+  "fecha": "2024-12-19",
+  "strike": 590.0,
+  "right": "C",
+  "ticker": "O:SPY241219C00590000",
+  "entrada": "10:33",
+  "salida": "10:57"
+ },
+ {
+  "fecha": "2024-12-19",
+  "strike": 593.0,
+  "right": "P",
+  "ticker": "O:SPY241219P00593000",
+  "entrada": "10:57",
+  "salida": "12:27"
+ },
+ {
+  "fecha": "2024-12-20",
+  "strike": 591.0,
+  "right": "C",
+  "ticker": "O:SPY241220C00591000",
+  "entrada": "15:36",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-12-20",
+  "strike": 596.0,
+  "right": "P",
+  "ticker": "O:SPY241220P00596000",
+  "entrada": "14:15",
+  "salida": "15:36"
+ },
+ {
+  "fecha": "2024-12-23",
+  "strike": 588.0,
+  "right": "C",
+  "ticker": "O:SPY241223C00588000",
+  "entrada": "09:40",
+  "salida": "10:51"
+ },
+ {
+  "fecha": "2024-12-23",
+  "strike": 589.0,
+  "right": "C",
+  "ticker": "O:SPY241223C00589000",
+  "entrada": "12:42",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-12-23",
+  "strike": 592.0,
+  "right": "P",
+  "ticker": "O:SPY241223P00592000",
+  "entrada": "10:51",
+  "salida": "12:42"
+ },
+ {
+  "fecha": "2024-12-24",
+  "strike": 594.0,
+  "right": "C",
+  "ticker": "O:SPY241224C00594000",
+  "entrada": "10:42",
+  "salida": "13:00"
+ },
+ {
+  "fecha": "2024-12-24",
+  "strike": 597.0,
+  "right": "C",
+  "ticker": "O:SPY241224C00597000",
+  "entrada": "13:24",
+  "salida": "13:36"
+ },
+ {
+  "fecha": "2024-12-24",
+  "strike": 598.0,
+  "right": "P",
+  "ticker": "O:SPY241224P00598000",
+  "entrada": "10:27",
+  "salida": "10:42"
+ },
+ {
+  "fecha": "2024-12-24",
+  "strike": 602.0,
+  "right": "P",
+  "ticker": "O:SPY241224P00602000",
+  "entrada": "13:00",
+  "salida": "13:24"
+ },
+ {
+  "fecha": "2024-12-26",
+  "strike": 597.0,
+  "right": "C",
+  "ticker": "O:SPY241226C00597000",
+  "entrada": "10:33",
+  "salida": "10:54"
+ },
+ {
+  "fecha": "2024-12-26",
+  "strike": 598.0,
+  "right": "C",
+  "ticker": "O:SPY241226C00598000",
+  "entrada": "12:00",
+  "salida": "13:30"
+ },
+ {
+  "fecha": "2024-12-26",
+  "strike": 601.0,
+  "right": "P",
+  "ticker": "O:SPY241226P00601000",
+  "entrada": "10:54",
+  "salida": "12:00"
+ },
+ {
+  "fecha": "2024-12-26",
+  "strike": 604.0,
+  "right": "P",
+  "ticker": "O:SPY241226P00604000",
+  "entrada": "13:30",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-12-27",
+  "strike": 590.0,
+  "right": "C",
+  "ticker": "O:SPY241227C00590000",
+  "entrada": "14:39",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-12-30",
+  "strike": 584.0,
+  "right": "C",
+  "ticker": "O:SPY241230C00584000",
+  "entrada": "12:00",
+  "salida": "15:21"
+ },
+ {
+  "fecha": "2024-12-30",
+  "strike": 592.0,
+  "right": "P",
+  "ticker": "O:SPY241230P00592000",
+  "entrada": "15:21",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-12-31",
+  "strike": 584.0,
+  "right": "C",
+  "ticker": "O:SPY241231C00584000",
+  "entrada": "14:00",
+  "salida": "14:24"
+ },
+ {
+  "fecha": "2024-12-31",
+  "strike": 588.0,
+  "right": "P",
+  "ticker": "O:SPY241231P00588000",
+  "entrada": "14:24",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2024-12-31",
+  "strike": 593.0,
+  "right": "P",
+  "ticker": "O:SPY241231P00593000",
+  "entrada": "10:33",
+  "salida": "14:00"
+ },
+ {
+  "fecha": "2025-01-02",
+  "strike": 588.0,
+  "right": "C",
+  "ticker": "O:SPY250102C00588000",
+  "entrada": "10:57",
+  "salida": "11:33"
+ },
+ {
+  "fecha": "2025-01-02",
+  "strike": 590.0,
+  "right": "P",
+  "ticker": "O:SPY250102P00590000",
+  "entrada": "11:33",
+  "salida": "15:54"
+ },
+ {
+  "fecha": "2025-01-03",
+  "strike": 585.0,
+  "right": "C",
+  "ticker": "O:SPY250103C00585000",
+  "entrada": "10:15",
+  "salida": "11:18"
+ },
+ {
+  "fecha": "2025-01-03",
+  "strike": 587.0,
+  "right": "C",
+  "ticker": "O:SPY250103C00587000",
+  "entrada": "12:30",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-01-03",
+  "strike": 589.0,
+  "right": "P",
+  "ticker": "O:SPY250103P00589000",
+  "entrada": "09:54",
+  "salida": "10:15"
+ },
+ {
+  "fecha": "2025-01-03",
+  "strike": 590.0,
+  "right": "P",
+  "ticker": "O:SPY250103P00590000",
+  "entrada": "11:18",
+  "salida": "12:30"
+ },
+ {
+  "fecha": "2025-01-06",
+  "strike": 595.0,
+  "right": "C",
+  "ticker": "O:SPY250106C00595000",
+  "entrada": "10:42",
+  "salida": "13:30"
+ },
+ {
+  "fecha": "2025-01-06",
+  "strike": 597.0,
+  "right": "P",
+  "ticker": "O:SPY250106P00597000",
+  "entrada": "10:18",
+  "salida": "10:42"
+ },
+ {
+  "fecha": "2025-01-06",
+  "strike": 601.0,
+  "right": "P",
+  "ticker": "O:SPY250106P00601000",
+  "entrada": "13:30",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-01-07",
+  "strike": 589.0,
+  "right": "C",
+  "ticker": "O:SPY250107C00589000",
+  "entrada": "14:09",
+  "salida": "14:42"
+ },
+ {
+  "fecha": "2025-01-07",
+  "strike": 594.0,
+  "right": "C",
+  "ticker": "O:SPY250107C00594000",
+  "entrada": "09:48",
+  "salida": "10:36"
+ },
+ {
+  "fecha": "2025-01-07",
+  "strike": 594.0,
+  "right": "P",
+  "ticker": "O:SPY250107P00594000",
+  "entrada": "14:42",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-01-07",
+  "strike": 599.0,
+  "right": "P",
+  "ticker": "O:SPY250107P00599000",
+  "entrada": "10:36",
+  "salida": "14:09"
+ },
+ {
+  "fecha": "2025-01-08",
+  "strike": 585.0,
+  "right": "C",
+  "ticker": "O:SPY250108C00585000",
+  "entrada": "14:03",
+  "salida": "14:54"
+ },
+ {
+  "fecha": "2025-01-08",
+  "strike": 587.0,
+  "right": "C",
+  "ticker": "O:SPY250108C00587000",
+  "entrada": "12:39",
+  "salida": "13:09"
+ },
+ {
+  "fecha": "2025-01-08",
+  "strike": 590.0,
+  "right": "P",
+  "ticker": "O:SPY250108P00590000",
+  "entrada": "10:54",
+  "salida": "12:39"
+ },
+ {
+  "fecha": "2025-01-08",
+  "strike": 591.0,
+  "right": "P",
+  "ticker": "O:SPY250108P00591000",
+  "entrada": "13:09",
+  "salida": "14:03"
+ },
+ {
+  "fecha": "2025-01-10",
+  "strike": 578.0,
+  "right": "C",
+  "ticker": "O:SPY250110C00578000",
+  "entrada": "13:39",
+  "salida": "15:09"
+ },
+ {
+  "fecha": "2025-01-10",
+  "strike": 581.0,
+  "right": "C",
+  "ticker": "O:SPY250110C00581000",
+  "entrada": "11:48",
+  "salida": "12:33"
+ },
+ {
+  "fecha": "2025-01-10",
+  "strike": 582.0,
+  "right": "P",
+  "ticker": "O:SPY250110P00582000",
+  "entrada": "12:33",
+  "salida": "13:39"
+ },
+ {
+  "fecha": "2025-01-10",
+  "strike": 585.0,
+  "right": "P",
+  "ticker": "O:SPY250110P00585000",
+  "entrada": "15:09",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-01-13",
+  "strike": 575.0,
+  "right": "C",
+  "ticker": "O:SPY250113C00575000",
+  "entrada": "13:21",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-01-13",
+  "strike": 579.0,
+  "right": "P",
+  "ticker": "O:SPY250113P00579000",
+  "entrada": "12:57",
+  "salida": "13:21"
+ },
+ {
+  "fecha": "2025-01-14",
+  "strike": 578.0,
+  "right": "C",
+  "ticker": "O:SPY250114C00578000",
+  "entrada": "13:54",
+  "salida": "15:54"
+ },
+ {
+  "fecha": "2025-01-14",
+  "strike": 585.0,
+  "right": "P",
+  "ticker": "O:SPY250114P00585000",
+  "entrada": "10:54",
+  "salida": "13:54"
+ },
+ {
+  "fecha": "2025-01-15",
+  "strike": 589.0,
+  "right": "C",
+  "ticker": "O:SPY250115C00589000",
+  "entrada": "13:36",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-01-15",
+  "strike": 593.0,
+  "right": "P",
+  "ticker": "O:SPY250115P00593000",
+  "entrada": "09:40",
+  "salida": "13:36"
+ },
+ {
+  "fecha": "2025-01-16",
+  "strike": 591.0,
+  "right": "C",
+  "ticker": "O:SPY250116C00591000",
+  "entrada": "12:03",
+  "salida": "14:30"
+ },
+ {
+  "fecha": "2025-01-16",
+  "strike": 595.0,
+  "right": "P",
+  "ticker": "O:SPY250116P00595000",
+  "entrada": "14:30",
+  "salida": "15:39"
+ },
+ {
+  "fecha": "2025-01-17",
+  "strike": 601.0,
+  "right": "P",
+  "ticker": "O:SPY250117P00601000",
+  "entrada": "14:51",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-01-21",
+  "strike": 598.0,
+  "right": "C",
+  "ticker": "O:SPY250121C00598000",
+  "entrada": "12:57",
+  "salida": "15:21"
+ },
+ {
+  "fecha": "2025-01-21",
+  "strike": 599.0,
+  "right": "C",
+  "ticker": "O:SPY250121C00599000",
+  "entrada": "10:48",
+  "salida": "11:12"
+ },
+ {
+  "fecha": "2025-01-21",
+  "strike": 601.0,
+  "right": "P",
+  "ticker": "O:SPY250121P00601000",
+  "entrada": "11:12",
+  "salida": "12:57"
+ },
+ {
+  "fecha": "2025-01-21",
+  "strike": 603.0,
+  "right": "P",
+  "ticker": "O:SPY250121P00603000",
+  "entrada": "10:39",
+  "salida": "10:48"
+ },
+ {
+  "fecha": "2025-01-22",
+  "strike": 604.0,
+  "right": "C",
+  "ticker": "O:SPY250122C00604000",
+  "entrada": "10:57",
+  "salida": "14:21"
+ },
+ {
+  "fecha": "2025-01-22",
+  "strike": 608.0,
+  "right": "P",
+  "ticker": "O:SPY250122P00608000",
+  "entrada": "10:09",
+  "salida": "10:57"
+ },
+ {
+  "fecha": "2025-01-22",
+  "strike": 610.0,
+  "right": "P",
+  "ticker": "O:SPY250122P00610000",
+  "entrada": "14:21",
+  "salida": "15:54"
+ },
+ {
+  "fecha": "2025-01-23",
+  "strike": 604.0,
+  "right": "C",
+  "ticker": "O:SPY250123C00604000",
+  "entrada": "09:57",
+  "salida": "15:06"
+ },
+ {
+  "fecha": "2025-01-23",
+  "strike": 605.0,
+  "right": "C",
+  "ticker": "O:SPY250123C00605000",
+  "entrada": "15:33",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-01-23",
+  "strike": 610.0,
+  "right": "P",
+  "ticker": "O:SPY250123P00610000",
+  "entrada": "15:06",
+  "salida": "15:33"
+ },
+ {
+  "fecha": "2025-01-24",
+  "strike": 607.0,
+  "right": "C",
+  "ticker": "O:SPY250124C00607000",
+  "entrada": "12:39",
+  "salida": "12:57"
+ },
+ {
+  "fecha": "2025-01-24",
+  "strike": 612.0,
+  "right": "P",
+  "ticker": "O:SPY250124P00612000",
+  "entrada": "12:57",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-01-27",
+  "strike": 595.0,
+  "right": "C",
+  "ticker": "O:SPY250127C00595000",
+  "entrada": "15:18",
+  "salida": "15:48"
+ },
+ {
+  "fecha": "2025-01-27",
+  "strike": 599.0,
+  "right": "P",
+  "ticker": "O:SPY250127P00599000",
+  "entrada": "12:24",
+  "salida": "15:18"
+ },
+ {
+  "fecha": "2025-01-28",
+  "strike": 598.0,
+  "right": "C",
+  "ticker": "O:SPY250128C00598000",
+  "entrada": "09:43",
+  "salida": "12:27"
+ },
+ {
+  "fecha": "2025-01-28",
+  "strike": 601.0,
+  "right": "C",
+  "ticker": "O:SPY250128C00601000",
+  "entrada": "13:09",
+  "salida": "14:42"
+ },
+ {
+  "fecha": "2025-01-28",
+  "strike": 604.0,
+  "right": "P",
+  "ticker": "O:SPY250128P00604000",
+  "entrada": "12:27",
+  "salida": "13:09"
+ },
+ {
+  "fecha": "2025-01-28",
+  "strike": 606.0,
+  "right": "P",
+  "ticker": "O:SPY250128P00606000",
+  "entrada": "14:42",
+  "salida": "15:33"
+ },
+ {
+  "fecha": "2025-01-29",
+  "strike": 600.0,
+  "right": "C",
+  "ticker": "O:SPY250129C00600000",
+  "entrada": "14:30",
+  "salida": "15:06"
+ },
+ {
+  "fecha": "2025-01-29",
+  "strike": 602.0,
+  "right": "C",
+  "ticker": "O:SPY250129C00602000",
+  "entrada": "11:09",
+  "salida": "12:18"
+ },
+ {
+  "fecha": "2025-01-29",
+  "strike": 603.0,
+  "right": "P",
+  "ticker": "O:SPY250129P00603000",
+  "entrada": "15:06",
+  "salida": "15:42"
+ },
+ {
+  "fecha": "2025-01-29",
+  "strike": 605.0,
+  "right": "P",
+  "ticker": "O:SPY250129P00605000",
+  "entrada": "12:18",
+  "salida": "14:30"
+ },
+ {
+  "fecha": "2025-01-30",
+  "strike": 600.0,
+  "right": "C",
+  "ticker": "O:SPY250130C00600000",
+  "entrada": "12:30",
+  "salida": "13:27"
+ },
+ {
+  "fecha": "2025-01-30",
+  "strike": 601.0,
+  "right": "C",
+  "ticker": "O:SPY250130C00601000",
+  "entrada": "14:09",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-01-30",
+  "strike": 605.0,
+  "right": "P",
+  "ticker": "O:SPY250130P00605000",
+  "entrada": "13:27",
+  "salida": "14:09"
+ },
+ {
+  "fecha": "2025-01-30",
+  "strike": 606.0,
+  "right": "P",
+  "ticker": "O:SPY250130P00606000",
+  "entrada": "11:03",
+  "salida": "12:30"
+ },
+ {
+  "fecha": "2025-01-31",
+  "strike": 605.0,
+  "right": "C",
+  "ticker": "O:SPY250131C00605000",
+  "entrada": "10:42",
+  "salida": "12:45"
+ },
+ {
+  "fecha": "2025-01-31",
+  "strike": 607.0,
+  "right": "C",
+  "ticker": "O:SPY250131C00607000",
+  "entrada": "13:30",
+  "salida": "14:21"
+ },
+ {
+  "fecha": "2025-01-31",
+  "strike": 610.0,
+  "right": "P",
+  "ticker": "O:SPY250131P00610000",
+  "entrada": "14:21",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-01-31",
+  "strike": 611.0,
+  "right": "P",
+  "ticker": "O:SPY250131P00611000",
+  "entrada": "12:45",
+  "salida": "13:30"
+ },
+ {
+  "fecha": "2025-02-03",
+  "strike": 590.0,
+  "right": "C",
+  "ticker": "O:SPY250203C00590000",
+  "entrada": "09:40",
+  "salida": "11:03"
+ },
+ {
+  "fecha": "2025-02-03",
+  "strike": 593.0,
+  "right": "C",
+  "ticker": "O:SPY250203C00593000",
+  "entrada": "11:27",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-02-03",
+  "strike": 594.0,
+  "right": "P",
+  "ticker": "O:SPY250203P00594000",
+  "entrada": "11:03",
+  "salida": "11:27"
+ },
+ {
+  "fecha": "2025-02-04",
+  "strike": 599.0,
+  "right": "C",
+  "ticker": "O:SPY250204C00599000",
+  "entrada": "15:09",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-02-04",
+  "strike": 604.0,
+  "right": "P",
+  "ticker": "O:SPY250204P00604000",
+  "entrada": "12:51",
+  "salida": "15:09"
+ },
+ {
+  "fecha": "2025-02-05",
+  "strike": 598.0,
+  "right": "C",
+  "ticker": "O:SPY250205C00598000",
+  "entrada": "12:12",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-02-05",
+  "strike": 602.0,
+  "right": "P",
+  "ticker": "O:SPY250205P00602000",
+  "entrada": "10:57",
+  "salida": "12:12"
+ },
+ {
+  "fecha": "2025-02-06",
+  "strike": 603.0,
+  "right": "C",
+  "ticker": "O:SPY250206C00603000",
+  "entrada": "13:54",
+  "salida": "14:54"
+ },
+ {
+  "fecha": "2025-02-06",
+  "strike": 608.0,
+  "right": "P",
+  "ticker": "O:SPY250206P00608000",
+  "entrada": "14:54",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-02-07",
+  "strike": 608.0,
+  "right": "P",
+  "ticker": "O:SPY250207P00608000",
+  "entrada": "11:03",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-02-10",
+  "strike": 602.0,
+  "right": "C",
+  "ticker": "O:SPY250210C00602000",
+  "entrada": "13:54",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-02-10",
+  "strike": 606.0,
+  "right": "P",
+  "ticker": "O:SPY250210P00606000",
+  "entrada": "10:15",
+  "salida": "11:06"
+ },
+ {
+  "fecha": "2025-02-10",
+  "strike": 607.0,
+  "right": "P",
+  "ticker": "O:SPY250210P00607000",
+  "entrada": "12:21",
+  "salida": "13:54"
+ },
+ {
+  "fecha": "2025-02-11",
+  "strike": 601.0,
+  "right": "C",
+  "ticker": "O:SPY250211C00601000",
+  "entrada": "10:36",
+  "salida": "12:57"
+ },
+ {
+  "fecha": "2025-02-11",
+  "strike": 602.0,
+  "right": "C",
+  "ticker": "O:SPY250211C00602000",
+  "entrada": "14:33",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-02-11",
+  "strike": 607.0,
+  "right": "P",
+  "ticker": "O:SPY250211P00607000",
+  "entrada": "12:57",
+  "salida": "14:33"
+ },
+ {
+  "fecha": "2025-02-12",
+  "strike": 598.0,
+  "right": "C",
+  "ticker": "O:SPY250212C00598000",
+  "entrada": "10:48",
+  "salida": "12:27"
+ },
+ {
+  "fecha": "2025-02-12",
+  "strike": 600.0,
+  "right": "C",
+  "ticker": "O:SPY250212C00600000",
+  "entrada": "12:45",
+  "salida": "14:45"
+ },
+ {
+  "fecha": "2025-02-12",
+  "strike": 603.0,
+  "right": "P",
+  "ticker": "O:SPY250212P00603000",
+  "entrada": "12:27",
+  "salida": "12:45"
+ },
+ {
+  "fecha": "2025-02-12",
+  "strike": 606.0,
+  "right": "P",
+  "ticker": "O:SPY250212P00606000",
+  "entrada": "14:45",
+  "salida": "15:48"
+ },
+ {
+  "fecha": "2025-02-13",
+  "strike": 603.0,
+  "right": "C",
+  "ticker": "O:SPY250213C00603000",
+  "entrada": "11:03",
+  "salida": "12:54"
+ },
+ {
+  "fecha": "2025-02-13",
+  "strike": 605.0,
+  "right": "C",
+  "ticker": "O:SPY250213C00605000",
+  "entrada": "15:00",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-02-13",
+  "strike": 606.0,
+  "right": "P",
+  "ticker": "O:SPY250213P00606000",
+  "entrada": "10:39",
+  "salida": "11:03"
+ },
+ {
+  "fecha": "2025-02-13",
+  "strike": 609.0,
+  "right": "P",
+  "ticker": "O:SPY250213P00609000",
+  "entrada": "12:54",
+  "salida": "15:00"
+ },
+ {
+  "fecha": "2025-02-14",
+  "strike": 608.0,
+  "right": "C",
+  "ticker": "O:SPY250214C00608000",
+  "entrada": "14:33",
+  "salida": "15:30"
+ },
+ {
+  "fecha": "2025-02-14",
+  "strike": 612.0,
+  "right": "P",
+  "ticker": "O:SPY250214P00612000",
+  "entrada": "11:42",
+  "salida": "14:33"
+ },
+ {
+  "fecha": "2025-02-14",
+  "strike": 613.0,
+  "right": "P",
+  "ticker": "O:SPY250214P00613000",
+  "entrada": "15:30",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-02-18",
+  "strike": 614.0,
+  "right": "P",
+  "ticker": "O:SPY250218P00614000",
+  "entrada": "10:21",
+  "salida": "15:54"
+ },
+ {
+  "fecha": "2025-02-19",
+  "strike": 608.0,
+  "right": "C",
+  "ticker": "O:SPY250219C00608000",
+  "entrada": "11:33",
+  "salida": "13:24"
+ },
+ {
+  "fecha": "2025-02-19",
+  "strike": 609.0,
+  "right": "C",
+  "ticker": "O:SPY250219C00609000",
+  "entrada": "13:54",
+  "salida": "14:12"
+ },
+ {
+  "fecha": "2025-02-19",
+  "strike": 613.0,
+  "right": "P",
+  "ticker": "O:SPY250219P00613000",
+  "entrada": "14:12",
+  "salida": "14:33"
+ },
+ {
+  "fecha": "2025-02-19",
+  "strike": 614.0,
+  "right": "P",
+  "ticker": "O:SPY250219P00614000",
+  "entrada": "13:24",
+  "salida": "13:54"
+ },
+ {
+  "fecha": "2025-02-20",
+  "strike": 606.0,
+  "right": "C",
+  "ticker": "O:SPY250220C00606000",
+  "entrada": "13:18",
+  "salida": "13:57"
+ },
+ {
+  "fecha": "2025-02-20",
+  "strike": 609.0,
+  "right": "C",
+  "ticker": "O:SPY250220C00609000",
+  "entrada": "10:03",
+  "salida": "10:36"
+ },
+ {
+  "fecha": "2025-02-20",
+  "strike": 611.0,
+  "right": "P",
+  "ticker": "O:SPY250220P00611000",
+  "entrada": "13:57",
+  "salida": "15:09"
+ },
+ {
+  "fecha": "2025-02-20",
+  "strike": 614.0,
+  "right": "P",
+  "ticker": "O:SPY250220P00614000",
+  "entrada": "10:36",
+  "salida": "13:18"
+ },
+ {
+  "fecha": "2025-02-21",
+  "strike": 609.0,
+  "right": "C",
+  "ticker": "O:SPY250221C00609000",
+  "entrada": "10:18",
+  "salida": "10:30"
+ },
+ {
+  "fecha": "2025-02-21",
+  "strike": 612.0,
+  "right": "P",
+  "ticker": "O:SPY250221P00612000",
+  "entrada": "10:30",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-02-24",
+  "strike": 598.0,
+  "right": "C",
+  "ticker": "O:SPY250224C00598000",
+  "entrada": "12:27",
+  "salida": "15:21"
+ },
+ {
+  "fecha": "2025-02-24",
+  "strike": 600.0,
+  "right": "C",
+  "ticker": "O:SPY250224C00600000",
+  "entrada": "10:33",
+  "salida": "10:45"
+ },
+ {
+  "fecha": "2025-02-24",
+  "strike": 604.0,
+  "right": "P",
+  "ticker": "O:SPY250224P00604000",
+  "entrada": "10:45",
+  "salida": "12:27"
+ },
+ {
+  "fecha": "2025-02-24",
+  "strike": 605.0,
+  "right": "P",
+  "ticker": "O:SPY250224P00605000",
+  "entrada": "10:09",
+  "salida": "10:33"
+ },
+ {
+  "fecha": "2025-02-25",
+  "strike": 591.0,
+  "right": "C",
+  "ticker": "O:SPY250225C00591000",
+  "entrada": "13:00",
+  "salida": "14:30"
+ },
+ {
+  "fecha": "2025-02-25",
+  "strike": 593.0,
+  "right": "C",
+  "ticker": "O:SPY250225C00593000",
+  "entrada": "14:48",
+  "salida": "15:15"
+ },
+ {
+  "fecha": "2025-02-25",
+  "strike": 596.0,
+  "right": "P",
+  "ticker": "O:SPY250225P00596000",
+  "entrada": "14:30",
+  "salida": "14:48"
+ },
+ {
+  "fecha": "2025-02-25",
+  "strike": 599.0,
+  "right": "P",
+  "ticker": "O:SPY250225P00599000",
+  "entrada": "10:27",
+  "salida": "13:00"
+ },
+ {
+  "fecha": "2025-02-26",
+  "strike": 595.0,
+  "right": "C",
+  "ticker": "O:SPY250226C00595000",
+  "entrada": "10:51",
+  "salida": "13:00"
+ },
+ {
+  "fecha": "2025-02-26",
+  "strike": 599.0,
+  "right": "P",
+  "ticker": "O:SPY250226P00599000",
+  "entrada": "09:48",
+  "salida": "10:51"
+ },
+ {
+  "fecha": "2025-02-26",
+  "strike": 601.0,
+  "right": "P",
+  "ticker": "O:SPY250226P00601000",
+  "entrada": "13:00",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-02-27",
+  "strike": 591.0,
+  "right": "C",
+  "ticker": "O:SPY250227C00591000",
+  "entrada": "13:30",
+  "salida": "15:12"
+ },
+ {
+  "fecha": "2025-02-27",
+  "strike": 593.0,
+  "right": "C",
+  "ticker": "O:SPY250227C00593000",
+  "entrada": "11:24",
+  "salida": "12:54"
+ },
+ {
+  "fecha": "2025-02-27",
+  "strike": 595.0,
+  "right": "P",
+  "ticker": "O:SPY250227P00595000",
+  "entrada": "12:54",
+  "salida": "13:30"
+ },
+ {
+  "fecha": "2025-02-27",
+  "strike": 600.0,
+  "right": "P",
+  "ticker": "O:SPY250227P00600000",
+  "entrada": "09:41",
+  "salida": "11:24"
+ },
+ {
+  "fecha": "2025-02-28",
+  "strike": 583.0,
+  "right": "C",
+  "ticker": "O:SPY250228C00583000",
+  "entrada": "14:39",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-02-28",
+  "strike": 586.0,
+  "right": "P",
+  "ticker": "O:SPY250228P00586000",
+  "entrada": "10:33",
+  "salida": "11:03"
+ },
+ {
+  "fecha": "2025-02-28",
+  "strike": 589.0,
+  "right": "P",
+  "ticker": "O:SPY250228P00589000",
+  "entrada": "12:27",
+  "salida": "14:39"
+ },
+ {
+  "fecha": "2025-03-03",
+  "strike": 594.0,
+  "right": "C",
+  "ticker": "O:SPY250303C00594000",
+  "entrada": "10:06",
+  "salida": "10:39"
+ },
+ {
+  "fecha": "2025-03-03",
+  "strike": 598.0,
+  "right": "P",
+  "ticker": "O:SPY250303P00598000",
+  "entrada": "10:39",
+  "salida": "15:42"
+ },
+ {
+  "fecha": "2025-03-04",
+  "strike": 573.0,
+  "right": "C",
+  "ticker": "O:SPY250304C00573000",
+  "entrada": "12:54",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-03-04",
+  "strike": 583.0,
+  "right": "P",
+  "ticker": "O:SPY250304P00583000",
+  "entrada": "09:42",
+  "salida": "12:54"
+ },
+ {
+  "fecha": "2025-03-05",
+  "strike": 574.0,
+  "right": "C",
+  "ticker": "O:SPY250305C00574000",
+  "entrada": "13:03",
+  "salida": "14:33"
+ },
+ {
+  "fecha": "2025-03-05",
+  "strike": 578.0,
+  "right": "P",
+  "ticker": "O:SPY250305P00578000",
+  "entrada": "10:57",
+  "salida": "13:03"
+ },
+ {
+  "fecha": "2025-03-05",
+  "strike": 582.0,
+  "right": "P",
+  "ticker": "O:SPY250305P00582000",
+  "entrada": "14:33",
+  "salida": "15:03"
+ },
+ {
+  "fecha": "2025-03-06",
+  "strike": 575.0,
+  "right": "C",
+  "ticker": "O:SPY250306C00575000",
+  "entrada": "11:09",
+  "salida": "12:42"
+ },
+ {
+  "fecha": "2025-03-06",
+  "strike": 579.0,
+  "right": "P",
+  "ticker": "O:SPY250306P00579000",
+  "entrada": "12:42",
+  "salida": "15:51"
+ },
+ {
+  "fecha": "2025-03-07",
+  "strike": 567.0,
+  "right": "C",
+  "ticker": "O:SPY250307C00567000",
+  "entrada": "13:36",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-03-07",
+  "strike": 571.0,
+  "right": "C",
+  "ticker": "O:SPY250307C00571000",
+  "entrada": "10:42",
+  "salida": "11:33"
+ },
+ {
+  "fecha": "2025-03-07",
+  "strike": 573.0,
+  "right": "P",
+  "ticker": "O:SPY250307P00573000",
+  "entrada": "11:33",
+  "salida": "13:36"
+ },
+ {
+  "fecha": "2025-03-07",
+  "strike": 575.0,
+  "right": "P",
+  "ticker": "O:SPY250307P00575000",
+  "entrada": "10:00",
+  "salida": "10:42"
+ },
+ {
+  "fecha": "2025-03-10",
+  "strike": 556.0,
+  "right": "C",
+  "ticker": "O:SPY250310C00556000",
+  "entrada": "15:21",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-03-10",
+  "strike": 567.0,
+  "right": "C",
+  "ticker": "O:SPY250310C00567000",
+  "entrada": "09:45",
+  "salida": "09:54"
+ },
+ {
+  "fecha": "2025-03-10",
+  "strike": 569.0,
+  "right": "P",
+  "ticker": "O:SPY250310P00569000",
+  "entrada": "09:54",
+  "salida": "15:21"
+ },
+ {
+  "fecha": "2025-03-10",
+  "strike": 571.0,
+  "right": "P",
+  "ticker": "O:SPY250310P00571000",
+  "entrada": "09:40",
+  "salida": "09:45"
+ },
+ {
+  "fecha": "2025-03-11",
+  "strike": 557.0,
+  "right": "C",
+  "ticker": "O:SPY250311C00557000",
+  "entrada": "11:42",
+  "salida": "12:12"
+ },
+ {
+  "fecha": "2025-03-11",
+  "strike": 559.0,
+  "right": "C",
+  "ticker": "O:SPY250311C00559000",
+  "entrada": "09:51",
+  "salida": "10:06"
+ },
+ {
+  "fecha": "2025-03-11",
+  "strike": 558.0,
+  "right": "P",
+  "ticker": "O:SPY250311P00558000",
+  "entrada": "12:12",
+  "salida": "13:48"
+ },
+ {
+  "fecha": "2025-03-11",
+  "strike": 561.0,
+  "right": "P",
+  "ticker": "O:SPY250311P00561000",
+  "entrada": "10:06",
+  "salida": "11:42"
+ },
+ {
+  "fecha": "2025-03-12",
+  "strike": 555.0,
+  "right": "C",
+  "ticker": "O:SPY250312C00555000",
+  "entrada": "11:36",
+  "salida": "12:45"
+ },
+ {
+  "fecha": "2025-03-12",
+  "strike": 559.0,
+  "right": "C",
+  "ticker": "O:SPY250312C00559000",
+  "entrada": "09:43",
+  "salida": "09:54"
+ },
+ {
+  "fecha": "2025-03-12",
+  "strike": 562.0,
+  "right": "P",
+  "ticker": "O:SPY250312P00562000",
+  "entrada": "12:45",
+  "salida": "13:33"
+ },
+ {
+  "fecha": "2025-03-13",
+  "strike": 555.0,
+  "right": "C",
+  "ticker": "O:SPY250313C00555000",
+  "entrada": "10:15",
+  "salida": "11:15"
+ },
+ {
+  "fecha": "2025-03-13",
+  "strike": 557.0,
+  "right": "P",
+  "ticker": "O:SPY250313P00557000",
+  "entrada": "11:15",
+  "salida": "14:09"
+ },
+ {
+  "fecha": "2025-03-13",
+  "strike": 560.0,
+  "right": "P",
+  "ticker": "O:SPY250313P00560000",
+  "entrada": "09:45",
+  "salida": "10:15"
+ },
+ {
+  "fecha": "2025-03-14",
+  "strike": 558.0,
+  "right": "C",
+  "ticker": "O:SPY250314C00558000",
+  "entrada": "11:00",
+  "salida": "12:18"
+ },
+ {
+  "fecha": "2025-03-14",
+  "strike": 560.0,
+  "right": "C",
+  "ticker": "O:SPY250314C00560000",
+  "entrada": "12:54",
+  "salida": "14:24"
+ },
+ {
+  "fecha": "2025-03-14",
+  "strike": 560.0,
+  "right": "P",
+  "ticker": "O:SPY250314P00560000",
+  "entrada": "09:43",
+  "salida": "11:00"
+ },
+ {
+  "fecha": "2025-03-14",
+  "strike": 563.0,
+  "right": "P",
+  "ticker": "O:SPY250314P00563000",
+  "entrada": "12:18",
+  "salida": "12:54"
+ },
+ {
+  "fecha": "2025-03-17",
+  "strike": 563.0,
+  "right": "C",
+  "ticker": "O:SPY250317C00563000",
+  "entrada": "13:24",
+  "salida": "15:51"
+ },
+ {
+  "fecha": "2025-03-17",
+  "strike": 568.0,
+  "right": "P",
+  "ticker": "O:SPY250317P00568000",
+  "entrada": "09:40",
+  "salida": "13:24"
+ },
+ {
+  "fecha": "2025-03-18",
+  "strike": 560.0,
+  "right": "C",
+  "ticker": "O:SPY250318C00560000",
+  "entrada": "09:40",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-03-19",
+  "strike": 560.0,
+  "right": "C",
+  "ticker": "O:SPY250319C00560000",
+  "entrada": "09:42",
+  "salida": "13:03"
+ },
+ {
+  "fecha": "2025-03-19",
+  "strike": 563.0,
+  "right": "C",
+  "ticker": "O:SPY250319C00563000",
+  "entrada": "14:12",
+  "salida": "15:30"
+ },
+ {
+  "fecha": "2025-03-19",
+  "strike": 567.0,
+  "right": "P",
+  "ticker": "O:SPY250319P00567000",
+  "entrada": "13:03",
+  "salida": "14:12"
+ },
+ {
+  "fecha": "2025-03-19",
+  "strike": 570.0,
+  "right": "P",
+  "ticker": "O:SPY250319P00570000",
+  "entrada": "15:30",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-03-20",
+  "strike": 563.0,
+  "right": "C",
+  "ticker": "O:SPY250320C00563000",
+  "entrada": "14:54",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-03-20",
+  "strike": 567.0,
+  "right": "P",
+  "ticker": "O:SPY250320P00567000",
+  "entrada": "09:42",
+  "salida": "09:45"
+ },
+ {
+  "fecha": "2025-03-20",
+  "strike": 570.0,
+  "right": "P",
+  "ticker": "O:SPY250320P00570000",
+  "entrada": "11:36",
+  "salida": "14:54"
+ },
+ {
+  "fecha": "2025-03-21",
+  "strike": 558.0,
+  "right": "C",
+  "ticker": "O:SPY250321C00558000",
+  "entrada": "09:51",
+  "salida": "11:42"
+ },
+ {
+  "fecha": "2025-03-21",
+  "strike": 559.0,
+  "right": "C",
+  "ticker": "O:SPY250321C00559000",
+  "entrada": "12:15",
+  "salida": "14:27"
+ },
+ {
+  "fecha": "2025-03-21",
+  "strike": 562.0,
+  "right": "P",
+  "ticker": "O:SPY250321P00562000",
+  "entrada": "11:42",
+  "salida": "12:15"
+ },
+ {
+  "fecha": "2025-03-21",
+  "strike": 565.0,
+  "right": "P",
+  "ticker": "O:SPY250321P00565000",
+  "entrada": "14:27",
+  "salida": "15:57"
+ },
+ {
+  "fecha": "2025-03-24",
+  "strike": 571.0,
+  "right": "C",
+  "ticker": "O:SPY250324C00571000",
+  "entrada": "14:45",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-03-24",
+  "strike": 574.0,
+  "right": "P",
+  "ticker": "O:SPY250324P00574000",
+  "entrada": "09:40",
+  "salida": "14:45"
+ },
+ {
+  "fecha": "2025-03-25",
+  "strike": 572.0,
+  "right": "C",
+  "ticker": "O:SPY250325C00572000",
+  "entrada": "09:43",
+  "salida": "11:54"
+ },
+ {
+  "fecha": "2025-03-25",
+  "strike": 573.0,
+  "right": "C",
+  "ticker": "O:SPY250325C00573000",
+  "entrada": "13:03",
+  "salida": "13:24"
+ },
+ {
+  "fecha": "2025-03-25",
+  "strike": 577.0,
+  "right": "P",
+  "ticker": "O:SPY250325P00577000",
+  "entrada": "13:24",
+  "salida": "15:48"
+ },
+ {
+  "fecha": "2025-03-26",
+  "strike": 578.0,
+  "right": "P",
+  "ticker": "O:SPY250326P00578000",
+  "entrada": "09:40",
+  "salida": "15:51"
+ },
+ {
+  "fecha": "2025-03-27",
+  "strike": 563.0,
+  "right": "C",
+  "ticker": "O:SPY250327C00563000",
+  "entrada": "09:41",
+  "salida": "11:39"
+ },
+ {
+  "fecha": "2025-03-27",
+  "strike": 567.0,
+  "right": "C",
+  "ticker": "O:SPY250327C00567000",
+  "entrada": "12:18",
+  "salida": "12:51"
+ },
+ {
+  "fecha": "2025-03-27",
+  "strike": 570.0,
+  "right": "P",
+  "ticker": "O:SPY250327P00570000",
+  "entrada": "12:51",
+  "salida": "14:15"
+ },
+ {
+  "fecha": "2025-03-27",
+  "strike": 571.0,
+  "right": "P",
+  "ticker": "O:SPY250327P00571000",
+  "entrada": "11:39",
+  "salida": "12:18"
+ },
+ {
+  "fecha": "2025-03-28",
+  "strike": 554.0,
+  "right": "C",
+  "ticker": "O:SPY250328C00554000",
+  "entrada": "14:12",
+  "salida": "15:42"
+ },
+ {
+  "fecha": "2025-03-28",
+  "strike": 567.0,
+  "right": "P",
+  "ticker": "O:SPY250328P00567000",
+  "entrada": "09:54",
+  "salida": "14:12"
+ },
+ {
+  "fecha": "2025-03-31",
+  "strike": 546.0,
+  "right": "C",
+  "ticker": "O:SPY250331C00546000",
+  "entrada": "09:41",
+  "salida": "13:27"
+ },
+ {
+  "fecha": "2025-03-31",
+  "strike": 554.0,
+  "right": "C",
+  "ticker": "O:SPY250331C00554000",
+  "entrada": "14:09",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-03-31",
+  "strike": 556.0,
+  "right": "P",
+  "ticker": "O:SPY250331P00556000",
+  "entrada": "13:27",
+  "salida": "14:09"
+ },
+ {
+  "fecha": "2025-04-01",
+  "strike": 555.0,
+  "right": "C",
+  "ticker": "O:SPY250401C00555000",
+  "entrada": "10:42",
+  "salida": "12:36"
+ },
+ {
+  "fecha": "2025-04-01",
+  "strike": 556.0,
+  "right": "C",
+  "ticker": "O:SPY250401C00556000",
+  "entrada": "15:06",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-04-01",
+  "strike": 563.0,
+  "right": "P",
+  "ticker": "O:SPY250401P00563000",
+  "entrada": "12:36",
+  "salida": "15:06"
+ },
+ {
+  "fecha": "2025-04-02",
+  "strike": 562.0,
+  "right": "C",
+  "ticker": "O:SPY250402C00562000",
+  "entrada": "15:36",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-04-02",
+  "strike": 561.0,
+  "right": "P",
+  "ticker": "O:SPY250402P00561000",
+  "entrada": "09:40",
+  "salida": "15:36"
+ },
+ {
+  "fecha": "2025-04-03",
+  "strike": 541.0,
+  "right": "C",
+  "ticker": "O:SPY250403C00541000",
+  "entrada": "11:39",
+  "salida": "13:21"
+ },
+ {
+  "fecha": "2025-04-03",
+  "strike": 545.0,
+  "right": "P",
+  "ticker": "O:SPY250403P00545000",
+  "entrada": "13:21",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-04-03",
+  "strike": 546.0,
+  "right": "P",
+  "ticker": "O:SPY250403P00546000",
+  "entrada": "10:06",
+  "salida": "11:39"
+ },
+ {
+  "fecha": "2025-04-04",
+  "strike": 511.0,
+  "right": "C",
+  "ticker": "O:SPY250404C00511000",
+  "entrada": "13:39",
+  "salida": "14:18"
+ },
+ {
+  "fecha": "2025-04-04",
+  "strike": 518.0,
+  "right": "C",
+  "ticker": "O:SPY250404C00518000",
+  "entrada": "09:40",
+  "salida": "12:18"
+ },
+ {
+  "fecha": "2025-04-04",
+  "strike": 513.0,
+  "right": "P",
+  "ticker": "O:SPY250404P00513000",
+  "entrada": "14:18",
+  "salida": "15:33"
+ },
+ {
+  "fecha": "2025-04-04",
+  "strike": 516.0,
+  "right": "P",
+  "ticker": "O:SPY250404P00516000",
+  "entrada": "12:18",
+  "salida": "13:39"
+ },
+ {
+  "fecha": "2025-04-07",
+  "strike": 480.0,
+  "right": "C",
+  "ticker": "O:SPY250407C00480000",
+  "entrada": "09:42",
+  "salida": "10:30"
+ },
+ {
+  "fecha": "2025-04-07",
+  "strike": 500.0,
+  "right": "C",
+  "ticker": "O:SPY250407C00500000",
+  "entrada": "13:18",
+  "salida": "15:12"
+ },
+ {
+  "fecha": "2025-04-07",
+  "strike": 501.0,
+  "right": "P",
+  "ticker": "O:SPY250407P00501000",
+  "entrada": "10:30",
+  "salida": "13:18"
+ },
+ {
+  "fecha": "2025-04-07",
+  "strike": 505.0,
+  "right": "P",
+  "ticker": "O:SPY250407P00505000",
+  "entrada": "15:12",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-04-08",
+  "strike": 521.0,
+  "right": "C",
+  "ticker": "O:SPY250408C00521000",
+  "entrada": "10:03",
+  "salida": "10:57"
+ },
+ {
+  "fecha": "2025-04-08",
+  "strike": 521.0,
+  "right": "P",
+  "ticker": "O:SPY250408P00521000",
+  "entrada": "10:57",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-04-09",
+  "strike": 498.0,
+  "right": "C",
+  "ticker": "O:SPY250409C00498000",
+  "entrada": "12:27",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-04-09",
+  "strike": 502.0,
+  "right": "P",
+  "ticker": "O:SPY250409P00502000",
+  "entrada": "09:40",
+  "salida": "12:27"
+ },
+ {
+  "fecha": "2025-04-10",
+  "strike": 527.0,
+  "right": "C",
+  "ticker": "O:SPY250410C00527000",
+  "entrada": "09:41",
+  "salida": "15:42"
+ },
+ {
+  "fecha": "2025-04-11",
+  "strike": 525.0,
+  "right": "C",
+  "ticker": "O:SPY250411C00525000",
+  "entrada": "09:48",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-04-11",
+  "strike": 528.0,
+  "right": "P",
+  "ticker": "O:SPY250411P00528000",
+  "entrada": "09:44",
+  "salida": "09:48"
+ },
+ {
+  "fecha": "2025-04-14",
+  "strike": 536.0,
+  "right": "C",
+  "ticker": "O:SPY250414C00536000",
+  "entrada": "13:54",
+  "salida": "15:51"
+ },
+ {
+  "fecha": "2025-04-14",
+  "strike": 538.0,
+  "right": "C",
+  "ticker": "O:SPY250414C00538000",
+  "entrada": "09:40",
+  "salida": "11:18"
+ },
+ {
+  "fecha": "2025-04-14",
+  "strike": 543.0,
+  "right": "P",
+  "ticker": "O:SPY250414P00543000",
+  "entrada": "11:18",
+  "salida": "13:54"
+ },
+ {
+  "fecha": "2025-04-15",
+  "strike": 544.0,
+  "right": "P",
+  "ticker": "O:SPY250415P00544000",
+  "entrada": "09:42",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-04-16",
+  "strike": 532.0,
+  "right": "C",
+  "ticker": "O:SPY250416C00532000",
+  "entrada": "11:24",
+  "salida": "12:00"
+ },
+ {
+  "fecha": "2025-04-16",
+  "strike": 533.0,
+  "right": "P",
+  "ticker": "O:SPY250416P00533000",
+  "entrada": "09:54",
+  "salida": "11:24"
+ },
+ {
+  "fecha": "2025-04-16",
+  "strike": 534.0,
+  "right": "P",
+  "ticker": "O:SPY250416P00534000",
+  "entrada": "12:00",
+  "salida": "15:51"
+ },
+ {
+  "fecha": "2025-04-17",
+  "strike": 525.0,
+  "right": "C",
+  "ticker": "O:SPY250417C00525000",
+  "entrada": "11:09",
+  "salida": "15:00"
+ },
+ {
+  "fecha": "2025-04-17",
+  "strike": 531.0,
+  "right": "P",
+  "ticker": "O:SPY250417P00531000",
+  "entrada": "15:00",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-04-21",
+  "strike": 507.0,
+  "right": "C",
+  "ticker": "O:SPY250421C00507000",
+  "entrada": "14:36",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-04-21",
+  "strike": 510.0,
+  "right": "C",
+  "ticker": "O:SPY250421C00510000",
+  "entrada": "12:39",
+  "salida": "12:57"
+ },
+ {
+  "fecha": "2025-04-21",
+  "strike": 514.0,
+  "right": "P",
+  "ticker": "O:SPY250421P00514000",
+  "entrada": "12:57",
+  "salida": "14:36"
+ },
+ {
+  "fecha": "2025-04-22",
+  "strike": 523.0,
+  "right": "C",
+  "ticker": "O:SPY250422C00523000",
+  "entrada": "14:24",
+  "salida": "15:21"
+ },
+ {
+  "fecha": "2025-04-22",
+  "strike": 525.0,
+  "right": "C",
+  "ticker": "O:SPY250422C00525000",
+  "entrada": "12:00",
+  "salida": "13:12"
+ },
+ {
+  "fecha": "2025-04-22",
+  "strike": 523.0,
+  "right": "P",
+  "ticker": "O:SPY250422P00523000",
+  "entrada": "09:40",
+  "salida": "12:00"
+ },
+ {
+  "fecha": "2025-04-22",
+  "strike": 529.0,
+  "right": "P",
+  "ticker": "O:SPY250422P00529000",
+  "entrada": "13:12",
+  "salida": "14:24"
+ },
+ {
+  "fecha": "2025-04-23",
+  "strike": 535.0,
+  "right": "C",
+  "ticker": "O:SPY250423C00535000",
+  "entrada": "12:39",
+  "salida": "13:39"
+ },
+ {
+  "fecha": "2025-04-23",
+  "strike": 539.0,
+  "right": "P",
+  "ticker": "O:SPY250423P00539000",
+  "entrada": "13:39",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-04-23",
+  "strike": 544.0,
+  "right": "P",
+  "ticker": "O:SPY250423P00544000",
+  "entrada": "11:21",
+  "salida": "12:39"
+ },
+ {
+  "fecha": "2025-04-24",
+  "strike": 539.0,
+  "right": "P",
+  "ticker": "O:SPY250424P00539000",
+  "entrada": "09:40",
+  "salida": "15:42"
+ },
+ {
+  "fecha": "2025-04-25",
+  "strike": 546.0,
+  "right": "C",
+  "ticker": "O:SPY250425C00546000",
+  "entrada": "12:24",
+  "salida": "13:39"
+ },
+ {
+  "fecha": "2025-04-25",
+  "strike": 547.0,
+  "right": "C",
+  "ticker": "O:SPY250425C00547000",
+  "entrada": "14:24",
+  "salida": "15:42"
+ },
+ {
+  "fecha": "2025-04-25",
+  "strike": 547.0,
+  "right": "P",
+  "ticker": "O:SPY250425P00547000",
+  "entrada": "09:54",
+  "salida": "12:24"
+ },
+ {
+  "fecha": "2025-04-25",
+  "strike": 552.0,
+  "right": "P",
+  "ticker": "O:SPY250425P00552000",
+  "entrada": "13:39",
+  "salida": "14:24"
+ },
+ {
+  "fecha": "2025-04-28",
+  "strike": 545.0,
+  "right": "C",
+  "ticker": "O:SPY250428C00545000",
+  "entrada": "13:57",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-04-28",
+  "strike": 555.0,
+  "right": "P",
+  "ticker": "O:SPY250428P00555000",
+  "entrada": "09:41",
+  "salida": "13:57"
+ },
+ {
+  "fecha": "2025-04-29",
+  "strike": 548.0,
+  "right": "C",
+  "ticker": "O:SPY250429C00548000",
+  "entrada": "09:45",
+  "salida": "12:51"
+ },
+ {
+  "fecha": "2025-04-29",
+  "strike": 551.0,
+  "right": "C",
+  "ticker": "O:SPY250429C00551000",
+  "entrada": "13:39",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-04-29",
+  "strike": 552.0,
+  "right": "P",
+  "ticker": "O:SPY250429P00552000",
+  "entrada": "09:40",
+  "salida": "09:45"
+ },
+ {
+  "fecha": "2025-04-29",
+  "strike": 554.0,
+  "right": "P",
+  "ticker": "O:SPY250429P00554000",
+  "entrada": "12:51",
+  "salida": "13:39"
+ },
+ {
+  "fecha": "2025-04-30",
+  "strike": 542.0,
+  "right": "C",
+  "ticker": "O:SPY250430C00542000",
+  "entrada": "09:40",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-05-01",
+  "strike": 559.0,
+  "right": "C",
+  "ticker": "O:SPY250501C00559000",
+  "entrada": "09:51",
+  "salida": "10:00"
+ },
+ {
+  "fecha": "2025-05-01",
+  "strike": 560.0,
+  "right": "C",
+  "ticker": "O:SPY250501C00560000",
+  "entrada": "10:42",
+  "salida": "11:45"
+ },
+ {
+  "fecha": "2025-05-01",
+  "strike": 562.0,
+  "right": "P",
+  "ticker": "O:SPY250501P00562000",
+  "entrada": "10:00",
+  "salida": "10:42"
+ },
+ {
+  "fecha": "2025-05-01",
+  "strike": 565.0,
+  "right": "P",
+  "ticker": "O:SPY250501P00565000",
+  "entrada": "11:45",
+  "salida": "13:18"
+ },
+ {
+  "fecha": "2025-05-02",
+  "strike": 563.0,
+  "right": "C",
+  "ticker": "O:SPY250502C00563000",
+  "entrada": "10:27",
+  "salida": "14:51"
+ },
+ {
+  "fecha": "2025-05-02",
+  "strike": 566.0,
+  "right": "P",
+  "ticker": "O:SPY250502P00566000",
+  "entrada": "09:48",
+  "salida": "10:27"
+ },
+ {
+  "fecha": "2025-05-02",
+  "strike": 569.0,
+  "right": "P",
+  "ticker": "O:SPY250502P00569000",
+  "entrada": "14:51",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-05-05",
+  "strike": 560.0,
+  "right": "C",
+  "ticker": "O:SPY250505C00560000",
+  "entrada": "09:41",
+  "salida": "15:00"
+ },
+ {
+  "fecha": "2025-05-05",
+  "strike": 568.0,
+  "right": "P",
+  "ticker": "O:SPY250505P00568000",
+  "entrada": "15:00",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-05-06",
+  "strike": 557.0,
+  "right": "C",
+  "ticker": "O:SPY250506C00557000",
+  "entrada": "10:18",
+  "salida": "12:45"
+ },
+ {
+  "fecha": "2025-05-06",
+  "strike": 558.0,
+  "right": "C",
+  "ticker": "O:SPY250506C00558000",
+  "entrada": "14:27",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-05-06",
+  "strike": 560.0,
+  "right": "P",
+  "ticker": "O:SPY250506P00560000",
+  "entrada": "09:51",
+  "salida": "10:18"
+ },
+ {
+  "fecha": "2025-05-06",
+  "strike": 563.0,
+  "right": "P",
+  "ticker": "O:SPY250506P00563000",
+  "entrada": "12:45",
+  "salida": "14:27"
+ },
+ {
+  "fecha": "2025-05-07",
+  "strike": 558.0,
+  "right": "C",
+  "ticker": "O:SPY250507C00558000",
+  "entrada": "12:54",
+  "salida": "13:42"
+ },
+ {
+  "fecha": "2025-05-07",
+  "strike": 559.0,
+  "right": "C",
+  "ticker": "O:SPY250507C00559000",
+  "entrada": "09:45",
+  "salida": "10:54"
+ },
+ {
+  "fecha": "2025-05-07",
+  "strike": 562.0,
+  "right": "P",
+  "ticker": "O:SPY250507P00562000",
+  "entrada": "10:54",
+  "salida": "12:54"
+ },
+ {
+  "fecha": "2025-05-07",
+  "strike": 563.0,
+  "right": "P",
+  "ticker": "O:SPY250507P00563000",
+  "entrada": "09:43",
+  "salida": "09:45"
+ },
+ {
+  "fecha": "2025-05-08",
+  "strike": 563.0,
+  "right": "C",
+  "ticker": "O:SPY250508C00563000",
+  "entrada": "11:21",
+  "salida": "13:21"
+ },
+ {
+  "fecha": "2025-05-08",
+  "strike": 572.0,
+  "right": "P",
+  "ticker": "O:SPY250508P00572000",
+  "entrada": "13:21",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-05-09",
+  "strike": 564.0,
+  "right": "C",
+  "ticker": "O:SPY250509C00564000",
+  "entrada": "09:44",
+  "salida": "15:48"
+ },
+ {
+  "fecha": "2025-05-12",
+  "strike": 576.0,
+  "right": "C",
+  "ticker": "O:SPY250512C00576000",
+  "entrada": "09:42",
+  "salida": "15:39"
+ },
+ {
+  "fecha": "2025-05-12",
+  "strike": 584.0,
+  "right": "P",
+  "ticker": "O:SPY250512P00584000",
+  "entrada": "15:39",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-05-13",
+  "strike": 586.0,
+  "right": "C",
+  "ticker": "O:SPY250513C00586000",
+  "entrada": "15:00",
+  "salida": "15:54"
+ },
+ {
+  "fecha": "2025-05-13",
+  "strike": 587.0,
+  "right": "P",
+  "ticker": "O:SPY250513P00587000",
+  "entrada": "09:40",
+  "salida": "15:00"
+ },
+ {
+  "fecha": "2025-05-14",
+  "strike": 586.0,
+  "right": "C",
+  "ticker": "O:SPY250514C00586000",
+  "entrada": "11:33",
+  "salida": "12:42"
+ },
+ {
+  "fecha": "2025-05-14",
+  "strike": 589.0,
+  "right": "P",
+  "ticker": "O:SPY250514P00589000",
+  "entrada": "09:48",
+  "salida": "11:33"
+ },
+ {
+  "fecha": "2025-05-14",
+  "strike": 590.0,
+  "right": "P",
+  "ticker": "O:SPY250514P00590000",
+  "entrada": "12:42",
+  "salida": "14:06"
+ },
+ {
+  "fecha": "2025-05-15",
+  "strike": 588.0,
+  "right": "C",
+  "ticker": "O:SPY250515C00588000",
+  "entrada": "14:42",
+  "salida": "15:27"
+ },
+ {
+  "fecha": "2025-05-15",
+  "strike": 592.0,
+  "right": "P",
+  "ticker": "O:SPY250515P00592000",
+  "entrada": "15:27",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-05-16",
+  "strike": 588.0,
+  "right": "C",
+  "ticker": "O:SPY250516C00588000",
+  "entrada": "09:41",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-05-19",
+  "strike": 592.0,
+  "right": "P",
+  "ticker": "O:SPY250519P00592000",
+  "entrada": "09:40",
+  "salida": "15:51"
+ },
+ {
+  "fecha": "2025-05-20",
+  "strike": 589.0,
+  "right": "C",
+  "ticker": "O:SPY250520C00589000",
+  "entrada": "15:27",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-05-20",
+  "strike": 591.0,
+  "right": "C",
+  "ticker": "O:SPY250520C00591000",
+  "entrada": "12:57",
+  "salida": "13:51"
+ },
+ {
+  "fecha": "2025-05-20",
+  "strike": 595.0,
+  "right": "P",
+  "ticker": "O:SPY250520P00595000",
+  "entrada": "13:51",
+  "salida": "15:27"
+ },
+ {
+  "fecha": "2025-05-21",
+  "strike": 592.0,
+  "right": "P",
+  "ticker": "O:SPY250521P00592000",
+  "entrada": "09:42",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-05-22",
+  "strike": 582.0,
+  "right": "C",
+  "ticker": "O:SPY250522C00582000",
+  "entrada": "13:24",
+  "salida": "15:45"
+ },
+ {
+  "fecha": "2025-05-22",
+  "strike": 585.0,
+  "right": "P",
+  "ticker": "O:SPY250522P00585000",
+  "entrada": "10:39",
+  "salida": "12:03"
+ },
+ {
+  "fecha": "2025-05-22",
+  "strike": 586.0,
+  "right": "P",
+  "ticker": "O:SPY250522P00586000",
+  "entrada": "12:57",
+  "salida": "13:24"
+ },
+ {
+  "fecha": "2025-05-23",
+  "strike": 583.0,
+  "right": "P",
+  "ticker": "O:SPY250523P00583000",
+  "entrada": "15:24",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-05-27",
+  "strike": 584.0,
+  "right": "C",
+  "ticker": "O:SPY250527C00584000",
+  "entrada": "10:03",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-05-28",
+  "strike": 588.0,
+  "right": "C",
+  "ticker": "O:SPY250528C00588000",
+  "entrada": "15:09",
+  "salida": "15:39"
+ },
+ {
+  "fecha": "2025-05-28",
+  "strike": 592.0,
+  "right": "P",
+  "ticker": "O:SPY250528P00592000",
+  "entrada": "13:45",
+  "salida": "15:09"
+ },
+ {
+  "fecha": "2025-05-28",
+  "strike": 594.0,
+  "right": "P",
+  "ticker": "O:SPY250528P00594000",
+  "entrada": "09:51",
+  "salida": "12:39"
+ },
+ {
+  "fecha": "2025-05-29",
+  "strike": 589.0,
+  "right": "C",
+  "ticker": "O:SPY250529C00589000",
+  "entrada": "09:44",
+  "salida": "14:21"
+ },
+ {
+  "fecha": "2025-05-29",
+  "strike": 590.0,
+  "right": "P",
+  "ticker": "O:SPY250529P00590000",
+  "entrada": "14:21",
+  "salida": "15:48"
+ },
+ {
+  "fecha": "2025-05-30",
+  "strike": 584.0,
+  "right": "C",
+  "ticker": "O:SPY250530C00584000",
+  "entrada": "13:51",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-05-30",
+  "strike": 587.0,
+  "right": "C",
+  "ticker": "O:SPY250530C00587000",
+  "entrada": "10:15",
+  "salida": "11:42"
+ },
+ {
+  "fecha": "2025-05-30",
+  "strike": 590.0,
+  "right": "P",
+  "ticker": "O:SPY250530P00590000",
+  "entrada": "11:42",
+  "salida": "13:51"
+ },
+ {
+  "fecha": "2025-06-02",
+  "strike": 586.0,
+  "right": "C",
+  "ticker": "O:SPY250602C00586000",
+  "entrada": "10:54",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-06-02",
+  "strike": 590.0,
+  "right": "P",
+  "ticker": "O:SPY250602P00590000",
+  "entrada": "09:54",
+  "salida": "10:54"
+ },
+ {
+  "fecha": "2025-06-03",
+  "strike": 599.0,
+  "right": "P",
+  "ticker": "O:SPY250603P00599000",
+  "entrada": "13:57",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-06-04",
+  "strike": 595.0,
+  "right": "C",
+  "ticker": "O:SPY250604C00595000",
+  "entrada": "13:18",
+  "salida": "14:51"
+ },
+ {
+  "fecha": "2025-06-04",
+  "strike": 599.0,
+  "right": "P",
+  "ticker": "O:SPY250604P00599000",
+  "entrada": "10:09",
+  "salida": "13:18"
+ },
+ {
+  "fecha": "2025-06-04",
+  "strike": 600.0,
+  "right": "P",
+  "ticker": "O:SPY250604P00600000",
+  "entrada": "14:51",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-06-05",
+  "strike": 594.0,
+  "right": "C",
+  "ticker": "O:SPY250605C00594000",
+  "entrada": "13:36",
+  "salida": "14:03"
+ },
+ {
+  "fecha": "2025-06-05",
+  "strike": 598.0,
+  "right": "P",
+  "ticker": "O:SPY250605P00598000",
+  "entrada": "14:03",
+  "salida": "15:39"
+ },
+ {
+  "fecha": "2025-06-05",
+  "strike": 600.0,
+  "right": "P",
+  "ticker": "O:SPY250605P00600000",
+  "entrada": "12:18",
+  "salida": "13:36"
+ },
+ {
+  "fecha": "2025-06-06",
+  "strike": 596.0,
+  "right": "C",
+  "ticker": "O:SPY250606C00596000",
+  "entrada": "13:45",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-06-06",
+  "strike": 602.0,
+  "right": "P",
+  "ticker": "O:SPY250606P00602000",
+  "entrada": "09:40",
+  "salida": "13:45"
+ },
+ {
+  "fecha": "2025-06-09",
+  "strike": 598.0,
+  "right": "C",
+  "ticker": "O:SPY250609C00598000",
+  "entrada": "10:33",
+  "salida": "14:42"
+ },
+ {
+  "fecha": "2025-06-09",
+  "strike": 603.0,
+  "right": "P",
+  "ticker": "O:SPY250609P00603000",
+  "entrada": "14:42",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-06-10",
+  "strike": 599.0,
+  "right": "C",
+  "ticker": "O:SPY250610C00599000",
+  "entrada": "12:03",
+  "salida": "13:48"
+ },
+ {
+  "fecha": "2025-06-10",
+  "strike": 600.0,
+  "right": "C",
+  "ticker": "O:SPY250610C00600000",
+  "entrada": "14:57",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-06-10",
+  "strike": 602.0,
+  "right": "P",
+  "ticker": "O:SPY250610P00602000",
+  "entrada": "11:33",
+  "salida": "12:03"
+ },
+ {
+  "fecha": "2025-06-10",
+  "strike": 604.0,
+  "right": "P",
+  "ticker": "O:SPY250610P00604000",
+  "entrada": "13:48",
+  "salida": "14:57"
+ },
+ {
+  "fecha": "2025-06-11",
+  "strike": 602.0,
+  "right": "C",
+  "ticker": "O:SPY250611C00602000",
+  "entrada": "13:09",
+  "salida": "13:48"
+ },
+ {
+  "fecha": "2025-06-11",
+  "strike": 606.0,
+  "right": "P",
+  "ticker": "O:SPY250611P00606000",
+  "entrada": "13:48",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-06-12",
+  "strike": 601.0,
+  "right": "C",
+  "ticker": "O:SPY250612C00601000",
+  "entrada": "13:33",
+  "salida": "15:54"
+ },
+ {
+  "fecha": "2025-06-12",
+  "strike": 603.0,
+  "right": "P",
+  "ticker": "O:SPY250612P00603000",
+  "entrada": "09:43",
+  "salida": "13:33"
+ },
+ {
+  "fecha": "2025-06-13",
+  "strike": 597.0,
+  "right": "C",
+  "ticker": "O:SPY250613C00597000",
+  "entrada": "11:03",
+  "salida": "13:12"
+ },
+ {
+  "fecha": "2025-06-13",
+  "strike": 600.0,
+  "right": "P",
+  "ticker": "O:SPY250613P00600000",
+  "entrada": "10:21",
+  "salida": "11:03"
+ },
+ {
+  "fecha": "2025-06-13",
+  "strike": 603.0,
+  "right": "P",
+  "ticker": "O:SPY250613P00603000",
+  "entrada": "13:12",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-06-16",
+  "strike": 601.0,
+  "right": "C",
+  "ticker": "O:SPY250616C00601000",
+  "entrada": "13:30",
+  "salida": "14:00"
+ },
+ {
+  "fecha": "2025-06-16",
+  "strike": 605.0,
+  "right": "P",
+  "ticker": "O:SPY250616P00605000",
+  "entrada": "14:00",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-06-16",
+  "strike": 606.0,
+  "right": "P",
+  "ticker": "O:SPY250616P00606000",
+  "entrada": "11:57",
+  "salida": "13:30"
+ },
+ {
+  "fecha": "2025-06-17",
+  "strike": 603.0,
+  "right": "P",
+  "ticker": "O:SPY250617P00603000",
+  "entrada": "11:33",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-06-18",
+  "strike": 597.0,
+  "right": "C",
+  "ticker": "O:SPY250618C00597000",
+  "entrada": "13:48",
+  "salida": "14:54"
+ },
+ {
+  "fecha": "2025-06-18",
+  "strike": 601.0,
+  "right": "P",
+  "ticker": "O:SPY250618P00601000",
+  "entrada": "14:54",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-06-18",
+  "strike": 602.0,
+  "right": "P",
+  "ticker": "O:SPY250618P00602000",
+  "entrada": "12:00",
+  "salida": "13:48"
+ },
+ {
+  "fecha": "2025-06-20",
+  "strike": 592.0,
+  "right": "C",
+  "ticker": "O:SPY250620C00592000",
+  "entrada": "14:18",
+  "salida": "14:57"
+ },
+ {
+  "fecha": "2025-06-20",
+  "strike": 593.0,
+  "right": "C",
+  "ticker": "O:SPY250620C00593000",
+  "entrada": "11:45",
+  "salida": "12:00"
+ },
+ {
+  "fecha": "2025-06-20",
+  "strike": 597.0,
+  "right": "P",
+  "ticker": "O:SPY250620P00597000",
+  "entrada": "12:00",
+  "salida": "14:18"
+ },
+ {
+  "fecha": "2025-06-20",
+  "strike": 602.0,
+  "right": "P",
+  "ticker": "O:SPY250620P00602000",
+  "entrada": "09:40",
+  "salida": "11:45"
+ },
+ {
+  "fecha": "2025-06-23",
+  "strike": 593.0,
+  "right": "C",
+  "ticker": "O:SPY250623C00593000",
+  "entrada": "13:09",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-06-23",
+  "strike": 599.0,
+  "right": "P",
+  "ticker": "O:SPY250623P00599000",
+  "entrada": "11:30",
+  "salida": "13:09"
+ },
+ {
+  "fecha": "2025-06-24",
+  "strike": 603.0,
+  "right": "C",
+  "ticker": "O:SPY250624C00603000",
+  "entrada": "11:24",
+  "salida": "15:57"
+ },
+ {
+  "fecha": "2025-06-24",
+  "strike": 607.0,
+  "right": "P",
+  "ticker": "O:SPY250624P00607000",
+  "entrada": "09:41",
+  "salida": "11:24"
+ },
+ {
+  "fecha": "2025-06-25",
+  "strike": 604.0,
+  "right": "C",
+  "ticker": "O:SPY250625C00604000",
+  "entrada": "15:09",
+  "salida": "15:39"
+ },
+ {
+  "fecha": "2025-06-25",
+  "strike": 609.0,
+  "right": "P",
+  "ticker": "O:SPY250625P00609000",
+  "entrada": "15:39",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-06-25",
+  "strike": 610.0,
+  "right": "P",
+  "ticker": "O:SPY250625P00610000",
+  "entrada": "10:15",
+  "salida": "15:09"
+ },
+ {
+  "fecha": "2025-06-26",
+  "strike": 607.0,
+  "right": "C",
+  "ticker": "O:SPY250626C00607000",
+  "entrada": "10:03",
+  "salida": "11:33"
+ },
+ {
+  "fecha": "2025-06-26",
+  "strike": 608.0,
+  "right": "C",
+  "ticker": "O:SPY250626C00608000",
+  "entrada": "12:03",
+  "salida": "14:51"
+ },
+ {
+  "fecha": "2025-06-26",
+  "strike": 613.0,
+  "right": "P",
+  "ticker": "O:SPY250626P00613000",
+  "entrada": "11:33",
+  "salida": "12:03"
+ },
+ {
+  "fecha": "2025-06-26",
+  "strike": 614.0,
+  "right": "P",
+  "ticker": "O:SPY250626P00614000",
+  "entrada": "14:51",
+  "salida": "15:54"
+ },
+ {
+  "fecha": "2025-06-27",
+  "strike": 611.0,
+  "right": "C",
+  "ticker": "O:SPY250627C00611000",
+  "entrada": "09:48",
+  "salida": "13:03"
+ },
+ {
+  "fecha": "2025-06-27",
+  "strike": 618.0,
+  "right": "P",
+  "ticker": "O:SPY250627P00618000",
+  "entrada": "13:03",
+  "salida": "15:42"
+ },
+ {
+  "fecha": "2025-06-30",
+  "strike": 614.0,
+  "right": "C",
+  "ticker": "O:SPY250630C00614000",
+  "entrada": "14:57",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-06-30",
+  "strike": 619.0,
+  "right": "P",
+  "ticker": "O:SPY250630P00619000",
+  "entrada": "13:33",
+  "salida": "14:57"
+ },
+ {
+  "fecha": "2025-07-01",
+  "strike": 615.0,
+  "right": "C",
+  "ticker": "O:SPY250701C00615000",
+  "entrada": "12:12",
+  "salida": "15:03"
+ },
+ {
+  "fecha": "2025-07-01",
+  "strike": 619.0,
+  "right": "P",
+  "ticker": "O:SPY250701P00619000",
+  "entrada": "10:48",
+  "salida": "12:12"
+ },
+ {
+  "fecha": "2025-07-01",
+  "strike": 620.0,
+  "right": "P",
+  "ticker": "O:SPY250701P00620000",
+  "entrada": "15:03",
+  "salida": "15:48"
+ },
+ {
+  "fecha": "2025-07-02",
+  "strike": 616.0,
+  "right": "C",
+  "ticker": "O:SPY250702C00616000",
+  "entrada": "10:06",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-07-03",
+  "strike": 628.0,
+  "right": "P",
+  "ticker": "O:SPY250703P00628000",
+  "entrada": "12:54",
+  "salida": "15:45"
+ },
+ {
+  "fecha": "2025-07-07",
+  "strike": 617.0,
+  "right": "C",
+  "ticker": "O:SPY250707C00617000",
+  "entrada": "14:57",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-07-07",
+  "strike": 621.0,
+  "right": "C",
+  "ticker": "O:SPY250707C00621000",
+  "entrada": "09:54",
+  "salida": "10:03"
+ },
+ {
+  "fecha": "2025-07-07",
+  "strike": 626.0,
+  "right": "P",
+  "ticker": "O:SPY250707P00626000",
+  "entrada": "10:03",
+  "salida": "14:57"
+ },
+ {
+  "fecha": "2025-07-08",
+  "strike": 619.0,
+  "right": "C",
+  "ticker": "O:SPY250708C00619000",
+  "entrada": "12:24",
+  "salida": "12:36"
+ },
+ {
+  "fecha": "2025-07-08",
+  "strike": 622.0,
+  "right": "P",
+  "ticker": "O:SPY250708P00622000",
+  "entrada": "10:54",
+  "salida": "12:24"
+ },
+ {
+  "fecha": "2025-07-08",
+  "strike": 624.0,
+  "right": "P",
+  "ticker": "O:SPY250708P00624000",
+  "entrada": "12:36",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-07-09",
+  "strike": 620.0,
+  "right": "C",
+  "ticker": "O:SPY250709C00620000",
+  "entrada": "13:51",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-07-09",
+  "strike": 626.0,
+  "right": "P",
+  "ticker": "O:SPY250709P00626000",
+  "entrada": "09:40",
+  "salida": "13:51"
+ },
+ {
+  "fecha": "2025-07-10",
+  "strike": 621.0,
+  "right": "C",
+  "ticker": "O:SPY250710C00621000",
+  "entrada": "09:40",
+  "salida": "10:00"
+ },
+ {
+  "fecha": "2025-07-10",
+  "strike": 622.0,
+  "right": "C",
+  "ticker": "O:SPY250710C00622000",
+  "entrada": "10:42",
+  "salida": "14:51"
+ },
+ {
+  "fecha": "2025-07-10",
+  "strike": 626.0,
+  "right": "P",
+  "ticker": "O:SPY250710P00626000",
+  "entrada": "10:00",
+  "salida": "10:42"
+ },
+ {
+  "fecha": "2025-07-10",
+  "strike": 629.0,
+  "right": "P",
+  "ticker": "O:SPY250710P00629000",
+  "entrada": "14:51",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-07-11",
+  "strike": 620.0,
+  "right": "C",
+  "ticker": "O:SPY250711C00620000",
+  "entrada": "09:42",
+  "salida": "11:15"
+ },
+ {
+  "fecha": "2025-07-11",
+  "strike": 622.0,
+  "right": "C",
+  "ticker": "O:SPY250711C00622000",
+  "entrada": "11:42",
+  "salida": "12:09"
+ },
+ {
+  "fecha": "2025-07-11",
+  "strike": 626.0,
+  "right": "P",
+  "ticker": "O:SPY250711P00626000",
+  "entrada": "12:09",
+  "salida": "13:09"
+ },
+ {
+  "fecha": "2025-07-14",
+  "strike": 620.0,
+  "right": "C",
+  "ticker": "O:SPY250714C00620000",
+  "entrada": "09:42",
+  "salida": "09:45"
+ },
+ {
+  "fecha": "2025-07-14",
+  "strike": 621.0,
+  "right": "C",
+  "ticker": "O:SPY250714C00621000",
+  "entrada": "10:24",
+  "salida": "15:24"
+ },
+ {
+  "fecha": "2025-07-14",
+  "strike": 625.0,
+  "right": "P",
+  "ticker": "O:SPY250714P00625000",
+  "entrada": "09:45",
+  "salida": "10:24"
+ },
+ {
+  "fecha": "2025-07-14",
+  "strike": 627.0,
+  "right": "P",
+  "ticker": "O:SPY250714P00627000",
+  "entrada": "15:24",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-07-15",
+  "strike": 624.0,
+  "right": "C",
+  "ticker": "O:SPY250715C00624000",
+  "entrada": "09:40",
+  "salida": "14:54"
+ },
+ {
+  "fecha": "2025-07-15",
+  "strike": 627.0,
+  "right": "P",
+  "ticker": "O:SPY250715P00627000",
+  "entrada": "14:54",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-07-16",
+  "strike": 619.0,
+  "right": "C",
+  "ticker": "O:SPY250716C00619000",
+  "entrada": "11:57",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-07-16",
+  "strike": 625.0,
+  "right": "P",
+  "ticker": "O:SPY250716P00625000",
+  "entrada": "09:48",
+  "salida": "11:57"
+ },
+ {
+  "fecha": "2025-07-17",
+  "strike": 625.0,
+  "right": "C",
+  "ticker": "O:SPY250717C00625000",
+  "entrada": "13:42",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-07-17",
+  "strike": 629.0,
+  "right": "P",
+  "ticker": "O:SPY250717P00629000",
+  "entrada": "12:42",
+  "salida": "13:42"
+ },
+ {
+  "fecha": "2025-07-21",
+  "strike": 629.0,
+  "right": "C",
+  "ticker": "O:SPY250721C00629000",
+  "entrada": "12:57",
+  "salida": "14:33"
+ },
+ {
+  "fecha": "2025-07-21",
+  "strike": 633.0,
+  "right": "P",
+  "ticker": "O:SPY250721P00633000",
+  "entrada": "12:12",
+  "salida": "12:57"
+ },
+ {
+  "fecha": "2025-07-21",
+  "strike": 634.0,
+  "right": "P",
+  "ticker": "O:SPY250721P00634000",
+  "entrada": "14:33",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-07-22",
+  "strike": 626.0,
+  "right": "C",
+  "ticker": "O:SPY250722C00626000",
+  "entrada": "13:21",
+  "salida": "14:18"
+ },
+ {
+  "fecha": "2025-07-22",
+  "strike": 627.0,
+  "right": "C",
+  "ticker": "O:SPY250722C00627000",
+  "entrada": "14:39",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-07-22",
+  "strike": 631.0,
+  "right": "P",
+  "ticker": "O:SPY250722P00631000",
+  "entrada": "14:18",
+  "salida": "14:39"
+ },
+ {
+  "fecha": "2025-07-23",
+  "strike": 630.0,
+  "right": "C",
+  "ticker": "O:SPY250723C00630000",
+  "entrada": "11:57",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-07-24",
+  "strike": 632.0,
+  "right": "C",
+  "ticker": "O:SPY250724C00632000",
+  "entrada": "09:40",
+  "salida": "10:18"
+ },
+ {
+  "fecha": "2025-07-24",
+  "strike": 633.0,
+  "right": "C",
+  "ticker": "O:SPY250724C00633000",
+  "entrada": "10:57",
+  "salida": "12:12"
+ },
+ {
+  "fecha": "2025-07-24",
+  "strike": 637.0,
+  "right": "P",
+  "ticker": "O:SPY250724P00637000",
+  "entrada": "12:12",
+  "salida": "13:09"
+ },
+ {
+  "fecha": "2025-07-25",
+  "strike": 633.0,
+  "right": "C",
+  "ticker": "O:SPY250725C00633000",
+  "entrada": "10:36",
+  "salida": "15:54"
+ },
+ {
+  "fecha": "2025-07-29",
+  "strike": 634.0,
+  "right": "C",
+  "ticker": "O:SPY250729C00634000",
+  "entrada": "13:03",
+  "salida": "13:39"
+ },
+ {
+  "fecha": "2025-07-29",
+  "strike": 638.0,
+  "right": "P",
+  "ticker": "O:SPY250729P00638000",
+  "entrada": "13:39",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-07-29",
+  "strike": 640.0,
+  "right": "P",
+  "ticker": "O:SPY250729P00640000",
+  "entrada": "09:51",
+  "salida": "13:03"
+ },
+ {
+  "fecha": "2025-07-30",
+  "strike": 633.0,
+  "right": "C",
+  "ticker": "O:SPY250730C00633000",
+  "entrada": "12:00",
+  "salida": "14:03"
+ },
+ {
+  "fecha": "2025-07-30",
+  "strike": 634.0,
+  "right": "C",
+  "ticker": "O:SPY250730C00634000",
+  "entrada": "10:24",
+  "salida": "11:12"
+ },
+ {
+  "fecha": "2025-07-30",
+  "strike": 638.0,
+  "right": "P",
+  "ticker": "O:SPY250730P00638000",
+  "entrada": "11:12",
+  "salida": "12:00"
+ },
+ {
+  "fecha": "2025-07-30",
+  "strike": 639.0,
+  "right": "P",
+  "ticker": "O:SPY250730P00639000",
+  "entrada": "14:03",
+  "salida": "14:36"
+ },
+ {
+  "fecha": "2025-07-31",
+  "strike": 635.0,
+  "right": "C",
+  "ticker": "O:SPY250731C00635000",
+  "entrada": "11:45",
+  "salida": "13:03"
+ },
+ {
+  "fecha": "2025-07-31",
+  "strike": 636.0,
+  "right": "C",
+  "ticker": "O:SPY250731C00636000",
+  "entrada": "09:40",
+  "salida": "10:51"
+ },
+ {
+  "fecha": "2025-07-31",
+  "strike": 640.0,
+  "right": "P",
+  "ticker": "O:SPY250731P00640000",
+  "entrada": "13:03",
+  "salida": "14:33"
+ },
+ {
+  "fecha": "2025-08-01",
+  "strike": 619.0,
+  "right": "C",
+  "ticker": "O:SPY250801C00619000",
+  "entrada": "14:30",
+  "salida": "15:03"
+ },
+ {
+  "fecha": "2025-08-01",
+  "strike": 621.0,
+  "right": "C",
+  "ticker": "O:SPY250801C00621000",
+  "entrada": "09:40",
+  "salida": "12:48"
+ },
+ {
+  "fecha": "2025-08-01",
+  "strike": 624.0,
+  "right": "P",
+  "ticker": "O:SPY250801P00624000",
+  "entrada": "15:03",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-08-01",
+  "strike": 626.0,
+  "right": "P",
+  "ticker": "O:SPY250801P00626000",
+  "entrada": "12:48",
+  "salida": "14:30"
+ },
+ {
+  "fecha": "2025-08-04",
+  "strike": 628.0,
+  "right": "C",
+  "ticker": "O:SPY250804C00628000",
+  "entrada": "15:18",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-08-04",
+  "strike": 630.0,
+  "right": "P",
+  "ticker": "O:SPY250804P00630000",
+  "entrada": "09:42",
+  "salida": "15:18"
+ },
+ {
+  "fecha": "2025-08-05",
+  "strike": 627.0,
+  "right": "C",
+  "ticker": "O:SPY250805C00627000",
+  "entrada": "13:30",
+  "salida": "14:15"
+ },
+ {
+  "fecha": "2025-08-05",
+  "strike": 631.0,
+  "right": "P",
+  "ticker": "O:SPY250805P00631000",
+  "entrada": "12:48",
+  "salida": "13:30"
+ },
+ {
+  "fecha": "2025-08-05",
+  "strike": 633.0,
+  "right": "P",
+  "ticker": "O:SPY250805P00633000",
+  "entrada": "10:03",
+  "salida": "12:33"
+ },
+ {
+  "fecha": "2025-08-06",
+  "strike": 626.0,
+  "right": "C",
+  "ticker": "O:SPY250806C00626000",
+  "entrada": "09:40",
+  "salida": "10:24"
+ },
+ {
+  "fecha": "2025-08-06",
+  "strike": 628.0,
+  "right": "C",
+  "ticker": "O:SPY250806C00628000",
+  "entrada": "10:57",
+  "salida": "15:57"
+ },
+ {
+  "fecha": "2025-08-06",
+  "strike": 631.0,
+  "right": "P",
+  "ticker": "O:SPY250806P00631000",
+  "entrada": "10:24",
+  "salida": "10:57"
+ },
+ {
+  "fecha": "2025-08-08",
+  "strike": 634.0,
+  "right": "C",
+  "ticker": "O:SPY250808C00634000",
+  "entrada": "11:57",
+  "salida": "13:03"
+ },
+ {
+  "fecha": "2025-08-08",
+  "strike": 635.0,
+  "right": "C",
+  "ticker": "O:SPY250808C00635000",
+  "entrada": "13:54",
+  "salida": "15:36"
+ },
+ {
+  "fecha": "2025-08-08",
+  "strike": 637.0,
+  "right": "P",
+  "ticker": "O:SPY250808P00637000",
+  "entrada": "09:42",
+  "salida": "11:57"
+ },
+ {
+  "fecha": "2025-08-08",
+  "strike": 639.0,
+  "right": "P",
+  "ticker": "O:SPY250808P00639000",
+  "entrada": "13:03",
+  "salida": "13:54"
+ },
+ {
+  "fecha": "2025-08-11",
+  "strike": 635.0,
+  "right": "C",
+  "ticker": "O:SPY250811C00635000",
+  "entrada": "11:54",
+  "salida": "12:42"
+ },
+ {
+  "fecha": "2025-08-11",
+  "strike": 640.0,
+  "right": "P",
+  "ticker": "O:SPY250811P00640000",
+  "entrada": "12:42",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-08-12",
+  "strike": 637.0,
+  "right": "C",
+  "ticker": "O:SPY250812C00637000",
+  "entrada": "10:54",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-08-12",
+  "strike": 639.0,
+  "right": "P",
+  "ticker": "O:SPY250812P00639000",
+  "entrada": "09:51",
+  "salida": "10:54"
+ },
+ {
+  "fecha": "2025-08-13",
+  "strike": 641.0,
+  "right": "C",
+  "ticker": "O:SPY250813C00641000",
+  "entrada": "14:06",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-08-13",
+  "strike": 642.0,
+  "right": "C",
+  "ticker": "O:SPY250813C00642000",
+  "entrada": "11:45",
+  "salida": "12:51"
+ },
+ {
+  "fecha": "2025-08-13",
+  "strike": 646.0,
+  "right": "P",
+  "ticker": "O:SPY250813P00646000",
+  "entrada": "12:51",
+  "salida": "14:06"
+ },
+ {
+  "fecha": "2025-08-13",
+  "strike": 647.0,
+  "right": "P",
+  "ticker": "O:SPY250813P00647000",
+  "entrada": "10:12",
+  "salida": "11:45"
+ },
+ {
+  "fecha": "2025-08-14",
+  "strike": 642.0,
+  "right": "C",
+  "ticker": "O:SPY250814C00642000",
+  "entrada": "15:15",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-08-14",
+  "strike": 647.0,
+  "right": "P",
+  "ticker": "O:SPY250814P00647000",
+  "entrada": "14:18",
+  "salida": "15:15"
+ },
+ {
+  "fecha": "2025-08-15",
+  "strike": 642.0,
+  "right": "C",
+  "ticker": "O:SPY250815C00642000",
+  "entrada": "13:09",
+  "salida": "15:06"
+ },
+ {
+  "fecha": "2025-08-15",
+  "strike": 646.0,
+  "right": "P",
+  "ticker": "O:SPY250815P00646000",
+  "entrada": "15:06",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-08-18",
+  "strike": 641.0,
+  "right": "C",
+  "ticker": "O:SPY250818C00641000",
+  "entrada": "13:33",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-08-18",
+  "strike": 645.0,
+  "right": "P",
+  "ticker": "O:SPY250818P00645000",
+  "entrada": "10:00",
+  "salida": "13:33"
+ },
+ {
+  "fecha": "2025-08-19",
+  "strike": 645.0,
+  "right": "P",
+  "ticker": "O:SPY250819P00645000",
+  "entrada": "10:42",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-08-20",
+  "strike": 634.0,
+  "right": "C",
+  "ticker": "O:SPY250820C00634000",
+  "entrada": "12:18",
+  "salida": "14:03"
+ },
+ {
+  "fecha": "2025-08-20",
+  "strike": 636.0,
+  "right": "C",
+  "ticker": "O:SPY250820C00636000",
+  "entrada": "09:40",
+  "salida": "11:54"
+ },
+ {
+  "fecha": "2025-08-20",
+  "strike": 638.0,
+  "right": "P",
+  "ticker": "O:SPY250820P00638000",
+  "entrada": "11:54",
+  "salida": "12:18"
+ },
+ {
+  "fecha": "2025-08-20",
+  "strike": 639.0,
+  "right": "P",
+  "ticker": "O:SPY250820P00639000",
+  "entrada": "14:03",
+  "salida": "15:09"
+ },
+ {
+  "fecha": "2025-08-21",
+  "strike": 633.0,
+  "right": "C",
+  "ticker": "O:SPY250821C00633000",
+  "entrada": "13:42",
+  "salida": "15:42"
+ },
+ {
+  "fecha": "2025-08-21",
+  "strike": 635.0,
+  "right": "C",
+  "ticker": "O:SPY250821C00635000",
+  "entrada": "10:15",
+  "salida": "11:15"
+ },
+ {
+  "fecha": "2025-08-21",
+  "strike": 638.0,
+  "right": "P",
+  "ticker": "O:SPY250821P00638000",
+  "entrada": "11:15",
+  "salida": "13:42"
+ },
+ {
+  "fecha": "2025-08-22",
+  "strike": 643.0,
+  "right": "C",
+  "ticker": "O:SPY250822C00643000",
+  "entrada": "13:15",
+  "salida": "14:24"
+ },
+ {
+  "fecha": "2025-08-22",
+  "strike": 641.0,
+  "right": "P",
+  "ticker": "O:SPY250822P00641000",
+  "entrada": "09:40",
+  "salida": "13:15"
+ },
+ {
+  "fecha": "2025-08-22",
+  "strike": 648.0,
+  "right": "P",
+  "ticker": "O:SPY250822P00648000",
+  "entrada": "14:24",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-08-25",
+  "strike": 647.0,
+  "right": "P",
+  "ticker": "O:SPY250825P00647000",
+  "entrada": "13:06",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-08-26",
+  "strike": 641.0,
+  "right": "C",
+  "ticker": "O:SPY250826C00641000",
+  "entrada": "14:18",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-08-26",
+  "strike": 644.0,
+  "right": "P",
+  "ticker": "O:SPY250826P00644000",
+  "entrada": "09:48",
+  "salida": "12:15"
+ },
+ {
+  "fecha": "2025-08-26",
+  "strike": 645.0,
+  "right": "P",
+  "ticker": "O:SPY250826P00645000",
+  "entrada": "13:54",
+  "salida": "14:18"
+ },
+ {
+  "fecha": "2025-08-27",
+  "strike": 644.0,
+  "right": "C",
+  "ticker": "O:SPY250827C00644000",
+  "entrada": "15:39",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-08-27",
+  "strike": 648.0,
+  "right": "P",
+  "ticker": "O:SPY250827P00648000",
+  "entrada": "12:24",
+  "salida": "13:33"
+ },
+ {
+  "fecha": "2025-08-27",
+  "strike": 649.0,
+  "right": "P",
+  "ticker": "O:SPY250827P00649000",
+  "entrada": "15:12",
+  "salida": "15:39"
+ },
+ {
+  "fecha": "2025-08-28",
+  "strike": 645.0,
+  "right": "C",
+  "ticker": "O:SPY250828C00645000",
+  "entrada": "12:15",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-08-28",
+  "strike": 649.0,
+  "right": "P",
+  "ticker": "O:SPY250828P00649000",
+  "entrada": "11:30",
+  "salida": "12:15"
+ },
+ {
+  "fecha": "2025-08-29",
+  "strike": 642.0,
+  "right": "C",
+  "ticker": "O:SPY250829C00642000",
+  "entrada": "13:54",
+  "salida": "15:51"
+ },
+ {
+  "fecha": "2025-09-02",
+  "strike": 634.0,
+  "right": "C",
+  "ticker": "O:SPY250902C00634000",
+  "entrada": "12:54",
+  "salida": "14:30"
+ },
+ {
+  "fecha": "2025-09-02",
+  "strike": 636.0,
+  "right": "C",
+  "ticker": "O:SPY250902C00636000",
+  "entrada": "09:51",
+  "salida": "11:06"
+ },
+ {
+  "fecha": "2025-09-02",
+  "strike": 639.0,
+  "right": "P",
+  "ticker": "O:SPY250902P00639000",
+  "entrada": "11:06",
+  "salida": "12:54"
+ },
+ {
+  "fecha": "2025-09-02",
+  "strike": 641.0,
+  "right": "P",
+  "ticker": "O:SPY250902P00641000",
+  "entrada": "14:30",
+  "salida": "14:51"
+ },
+ {
+  "fecha": "2025-09-03",
+  "strike": 640.0,
+  "right": "C",
+  "ticker": "O:SPY250903C00640000",
+  "entrada": "13:18",
+  "salida": "13:42"
+ },
+ {
+  "fecha": "2025-09-03",
+  "strike": 644.0,
+  "right": "P",
+  "ticker": "O:SPY250903P00644000",
+  "entrada": "13:42",
+  "salida": "15:39"
+ },
+ {
+  "fecha": "2025-09-03",
+  "strike": 645.0,
+  "right": "P",
+  "ticker": "O:SPY250903P00645000",
+  "entrada": "11:27",
+  "salida": "13:18"
+ },
+ {
+  "fecha": "2025-09-04",
+  "strike": 643.0,
+  "right": "C",
+  "ticker": "O:SPY250904C00643000",
+  "entrada": "10:33",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-09-04",
+  "strike": 646.0,
+  "right": "P",
+  "ticker": "O:SPY250904P00646000",
+  "entrada": "10:09",
+  "salida": "10:33"
+ },
+ {
+  "fecha": "2025-09-05",
+  "strike": 644.0,
+  "right": "C",
+  "ticker": "O:SPY250905C00644000",
+  "entrada": "11:39",
+  "salida": "15:54"
+ },
+ {
+  "fecha": "2025-09-05",
+  "strike": 652.0,
+  "right": "P",
+  "ticker": "O:SPY250905P00652000",
+  "entrada": "10:03",
+  "salida": "11:39"
+ },
+ {
+  "fecha": "2025-09-08",
+  "strike": 646.0,
+  "right": "C",
+  "ticker": "O:SPY250908C00646000",
+  "entrada": "14:30",
+  "salida": "15:15"
+ },
+ {
+  "fecha": "2025-09-08",
+  "strike": 647.0,
+  "right": "C",
+  "ticker": "O:SPY250908C00647000",
+  "entrada": "10:39",
+  "salida": "11:48"
+ },
+ {
+  "fecha": "2025-09-08",
+  "strike": 650.0,
+  "right": "P",
+  "ticker": "O:SPY250908P00650000",
+  "entrada": "15:15",
+  "salida": "15:48"
+ },
+ {
+  "fecha": "2025-09-08",
+  "strike": 651.0,
+  "right": "P",
+  "ticker": "O:SPY250908P00651000",
+  "entrada": "11:48",
+  "salida": "14:30"
+ },
+ {
+  "fecha": "2025-09-09",
+  "strike": 646.0,
+  "right": "C",
+  "ticker": "O:SPY250909C00646000",
+  "entrada": "12:18",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-09-09",
+  "strike": 647.0,
+  "right": "C",
+  "ticker": "O:SPY250909C00647000",
+  "entrada": "10:12",
+  "salida": "10:33"
+ },
+ {
+  "fecha": "2025-09-09",
+  "strike": 650.0,
+  "right": "P",
+  "ticker": "O:SPY250909P00650000",
+  "entrada": "10:33",
+  "salida": "12:18"
+ },
+ {
+  "fecha": "2025-09-10",
+  "strike": 651.0,
+  "right": "C",
+  "ticker": "O:SPY250910C00651000",
+  "entrada": "11:51",
+  "salida": "12:30"
+ },
+ {
+  "fecha": "2025-09-10",
+  "strike": 652.0,
+  "right": "C",
+  "ticker": "O:SPY250910C00652000",
+  "entrada": "10:09",
+  "salida": "11:06"
+ },
+ {
+  "fecha": "2025-09-10",
+  "strike": 655.0,
+  "right": "P",
+  "ticker": "O:SPY250910P00655000",
+  "entrada": "12:30",
+  "salida": "13:03"
+ },
+ {
+  "fecha": "2025-09-10",
+  "strike": 656.0,
+  "right": "P",
+  "ticker": "O:SPY250910P00656000",
+  "entrada": "11:06",
+  "salida": "11:51"
+ },
+ {
+  "fecha": "2025-09-11",
+  "strike": 651.0,
+  "right": "C",
+  "ticker": "O:SPY250911C00651000",
+  "entrada": "09:42",
+  "salida": "12:54"
+ },
+ {
+  "fecha": "2025-09-11",
+  "strike": 655.0,
+  "right": "C",
+  "ticker": "O:SPY250911C00655000",
+  "entrada": "15:21",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-09-11",
+  "strike": 660.0,
+  "right": "P",
+  "ticker": "O:SPY250911P00660000",
+  "entrada": "12:54",
+  "salida": "15:21"
+ },
+ {
+  "fecha": "2025-09-12",
+  "strike": 656.0,
+  "right": "C",
+  "ticker": "O:SPY250912C00656000",
+  "entrada": "13:21",
+  "salida": "15:27"
+ },
+ {
+  "fecha": "2025-09-12",
+  "strike": 660.0,
+  "right": "P",
+  "ticker": "O:SPY250912P00660000",
+  "entrada": "11:39",
+  "salida": "13:21"
+ },
+ {
+  "fecha": "2025-09-12",
+  "strike": 661.0,
+  "right": "P",
+  "ticker": "O:SPY250912P00661000",
+  "entrada": "15:27",
+  "salida": "15:54"
+ },
+ {
+  "fecha": "2025-09-15",
+  "strike": 658.0,
+  "right": "C",
+  "ticker": "O:SPY250915C00658000",
+  "entrada": "13:51",
+  "salida": "14:30"
+ },
+ {
+  "fecha": "2025-09-15",
+  "strike": 663.0,
+  "right": "P",
+  "ticker": "O:SPY250915P00663000",
+  "entrada": "14:30",
+  "salida": "15:48"
+ },
+ {
+  "fecha": "2025-09-16",
+  "strike": 659.0,
+  "right": "C",
+  "ticker": "O:SPY250916C00659000",
+  "entrada": "09:40",
+  "salida": "15:33"
+ },
+ {
+  "fecha": "2025-09-16",
+  "strike": 663.0,
+  "right": "P",
+  "ticker": "O:SPY250916P00663000",
+  "entrada": "15:33",
+  "salida": "15:51"
+ },
+ {
+  "fecha": "2025-09-17",
+  "strike": 657.0,
+  "right": "C",
+  "ticker": "O:SPY250917C00657000",
+  "entrada": "13:42",
+  "salida": "14:15"
+ },
+ {
+  "fecha": "2025-09-17",
+  "strike": 658.0,
+  "right": "C",
+  "ticker": "O:SPY250917C00658000",
+  "entrada": "15:27",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-09-17",
+  "strike": 661.0,
+  "right": "P",
+  "ticker": "O:SPY250917P00661000",
+  "entrada": "14:15",
+  "salida": "15:27"
+ },
+ {
+  "fecha": "2025-09-17",
+  "strike": 662.0,
+  "right": "P",
+  "ticker": "O:SPY250917P00662000",
+  "entrada": "10:03",
+  "salida": "13:42"
+ },
+ {
+  "fecha": "2025-09-18",
+  "strike": 659.0,
+  "right": "C",
+  "ticker": "O:SPY250918C00659000",
+  "entrada": "09:41",
+  "salida": "10:57"
+ },
+ {
+  "fecha": "2025-09-18",
+  "strike": 661.0,
+  "right": "C",
+  "ticker": "O:SPY250918C00661000",
+  "entrada": "12:39",
+  "salida": "13:36"
+ },
+ {
+  "fecha": "2025-09-18",
+  "strike": 665.0,
+  "right": "P",
+  "ticker": "O:SPY250918P00665000",
+  "entrada": "13:36",
+  "salida": "14:57"
+ },
+ {
+  "fecha": "2025-09-19",
+  "strike": 659.0,
+  "right": "C",
+  "ticker": "O:SPY250919C00659000",
+  "entrada": "12:03",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-09-19",
+  "strike": 660.0,
+  "right": "C",
+  "ticker": "O:SPY250919C00660000",
+  "entrada": "09:54",
+  "salida": "10:48"
+ },
+ {
+  "fecha": "2025-09-19",
+  "strike": 664.0,
+  "right": "P",
+  "ticker": "O:SPY250919P00664000",
+  "entrada": "10:48",
+  "salida": "12:03"
+ },
+ {
+  "fecha": "2025-09-23",
+  "strike": 663.0,
+  "right": "C",
+  "ticker": "O:SPY250923C00663000",
+  "entrada": "12:48",
+  "salida": "13:03"
+ },
+ {
+  "fecha": "2025-09-23",
+  "strike": 667.0,
+  "right": "P",
+  "ticker": "O:SPY250923P00667000",
+  "entrada": "13:03",
+  "salida": "15:54"
+ },
+ {
+  "fecha": "2025-09-23",
+  "strike": 669.0,
+  "right": "P",
+  "ticker": "O:SPY250923P00669000",
+  "entrada": "10:27",
+  "salida": "12:48"
+ },
+ {
+  "fecha": "2025-09-24",
+  "strike": 658.0,
+  "right": "C",
+  "ticker": "O:SPY250924C00658000",
+  "entrada": "14:54",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-09-24",
+  "strike": 661.0,
+  "right": "C",
+  "ticker": "O:SPY250924C00661000",
+  "entrada": "09:43",
+  "salida": "13:48"
+ },
+ {
+  "fecha": "2025-09-24",
+  "strike": 663.0,
+  "right": "P",
+  "ticker": "O:SPY250924P00663000",
+  "entrada": "13:48",
+  "salida": "14:54"
+ },
+ {
+  "fecha": "2025-09-25",
+  "strike": 653.0,
+  "right": "C",
+  "ticker": "O:SPY250925C00653000",
+  "entrada": "09:40",
+  "salida": "11:09"
+ },
+ {
+  "fecha": "2025-09-25",
+  "strike": 657.0,
+  "right": "C",
+  "ticker": "O:SPY250925C00657000",
+  "entrada": "11:45",
+  "salida": "12:54"
+ },
+ {
+  "fecha": "2025-09-25",
+  "strike": 660.0,
+  "right": "P",
+  "ticker": "O:SPY250925P00660000",
+  "entrada": "12:54",
+  "salida": "14:18"
+ },
+ {
+  "fecha": "2025-09-26",
+  "strike": 658.0,
+  "right": "C",
+  "ticker": "O:SPY250926C00658000",
+  "entrada": "12:27",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-09-26",
+  "strike": 664.0,
+  "right": "P",
+  "ticker": "O:SPY250926P00664000",
+  "entrada": "09:42",
+  "salida": "12:27"
+ },
+ {
+  "fecha": "2025-09-29",
+  "strike": 662.0,
+  "right": "C",
+  "ticker": "O:SPY250929C00662000",
+  "entrada": "09:41",
+  "salida": "15:09"
+ },
+ {
+  "fecha": "2025-09-29",
+  "strike": 665.0,
+  "right": "P",
+  "ticker": "O:SPY250929P00665000",
+  "entrada": "15:09",
+  "salida": "15:42"
+ },
+ {
+  "fecha": "2025-09-30",
+  "strike": 660.0,
+  "right": "C",
+  "ticker": "O:SPY250930C00660000",
+  "entrada": "13:54",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-09-30",
+  "strike": 661.0,
+  "right": "C",
+  "ticker": "O:SPY250930C00661000",
+  "entrada": "10:03",
+  "salida": "13:12"
+ },
+ {
+  "fecha": "2025-09-30",
+  "strike": 665.0,
+  "right": "P",
+  "ticker": "O:SPY250930P00665000",
+  "entrada": "13:12",
+  "salida": "13:54"
+ },
+ {
+  "fecha": "2025-10-01",
+  "strike": 663.0,
+  "right": "C",
+  "ticker": "O:SPY251001C00663000",
+  "entrada": "10:27",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-10-01",
+  "strike": 667.0,
+  "right": "P",
+  "ticker": "O:SPY251001P00667000",
+  "entrada": "09:40",
+  "salida": "10:27"
+ },
+ {
+  "fecha": "2025-10-02",
+  "strike": 667.0,
+  "right": "C",
+  "ticker": "O:SPY251002C00667000",
+  "entrada": "09:40",
+  "salida": "15:42"
+ },
+ {
+  "fecha": "2025-10-03",
+  "strike": 668.0,
+  "right": "C",
+  "ticker": "O:SPY251003C00668000",
+  "entrada": "14:27",
+  "salida": "15:57"
+ },
+ {
+  "fecha": "2025-10-03",
+  "strike": 674.0,
+  "right": "P",
+  "ticker": "O:SPY251003P00674000",
+  "entrada": "13:03",
+  "salida": "14:27"
+ },
+ {
+  "fecha": "2025-10-06",
+  "strike": 668.0,
+  "right": "C",
+  "ticker": "O:SPY251006C00668000",
+  "entrada": "09:43",
+  "salida": "15:18"
+ },
+ {
+  "fecha": "2025-10-06",
+  "strike": 675.0,
+  "right": "P",
+  "ticker": "O:SPY251006P00675000",
+  "entrada": "15:18",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-10-07",
+  "strike": 667.0,
+  "right": "C",
+  "ticker": "O:SPY251007C00667000",
+  "entrada": "12:39",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-10-07",
+  "strike": 675.0,
+  "right": "P",
+  "ticker": "O:SPY251007P00675000",
+  "entrada": "09:48",
+  "salida": "12:39"
+ },
+ {
+  "fecha": "2025-10-08",
+  "strike": 669.0,
+  "right": "C",
+  "ticker": "O:SPY251008C00669000",
+  "entrada": "10:03",
+  "salida": "12:51"
+ },
+ {
+  "fecha": "2025-10-08",
+  "strike": 670.0,
+  "right": "C",
+  "ticker": "O:SPY251008C00670000",
+  "entrada": "13:24",
+  "salida": "14:48"
+ },
+ {
+  "fecha": "2025-10-08",
+  "strike": 675.0,
+  "right": "P",
+  "ticker": "O:SPY251008P00675000",
+  "entrada": "14:48",
+  "salida": "15:21"
+ },
+ {
+  "fecha": "2025-10-09",
+  "strike": 668.0,
+  "right": "C",
+  "ticker": "O:SPY251009C00668000",
+  "entrada": "15:33",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-10-10",
+  "strike": 675.0,
+  "right": "P",
+  "ticker": "O:SPY251010P00675000",
+  "entrada": "10:06",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-10-13",
+  "strike": 661.0,
+  "right": "C",
+  "ticker": "O:SPY251013C00661000",
+  "entrada": "14:24",
+  "salida": "14:45"
+ },
+ {
+  "fecha": "2025-10-13",
+  "strike": 666.0,
+  "right": "P",
+  "ticker": "O:SPY251013P00666000",
+  "entrada": "14:45",
+  "salida": "15:24"
+ },
+ {
+  "fecha": "2025-10-14",
+  "strike": 651.0,
+  "right": "C",
+  "ticker": "O:SPY251014C00651000",
+  "entrada": "09:43",
+  "salida": "15:39"
+ },
+ {
+  "fecha": "2025-10-14",
+  "strike": 666.0,
+  "right": "P",
+  "ticker": "O:SPY251014P00666000",
+  "entrada": "15:39",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-10-15",
+  "strike": 661.0,
+  "right": "C",
+  "ticker": "O:SPY251015C00661000",
+  "entrada": "13:48",
+  "salida": "15:39"
+ },
+ {
+  "fecha": "2025-10-15",
+  "strike": 667.0,
+  "right": "P",
+  "ticker": "O:SPY251015P00667000",
+  "entrada": "15:39",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-10-15",
+  "strike": 670.0,
+  "right": "P",
+  "ticker": "O:SPY251015P00670000",
+  "entrada": "11:12",
+  "salida": "13:48"
+ },
+ {
+  "fecha": "2025-10-16",
+  "strike": 664.0,
+  "right": "C",
+  "ticker": "O:SPY251016C00664000",
+  "entrada": "09:40",
+  "salida": "11:30"
+ },
+ {
+  "fecha": "2025-10-16",
+  "strike": 668.0,
+  "right": "P",
+  "ticker": "O:SPY251016P00668000",
+  "entrada": "11:30",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-10-17",
+  "strike": 656.0,
+  "right": "C",
+  "ticker": "O:SPY251017C00656000",
+  "entrada": "09:43",
+  "salida": "11:15"
+ },
+ {
+  "fecha": "2025-10-17",
+  "strike": 659.0,
+  "right": "C",
+  "ticker": "O:SPY251017C00659000",
+  "entrada": "11:54",
+  "salida": "13:12"
+ },
+ {
+  "fecha": "2025-10-17",
+  "strike": 662.0,
+  "right": "P",
+  "ticker": "O:SPY251017P00662000",
+  "entrada": "11:15",
+  "salida": "11:54"
+ },
+ {
+  "fecha": "2025-10-17",
+  "strike": 664.0,
+  "right": "P",
+  "ticker": "O:SPY251017P00664000",
+  "entrada": "13:12",
+  "salida": "14:03"
+ },
+ {
+  "fecha": "2025-10-20",
+  "strike": 669.0,
+  "right": "C",
+  "ticker": "O:SPY251020C00669000",
+  "entrada": "15:03",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-10-20",
+  "strike": 674.0,
+  "right": "P",
+  "ticker": "O:SPY251020P00674000",
+  "entrada": "14:48",
+  "salida": "15:03"
+ },
+ {
+  "fecha": "2025-10-21",
+  "strike": 669.0,
+  "right": "C",
+  "ticker": "O:SPY251021C00669000",
+  "entrada": "09:42",
+  "salida": "12:54"
+ },
+ {
+  "fecha": "2025-10-21",
+  "strike": 674.0,
+  "right": "P",
+  "ticker": "O:SPY251021P00674000",
+  "entrada": "12:54",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-10-22",
+  "strike": 663.0,
+  "right": "C",
+  "ticker": "O:SPY251022C00663000",
+  "entrada": "14:24",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-10-23",
+  "strike": 668.0,
+  "right": "C",
+  "ticker": "O:SPY251023C00668000",
+  "entrada": "11:57",
+  "salida": "13:09"
+ },
+ {
+  "fecha": "2025-10-23",
+  "strike": 670.0,
+  "right": "C",
+  "ticker": "O:SPY251023C00670000",
+  "entrada": "13:39",
+  "salida": "15:45"
+ },
+ {
+  "fecha": "2025-10-23",
+  "strike": 672.0,
+  "right": "P",
+  "ticker": "O:SPY251023P00672000",
+  "entrada": "09:44",
+  "salida": "11:57"
+ },
+ {
+  "fecha": "2025-10-23",
+  "strike": 673.0,
+  "right": "P",
+  "ticker": "O:SPY251023P00673000",
+  "entrada": "13:09",
+  "salida": "13:39"
+ },
+ {
+  "fecha": "2025-10-24",
+  "strike": 676.0,
+  "right": "C",
+  "ticker": "O:SPY251024C00676000",
+  "entrada": "13:39",
+  "salida": "15:45"
+ },
+ {
+  "fecha": "2025-10-24",
+  "strike": 680.0,
+  "right": "P",
+  "ticker": "O:SPY251024P00680000",
+  "entrada": "12:45",
+  "salida": "13:39"
+ },
+ {
+  "fecha": "2025-10-27",
+  "strike": 681.0,
+  "right": "C",
+  "ticker": "O:SPY251027C00681000",
+  "entrada": "13:45",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-10-27",
+  "strike": 686.0,
+  "right": "P",
+  "ticker": "O:SPY251027P00686000",
+  "entrada": "13:24",
+  "salida": "13:45"
+ },
+ {
+  "fecha": "2025-10-28",
+  "strike": 684.0,
+  "right": "C",
+  "ticker": "O:SPY251028C00684000",
+  "entrada": "09:41",
+  "salida": "15:42"
+ },
+ {
+  "fecha": "2025-10-29",
+  "strike": 691.0,
+  "right": "P",
+  "ticker": "O:SPY251029P00691000",
+  "entrada": "09:44",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-10-30",
+  "strike": 682.0,
+  "right": "C",
+  "ticker": "O:SPY251030C00682000",
+  "entrada": "12:15",
+  "salida": "13:06"
+ },
+ {
+  "fecha": "2025-10-30",
+  "strike": 686.0,
+  "right": "P",
+  "ticker": "O:SPY251030P00686000",
+  "entrada": "13:06",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-10-31",
+  "strike": 678.0,
+  "right": "C",
+  "ticker": "O:SPY251031C00678000",
+  "entrada": "13:48",
+  "salida": "15:57"
+ },
+ {
+  "fecha": "2025-10-31",
+  "strike": 682.0,
+  "right": "C",
+  "ticker": "O:SPY251031C00682000",
+  "entrada": "09:40",
+  "salida": "11:39"
+ },
+ {
+  "fecha": "2025-10-31",
+  "strike": 686.0,
+  "right": "P",
+  "ticker": "O:SPY251031P00686000",
+  "entrada": "11:39",
+  "salida": "13:48"
+ },
+ {
+  "fecha": "2025-11-03",
+  "strike": 680.0,
+  "right": "C",
+  "ticker": "O:SPY251103C00680000",
+  "entrada": "11:57",
+  "salida": "15:03"
+ },
+ {
+  "fecha": "2025-11-03",
+  "strike": 683.0,
+  "right": "C",
+  "ticker": "O:SPY251103C00683000",
+  "entrada": "10:03",
+  "salida": "10:36"
+ },
+ {
+  "fecha": "2025-11-03",
+  "strike": 686.0,
+  "right": "P",
+  "ticker": "O:SPY251103P00686000",
+  "entrada": "15:03",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-11-03",
+  "strike": 687.0,
+  "right": "P",
+  "ticker": "O:SPY251103P00687000",
+  "entrada": "10:36",
+  "salida": "11:57"
+ },
+ {
+  "fecha": "2025-11-04",
+  "strike": 674.0,
+  "right": "C",
+  "ticker": "O:SPY251104C00674000",
+  "entrada": "15:03",
+  "salida": "15:39"
+ },
+ {
+  "fecha": "2025-11-04",
+  "strike": 678.0,
+  "right": "P",
+  "ticker": "O:SPY251104P00678000",
+  "entrada": "15:39",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-11-04",
+  "strike": 680.0,
+  "right": "P",
+  "ticker": "O:SPY251104P00680000",
+  "entrada": "11:57",
+  "salida": "15:03"
+ },
+ {
+  "fecha": "2025-11-05",
+  "strike": 674.0,
+  "right": "C",
+  "ticker": "O:SPY251105C00674000",
+  "entrada": "10:48",
+  "salida": "15:09"
+ },
+ {
+  "fecha": "2025-11-05",
+  "strike": 678.0,
+  "right": "P",
+  "ticker": "O:SPY251105P00678000",
+  "entrada": "09:41",
+  "salida": "10:48"
+ },
+ {
+  "fecha": "2025-11-05",
+  "strike": 682.0,
+  "right": "P",
+  "ticker": "O:SPY251105P00682000",
+  "entrada": "15:09",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-11-06",
+  "strike": 669.0,
+  "right": "C",
+  "ticker": "O:SPY251106C00669000",
+  "entrada": "14:33",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-11-06",
+  "strike": 681.0,
+  "right": "P",
+  "ticker": "O:SPY251106P00681000",
+  "entrada": "10:00",
+  "salida": "14:33"
+ },
+ {
+  "fecha": "2025-11-07",
+  "strike": 661.0,
+  "right": "C",
+  "ticker": "O:SPY251107C00661000",
+  "entrada": "13:24",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-11-07",
+  "strike": 668.0,
+  "right": "P",
+  "ticker": "O:SPY251107P00668000",
+  "entrada": "10:36",
+  "salida": "13:24"
+ },
+ {
+  "fecha": "2025-11-10",
+  "strike": 675.0,
+  "right": "C",
+  "ticker": "O:SPY251110C00675000",
+  "entrada": "13:06",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-11-10",
+  "strike": 679.0,
+  "right": "P",
+  "ticker": "O:SPY251110P00679000",
+  "entrada": "11:51",
+  "salida": "13:06"
+ },
+ {
+  "fecha": "2025-11-11",
+  "strike": 678.0,
+  "right": "C",
+  "ticker": "O:SPY251111C00678000",
+  "entrada": "12:24",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-11-11",
+  "strike": 682.0,
+  "right": "P",
+  "ticker": "O:SPY251111P00682000",
+  "entrada": "11:18",
+  "salida": "12:24"
+ },
+ {
+  "fecha": "2025-11-12",
+  "strike": 681.0,
+  "right": "C",
+  "ticker": "O:SPY251112C00681000",
+  "entrada": "13:39",
+  "salida": "15:30"
+ },
+ {
+  "fecha": "2025-11-12",
+  "strike": 685.0,
+  "right": "P",
+  "ticker": "O:SPY251112P00685000",
+  "entrada": "15:30",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-11-12",
+  "strike": 688.0,
+  "right": "P",
+  "ticker": "O:SPY251112P00688000",
+  "entrada": "09:40",
+  "salida": "13:39"
+ },
+ {
+  "fecha": "2025-11-13",
+  "strike": 678.0,
+  "right": "C",
+  "ticker": "O:SPY251113C00678000",
+  "entrada": "11:15",
+  "salida": "11:36"
+ },
+ {
+  "fecha": "2025-11-13",
+  "strike": 681.0,
+  "right": "P",
+  "ticker": "O:SPY251113P00681000",
+  "entrada": "11:36",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-11-14",
+  "strike": 662.0,
+  "right": "C",
+  "ticker": "O:SPY251114C00662000",
+  "entrada": "09:43",
+  "salida": "14:03"
+ },
+ {
+  "fecha": "2025-11-14",
+  "strike": 672.0,
+  "right": "C",
+  "ticker": "O:SPY251114C00672000",
+  "entrada": "15:24",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-11-14",
+  "strike": 675.0,
+  "right": "P",
+  "ticker": "O:SPY251114P00675000",
+  "entrada": "14:03",
+  "salida": "15:24"
+ },
+ {
+  "fecha": "2025-11-17",
+  "strike": 668.0,
+  "right": "C",
+  "ticker": "O:SPY251117C00668000",
+  "entrada": "12:33",
+  "salida": "13:48"
+ },
+ {
+  "fecha": "2025-11-17",
+  "strike": 673.0,
+  "right": "P",
+  "ticker": "O:SPY251117P00673000",
+  "entrada": "13:48",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-11-18",
+  "strike": 659.0,
+  "right": "C",
+  "ticker": "O:SPY251118C00659000",
+  "entrada": "12:27",
+  "salida": "13:33"
+ },
+ {
+  "fecha": "2025-11-18",
+  "strike": 660.0,
+  "right": "C",
+  "ticker": "O:SPY251118C00660000",
+  "entrada": "13:42",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-11-18",
+  "strike": 661.0,
+  "right": "P",
+  "ticker": "O:SPY251118P00661000",
+  "entrada": "13:33",
+  "salida": "13:42"
+ },
+ {
+  "fecha": "2025-11-18",
+  "strike": 663.0,
+  "right": "P",
+  "ticker": "O:SPY251118P00663000",
+  "entrada": "10:51",
+  "salida": "12:27"
+ },
+ {
+  "fecha": "2025-11-19",
+  "strike": 660.0,
+  "right": "C",
+  "ticker": "O:SPY251119C00660000",
+  "entrada": "14:12",
+  "salida": "15:27"
+ },
+ {
+  "fecha": "2025-11-19",
+  "strike": 662.0,
+  "right": "P",
+  "ticker": "O:SPY251119P00662000",
+  "entrada": "15:27",
+  "salida": "15:57"
+ },
+ {
+  "fecha": "2025-11-19",
+  "strike": 667.0,
+  "right": "P",
+  "ticker": "O:SPY251119P00667000",
+  "entrada": "11:51",
+  "salida": "14:12"
+ },
+ {
+  "fecha": "2025-11-20",
+  "strike": 659.0,
+  "right": "C",
+  "ticker": "O:SPY251120C00659000",
+  "entrada": "14:15",
+  "salida": "14:45"
+ },
+ {
+  "fecha": "2025-11-20",
+  "strike": 659.0,
+  "right": "P",
+  "ticker": "O:SPY251120P00659000",
+  "entrada": "14:45",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-11-20",
+  "strike": 675.0,
+  "right": "P",
+  "ticker": "O:SPY251120P00675000",
+  "entrada": "12:00",
+  "salida": "14:15"
+ },
+ {
+  "fecha": "2025-11-21",
+  "strike": 654.0,
+  "right": "C",
+  "ticker": "O:SPY251121C00654000",
+  "entrada": "12:36",
+  "salida": "14:06"
+ },
+ {
+  "fecha": "2025-11-21",
+  "strike": 658.0,
+  "right": "C",
+  "ticker": "O:SPY251121C00658000",
+  "entrada": "14:39",
+  "salida": "15:54"
+ },
+ {
+  "fecha": "2025-11-21",
+  "strike": 658.0,
+  "right": "P",
+  "ticker": "O:SPY251121P00658000",
+  "entrada": "10:48",
+  "salida": "12:36"
+ },
+ {
+  "fecha": "2025-11-21",
+  "strike": 661.0,
+  "right": "P",
+  "ticker": "O:SPY251121P00661000",
+  "entrada": "14:06",
+  "salida": "14:39"
+ },
+ {
+  "fecha": "2025-11-24",
+  "strike": 664.0,
+  "right": "C",
+  "ticker": "O:SPY251124C00664000",
+  "entrada": "11:42",
+  "salida": "15:33"
+ },
+ {
+  "fecha": "2025-11-24",
+  "strike": 665.0,
+  "right": "P",
+  "ticker": "O:SPY251124P00665000",
+  "entrada": "10:51",
+  "salida": "11:42"
+ },
+ {
+  "fecha": "2025-11-24",
+  "strike": 671.0,
+  "right": "P",
+  "ticker": "O:SPY251124P00671000",
+  "entrada": "15:33",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-11-25",
+  "strike": 666.0,
+  "right": "C",
+  "ticker": "O:SPY251125C00666000",
+  "entrada": "09:43",
+  "salida": "10:09"
+ },
+ {
+  "fecha": "2025-11-25",
+  "strike": 667.0,
+  "right": "C",
+  "ticker": "O:SPY251125C00667000",
+  "entrada": "10:36",
+  "salida": "10:45"
+ },
+ {
+  "fecha": "2025-11-25",
+  "strike": 669.0,
+  "right": "P",
+  "ticker": "O:SPY251125P00669000",
+  "entrada": "10:45",
+  "salida": "11:00"
+ },
+ {
+  "fecha": "2025-11-25",
+  "strike": 671.0,
+  "right": "P",
+  "ticker": "O:SPY251125P00671000",
+  "entrada": "10:09",
+  "salida": "10:36"
+ },
+ {
+  "fecha": "2025-11-26",
+  "strike": 677.0,
+  "right": "C",
+  "ticker": "O:SPY251126C00677000",
+  "entrada": "12:03",
+  "salida": "14:12"
+ },
+ {
+  "fecha": "2025-11-26",
+  "strike": 680.0,
+  "right": "P",
+  "ticker": "O:SPY251126P00680000",
+  "entrada": "11:00",
+  "salida": "12:03"
+ },
+ {
+  "fecha": "2025-11-26",
+  "strike": 683.0,
+  "right": "P",
+  "ticker": "O:SPY251126P00683000",
+  "entrada": "14:12",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-11-28",
+  "strike": 679.0,
+  "right": "C",
+  "ticker": "O:SPY251128C00679000",
+  "entrada": "11:18",
+  "salida": "12:27"
+ },
+ {
+  "fecha": "2025-11-28",
+  "strike": 681.0,
+  "right": "C",
+  "ticker": "O:SPY251128C00681000",
+  "entrada": "13:57",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-11-28",
+  "strike": 684.0,
+  "right": "P",
+  "ticker": "O:SPY251128P00684000",
+  "entrada": "12:27",
+  "salida": "13:57"
+ },
+ {
+  "fecha": "2025-12-01",
+  "strike": 679.0,
+  "right": "C",
+  "ticker": "O:SPY251201C00679000",
+  "entrada": "11:54",
+  "salida": "15:06"
+ },
+ {
+  "fecha": "2025-12-01",
+  "strike": 682.0,
+  "right": "P",
+  "ticker": "O:SPY251201P00682000",
+  "entrada": "11:36",
+  "salida": "11:54"
+ },
+ {
+  "fecha": "2025-12-01",
+  "strike": 685.0,
+  "right": "P",
+  "ticker": "O:SPY251201P00685000",
+  "entrada": "15:06",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-12-02",
+  "strike": 680.0,
+  "right": "C",
+  "ticker": "O:SPY251202C00680000",
+  "entrada": "13:27",
+  "salida": "13:57"
+ },
+ {
+  "fecha": "2025-12-02",
+  "strike": 681.0,
+  "right": "C",
+  "ticker": "O:SPY251202C00681000",
+  "entrada": "11:51",
+  "salida": "12:15"
+ },
+ {
+  "fecha": "2025-12-02",
+  "strike": 684.0,
+  "right": "P",
+  "ticker": "O:SPY251202P00684000",
+  "entrada": "12:15",
+  "salida": "13:27"
+ },
+ {
+  "fecha": "2025-12-03",
+  "strike": 680.0,
+  "right": "C",
+  "ticker": "O:SPY251203C00680000",
+  "entrada": "11:03",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-12-04",
+  "strike": 682.0,
+  "right": "C",
+  "ticker": "O:SPY251204C00682000",
+  "entrada": "14:27",
+  "salida": "15:15"
+ },
+ {
+  "fecha": "2025-12-04",
+  "strike": 686.0,
+  "right": "P",
+  "ticker": "O:SPY251204P00686000",
+  "entrada": "15:15",
+  "salida": "15:39"
+ },
+ {
+  "fecha": "2025-12-04",
+  "strike": 687.0,
+  "right": "P",
+  "ticker": "O:SPY251204P00687000",
+  "entrada": "10:36",
+  "salida": "14:27"
+ },
+ {
+  "fecha": "2025-12-05",
+  "strike": 682.0,
+  "right": "C",
+  "ticker": "O:SPY251205C00682000",
+  "entrada": "09:42",
+  "salida": "11:57"
+ },
+ {
+  "fecha": "2025-12-05",
+  "strike": 684.0,
+  "right": "C",
+  "ticker": "O:SPY251205C00684000",
+  "entrada": "13:54",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-12-05",
+  "strike": 689.0,
+  "right": "P",
+  "ticker": "O:SPY251205P00689000",
+  "entrada": "11:57",
+  "salida": "13:54"
+ },
+ {
+  "fecha": "2025-12-08",
+  "strike": 681.0,
+  "right": "C",
+  "ticker": "O:SPY251208C00681000",
+  "entrada": "13:57",
+  "salida": "14:30"
+ },
+ {
+  "fecha": "2025-12-08",
+  "strike": 685.0,
+  "right": "P",
+  "ticker": "O:SPY251208P00685000",
+  "entrada": "14:30",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-12-08",
+  "strike": 689.0,
+  "right": "P",
+  "ticker": "O:SPY251208P00689000",
+  "entrada": "10:30",
+  "salida": "13:57"
+ },
+ {
+  "fecha": "2025-12-09",
+  "strike": 681.0,
+  "right": "C",
+  "ticker": "O:SPY251209C00681000",
+  "entrada": "10:36",
+  "salida": "13:39"
+ },
+ {
+  "fecha": "2025-12-09",
+  "strike": 682.0,
+  "right": "C",
+  "ticker": "O:SPY251209C00682000",
+  "entrada": "14:57",
+  "salida": "15:45"
+ },
+ {
+  "fecha": "2025-12-09",
+  "strike": 687.0,
+  "right": "P",
+  "ticker": "O:SPY251209P00687000",
+  "entrada": "13:39",
+  "salida": "14:57"
+ },
+ {
+  "fecha": "2025-12-10",
+  "strike": 681.0,
+  "right": "C",
+  "ticker": "O:SPY251210C00681000",
+  "entrada": "12:21",
+  "salida": "14:27"
+ },
+ {
+  "fecha": "2025-12-10",
+  "strike": 684.0,
+  "right": "P",
+  "ticker": "O:SPY251210P00684000",
+  "entrada": "12:03",
+  "salida": "12:21"
+ },
+ {
+  "fecha": "2025-12-10",
+  "strike": 685.0,
+  "right": "P",
+  "ticker": "O:SPY251210P00685000",
+  "entrada": "10:06",
+  "salida": "10:48"
+ },
+ {
+  "fecha": "2025-12-11",
+  "strike": 682.0,
+  "right": "C",
+  "ticker": "O:SPY251211C00682000",
+  "entrada": "11:15",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-12-11",
+  "strike": 683.0,
+  "right": "C",
+  "ticker": "O:SPY251211C00683000",
+  "entrada": "10:45",
+  "salida": "10:48"
+ },
+ {
+  "fecha": "2025-12-11",
+  "strike": 687.0,
+  "right": "P",
+  "ticker": "O:SPY251211P00687000",
+  "entrada": "10:48",
+  "salida": "11:15"
+ },
+ {
+  "fecha": "2025-12-12",
+  "strike": 680.0,
+  "right": "C",
+  "ticker": "O:SPY251212C00680000",
+  "entrada": "13:18",
+  "salida": "15:03"
+ },
+ {
+  "fecha": "2025-12-12",
+  "strike": 685.0,
+  "right": "P",
+  "ticker": "O:SPY251212P00685000",
+  "entrada": "15:03",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-12-12",
+  "strike": 691.0,
+  "right": "P",
+  "ticker": "O:SPY251212P00691000",
+  "entrada": "10:27",
+  "salida": "13:18"
+ },
+ {
+  "fecha": "2025-12-15",
+  "strike": 680.0,
+  "right": "C",
+  "ticker": "O:SPY251215C00680000",
+  "entrada": "12:18",
+  "salida": "12:42"
+ },
+ {
+  "fecha": "2025-12-15",
+  "strike": 683.0,
+  "right": "P",
+  "ticker": "O:SPY251215P00683000",
+  "entrada": "12:42",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-12-15",
+  "strike": 687.0,
+  "right": "P",
+  "ticker": "O:SPY251215P00687000",
+  "entrada": "10:36",
+  "salida": "12:18"
+ },
+ {
+  "fecha": "2025-12-16",
+  "strike": 675.0,
+  "right": "C",
+  "ticker": "O:SPY251216C00675000",
+  "entrada": "14:42",
+  "salida": "15:06"
+ },
+ {
+  "fecha": "2025-12-16",
+  "strike": 678.0,
+  "right": "C",
+  "ticker": "O:SPY251216C00678000",
+  "entrada": "09:44",
+  "salida": "10:42"
+ },
+ {
+  "fecha": "2025-12-16",
+  "strike": 679.0,
+  "right": "P",
+  "ticker": "O:SPY251216P00679000",
+  "entrada": "15:06",
+  "salida": "15:36"
+ },
+ {
+  "fecha": "2025-12-16",
+  "strike": 681.0,
+  "right": "P",
+  "ticker": "O:SPY251216P00681000",
+  "entrada": "10:42",
+  "salida": "14:42"
+ },
+ {
+  "fecha": "2025-12-18",
+  "strike": 675.0,
+  "right": "C",
+  "ticker": "O:SPY251218C00675000",
+  "entrada": "13:42",
+  "salida": "14:54"
+ },
+ {
+  "fecha": "2025-12-18",
+  "strike": 676.0,
+  "right": "C",
+  "ticker": "O:SPY251218C00676000",
+  "entrada": "11:27",
+  "salida": "13:06"
+ },
+ {
+  "fecha": "2025-12-18",
+  "strike": 679.0,
+  "right": "P",
+  "ticker": "O:SPY251218P00679000",
+  "entrada": "10:45",
+  "salida": "11:27"
+ },
+ {
+  "fecha": "2025-12-18",
+  "strike": 680.0,
+  "right": "P",
+  "ticker": "O:SPY251218P00680000",
+  "entrada": "13:06",
+  "salida": "13:42"
+ },
+ {
+  "fecha": "2025-12-19",
+  "strike": 674.0,
+  "right": "C",
+  "ticker": "O:SPY251219C00674000",
+  "entrada": "10:18",
+  "salida": "14:48"
+ },
+ {
+  "fecha": "2025-12-19",
+  "strike": 683.0,
+  "right": "P",
+  "ticker": "O:SPY251219P00683000",
+  "entrada": "14:48",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-12-22",
+  "strike": 682.0,
+  "right": "C",
+  "ticker": "O:SPY251222C00682000",
+  "entrada": "15:33",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-12-22",
+  "strike": 686.0,
+  "right": "P",
+  "ticker": "O:SPY251222P00686000",
+  "entrada": "10:36",
+  "salida": "12:12"
+ },
+ {
+  "fecha": "2025-12-22",
+  "strike": 687.0,
+  "right": "P",
+  "ticker": "O:SPY251222P00687000",
+  "entrada": "14:24",
+  "salida": "15:33"
+ },
+ {
+  "fecha": "2025-12-23",
+  "strike": 683.0,
+  "right": "C",
+  "ticker": "O:SPY251223C00683000",
+  "entrada": "11:45",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-12-23",
+  "strike": 687.0,
+  "right": "P",
+  "ticker": "O:SPY251223P00687000",
+  "entrada": "11:06",
+  "salida": "11:45"
+ },
+ {
+  "fecha": "2025-12-24",
+  "strike": 693.0,
+  "right": "P",
+  "ticker": "O:SPY251224P00693000",
+  "entrada": "14:06",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-12-26",
+  "strike": 688.0,
+  "right": "C",
+  "ticker": "O:SPY251226C00688000",
+  "entrada": "14:51",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-12-26",
+  "strike": 692.0,
+  "right": "P",
+  "ticker": "O:SPY251226P00692000",
+  "entrada": "14:24",
+  "salida": "14:51"
+ },
+ {
+  "fecha": "2025-12-26",
+  "strike": 693.0,
+  "right": "P",
+  "ticker": "O:SPY251226P00693000",
+  "entrada": "11:03",
+  "salida": "13:30"
+ },
+ {
+  "fecha": "2025-12-29",
+  "strike": 684.0,
+  "right": "C",
+  "ticker": "O:SPY251229C00684000",
+  "entrada": "14:09",
+  "salida": "15:03"
+ },
+ {
+  "fecha": "2025-12-29",
+  "strike": 687.0,
+  "right": "C",
+  "ticker": "O:SPY251229C00687000",
+  "entrada": "10:36",
+  "salida": "11:12"
+ },
+ {
+  "fecha": "2025-12-29",
+  "strike": 690.0,
+  "right": "P",
+  "ticker": "O:SPY251229P00690000",
+  "entrada": "15:03",
+  "salida": "15:33"
+ },
+ {
+  "fecha": "2025-12-30",
+  "strike": 685.0,
+  "right": "C",
+  "ticker": "O:SPY251230C00685000",
+  "entrada": "12:03",
+  "salida": "12:51"
+ },
+ {
+  "fecha": "2025-12-30",
+  "strike": 689.0,
+  "right": "P",
+  "ticker": "O:SPY251230P00689000",
+  "entrada": "11:15",
+  "salida": "12:03"
+ },
+ {
+  "fecha": "2025-12-30",
+  "strike": 690.0,
+  "right": "P",
+  "ticker": "O:SPY251230P00690000",
+  "entrada": "12:51",
+  "salida": "14:09"
+ },
+ {
+  "fecha": "2025-12-31",
+  "strike": 683.0,
+  "right": "C",
+  "ticker": "O:SPY251231C00683000",
+  "entrada": "12:57",
+  "salida": "15:21"
+ },
+ {
+  "fecha": "2025-12-31",
+  "strike": 688.0,
+  "right": "P",
+  "ticker": "O:SPY251231P00688000",
+  "entrada": "15:21",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2025-12-31",
+  "strike": 689.0,
+  "right": "P",
+  "ticker": "O:SPY251231P00689000",
+  "entrada": "10:33",
+  "salida": "12:57"
+ },
+ {
+  "fecha": "2026-01-02",
+  "strike": 680.0,
+  "right": "C",
+  "ticker": "O:SPY260102C00680000",
+  "entrada": "15:12",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-01-02",
+  "strike": 684.0,
+  "right": "C",
+  "ticker": "O:SPY260102C00684000",
+  "entrada": "10:48",
+  "salida": "11:15"
+ },
+ {
+  "fecha": "2026-01-02",
+  "strike": 686.0,
+  "right": "P",
+  "ticker": "O:SPY260102P00686000",
+  "entrada": "11:15",
+  "salida": "15:12"
+ },
+ {
+  "fecha": "2026-01-05",
+  "strike": 684.0,
+  "right": "C",
+  "ticker": "O:SPY260105C00684000",
+  "entrada": "10:03",
+  "salida": "14:18"
+ },
+ {
+  "fecha": "2026-01-05",
+  "strike": 690.0,
+  "right": "P",
+  "ticker": "O:SPY260105P00690000",
+  "entrada": "14:18",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-01-06",
+  "strike": 686.0,
+  "right": "C",
+  "ticker": "O:SPY260106C00686000",
+  "entrada": "10:33",
+  "salida": "11:54"
+ },
+ {
+  "fecha": "2026-01-06",
+  "strike": 687.0,
+  "right": "C",
+  "ticker": "O:SPY260106C00687000",
+  "entrada": "13:18",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-01-06",
+  "strike": 692.0,
+  "right": "P",
+  "ticker": "O:SPY260106P00692000",
+  "entrada": "11:54",
+  "salida": "13:18"
+ },
+ {
+  "fecha": "2026-01-07",
+  "strike": 690.0,
+  "right": "C",
+  "ticker": "O:SPY260107C00690000",
+  "entrada": "12:03",
+  "salida": "13:51"
+ },
+ {
+  "fecha": "2026-01-07",
+  "strike": 694.0,
+  "right": "P",
+  "ticker": "O:SPY260107P00694000",
+  "entrada": "11:03",
+  "salida": "12:03"
+ },
+ {
+  "fecha": "2026-01-07",
+  "strike": 696.0,
+  "right": "P",
+  "ticker": "O:SPY260107P00696000",
+  "entrada": "13:51",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-01-08",
+  "strike": 687.0,
+  "right": "C",
+  "ticker": "O:SPY260108C00687000",
+  "entrada": "11:09",
+  "salida": "14:12"
+ },
+ {
+  "fecha": "2026-01-08",
+  "strike": 690.0,
+  "right": "P",
+  "ticker": "O:SPY260108P00690000",
+  "entrada": "10:45",
+  "salida": "11:09"
+ },
+ {
+  "fecha": "2026-01-08",
+  "strike": 692.0,
+  "right": "P",
+  "ticker": "O:SPY260108P00692000",
+  "entrada": "14:12",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-01-09",
+  "strike": 690.0,
+  "right": "C",
+  "ticker": "O:SPY260109C00690000",
+  "entrada": "10:39",
+  "salida": "11:09"
+ },
+ {
+  "fecha": "2026-01-09",
+  "strike": 691.0,
+  "right": "C",
+  "ticker": "O:SPY260109C00691000",
+  "entrada": "11:27",
+  "salida": "14:09"
+ },
+ {
+  "fecha": "2026-01-09",
+  "strike": 692.0,
+  "right": "P",
+  "ticker": "O:SPY260109P00692000",
+  "entrada": "11:09",
+  "salida": "11:27"
+ },
+ {
+  "fecha": "2026-01-09",
+  "strike": 695.0,
+  "right": "P",
+  "ticker": "O:SPY260109P00695000",
+  "entrada": "09:42",
+  "salida": "10:39"
+ },
+ {
+  "fecha": "2026-01-13",
+  "strike": 691.0,
+  "right": "C",
+  "ticker": "O:SPY260113C00691000",
+  "entrada": "12:36",
+  "salida": "13:45"
+ },
+ {
+  "fecha": "2026-01-13",
+  "strike": 696.0,
+  "right": "P",
+  "ticker": "O:SPY260113P00696000",
+  "entrada": "13:45",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-01-13",
+  "strike": 697.0,
+  "right": "P",
+  "ticker": "O:SPY260113P00697000",
+  "entrada": "10:45",
+  "salida": "12:36"
+ },
+ {
+  "fecha": "2026-01-14",
+  "strike": 685.0,
+  "right": "C",
+  "ticker": "O:SPY260114C00685000",
+  "entrada": "15:00",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-01-14",
+  "strike": 689.0,
+  "right": "C",
+  "ticker": "O:SPY260114C00689000",
+  "entrada": "09:44",
+  "salida": "12:48"
+ },
+ {
+  "fecha": "2026-01-14",
+  "strike": 689.0,
+  "right": "P",
+  "ticker": "O:SPY260114P00689000",
+  "entrada": "12:48",
+  "salida": "15:00"
+ },
+ {
+  "fecha": "2026-01-15",
+  "strike": 693.0,
+  "right": "C",
+  "ticker": "O:SPY260115C00693000",
+  "entrada": "13:03",
+  "salida": "13:33"
+ },
+ {
+  "fecha": "2026-01-15",
+  "strike": 696.0,
+  "right": "P",
+  "ticker": "O:SPY260115P00696000",
+  "entrada": "10:39",
+  "salida": "13:03"
+ },
+ {
+  "fecha": "2026-01-15",
+  "strike": 697.0,
+  "right": "P",
+  "ticker": "O:SPY260115P00697000",
+  "entrada": "13:33",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-01-16",
+  "strike": 690.0,
+  "right": "C",
+  "ticker": "O:SPY260116C00690000",
+  "entrada": "12:09",
+  "salida": "14:00"
+ },
+ {
+  "fecha": "2026-01-16",
+  "strike": 691.0,
+  "right": "C",
+  "ticker": "O:SPY260116C00691000",
+  "entrada": "09:40",
+  "salida": "10:54"
+ },
+ {
+  "fecha": "2026-01-16",
+  "strike": 695.0,
+  "right": "P",
+  "ticker": "O:SPY260116P00695000",
+  "entrada": "14:00",
+  "salida": "15:06"
+ },
+ {
+  "fecha": "2026-01-20",
+  "strike": 680.0,
+  "right": "C",
+  "ticker": "O:SPY260120C00680000",
+  "entrada": "10:39",
+  "salida": "13:33"
+ },
+ {
+  "fecha": "2026-01-20",
+  "strike": 684.0,
+  "right": "P",
+  "ticker": "O:SPY260120P00684000",
+  "entrada": "13:33",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-01-21",
+  "strike": 683.0,
+  "right": "C",
+  "ticker": "O:SPY260121C00683000",
+  "entrada": "15:30",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-01-21",
+  "strike": 684.0,
+  "right": "P",
+  "ticker": "O:SPY260121P00684000",
+  "entrada": "12:39",
+  "salida": "15:30"
+ },
+ {
+  "fecha": "2026-01-22",
+  "strike": 687.0,
+  "right": "C",
+  "ticker": "O:SPY260122C00687000",
+  "entrada": "11:48",
+  "salida": "15:00"
+ },
+ {
+  "fecha": "2026-01-22",
+  "strike": 690.0,
+  "right": "P",
+  "ticker": "O:SPY260122P00690000",
+  "entrada": "10:48",
+  "salida": "11:48"
+ },
+ {
+  "fecha": "2026-01-22",
+  "strike": 693.0,
+  "right": "P",
+  "ticker": "O:SPY260122P00693000",
+  "entrada": "15:00",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-01-23",
+  "strike": 686.0,
+  "right": "C",
+  "ticker": "O:SPY260123C00686000",
+  "entrada": "10:57",
+  "salida": "12:33"
+ },
+ {
+  "fecha": "2026-01-23",
+  "strike": 687.0,
+  "right": "C",
+  "ticker": "O:SPY260123C00687000",
+  "entrada": "15:06",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-01-23",
+  "strike": 692.0,
+  "right": "P",
+  "ticker": "O:SPY260123P00692000",
+  "entrada": "12:33",
+  "salida": "15:06"
+ },
+ {
+  "fecha": "2026-01-27",
+  "strike": 692.0,
+  "right": "C",
+  "ticker": "O:SPY260127C00692000",
+  "entrada": "10:51",
+  "salida": "13:15"
+ },
+ {
+  "fecha": "2026-01-27",
+  "strike": 693.0,
+  "right": "C",
+  "ticker": "O:SPY260127C00693000",
+  "entrada": "14:24",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-01-27",
+  "strike": 698.0,
+  "right": "P",
+  "ticker": "O:SPY260127P00698000",
+  "entrada": "13:15",
+  "salida": "14:24"
+ },
+ {
+  "fecha": "2026-01-28",
+  "strike": 695.0,
+  "right": "C",
+  "ticker": "O:SPY260128C00695000",
+  "entrada": "10:33",
+  "salida": "11:12"
+ },
+ {
+  "fecha": "2026-01-28",
+  "strike": 699.0,
+  "right": "P",
+  "ticker": "O:SPY260128P00699000",
+  "entrada": "11:12",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-01-29",
+  "strike": 686.0,
+  "right": "C",
+  "ticker": "O:SPY260129C00686000",
+  "entrada": "12:21",
+  "salida": "13:54"
+ },
+ {
+  "fecha": "2026-01-29",
+  "strike": 689.0,
+  "right": "C",
+  "ticker": "O:SPY260129C00689000",
+  "entrada": "14:42",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-01-29",
+  "strike": 691.0,
+  "right": "P",
+  "ticker": "O:SPY260129P00691000",
+  "entrada": "13:54",
+  "salida": "14:42"
+ },
+ {
+  "fecha": "2026-01-29",
+  "strike": 699.0,
+  "right": "P",
+  "ticker": "O:SPY260129P00699000",
+  "entrada": "10:06",
+  "salida": "12:21"
+ },
+ {
+  "fecha": "2026-01-30",
+  "strike": 688.0,
+  "right": "C",
+  "ticker": "O:SPY260130C00688000",
+  "entrada": "14:51",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-01-30",
+  "strike": 691.0,
+  "right": "C",
+  "ticker": "O:SPY260130C00691000",
+  "entrada": "10:36",
+  "salida": "12:24"
+ },
+ {
+  "fecha": "2026-01-30",
+  "strike": 693.0,
+  "right": "P",
+  "ticker": "O:SPY260130P00693000",
+  "entrada": "12:24",
+  "salida": "14:51"
+ },
+ {
+  "fecha": "2026-02-02",
+  "strike": 687.0,
+  "right": "C",
+  "ticker": "O:SPY260202C00687000",
+  "entrada": "10:03",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-02-03",
+  "strike": 684.0,
+  "right": "C",
+  "ticker": "O:SPY260203C00684000",
+  "entrada": "15:15",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-02-04",
+  "strike": 683.0,
+  "right": "C",
+  "ticker": "O:SPY260204C00683000",
+  "entrada": "15:30",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-02-05",
+  "strike": 677.0,
+  "right": "C",
+  "ticker": "O:SPY260205C00677000",
+  "entrada": "12:30",
+  "salida": "14:24"
+ },
+ {
+  "fecha": "2026-02-05",
+  "strike": 681.0,
+  "right": "C",
+  "ticker": "O:SPY260205C00681000",
+  "entrada": "10:45",
+  "salida": "11:06"
+ },
+ {
+  "fecha": "2026-02-05",
+  "strike": 681.0,
+  "right": "P",
+  "ticker": "O:SPY260205P00681000",
+  "entrada": "11:06",
+  "salida": "12:30"
+ },
+ {
+  "fecha": "2026-02-05",
+  "strike": 682.0,
+  "right": "P",
+  "ticker": "O:SPY260205P00682000",
+  "entrada": "10:33",
+  "salida": "10:45"
+ },
+ {
+  "fecha": "2026-02-06",
+  "strike": 682.0,
+  "right": "C",
+  "ticker": "O:SPY260206C00682000",
+  "entrada": "10:33",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-02-09",
+  "strike": 687.0,
+  "right": "C",
+  "ticker": "O:SPY260209C00687000",
+  "entrada": "10:36",
+  "salida": "13:48"
+ },
+ {
+  "fecha": "2026-02-09",
+  "strike": 693.0,
+  "right": "C",
+  "ticker": "O:SPY260209C00693000",
+  "entrada": "15:24",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-02-09",
+  "strike": 691.0,
+  "right": "P",
+  "ticker": "O:SPY260209P00691000",
+  "entrada": "10:12",
+  "salida": "10:36"
+ },
+ {
+  "fecha": "2026-02-09",
+  "strike": 698.0,
+  "right": "P",
+  "ticker": "O:SPY260209P00698000",
+  "entrada": "13:48",
+  "salida": "15:24"
+ },
+ {
+  "fecha": "2026-02-10",
+  "strike": 692.0,
+  "right": "C",
+  "ticker": "O:SPY260210C00692000",
+  "entrada": "10:18",
+  "salida": "10:39"
+ },
+ {
+  "fecha": "2026-02-10",
+  "strike": 693.0,
+  "right": "C",
+  "ticker": "O:SPY260210C00693000",
+  "entrada": "10:57",
+  "salida": "12:51"
+ },
+ {
+  "fecha": "2026-02-10",
+  "strike": 697.0,
+  "right": "P",
+  "ticker": "O:SPY260210P00697000",
+  "entrada": "12:51",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-02-11",
+  "strike": 690.0,
+  "right": "C",
+  "ticker": "O:SPY260211C00690000",
+  "entrada": "12:12",
+  "salida": "14:12"
+ },
+ {
+  "fecha": "2026-02-11",
+  "strike": 691.0,
+  "right": "C",
+  "ticker": "O:SPY260211C00691000",
+  "entrada": "15:18",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-02-11",
+  "strike": 694.0,
+  "right": "P",
+  "ticker": "O:SPY260211P00694000",
+  "entrada": "14:12",
+  "salida": "15:18"
+ },
+ {
+  "fecha": "2026-02-11",
+  "strike": 698.0,
+  "right": "P",
+  "ticker": "O:SPY260211P00698000",
+  "entrada": "10:39",
+  "salida": "12:12"
+ },
+ {
+  "fecha": "2026-02-12",
+  "strike": 682.0,
+  "right": "C",
+  "ticker": "O:SPY260212C00682000",
+  "entrada": "14:54",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-02-12",
+  "strike": 697.0,
+  "right": "P",
+  "ticker": "O:SPY260212P00697000",
+  "entrada": "09:40",
+  "salida": "14:54"
+ },
+ {
+  "fecha": "2026-02-13",
+  "strike": 681.0,
+  "right": "C",
+  "ticker": "O:SPY260213C00681000",
+  "entrada": "11:30",
+  "salida": "15:42"
+ },
+ {
+  "fecha": "2026-02-13",
+  "strike": 681.0,
+  "right": "P",
+  "ticker": "O:SPY260213P00681000",
+  "entrada": "10:42",
+  "salida": "11:30"
+ },
+ {
+  "fecha": "2026-02-17",
+  "strike": 678.0,
+  "right": "C",
+  "ticker": "O:SPY260217C00678000",
+  "entrada": "12:06",
+  "salida": "13:45"
+ },
+ {
+  "fecha": "2026-02-17",
+  "strike": 682.0,
+  "right": "P",
+  "ticker": "O:SPY260217P00682000",
+  "entrada": "13:45",
+  "salida": "14:30"
+ },
+ {
+  "fecha": "2026-02-17",
+  "strike": 683.0,
+  "right": "P",
+  "ticker": "O:SPY260217P00683000",
+  "entrada": "10:48",
+  "salida": "12:06"
+ },
+ {
+  "fecha": "2026-02-18",
+  "strike": 683.0,
+  "right": "C",
+  "ticker": "O:SPY260218C00683000",
+  "entrada": "09:40",
+  "salida": "14:33"
+ },
+ {
+  "fecha": "2026-02-18",
+  "strike": 690.0,
+  "right": "P",
+  "ticker": "O:SPY260218P00690000",
+  "entrada": "14:33",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-02-19",
+  "strike": 681.0,
+  "right": "C",
+  "ticker": "O:SPY260219C00681000",
+  "entrada": "10:45",
+  "salida": "12:48"
+ },
+ {
+  "fecha": "2026-02-19",
+  "strike": 686.0,
+  "right": "P",
+  "ticker": "O:SPY260219P00686000",
+  "entrada": "12:48",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-02-20",
+  "strike": 680.0,
+  "right": "C",
+  "ticker": "O:SPY260220C00680000",
+  "entrada": "09:40",
+  "salida": "13:12"
+ },
+ {
+  "fecha": "2026-02-20",
+  "strike": 685.0,
+  "right": "C",
+  "ticker": "O:SPY260220C00685000",
+  "entrada": "13:54",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-02-20",
+  "strike": 689.0,
+  "right": "P",
+  "ticker": "O:SPY260220P00689000",
+  "entrada": "13:12",
+  "salida": "13:54"
+ },
+ {
+  "fecha": "2026-02-23",
+  "strike": 680.0,
+  "right": "C",
+  "ticker": "O:SPY260223C00680000",
+  "entrada": "12:30",
+  "salida": "14:57"
+ },
+ {
+  "fecha": "2026-02-23",
+  "strike": 685.0,
+  "right": "P",
+  "ticker": "O:SPY260223P00685000",
+  "entrada": "14:57",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-02-23",
+  "strike": 690.0,
+  "right": "P",
+  "ticker": "O:SPY260223P00690000",
+  "entrada": "10:45",
+  "salida": "12:30"
+ },
+ {
+  "fecha": "2026-02-24",
+  "strike": 681.0,
+  "right": "C",
+  "ticker": "O:SPY260224C00681000",
+  "entrada": "10:42",
+  "salida": "15:18"
+ },
+ {
+  "fecha": "2026-02-24",
+  "strike": 685.0,
+  "right": "P",
+  "ticker": "O:SPY260224P00685000",
+  "entrada": "10:21",
+  "salida": "10:42"
+ },
+ {
+  "fecha": "2026-02-24",
+  "strike": 690.0,
+  "right": "P",
+  "ticker": "O:SPY260224P00690000",
+  "entrada": "15:18",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-02-26",
+  "strike": 685.0,
+  "right": "C",
+  "ticker": "O:SPY260226C00685000",
+  "entrada": "14:36",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-02-26",
+  "strike": 686.0,
+  "right": "C",
+  "ticker": "O:SPY260226C00686000",
+  "entrada": "12:15",
+  "salida": "12:45"
+ },
+ {
+  "fecha": "2026-02-26",
+  "strike": 689.0,
+  "right": "P",
+  "ticker": "O:SPY260226P00689000",
+  "entrada": "12:45",
+  "salida": "14:36"
+ },
+ {
+  "fecha": "2026-02-26",
+  "strike": 695.0,
+  "right": "P",
+  "ticker": "O:SPY260226P00695000",
+  "entrada": "10:30",
+  "salida": "12:15"
+ },
+ {
+  "fecha": "2026-02-27",
+  "strike": 682.0,
+  "right": "C",
+  "ticker": "O:SPY260227C00682000",
+  "entrada": "11:09",
+  "salida": "13:21"
+ },
+ {
+  "fecha": "2026-02-27",
+  "strike": 686.0,
+  "right": "P",
+  "ticker": "O:SPY260227P00686000",
+  "entrada": "13:21",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-03-02",
+  "strike": 677.0,
+  "right": "C",
+  "ticker": "O:SPY260302C00677000",
+  "entrada": "09:44",
+  "salida": "12:30"
+ },
+ {
+  "fecha": "2026-03-02",
+  "strike": 684.0,
+  "right": "C",
+  "ticker": "O:SPY260302C00684000",
+  "entrada": "12:42",
+  "salida": "14:48"
+ },
+ {
+  "fecha": "2026-03-02",
+  "strike": 686.0,
+  "right": "P",
+  "ticker": "O:SPY260302P00686000",
+  "entrada": "12:30",
+  "salida": "12:42"
+ },
+ {
+  "fecha": "2026-03-02",
+  "strike": 688.0,
+  "right": "P",
+  "ticker": "O:SPY260302P00688000",
+  "entrada": "14:48",
+  "salida": "15:15"
+ },
+ {
+  "fecha": "2026-03-03",
+  "strike": 672.0,
+  "right": "C",
+  "ticker": "O:SPY260303C00672000",
+  "entrada": "12:06",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-03-03",
+  "strike": 673.0,
+  "right": "C",
+  "ticker": "O:SPY260303C00673000",
+  "entrada": "10:39",
+  "salida": "10:51"
+ },
+ {
+  "fecha": "2026-03-03",
+  "strike": 676.0,
+  "right": "P",
+  "ticker": "O:SPY260303P00676000",
+  "entrada": "10:51",
+  "salida": "12:06"
+ },
+ {
+  "fecha": "2026-03-04",
+  "strike": 681.0,
+  "right": "C",
+  "ticker": "O:SPY260304C00681000",
+  "entrada": "11:18",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-03-04",
+  "strike": 685.0,
+  "right": "P",
+  "ticker": "O:SPY260304P00685000",
+  "entrada": "09:42",
+  "salida": "11:18"
+ },
+ {
+  "fecha": "2026-03-05",
+  "strike": 682.0,
+  "right": "C",
+  "ticker": "O:SPY260305C00682000",
+  "entrada": "10:36",
+  "salida": "11:24"
+ },
+ {
+  "fecha": "2026-03-05",
+  "strike": 684.0,
+  "right": "P",
+  "ticker": "O:SPY260305P00684000",
+  "entrada": "11:24",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-03-06",
+  "strike": 672.0,
+  "right": "C",
+  "ticker": "O:SPY260306C00672000",
+  "entrada": "11:33",
+  "salida": "13:42"
+ },
+ {
+  "fecha": "2026-03-06",
+  "strike": 673.0,
+  "right": "C",
+  "ticker": "O:SPY260306C00673000",
+  "entrada": "14:15",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-03-06",
+  "strike": 675.0,
+  "right": "P",
+  "ticker": "O:SPY260306P00675000",
+  "entrada": "13:42",
+  "salida": "14:15"
+ },
+ {
+  "fecha": "2026-03-09",
+  "strike": 662.0,
+  "right": "C",
+  "ticker": "O:SPY260309C00662000",
+  "entrada": "09:40",
+  "salida": "13:21"
+ },
+ {
+  "fecha": "2026-03-09",
+  "strike": 667.0,
+  "right": "C",
+  "ticker": "O:SPY260309C00667000",
+  "entrada": "14:21",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-03-09",
+  "strike": 672.0,
+  "right": "P",
+  "ticker": "O:SPY260309P00672000",
+  "entrada": "13:21",
+  "salida": "14:21"
+ },
+ {
+  "fecha": "2026-03-10",
+  "strike": 674.0,
+  "right": "C",
+  "ticker": "O:SPY260310C00674000",
+  "entrada": "09:42",
+  "salida": "09:48"
+ },
+ {
+  "fecha": "2026-03-10",
+  "strike": 676.0,
+  "right": "C",
+  "ticker": "O:SPY260310C00676000",
+  "entrada": "10:33",
+  "salida": "13:39"
+ },
+ {
+  "fecha": "2026-03-10",
+  "strike": 679.0,
+  "right": "P",
+  "ticker": "O:SPY260310P00679000",
+  "entrada": "09:48",
+  "salida": "10:33"
+ },
+ {
+  "fecha": "2026-03-10",
+  "strike": 684.0,
+  "right": "P",
+  "ticker": "O:SPY260310P00684000",
+  "entrada": "13:39",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-03-11",
+  "strike": 675.0,
+  "right": "C",
+  "ticker": "O:SPY260311C00675000",
+  "entrada": "09:44",
+  "salida": "09:51"
+ },
+ {
+  "fecha": "2026-03-11",
+  "strike": 676.0,
+  "right": "C",
+  "ticker": "O:SPY260311C00676000",
+  "entrada": "10:03",
+  "salida": "11:18"
+ },
+ {
+  "fecha": "2026-03-11",
+  "strike": 678.0,
+  "right": "P",
+  "ticker": "O:SPY260311P00678000",
+  "entrada": "11:18",
+  "salida": "12:36"
+ },
+ {
+  "fecha": "2026-03-11",
+  "strike": 679.0,
+  "right": "P",
+  "ticker": "O:SPY260311P00679000",
+  "entrada": "09:51",
+  "salida": "10:03"
+ },
+ {
+  "fecha": "2026-03-12",
+  "strike": 667.0,
+  "right": "C",
+  "ticker": "O:SPY260312C00667000",
+  "entrada": "11:45",
+  "salida": "13:57"
+ },
+ {
+  "fecha": "2026-03-12",
+  "strike": 670.0,
+  "right": "P",
+  "ticker": "O:SPY260312P00670000",
+  "entrada": "13:57",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-03-13",
+  "strike": 673.0,
+  "right": "P",
+  "ticker": "O:SPY260313P00673000",
+  "entrada": "09:42",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-03-16",
+  "strike": 667.0,
+  "right": "C",
+  "ticker": "O:SPY260316C00667000",
+  "entrada": "14:18",
+  "salida": "15:27"
+ },
+ {
+  "fecha": "2026-03-16",
+  "strike": 668.0,
+  "right": "C",
+  "ticker": "O:SPY260316C00668000",
+  "entrada": "11:33",
+  "salida": "12:00"
+ },
+ {
+  "fecha": "2026-03-16",
+  "strike": 671.0,
+  "right": "P",
+  "ticker": "O:SPY260316P00671000",
+  "entrada": "12:00",
+  "salida": "14:18"
+ },
+ {
+  "fecha": "2026-03-16",
+  "strike": 672.0,
+  "right": "P",
+  "ticker": "O:SPY260316P00672000",
+  "entrada": "09:40",
+  "salida": "11:33"
+ },
+ {
+  "fecha": "2026-03-17",
+  "strike": 676.0,
+  "right": "P",
+  "ticker": "O:SPY260317P00676000",
+  "entrada": "09:41",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-03-18",
+  "strike": 672.0,
+  "right": "P",
+  "ticker": "O:SPY260318P00672000",
+  "entrada": "09:40",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-03-19",
+  "strike": 656.0,
+  "right": "C",
+  "ticker": "O:SPY260319C00656000",
+  "entrada": "14:15",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-03-19",
+  "strike": 657.0,
+  "right": "C",
+  "ticker": "O:SPY260319C00657000",
+  "entrada": "10:12",
+  "salida": "13:09"
+ },
+ {
+  "fecha": "2026-03-19",
+  "strike": 658.0,
+  "right": "P",
+  "ticker": "O:SPY260319P00658000",
+  "entrada": "13:09",
+  "salida": "14:15"
+ },
+ {
+  "fecha": "2026-03-19",
+  "strike": 660.0,
+  "right": "P",
+  "ticker": "O:SPY260319P00660000",
+  "entrada": "09:41",
+  "salida": "10:12"
+ },
+ {
+  "fecha": "2026-03-23",
+  "strike": 655.0,
+  "right": "C",
+  "ticker": "O:SPY260323C00655000",
+  "entrada": "13:36",
+  "salida": "15:54"
+ },
+ {
+  "fecha": "2026-03-23",
+  "strike": 658.0,
+  "right": "C",
+  "ticker": "O:SPY260323C00658000",
+  "entrada": "10:03",
+  "salida": "11:39"
+ },
+ {
+  "fecha": "2026-03-23",
+  "strike": 661.0,
+  "right": "P",
+  "ticker": "O:SPY260323P00661000",
+  "entrada": "09:42",
+  "salida": "10:03"
+ },
+ {
+  "fecha": "2026-03-23",
+  "strike": 662.0,
+  "right": "P",
+  "ticker": "O:SPY260323P00662000",
+  "entrada": "11:39",
+  "salida": "13:36"
+ },
+ {
+  "fecha": "2026-03-24",
+  "strike": 649.0,
+  "right": "C",
+  "ticker": "O:SPY260324C00649000",
+  "entrada": "09:40",
+  "salida": "12:06"
+ },
+ {
+  "fecha": "2026-03-24",
+  "strike": 652.0,
+  "right": "C",
+  "ticker": "O:SPY260324C00652000",
+  "entrada": "14:33",
+  "salida": "15:48"
+ },
+ {
+  "fecha": "2026-03-24",
+  "strike": 657.0,
+  "right": "P",
+  "ticker": "O:SPY260324P00657000",
+  "entrada": "12:06",
+  "salida": "14:33"
+ },
+ {
+  "fecha": "2026-03-25",
+  "strike": 656.0,
+  "right": "C",
+  "ticker": "O:SPY260325C00656000",
+  "entrada": "13:36",
+  "salida": "14:57"
+ },
+ {
+  "fecha": "2026-03-25",
+  "strike": 659.0,
+  "right": "P",
+  "ticker": "O:SPY260325P00659000",
+  "entrada": "14:57",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-03-26",
+  "strike": 655.0,
+  "right": "P",
+  "ticker": "O:SPY260326P00655000",
+  "entrada": "09:43",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-03-27",
+  "strike": 639.0,
+  "right": "C",
+  "ticker": "O:SPY260327C00639000",
+  "entrada": "11:33",
+  "salida": "12:27"
+ },
+ {
+  "fecha": "2026-03-27",
+  "strike": 641.0,
+  "right": "P",
+  "ticker": "O:SPY260327P00641000",
+  "entrada": "12:27",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-03-30",
+  "strike": 635.0,
+  "right": "C",
+  "ticker": "O:SPY260330C00635000",
+  "entrada": "09:40",
+  "salida": "12:21"
+ },
+ {
+  "fecha": "2026-03-30",
+  "strike": 639.0,
+  "right": "P",
+  "ticker": "O:SPY260330P00639000",
+  "entrada": "12:21",
+  "salida": "15:48"
+ },
+ {
+  "fecha": "2026-03-31",
+  "strike": 639.0,
+  "right": "C",
+  "ticker": "O:SPY260331C00639000",
+  "entrada": "11:15",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-03-31",
+  "strike": 642.0,
+  "right": "P",
+  "ticker": "O:SPY260331P00642000",
+  "entrada": "09:40",
+  "salida": "11:15"
+ },
+ {
+  "fecha": "2026-04-01",
+  "strike": 651.0,
+  "right": "C",
+  "ticker": "O:SPY260401C00651000",
+  "entrada": "09:43",
+  "salida": "13:54"
+ },
+ {
+  "fecha": "2026-04-01",
+  "strike": 653.0,
+  "right": "C",
+  "ticker": "O:SPY260401C00653000",
+  "entrada": "15:24",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-04-01",
+  "strike": 660.0,
+  "right": "P",
+  "ticker": "O:SPY260401P00660000",
+  "entrada": "13:54",
+  "salida": "15:24"
+ },
+ {
+  "fecha": "2026-04-02",
+  "strike": 652.0,
+  "right": "C",
+  "ticker": "O:SPY260402C00652000",
+  "entrada": "14:54",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-04-02",
+  "strike": 656.0,
+  "right": "P",
+  "ticker": "O:SPY260402P00656000",
+  "entrada": "13:54",
+  "salida": "14:54"
+ },
+ {
+  "fecha": "2026-04-06",
+  "strike": 655.0,
+  "right": "C",
+  "ticker": "O:SPY260406C00655000",
+  "entrada": "14:21",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-04-06",
+  "strike": 660.0,
+  "right": "P",
+  "ticker": "O:SPY260406P00660000",
+  "entrada": "13:03",
+  "salida": "14:21"
+ },
+ {
+  "fecha": "2026-04-07",
+  "strike": 653.0,
+  "right": "C",
+  "ticker": "O:SPY260407C00653000",
+  "entrada": "09:40",
+  "salida": "14:42"
+ },
+ {
+  "fecha": "2026-04-07",
+  "strike": 654.0,
+  "right": "C",
+  "ticker": "O:SPY260407C00654000",
+  "entrada": "15:21",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-04-07",
+  "strike": 658.0,
+  "right": "P",
+  "ticker": "O:SPY260407P00658000",
+  "entrada": "14:42",
+  "salida": "15:21"
+ },
+ {
+  "fecha": "2026-04-08",
+  "strike": 673.0,
+  "right": "C",
+  "ticker": "O:SPY260408C00673000",
+  "entrada": "09:41",
+  "salida": "13:27"
+ },
+ {
+  "fecha": "2026-04-08",
+  "strike": 674.0,
+  "right": "C",
+  "ticker": "O:SPY260408C00674000",
+  "entrada": "14:06",
+  "salida": "14:21"
+ },
+ {
+  "fecha": "2026-04-08",
+  "strike": 678.0,
+  "right": "P",
+  "ticker": "O:SPY260408P00678000",
+  "entrada": "14:21",
+  "salida": "15:48"
+ },
+ {
+  "fecha": "2026-04-09",
+  "strike": 674.0,
+  "right": "C",
+  "ticker": "O:SPY260409C00674000",
+  "entrada": "11:15",
+  "salida": "14:06"
+ },
+ {
+  "fecha": "2026-04-09",
+  "strike": 678.0,
+  "right": "C",
+  "ticker": "O:SPY260409C00678000",
+  "entrada": "15:33",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-04-09",
+  "strike": 678.0,
+  "right": "P",
+  "ticker": "O:SPY260409P00678000",
+  "entrada": "09:41",
+  "salida": "11:15"
+ },
+ {
+  "fecha": "2026-04-09",
+  "strike": 682.0,
+  "right": "P",
+  "ticker": "O:SPY260409P00682000",
+  "entrada": "14:06",
+  "salida": "15:33"
+ },
+ {
+  "fecha": "2026-04-10",
+  "strike": 677.0,
+  "right": "C",
+  "ticker": "O:SPY260410C00677000",
+  "entrada": "15:15",
+  "salida": "15:42"
+ },
+ {
+  "fecha": "2026-04-10",
+  "strike": 679.0,
+  "right": "C",
+  "ticker": "O:SPY260410C00679000",
+  "entrada": "11:24",
+  "salida": "11:42"
+ },
+ {
+  "fecha": "2026-04-10",
+  "strike": 683.0,
+  "right": "P",
+  "ticker": "O:SPY260410P00683000",
+  "entrada": "11:42",
+  "salida": "15:15"
+ },
+ {
+  "fecha": "2026-04-14",
+  "strike": 691.0,
+  "right": "C",
+  "ticker": "O:SPY260414C00691000",
+  "entrada": "15:12",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-04-14",
+  "strike": 692.0,
+  "right": "P",
+  "ticker": "O:SPY260414P00692000",
+  "entrada": "09:42",
+  "salida": "13:21"
+ },
+ {
+  "fecha": "2026-04-14",
+  "strike": 696.0,
+  "right": "P",
+  "ticker": "O:SPY260414P00696000",
+  "entrada": "14:18",
+  "salida": "15:12"
+ },
+ {
+  "fecha": "2026-04-15",
+  "strike": 692.0,
+  "right": "C",
+  "ticker": "O:SPY260415C00692000",
+  "entrada": "09:44",
+  "salida": "09:45"
+ },
+ {
+  "fecha": "2026-04-15",
+  "strike": 694.0,
+  "right": "C",
+  "ticker": "O:SPY260415C00694000",
+  "entrada": "10:27",
+  "salida": "12:42"
+ },
+ {
+  "fecha": "2026-04-15",
+  "strike": 697.0,
+  "right": "P",
+  "ticker": "O:SPY260415P00697000",
+  "entrada": "09:45",
+  "salida": "10:27"
+ },
+ {
+  "fecha": "2026-04-15",
+  "strike": 699.0,
+  "right": "P",
+  "ticker": "O:SPY260415P00699000",
+  "entrada": "12:42",
+  "salida": "13:27"
+ },
+ {
+  "fecha": "2026-04-16",
+  "strike": 698.0,
+  "right": "C",
+  "ticker": "O:SPY260416C00698000",
+  "entrada": "09:41",
+  "salida": "12:36"
+ },
+ {
+  "fecha": "2026-04-16",
+  "strike": 699.0,
+  "right": "C",
+  "ticker": "O:SPY260416C00699000",
+  "entrada": "13:48",
+  "salida": "14:24"
+ },
+ {
+  "fecha": "2026-04-16",
+  "strike": 703.0,
+  "right": "P",
+  "ticker": "O:SPY260416P00703000",
+  "entrada": "14:24",
+  "salida": "15:03"
+ },
+ {
+  "fecha": "2026-04-16",
+  "strike": 704.0,
+  "right": "P",
+  "ticker": "O:SPY260416P00704000",
+  "entrada": "12:36",
+  "salida": "13:48"
+ },
+ {
+  "fecha": "2026-04-17",
+  "strike": 707.0,
+  "right": "C",
+  "ticker": "O:SPY260417C00707000",
+  "entrada": "10:15",
+  "salida": "13:09"
+ },
+ {
+  "fecha": "2026-04-17",
+  "strike": 714.0,
+  "right": "P",
+  "ticker": "O:SPY260417P00714000",
+  "entrada": "13:09",
+  "salida": "15:45"
+ },
+ {
+  "fecha": "2026-04-20",
+  "strike": 706.0,
+  "right": "C",
+  "ticker": "O:SPY260420C00706000",
+  "entrada": "14:21",
+  "salida": "15:45"
+ },
+ {
+  "fecha": "2026-04-20",
+  "strike": 710.0,
+  "right": "P",
+  "ticker": "O:SPY260420P00710000",
+  "entrada": "10:54",
+  "salida": "14:21"
+ },
+ {
+  "fecha": "2026-04-21",
+  "strike": 704.0,
+  "right": "C",
+  "ticker": "O:SPY260421C00704000",
+  "entrada": "13:42",
+  "salida": "15:39"
+ },
+ {
+  "fecha": "2026-04-21",
+  "strike": 708.0,
+  "right": "C",
+  "ticker": "O:SPY260421C00708000",
+  "entrada": "09:54",
+  "salida": "10:45"
+ },
+ {
+  "fecha": "2026-04-21",
+  "strike": 709.0,
+  "right": "P",
+  "ticker": "O:SPY260421P00709000",
+  "entrada": "15:39",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-04-21",
+  "strike": 712.0,
+  "right": "P",
+  "ticker": "O:SPY260421P00712000",
+  "entrada": "10:45",
+  "salida": "13:42"
+ },
+ {
+  "fecha": "2026-04-22",
+  "strike": 706.0,
+  "right": "C",
+  "ticker": "O:SPY260422C00706000",
+  "entrada": "09:48",
+  "salida": "14:24"
+ },
+ {
+  "fecha": "2026-04-22",
+  "strike": 708.0,
+  "right": "C",
+  "ticker": "O:SPY260422C00708000",
+  "entrada": "15:21",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-04-22",
+  "strike": 712.0,
+  "right": "P",
+  "ticker": "O:SPY260422P00712000",
+  "entrada": "14:24",
+  "salida": "15:21"
+ },
+ {
+  "fecha": "2026-04-23",
+  "strike": 705.0,
+  "right": "C",
+  "ticker": "O:SPY260423C00705000",
+  "entrada": "14:03",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-04-23",
+  "strike": 713.0,
+  "right": "P",
+  "ticker": "O:SPY260423P00713000",
+  "entrada": "09:40",
+  "salida": "14:03"
+ },
+ {
+  "fecha": "2026-04-24",
+  "strike": 709.0,
+  "right": "C",
+  "ticker": "O:SPY260424C00709000",
+  "entrada": "10:57",
+  "salida": "15:36"
+ },
+ {
+  "fecha": "2026-04-24",
+  "strike": 716.0,
+  "right": "P",
+  "ticker": "O:SPY260424P00716000",
+  "entrada": "15:36",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-04-27",
+  "strike": 711.0,
+  "right": "C",
+  "ticker": "O:SPY260427C00711000",
+  "entrada": "12:12",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-04-27",
+  "strike": 715.0,
+  "right": "P",
+  "ticker": "O:SPY260427P00715000",
+  "entrada": "09:51",
+  "salida": "12:12"
+ },
+ {
+  "fecha": "2026-04-28",
+  "strike": 708.0,
+  "right": "C",
+  "ticker": "O:SPY260428C00708000",
+  "entrada": "13:36",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-04-28",
+  "strike": 715.0,
+  "right": "P",
+  "ticker": "O:SPY260428P00715000",
+  "entrada": "09:41",
+  "salida": "13:36"
+ },
+ {
+  "fecha": "2026-04-29",
+  "strike": 708.0,
+  "right": "C",
+  "ticker": "O:SPY260429C00708000",
+  "entrada": "13:51",
+  "salida": "14:06"
+ },
+ {
+  "fecha": "2026-04-29",
+  "strike": 709.0,
+  "right": "C",
+  "ticker": "O:SPY260429C00709000",
+  "entrada": "10:30",
+  "salida": "11:09"
+ },
+ {
+  "fecha": "2026-04-29",
+  "strike": 712.0,
+  "right": "P",
+  "ticker": "O:SPY260429P00712000",
+  "entrada": "14:06",
+  "salida": "15:00"
+ },
+ {
+  "fecha": "2026-04-29",
+  "strike": 713.0,
+  "right": "P",
+  "ticker": "O:SPY260429P00713000",
+  "entrada": "11:09",
+  "salida": "13:51"
+ },
+ {
+  "fecha": "2026-04-30",
+  "strike": 709.0,
+  "right": "C",
+  "ticker": "O:SPY260430C00709000",
+  "entrada": "09:40",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-05-01",
+  "strike": 720.0,
+  "right": "C",
+  "ticker": "O:SPY260501C00720000",
+  "entrada": "15:18",
+  "salida": "15:51"
+ },
+ {
+  "fecha": "2026-05-01",
+  "strike": 721.0,
+  "right": "C",
+  "ticker": "O:SPY260501C00721000",
+  "entrada": "11:45",
+  "salida": "12:09"
+ },
+ {
+  "fecha": "2026-05-01",
+  "strike": 725.0,
+  "right": "P",
+  "ticker": "O:SPY260501P00725000",
+  "entrada": "12:09",
+  "salida": "15:18"
+ },
+ {
+  "fecha": "2026-05-04",
+  "strike": 716.0,
+  "right": "C",
+  "ticker": "O:SPY260504C00716000",
+  "entrada": "13:24",
+  "salida": "14:27"
+ },
+ {
+  "fecha": "2026-05-04",
+  "strike": 718.0,
+  "right": "C",
+  "ticker": "O:SPY260504C00718000",
+  "entrada": "09:48",
+  "salida": "11:09"
+ },
+ {
+  "fecha": "2026-05-04",
+  "strike": 720.0,
+  "right": "P",
+  "ticker": "O:SPY260504P00720000",
+  "entrada": "14:27",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-05-04",
+  "strike": 723.0,
+  "right": "P",
+  "ticker": "O:SPY260504P00723000",
+  "entrada": "11:09",
+  "salida": "13:24"
+ },
+ {
+  "fecha": "2026-05-06",
+  "strike": 727.0,
+  "right": "C",
+  "ticker": "O:SPY260506C00727000",
+  "entrada": "10:00",
+  "salida": "13:00"
+ },
+ {
+  "fecha": "2026-05-06",
+  "strike": 729.0,
+  "right": "C",
+  "ticker": "O:SPY260506C00729000",
+  "entrada": "13:54",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-05-06",
+  "strike": 733.0,
+  "right": "P",
+  "ticker": "O:SPY260506P00733000",
+  "entrada": "13:00",
+  "salida": "13:54"
+ },
+ {
+  "fecha": "2026-05-07",
+  "strike": 732.0,
+  "right": "C",
+  "ticker": "O:SPY260507C00732000",
+  "entrada": "09:42",
+  "salida": "11:27"
+ },
+ {
+  "fecha": "2026-05-07",
+  "strike": 737.0,
+  "right": "P",
+  "ticker": "O:SPY260507P00737000",
+  "entrada": "11:27",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-05-08",
+  "strike": 734.0,
+  "right": "C",
+  "ticker": "O:SPY260508C00734000",
+  "entrada": "09:48",
+  "salida": "14:48"
+ },
+ {
+  "fecha": "2026-05-08",
+  "strike": 740.0,
+  "right": "P",
+  "ticker": "O:SPY260508P00740000",
+  "entrada": "14:48",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-05-11",
+  "strike": 737.0,
+  "right": "C",
+  "ticker": "O:SPY260511C00737000",
+  "entrada": "13:33",
+  "salida": "14:42"
+ },
+ {
+  "fecha": "2026-05-11",
+  "strike": 740.0,
+  "right": "P",
+  "ticker": "O:SPY260511P00740000",
+  "entrada": "09:41",
+  "salida": "10:54"
+ },
+ {
+  "fecha": "2026-05-11",
+  "strike": 742.0,
+  "right": "P",
+  "ticker": "O:SPY260511P00742000",
+  "entrada": "12:45",
+  "salida": "13:33"
+ },
+ {
+  "fecha": "2026-05-12",
+  "strike": 731.0,
+  "right": "C",
+  "ticker": "O:SPY260512C00731000",
+  "entrada": "13:18",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-05-13",
+  "strike": 736.0,
+  "right": "C",
+  "ticker": "O:SPY260513C00736000",
+  "entrada": "10:24",
+  "salida": "15:00"
+ },
+ {
+  "fecha": "2026-05-13",
+  "strike": 746.0,
+  "right": "P",
+  "ticker": "O:SPY260513P00746000",
+  "entrada": "15:00",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-05-14",
+  "strike": 746.0,
+  "right": "C",
+  "ticker": "O:SPY260514C00746000",
+  "entrada": "13:51",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-05-14",
+  "strike": 748.0,
+  "right": "P",
+  "ticker": "O:SPY260514P00748000",
+  "entrada": "09:40",
+  "salida": "13:51"
+ },
+ {
+  "fecha": "2026-05-15",
+  "strike": 737.0,
+  "right": "C",
+  "ticker": "O:SPY260515C00737000",
+  "entrada": "09:43",
+  "salida": "11:51"
+ },
+ {
+  "fecha": "2026-05-15",
+  "strike": 739.0,
+  "right": "C",
+  "ticker": "O:SPY260515C00739000",
+  "entrada": "13:21",
+  "salida": "14:21"
+ },
+ {
+  "fecha": "2026-05-15",
+  "strike": 742.0,
+  "right": "P",
+  "ticker": "O:SPY260515P00742000",
+  "entrada": "11:51",
+  "salida": "13:21"
+ },
+ {
+  "fecha": "2026-05-15",
+  "strike": 745.0,
+  "right": "P",
+  "ticker": "O:SPY260515P00745000",
+  "entrada": "14:21",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-05-18",
+  "strike": 734.0,
+  "right": "C",
+  "ticker": "O:SPY260518C00734000",
+  "entrada": "15:03",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-05-18",
+  "strike": 736.0,
+  "right": "C",
+  "ticker": "O:SPY260518C00736000",
+  "entrada": "09:42",
+  "salida": "10:36"
+ },
+ {
+  "fecha": "2026-05-18",
+  "strike": 739.0,
+  "right": "P",
+  "ticker": "O:SPY260518P00739000",
+  "entrada": "10:36",
+  "salida": "15:03"
+ },
+ {
+  "fecha": "2026-05-19",
+  "strike": 731.0,
+  "right": "C",
+  "ticker": "O:SPY260519C00731000",
+  "entrada": "09:44",
+  "salida": "14:30"
+ },
+ {
+  "fecha": "2026-05-19",
+  "strike": 738.0,
+  "right": "P",
+  "ticker": "O:SPY260519P00738000",
+  "entrada": "14:30",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-05-20",
+  "strike": 734.0,
+  "right": "C",
+  "ticker": "O:SPY260520C00734000",
+  "entrada": "09:48",
+  "salida": "12:27"
+ },
+ {
+  "fecha": "2026-05-20",
+  "strike": 738.0,
+  "right": "C",
+  "ticker": "O:SPY260520C00738000",
+  "entrada": "14:39",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-05-20",
+  "strike": 742.0,
+  "right": "P",
+  "ticker": "O:SPY260520P00742000",
+  "entrada": "12:27",
+  "salida": "14:39"
+ },
+ {
+  "fecha": "2026-05-21",
+  "strike": 737.0,
+  "right": "C",
+  "ticker": "O:SPY260521C00737000",
+  "entrada": "09:57",
+  "salida": "10:21"
+ },
+ {
+  "fecha": "2026-05-21",
+  "strike": 738.0,
+  "right": "C",
+  "ticker": "O:SPY260521C00738000",
+  "entrada": "13:12",
+  "salida": "14:54"
+ },
+ {
+  "fecha": "2026-05-21",
+  "strike": 740.0,
+  "right": "P",
+  "ticker": "O:SPY260521P00740000",
+  "entrada": "10:21",
+  "salida": "13:12"
+ },
+ {
+  "fecha": "2026-05-21",
+  "strike": 743.0,
+  "right": "P",
+  "ticker": "O:SPY260521P00743000",
+  "entrada": "14:54",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-05-22",
+  "strike": 745.0,
+  "right": "C",
+  "ticker": "O:SPY260522C00745000",
+  "entrada": "11:21",
+  "salida": "15:03"
+ },
+ {
+  "fecha": "2026-05-22",
+  "strike": 748.0,
+  "right": "P",
+  "ticker": "O:SPY260522P00748000",
+  "entrada": "10:15",
+  "salida": "11:21"
+ },
+ {
+  "fecha": "2026-05-22",
+  "strike": 749.0,
+  "right": "P",
+  "ticker": "O:SPY260522P00749000",
+  "entrada": "15:03",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-05-26",
+  "strike": 747.0,
+  "right": "C",
+  "ticker": "O:SPY260526C00747000",
+  "entrada": "14:12",
+  "salida": "15:00"
+ },
+ {
+  "fecha": "2026-05-26",
+  "strike": 749.0,
+  "right": "C",
+  "ticker": "O:SPY260526C00749000",
+  "entrada": "09:48",
+  "salida": "11:03"
+ },
+ {
+  "fecha": "2026-05-26",
+  "strike": 753.0,
+  "right": "P",
+  "ticker": "O:SPY260526P00753000",
+  "entrada": "11:03",
+  "salida": "14:12"
+ },
+ {
+  "fecha": "2026-05-27",
+  "strike": 747.0,
+  "right": "C",
+  "ticker": "O:SPY260527C00747000",
+  "entrada": "14:15",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-05-27",
+  "strike": 748.0,
+  "right": "C",
+  "ticker": "O:SPY260527C00748000",
+  "entrada": "09:41",
+  "salida": "13:09"
+ },
+ {
+  "fecha": "2026-05-27",
+  "strike": 751.0,
+  "right": "P",
+  "ticker": "O:SPY260527P00751000",
+  "entrada": "13:09",
+  "salida": "14:15"
+ },
+ {
+  "fecha": "2026-05-28",
+  "strike": 748.0,
+  "right": "C",
+  "ticker": "O:SPY260528C00748000",
+  "entrada": "10:09",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-05-29",
+  "strike": 754.0,
+  "right": "C",
+  "ticker": "O:SPY260529C00754000",
+  "entrada": "14:33",
+  "salida": "14:54"
+ },
+ {
+  "fecha": "2026-05-29",
+  "strike": 759.0,
+  "right": "P",
+  "ticker": "O:SPY260529P00759000",
+  "entrada": "13:24",
+  "salida": "14:33"
+ },
+ {
+  "fecha": "2026-06-01",
+  "strike": 755.0,
+  "right": "C",
+  "ticker": "O:SPY260601C00755000",
+  "entrada": "12:54",
+  "salida": "15:42"
+ },
+ {
+  "fecha": "2026-06-01",
+  "strike": 759.0,
+  "right": "P",
+  "ticker": "O:SPY260601P00759000",
+  "entrada": "12:18",
+  "salida": "12:54"
+ },
+ {
+  "fecha": "2026-06-02",
+  "strike": 757.0,
+  "right": "C",
+  "ticker": "O:SPY260602C00757000",
+  "entrada": "15:12",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-06-02",
+  "strike": 762.0,
+  "right": "P",
+  "ticker": "O:SPY260602P00762000",
+  "entrada": "12:27",
+  "salida": "15:12"
+ },
+ {
+  "fecha": "2026-06-03",
+  "strike": 755.0,
+  "right": "C",
+  "ticker": "O:SPY260603C00755000",
+  "entrada": "09:41",
+  "salida": "15:03"
+ },
+ {
+  "fecha": "2026-06-03",
+  "strike": 758.0,
+  "right": "P",
+  "ticker": "O:SPY260603P00758000",
+  "entrada": "15:03",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-06-05",
+  "strike": 749.0,
+  "right": "C",
+  "ticker": "O:SPY260605C00749000",
+  "entrada": "09:41",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-06-08",
+  "strike": 742.0,
+  "right": "C",
+  "ticker": "O:SPY260608C00742000",
+  "entrada": "11:00",
+  "salida": "11:33"
+ },
+ {
+  "fecha": "2026-06-08",
+  "strike": 745.0,
+  "right": "P",
+  "ticker": "O:SPY260608P00745000",
+  "entrada": "11:33",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-06-09",
+  "strike": 727.0,
+  "right": "C",
+  "ticker": "O:SPY260609C00727000",
+  "entrada": "13:18",
+  "salida": "15:18"
+ },
+ {
+  "fecha": "2026-06-09",
+  "strike": 736.0,
+  "right": "P",
+  "ticker": "O:SPY260609P00736000",
+  "entrada": "15:18",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-06-09",
+  "strike": 747.0,
+  "right": "P",
+  "ticker": "O:SPY260609P00747000",
+  "entrada": "09:42",
+  "salida": "13:18"
+ },
+ {
+  "fecha": "2026-06-10",
+  "strike": 727.0,
+  "right": "C",
+  "ticker": "O:SPY260610C00727000",
+  "entrada": "13:57",
+  "salida": "14:39"
+ },
+ {
+  "fecha": "2026-06-10",
+  "strike": 731.0,
+  "right": "P",
+  "ticker": "O:SPY260610P00731000",
+  "entrada": "14:39",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-06-10",
+  "strike": 738.0,
+  "right": "P",
+  "ticker": "O:SPY260610P00738000",
+  "entrada": "09:43",
+  "salida": "13:57"
+ },
+ {
+  "fecha": "2026-06-11",
+  "strike": 724.0,
+  "right": "C",
+  "ticker": "O:SPY260611C00724000",
+  "entrada": "09:40",
+  "salida": "10:54"
+ },
+ {
+  "fecha": "2026-06-11",
+  "strike": 726.0,
+  "right": "C",
+  "ticker": "O:SPY260611C00726000",
+  "entrada": "12:09",
+  "salida": "12:57"
+ },
+ {
+  "fecha": "2026-06-11",
+  "strike": 730.0,
+  "right": "P",
+  "ticker": "O:SPY260611P00730000",
+  "entrada": "12:57",
+  "salida": "13:30"
+ },
+ {
+  "fecha": "2026-06-12",
+  "strike": 735.0,
+  "right": "C",
+  "ticker": "O:SPY260612C00735000",
+  "entrada": "09:40",
+  "salida": "11:45"
+ },
+ {
+  "fecha": "2026-06-12",
+  "strike": 744.0,
+  "right": "P",
+  "ticker": "O:SPY260612P00744000",
+  "entrada": "11:45",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-06-15",
+  "strike": 758.0,
+  "right": "P",
+  "ticker": "O:SPY260615P00758000",
+  "entrada": "13:09",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-06-16",
+  "strike": 756.0,
+  "right": "P",
+  "ticker": "O:SPY260616P00756000",
+  "entrada": "10:24",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-06-17",
+  "strike": 748.0,
+  "right": "C",
+  "ticker": "O:SPY260617C00748000",
+  "entrada": "13:54",
+  "salida": "14:03"
+ },
+ {
+  "fecha": "2026-06-17",
+  "strike": 749.0,
+  "right": "C",
+  "ticker": "O:SPY260617C00749000",
+  "entrada": "09:45",
+  "salida": "10:39"
+ },
+ {
+  "fecha": "2026-06-17",
+  "strike": 752.0,
+  "right": "P",
+  "ticker": "O:SPY260617P00752000",
+  "entrada": "10:39",
+  "salida": "13:54"
+ },
+ {
+  "fecha": "2026-06-17",
+  "strike": 754.0,
+  "right": "P",
+  "ticker": "O:SPY260617P00754000",
+  "entrada": "09:43",
+  "salida": "09:45"
+ },
+ {
+  "fecha": "2026-06-18",
+  "strike": 742.0,
+  "right": "C",
+  "ticker": "O:SPY260618C00742000",
+  "entrada": "09:43",
+  "salida": "14:06"
+ },
+ {
+  "fecha": "2026-06-18",
+  "strike": 749.0,
+  "right": "P",
+  "ticker": "O:SPY260618P00749000",
+  "entrada": "14:06",
+  "salida": "15:42"
+ },
+ {
+  "fecha": "2026-06-22",
+  "strike": 743.0,
+  "right": "C",
+  "ticker": "O:SPY260622C00743000",
+  "entrada": "14:21",
+  "salida": "14:54"
+ },
+ {
+  "fecha": "2026-06-22",
+  "strike": 747.0,
+  "right": "P",
+  "ticker": "O:SPY260622P00747000",
+  "entrada": "14:54",
+  "salida": "15:51"
+ },
+ {
+  "fecha": "2026-06-22",
+  "strike": 750.0,
+  "right": "P",
+  "ticker": "O:SPY260622P00750000",
+  "entrada": "10:24",
+  "salida": "14:21"
+ },
+ {
+  "fecha": "2026-06-23",
+  "strike": 733.0,
+  "right": "C",
+  "ticker": "O:SPY260623C00733000",
+  "entrada": "09:45",
+  "salida": "11:06"
+ },
+ {
+  "fecha": "2026-06-23",
+  "strike": 734.0,
+  "right": "C",
+  "ticker": "O:SPY260623C00734000",
+  "entrada": "12:06",
+  "salida": "13:57"
+ },
+ {
+  "fecha": "2026-06-23",
+  "strike": 737.0,
+  "right": "P",
+  "ticker": "O:SPY260623P00737000",
+  "entrada": "09:40",
+  "salida": "09:45"
+ },
+ {
+  "fecha": "2026-06-23",
+  "strike": 738.0,
+  "right": "P",
+  "ticker": "O:SPY260623P00738000",
+  "entrada": "11:06",
+  "salida": "12:06"
+ },
+ {
+  "fecha": "2026-06-24",
+  "strike": 739.0,
+  "right": "P",
+  "ticker": "O:SPY260624P00739000",
+  "entrada": "12:39",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-06-25",
+  "strike": 732.0,
+  "right": "C",
+  "ticker": "O:SPY260625C00732000",
+  "entrada": "14:21",
+  "salida": "15:06"
+ },
+ {
+  "fecha": "2026-06-25",
+  "strike": 734.0,
+  "right": "C",
+  "ticker": "O:SPY260625C00734000",
+  "entrada": "09:40",
+  "salida": "11:15"
+ },
+ {
+  "fecha": "2026-06-25",
+  "strike": 735.0,
+  "right": "P",
+  "ticker": "O:SPY260625P00735000",
+  "entrada": "11:15",
+  "salida": "14:21"
+ },
+ {
+  "fecha": "2026-06-25",
+  "strike": 736.0,
+  "right": "P",
+  "ticker": "O:SPY260625P00736000",
+  "entrada": "15:06",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-06-26",
+  "strike": 729.0,
+  "right": "C",
+  "ticker": "O:SPY260626C00729000",
+  "entrada": "09:57",
+  "salida": "12:24"
+ },
+ {
+  "fecha": "2026-06-26",
+  "strike": 733.0,
+  "right": "C",
+  "ticker": "O:SPY260626C00733000",
+  "entrada": "13:09",
+  "salida": "13:57"
+ },
+ {
+  "fecha": "2026-06-26",
+  "strike": 736.0,
+  "right": "P",
+  "ticker": "O:SPY260626P00736000",
+  "entrada": "13:57",
+  "salida": "15:45"
+ },
+ {
+  "fecha": "2026-06-29",
+  "strike": 735.0,
+  "right": "C",
+  "ticker": "O:SPY260629C00735000",
+  "entrada": "10:36",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-06-29",
+  "strike": 741.0,
+  "right": "P",
+  "ticker": "O:SPY260629P00741000",
+  "entrada": "09:44",
+  "salida": "10:36"
+ },
+ {
+  "fecha": "2026-06-30",
+  "strike": 743.0,
+  "right": "C",
+  "ticker": "O:SPY260630C00743000",
+  "entrada": "11:24",
+  "salida": "13:39"
+ },
+ {
+  "fecha": "2026-06-30",
+  "strike": 745.0,
+  "right": "C",
+  "ticker": "O:SPY260630C00745000",
+  "entrada": "14:51",
+  "salida": "15:39"
+ },
+ {
+  "fecha": "2026-06-30",
+  "strike": 744.0,
+  "right": "P",
+  "ticker": "O:SPY260630P00744000",
+  "entrada": "09:43",
+  "salida": "11:24"
+ },
+ {
+  "fecha": "2026-06-30",
+  "strike": 749.0,
+  "right": "P",
+  "ticker": "O:SPY260630P00749000",
+  "entrada": "13:39",
+  "salida": "14:51"
+ },
+ {
+  "fecha": "2026-07-01",
+  "strike": 744.0,
+  "right": "C",
+  "ticker": "O:SPY260701C00744000",
+  "entrada": "10:06",
+  "salida": "12:54"
+ },
+ {
+  "fecha": "2026-07-01",
+  "strike": 745.0,
+  "right": "C",
+  "ticker": "O:SPY260701C00745000",
+  "entrada": "15:06",
+  "salida": "15:54"
+ },
+ {
+  "fecha": "2026-07-01",
+  "strike": 751.0,
+  "right": "P",
+  "ticker": "O:SPY260701P00751000",
+  "entrada": "12:54",
+  "salida": "15:06"
+ },
+ {
+  "fecha": "2026-07-02",
+  "strike": 740.0,
+  "right": "C",
+  "ticker": "O:SPY260702C00740000",
+  "entrada": "14:09",
+  "salida": "15:06"
+ },
+ {
+  "fecha": "2026-07-02",
+  "strike": 745.0,
+  "right": "P",
+  "ticker": "O:SPY260702P00745000",
+  "entrada": "15:06",
+  "salida": "15:45"
+ },
+ {
+  "fecha": "2026-07-02",
+  "strike": 752.0,
+  "right": "P",
+  "ticker": "O:SPY260702P00752000",
+  "entrada": "09:41",
+  "salida": "14:09"
+ },
+ {
+  "fecha": "2026-07-06",
+  "strike": 748.0,
+  "right": "C",
+  "ticker": "O:SPY260706C00748000",
+  "entrada": "14:09",
+  "salida": "15:54"
+ },
+ {
+  "fecha": "2026-07-06",
+  "strike": 752.0,
+  "right": "P",
+  "ticker": "O:SPY260706P00752000",
+  "entrada": "13:42",
+  "salida": "14:09"
+ },
+ {
+  "fecha": "2026-07-07",
+  "strike": 744.0,
+  "right": "C",
+  "ticker": "O:SPY260707C00744000",
+  "entrada": "11:54",
+  "salida": "14:51"
+ },
+ {
+  "fecha": "2026-07-07",
+  "strike": 751.0,
+  "right": "P",
+  "ticker": "O:SPY260707P00751000",
+  "entrada": "14:51",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-07-08",
+  "strike": 740.0,
+  "right": "C",
+  "ticker": "O:SPY260708C00740000",
+  "entrada": "12:15",
+  "salida": "13:57"
+ },
+ {
+  "fecha": "2026-07-08",
+  "strike": 747.0,
+  "right": "P",
+  "ticker": "O:SPY260708P00747000",
+  "entrada": "13:57",
+  "salida": "15:57"
+ },
+ {
+  "fecha": "2026-07-09",
+  "strike": 746.0,
+  "right": "C",
+  "ticker": "O:SPY260709C00746000",
+  "entrada": "11:00",
+  "salida": "14:57"
+ },
+ {
+  "fecha": "2026-07-09",
+  "strike": 751.0,
+  "right": "P",
+  "ticker": "O:SPY260709P00751000",
+  "entrada": "09:42",
+  "salida": "11:00"
+ },
+ {
+  "fecha": "2026-07-09",
+  "strike": 754.0,
+  "right": "P",
+  "ticker": "O:SPY260709P00754000",
+  "entrada": "14:57",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-07-10",
+  "strike": 750.0,
+  "right": "C",
+  "ticker": "O:SPY260710C00750000",
+  "entrada": "09:40",
+  "salida": "10:33"
+ },
+ {
+  "fecha": "2026-07-10",
+  "strike": 751.0,
+  "right": "C",
+  "ticker": "O:SPY260710C00751000",
+  "entrada": "12:48",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-07-10",
+  "strike": 753.0,
+  "right": "P",
+  "ticker": "O:SPY260710P00753000",
+  "entrada": "10:33",
+  "salida": "12:48"
+ },
+ {
+  "fecha": "2026-07-13",
+  "strike": 754.0,
+  "right": "P",
+  "ticker": "O:SPY260713P00754000",
+  "entrada": "10:18",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-07-14",
+  "strike": 749.0,
+  "right": "C",
+  "ticker": "O:SPY260714C00749000",
+  "entrada": "13:03",
+  "salida": "14:51"
+ },
+ {
+  "fecha": "2026-07-14",
+  "strike": 753.0,
+  "right": "P",
+  "ticker": "O:SPY260714P00753000",
+  "entrada": "12:03",
+  "salida": "13:03"
+ },
+ {
+  "fecha": "2026-07-14",
+  "strike": 755.0,
+  "right": "P",
+  "ticker": "O:SPY260714P00755000",
+  "entrada": "14:51",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-07-15",
+  "strike": 749.0,
+  "right": "C",
+  "ticker": "O:SPY260715C00749000",
+  "entrada": "13:03",
+  "salida": "14:48"
+ },
+ {
+  "fecha": "2026-07-15",
+  "strike": 753.0,
+  "right": "C",
+  "ticker": "O:SPY260715C00753000",
+  "entrada": "10:18",
+  "salida": "10:54"
+ },
+ {
+  "fecha": "2026-07-15",
+  "strike": 756.0,
+  "right": "P",
+  "ticker": "O:SPY260715P00756000",
+  "entrada": "10:54",
+  "salida": "13:03"
+ },
+ {
+  "fecha": "2026-07-16",
+  "strike": 749.0,
+  "right": "C",
+  "ticker": "O:SPY260716C00749000",
+  "entrada": "09:41",
+  "salida": "12:06"
+ },
+ {
+  "fecha": "2026-07-16",
+  "strike": 755.0,
+  "right": "P",
+  "ticker": "O:SPY260716P00755000",
+  "entrada": "12:06",
+  "salida": "15:57"
+ },
+ {
+  "fecha": "2026-07-17",
+  "strike": 741.0,
+  "right": "C",
+  "ticker": "O:SPY260717C00741000",
+  "entrada": "09:51",
+  "salida": "11:12"
+ },
+ {
+  "fecha": "2026-07-17",
+  "strike": 744.0,
+  "right": "C",
+  "ticker": "O:SPY260717C00744000",
+  "entrada": "11:57",
+  "salida": "13:51"
+ },
+ {
+  "fecha": "2026-07-17",
+  "strike": 747.0,
+  "right": "P",
+  "ticker": "O:SPY260717P00747000",
+  "entrada": "11:12",
+  "salida": "11:57"
+ },
+ {
+  "fecha": "2026-07-17",
+  "strike": 748.0,
+  "right": "P",
+  "ticker": "O:SPY260717P00748000",
+  "entrada": "13:51",
+  "salida": "15:48"
+ },
+ {
+  "fecha": "2026-07-20",
+  "strike": 744.0,
+  "right": "C",
+  "ticker": "O:SPY260720C00744000",
+  "entrada": "11:54",
+  "salida": "12:42"
+ },
+ {
+  "fecha": "2026-07-20",
+  "strike": 748.0,
+  "right": "P",
+  "ticker": "O:SPY260720P00748000",
+  "entrada": "12:42",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-07-20",
+  "strike": 749.0,
+  "right": "P",
+  "ticker": "O:SPY260720P00749000",
+  "entrada": "09:54",
+  "salida": "11:54"
+ },
+ {
+  "fecha": "2026-07-21",
+  "strike": 743.0,
+  "right": "C",
+  "ticker": "O:SPY260721C00743000",
+  "entrada": "09:40",
+  "salida": "14:15"
+ },
+ {
+  "fecha": "2026-07-21",
+  "strike": 751.0,
+  "right": "P",
+  "ticker": "O:SPY260721P00751000",
+  "entrada": "14:15",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-07-22",
+  "strike": 746.0,
+  "right": "C",
+  "ticker": "O:SPY260722C00746000",
+  "entrada": "11:09",
+  "salida": "13:21"
+ },
+ {
+  "fecha": "2026-07-22",
+  "strike": 750.0,
+  "right": "P",
+  "ticker": "O:SPY260722P00750000",
+  "entrada": "10:27",
+  "salida": "11:09"
+ },
+ {
+  "fecha": "2026-07-22",
+  "strike": 752.0,
+  "right": "P",
+  "ticker": "O:SPY260722P00752000",
+  "entrada": "13:21",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-07-23",
+  "strike": 736.0,
+  "right": "C",
+  "ticker": "O:SPY260723C00736000",
+  "entrada": "12:03",
+  "salida": "13:36"
+ },
+ {
+  "fecha": "2026-07-23",
+  "strike": 740.0,
+  "right": "P",
+  "ticker": "O:SPY260723P00740000",
+  "entrada": "13:36",
+  "salida": "15:57"
+ },
+ {
+  "fecha": "2026-07-23",
+  "strike": 744.0,
+  "right": "P",
+  "ticker": "O:SPY260723P00744000",
+  "entrada": "09:42",
+  "salida": "12:03"
+ },
+ {
+  "fecha": "2026-07-24",
+  "strike": 737.0,
+  "right": "C",
+  "ticker": "O:SPY260724C00737000",
+  "entrada": "10:24",
+  "salida": "12:45"
+ },
+ {
+  "fecha": "2026-07-24",
+  "strike": 744.0,
+  "right": "P",
+  "ticker": "O:SPY260724P00744000",
+  "entrada": "12:45",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-07-27",
+  "strike": 736.0,
+  "right": "C",
+  "ticker": "O:SPY260727C00736000",
+  "entrada": "14:54",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-07-27",
+  "strike": 741.0,
+  "right": "C",
+  "ticker": "O:SPY260727C00741000",
+  "entrada": "09:43",
+  "salida": "11:36"
+ },
+ {
+  "fecha": "2026-07-27",
+  "strike": 739.0,
+  "right": "P",
+  "ticker": "O:SPY260727P00739000",
+  "entrada": "11:36",
+  "salida": "14:54"
+ },
+ {
+  "fecha": "2026-07-28",
+  "strike": 735.0,
+  "right": "C",
+  "ticker": "O:SPY260728C00735000",
+  "entrada": "09:42",
+  "salida": "13:18"
+ },
+ {
+  "fecha": "2026-07-28",
+  "strike": 739.0,
+  "right": "C",
+  "ticker": "O:SPY260728C00739000",
+  "entrada": "15:03",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-07-28",
+  "strike": 744.0,
+  "right": "P",
+  "ticker": "O:SPY260728P00744000",
+  "entrada": "13:18",
+  "salida": "15:03"
+ },
+ {
+  "fecha": "2026-07-29",
+  "strike": 731.0,
+  "right": "C",
+  "ticker": "O:SPY260729C00731000",
+  "entrada": "12:51",
+  "salida": "15:18"
+ },
+ {
+  "fecha": "2026-07-29",
+  "strike": 740.0,
+  "right": "P",
+  "ticker": "O:SPY260729P00740000",
+  "entrada": "15:18",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-07-30",
+  "strike": 732.0,
+  "right": "C",
+  "ticker": "O:SPY260730C00732000",
+  "entrada": "09:40",
+  "salida": "10:54"
+ },
+ {
+  "fecha": "2026-07-30",
+  "strike": 735.0,
+  "right": "C",
+  "ticker": "O:SPY260730C00735000",
+  "entrada": "12:03",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-07-30",
+  "strike": 739.0,
+  "right": "P",
+  "ticker": "O:SPY260730P00739000",
+  "entrada": "10:54",
+  "salida": "12:03"
+ },
+ {
+  "fecha": "2026-07-31",
+  "strike": 741.0,
+  "right": "C",
+  "ticker": "O:SPY260731C00741000",
+  "entrada": "09:40",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-08-05",
+  "strike": 777.0,
+  "right": "P",
+  "ticker": "O:SPY260805P00777000",
+  "entrada": "09:51",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-08-06",
+  "strike": 767.0,
+  "right": "C",
+  "ticker": "O:SPY260806C00767000",
+  "entrada": "14:15",
+  "salida": "15:30"
+ },
+ {
+  "fecha": "2026-08-06",
+  "strike": 769.0,
+  "right": "C",
+  "ticker": "O:SPY260806C00769000",
+  "entrada": "09:48",
+  "salida": "10:48"
+ },
+ {
+  "fecha": "2026-08-06",
+  "strike": 771.0,
+  "right": "P",
+  "ticker": "O:SPY260806P00771000",
+  "entrada": "15:30",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-08-06",
+  "strike": 772.0,
+  "right": "P",
+  "ticker": "O:SPY260806P00772000",
+  "entrada": "10:48",
+  "salida": "14:15"
+ },
+ {
+  "fecha": "2026-08-07",
+  "strike": 769.0,
+  "right": "C",
+  "ticker": "O:SPY260807C00769000",
+  "entrada": "15:03",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-08-07",
+  "strike": 770.0,
+  "right": "C",
+  "ticker": "O:SPY260807C00770000",
+  "entrada": "10:24",
+  "salida": "12:27"
+ },
+ {
+  "fecha": "2026-08-07",
+  "strike": 774.0,
+  "right": "P",
+  "ticker": "O:SPY260807P00774000",
+  "entrada": "12:27",
+  "salida": "15:03"
+ },
+ {
+  "fecha": "2026-08-10",
+  "strike": 770.0,
+  "right": "C",
+  "ticker": "O:SPY260810C00770000",
+  "entrada": "15:00",
+  "salida": "15:51"
+ },
+ {
+  "fecha": "2026-08-10",
+  "strike": 776.0,
+  "right": "P",
+  "ticker": "O:SPY260810P00776000",
+  "entrada": "11:00",
+  "salida": "15:00"
+ },
+ {
+  "fecha": "2026-08-11",
+  "strike": 768.0,
+  "right": "C",
+  "ticker": "O:SPY260811C00768000",
+  "entrada": "15:39",
+  "salida": "15:51"
+ },
+ {
+  "fecha": "2026-08-12",
+  "strike": 770.0,
+  "right": "C",
+  "ticker": "O:SPY260812C00770000",
+  "entrada": "09:40",
+  "salida": "15:21"
+ },
+ {
+  "fecha": "2026-08-12",
+  "strike": 776.0,
+  "right": "P",
+  "ticker": "O:SPY260812P00776000",
+  "entrada": "15:21",
+  "salida": "15:59"
+ },
+ {
+  "fecha": "2026-08-13",
+  "strike": 774.0,
+  "right": "C",
+  "ticker": "O:SPY260813C00774000",
+  "entrada": "13:03",
+  "salida": "13:45"
+ },
+ {
+  "fecha": "2026-08-13",
+  "strike": 775.0,
+  "right": "C",
+  "ticker": "O:SPY260813C00775000",
+  "entrada": "14:39",
+  "salida": "15:51"
+ },
+ {
+  "fecha": "2026-08-13",
+  "strike": 779.0,
+  "right": "P",
+  "ticker": "O:SPY260813P00779000",
+  "entrada": "13:45",
+  "salida": "14:39"
+ },
+ {
+  "fecha": "2026-08-13",
+  "strike": 780.0,
+  "right": "P",
+  "ticker": "O:SPY260813P00780000",
+  "entrada": "10:51",
+  "salida": "13:03"
+ }
+]
