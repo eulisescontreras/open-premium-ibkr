@@ -1870,3 +1870,40 @@ reutilizando `analisis/bajar_bars_year.py`, al que se le parametrizó el SÍMBOL
 "SPY") y la PAUSA entre peticiones. Salidas: `qqq_bars_year.db`/`qqq_bars_year2.db` y equivalentes
 `iwm_`/`dia_`, mismo esquema que el SPY. OJO al pacing: IBKR limita el histórico a ~60 peticiones
 por 10 min y pasarse afecta a TODA la conexión del Gateway, incluida la de la app en vivo.
+
+## 18. AUDITORÍA DEL PREMIUM SINTÉTICO vs REAL (2026-08-14) — el gate del proyecto
+`analisis/auditoria_premium_synth.py` (nuevo). Calibra con `synth_premium.calibra` (FUNCIÓN REAL,
+importada, no reimplementada) sobre días de entreno y predice días que el modelo NO ha visto,
+comparando contra el mid real de `premium_minute`. Desglosa el error POR PROFUNDIDAD ITM, que es
+donde la spec sospechaba el sesgo.
+NOTA: `synth_premium.spy_min` lee `spy_bars_pm.db`, que NO existe en este entorno; se sustituye
+por `bars_minute` de la BD del día (mismo dato). Solo se cambia esa fuente.
+
+**RESULTADO (entreno 08-11 + 08-12, 627 buckets calibrados):**
+```
+DIA 08-13 (1 dia despues) · 15.127 contratos-minuto
+  ITM 0..1 +2.8% | ITM 1..2 +2.3% | ITM 3..5 +0.3% | ITM 5..10 -0.3% | TOTAL +3.5%
+DIA 08-14 (2 dias despues) · 7.800 contratos-minuto
+  OTM -1..0 +29.1% (sobreestima el 95% de las veces) | ITM 0..1 +16.2% (92%)
+  ITM 1..2 +9.1% (90%) | ITM 2..3 +4.5% (85%) | ITM 3..5 +1.6% | ITM 5..10 +0.1%
+  TOTAL +21.9%
+```
+- **El modelo se degrada MUY rápido fuera de su ventana**: +3,5% a un día, +21,9% a dos. El sesgo
+  es SISTEMÁTICO (sobreestima en el 90-95% de los casos), no ruido.
+- **Todo el error está en OTM y poco ITM.** En ITM profundo (5-10) el modelo es casi exacto (±0,3%).
+- **Dónde opera el sistema (VERIFICADO sobre las 28 operaciones reales ya ejecutadas):**
+  profundidad ITM mediana **0.15** (rango -2.88..2.41), precio de entrada mediana **1.35$**
+  (rango 0.68..2.78). O sea PEGADAS AL ATM — el tramo donde el modelo falla +16 a +29%. Pero esas
+  operaciones son del sistema ANTERIOR (media/M1, ATM). El sistema nuevo con `EJECUCION_ITM=True`
+  y tope 400$ × `CAPITAL_FRAC_MAX 0.80` = 320$/contrato caería en **ITM 2-3**, donde el error es
+  +1,1% (08-13) / +4,5% (08-14): tolerable, pero no cero.
+- **IMPLICACIÓN DE FONDO:** el backtest de 2 años (511 días) descansa en un modelo calibrado con
+  3 días que se degrada en 48 horas. La extrapolación a regímenes de volatilidad distintos NO
+  tiene apoyo empírico. Tenerlo delante al leer CUALQUIER cifra de la spec.
+- **NO VERIFICADO:** si el sesgo INFLA o DESINFLA los +25.769$. El signo depende de que la
+  profundidad cambia entre entrada y salida, y no se puede firmar sin correr el backtest con
+  precios reales vs sintéticos sobre los mismos días. Hace falta `mantener.py`, que NO está en el
+  repo (vive en el /tmp de la sesión del agente de investigación; ya se le pidió que lo suba).
+  Tampoco se puede explicar aún la contradicción del tope 200$ vs 400$ (§6.3 de la spec).
+- La herramienta es REUTILIZABLE: cada día nuevo de paper añade datos reales; volver a correrla
+  para ver si el modelo aguanta.
