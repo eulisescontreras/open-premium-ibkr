@@ -57,16 +57,17 @@ def sen_2min(bars):  # bars = [(hora,hi,lo,cl)] con premarket
         prev=D[i]
     return out
 
-modelo = calibra(["2026-08-11","2026-08-12","2026-08-13"])
-print(f"modelo calibrado ({len(modelo)} buckets). Cargando dias del año...", flush=True)
+def _main():
+  modelo = calibra(["2026-08-11","2026-08-12","2026-08-13"])
+  print(f"modelo calibrado ({len(modelo)} buckets). Cargando dias del año...", flush=True)
 
-conY = sqlite3.connect(f"file:{YEAR}?mode=ro", uri=True)
-dias = [r[0] for r in conY.execute("select distinct fecha from bars order by fecha")]
-TRAILS = [0.04,0.05,0.06,0.08,0.10]
-agg = {t:{"pnl":0.0,"win":0,"days":0} for t in TRAILS}
-por_dia = {t:[] for t in TRAILS}
+  conY = sqlite3.connect(f"file:{YEAR}?mode=ro", uri=True)
+  dias = [r[0] for r in conY.execute("select distinct fecha from bars order by fecha")]
+  TRAILS = [0.04,0.05,0.06,0.08,0.10]
+  agg = {t:{"pnl":0.0,"win":0,"days":0} for t in TRAILS}
+  por_dia = {t:[] for t in TRAILS}
 
-for fk in dias:
+  for fk in dias:
     dk = fk.replace("-","")
     bars = conY.execute("select hora,high,low,close from bars where fecha=? order by hora",(fk,)).fetchall()
     # (h, open~=close, hi, lo, cl) para RTH; no tenemos open real, usamos close como open (no afecta trail)
@@ -101,12 +102,15 @@ for fk in dias:
         _,c = simular(fk, senales=sen, trail=t, db_velas=TMP, db_tape=None, expiry=dk, mid=True, mag_umbral=None)
         g=c-CAPITAL_0
         agg[t]["pnl"]+=g; agg[t]["days"]+=1; agg[t]["win"]+= (1 if g>0 else 0); por_dia[t].append(g)
-conY.close()
-if os.path.exists(TMP): os.remove(TMP)
+  conY.close()
+  if os.path.exists(TMP): os.remove(TMP)
 
-print(f"\nBACKTEST AÑO ({agg[TRAILS[0]]['days']} dias) · 2-min · premium sintetico · magnitud OFF")
-print(f"{'trail':>6} | {'TOTAL':>12} {'prom/dia':>9} {'%dias+':>7} {'mejor':>9} {'peor':>9}")
-for t in TRAILS:
+  print(f"\nBACKTEST AÑO ({agg[TRAILS[0]]['days']} dias) · 2-min · premium sintetico · magnitud OFF")
+  print(f"{'trail':>6} | {'TOTAL':>12} {'prom/dia':>9} {'%dias+':>7} {'mejor':>9} {'peor':>9}")
+  for t in TRAILS:
     a=agg[t]; pd=por_dia[t]
     prom=a["pnl"]/a["days"]; wr=100*a["win"]/a["days"]
     print(f"{t:>5.2f}% | {a['pnl']:>+11.2f}$ {prom:>+8.2f}$ {wr:>6.1f}% {max(pd):>+8.2f}$ {min(pd):>+8.2f}$")
+
+if __name__ == "__main__":
+  _main()

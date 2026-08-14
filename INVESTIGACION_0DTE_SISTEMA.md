@@ -104,6 +104,9 @@ SALIDAS:    trail 0.04% | cierre 15:59 | flip pendiente. (Sin permanencia por ma
 | **ST multiplier ANCHO (3.5-5.0)** | PEOR (pierde giros verdaderos) | Bandas anchas giran menos pero pierden los buenos |
 | **Compounding día-a-día (80% del capital)** | **RUINA a $0** en ~1 mes | 80% en un 0DTE que puede perder 100% → ruina multiplicativa |
 | **Escalado +1 contrato por $1000** | Exponencial: explota a fantasía ($59M) o arruina | Mismo problema que el 80% |
+| **Skip apertura más agresivo (>09:45)** *(re-verif 2026-08-14)* | 09:45 es el óptimo; 10:00+ baja el total en AMBOS años; los malos quedan clavados ~−$5k para cualquier skip ≥09:45 | La única mejora de skip fue "sin skip"→09:45; más allá saca días buenos con los malos. Banco: `analisis/reverifica_dias_malos.py` |
+| **Trail a 2-min (alinear con el ST) todo el día** *(re-verif 2026-08-14)* | **DESASTRE en ambos años**: total +16k→−6.7k / +11.5k→−9.9k; %verde 63/60%→36/32%; malos se TRIPLICAN | El trail rápido de 1-min es load-bearing: en los giros falsos (mayoría) sale barato. A 2-min deja correr la pérdida al doble. Banco: `analisis/exp_trail_2min.py` |
+| **Trail 2-min SOLO en la apertura (operarla en vez de skipearla)** *(re-verif 2026-08-14)* | Peor que el baseline Y que el control (sin-skip 1-min) en ambos años: Δmalos −3.1k/−2.2k, Δ%verde −6.9%/−5.6% | La apertura es donde MÁS whipsaws hay → es donde el trail lento MÁS daña. Lo mejor con la apertura sigue siendo no operarla. Banco: `analisis/exp_trail_apertura.py` |
 
 ---
 
@@ -128,7 +131,11 @@ SALIDAS:    trail 0.04% | cierre 15:59 | flip pendiente. (Sin permanencia por ma
 
 ★ **Lo único controlable (y ya optimizado):** NO la tasa de acierto (no se predice), SÍ el **costo de equivocarse** (trail ceñido = falso flip barato) y **evitar la zona mala** (skip apertura, el hotspot #1 de whipsaws). Los días malos restantes (~−$5k/año) son el **costo IRREDUCIBLE** de hacer momentum en un mercado casi-eficiente.
 
-★ **Ejemplo canónico — 2026-06-26** (día que chopeó 727-735, 6 flips TODOS falsos, 0 ganadores, −$254 sin skip / ~−$160 con skip). El asesino fue el flip de apertura 09:44 CALL (−$113.92, SPY cayó −$1.15 en 1 min) — justo el que skip<09:45 elimina.
+★ **Ejemplo canónico — 2026-06-26** (día que chopeó 727-737, todos los flips pierden). **VERIFICADO contra el código real 2026-08-14** (corrección de una versión previa errónea que hablaba de un "09:44 CALL −$113.92" que NO existe). Los flips REALES del ST(7,3.0) 2-min con premarket:
+  - El día **abre en tendencia bajista (−1) heredada del premarket** (el ATR se calienta con velas premarket, así que el estado al abrir es el que traía). Por eso el primer evento RTH es un **PUT a las 09:30**, no un CALL.
+  - El **primer CALL nace a las 09:50** (≈09:52 en Webull), cuando el precio rompe la banda superior — NO a las 09:44.
+  - **P&L real (bid/ask, sintético, size_cap $400, trail 0.04%):** sin skip = **−$232.00** (5 trades, todos rojos: 09:30 PUT −41.42, 09:50 CALL −21.85, 12:12 PUT −71.24, 13:08 CALL −33.79, 13:24 PUT −63.69). Con skip 09:45 = **−$190.58** (elimina solo el PUT de apertura de 09:30, −$41.42; NO un "killer" de −$113).
+  - ★ El **09:50 CALL tenía la dirección CORRECTA** (el SPY subió hasta 736 después), pero el trail 0.04% lo cortó en 2 min por un dip de ruido (−$21.85). Es el retrato del insight raíz: en un día de chop, **la dirección puede acertar pero el trail ceñido corta la entrada en el ruido**; los 5 flips pierden no por dirección equivocada sino por whipsaw. Reproducir: `analisis/verifica_headline.py` (motor) + query directo del día.
 
 ---
 
