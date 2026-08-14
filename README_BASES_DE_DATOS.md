@@ -87,3 +87,42 @@ spy_velas.db            copia de trabajo de las velas, para análisis
 
 Ninguna es de producción: son derivadas, generadas para la investigación del tape del
 subyacente (ver `investigacion/INVESTIGACION_TAPE_SUBYACENTE.md`).
+
+## Datos externos añadidos el 2026-08-14
+
+### Velas 1-min de otros ETF (IBKR)
+
+```
+qqq_bars_year.db / qqq_bars_year2.db    261 + 261 dias   COMPLETO
+iwm_bars_year.db / iwm_bars_year2.db    261 + 260 dias   COMPLETO
+dia_bars_year.db / dia_bars_year2.db    264 + 260 dias   COMPLETO
+tlt_bars_year.db / tlt_bars_year2.db    261 + 261 dias   COMPLETO
+gld_bars_year.db                        201 dias         ⚠️ PARCIAL (77%), descarga cancelada
+```
+
+Mismo esquema que `spy_bars_year.db`: tabla `bars` con
+`fecha,hora,open,high,low,close,volume,wap`, hora US/Eastern, `TRADES`, `useRTH=False` (con
+premarket). Comparables 1:1 con el SPY.
+
+Se bajaron para la vía de "confirmación cruzada" del punto 6.4 de la spec congelada. **QQQ e IWM
+ya se probaron y NO pasan los 4 controles**: el patrón existe a nivel de operación (cuando otro
+índice acompaña el flip, la operación va PEOR) pero desaparece a nivel de sistema — 2 de 4
+bloques y p=0,59/0,37. DIA, TLT y GLD siguen sin probar.
+
+Se descargan con `analisis/descargar_etfs.py SIMBOLO [SIMBOLO...]`.
+
+### `massive_premium.db` — premium REAL de opciones
+
+El precio al que se negociaron de verdad los contratos 0DTE que el backtest opera, traído de la
+API de Massive (OPRA). Es lo que permite responder si los precios del backtest existieron, en vez
+de darlos por buenos porque los produjo un modelo calibrado con 3 días.
+
+**Tiene su propia documentación completa en `DATOS_MASSIVE.md`**: esquema, cómo se lee el ticker
+OPRA, el aviso de que la hora va en UTC, qué NO contiene (bid/ask, griegas, IV), cómo
+reconstruir el bid/ask y por qué es correcto, el tratamiento de los minutos sin barra, los
+límites verificados del plan gratuito y cómo reanudar la descarga.
+
+`massive_plan_contratos.json` acompaña a la BD: es la lista de los 1.268 contratos que hay que
+bajar, con fecha, strike, right, ticker OPRA y horas de entrada/salida. Sale de correr el
+backtest recolectando sus operaciones reales, así que documenta exactamente qué se descarga y
+por qué.

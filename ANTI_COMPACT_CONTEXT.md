@@ -2135,3 +2135,35 @@ P&L sintetico de las sesiones con hueco: +1358$ de +2822$
 **NO VERIFICADO / pendiente:** son 30 sesiones de 260 del año de reserva (12%) y 67 operaciones.
 La descarga sigue. Hay que repetir esto con el año completo antes de dar una cifra final, y
 comparar contra los +11.786$ del año de reserva sintético.
+
+## 25. PRIMERA TANDA DE PREMIUM REAL COMPLETADA (2026-08-14, 16:40 ET)
+```
+588 de 1.268 contratos (46%)  |  215.764 barras de 1 min  |  0 errores, 0 vacios
+periodo cubierto: 2024-08-15 .. 2026-08-13
+sesiones del AÑO DE RESERVA (2025-08-01+): 200
+PENDIENTES: 680  ->  2,4 h mas
+```
+Como baja de lo mas reciente hacia atras, lo que esta COMPLETO es el año de reserva OOS
+(2025-10-13 en adelante) y lo que falta es el año 1 de entrenamiento. Fue deliberado: si la
+descarga se corta, lo que queda entero es el año cuyo numero importa (+11.786$).
+
+**Documentacion nueva: `DATOS_MASSIVE.md`** — todo lo necesario para usar estos datos sin
+volver a descubrirlo: esquema de `aggs` y `hechos`, como leer el ticker OPRA, el aviso de que
+`ts` va en **UTC** (ignorarlo desplaza todo 4-5 h), que NO contiene (bid/ask, griegas, IV) y la
+alternativa para cada cosa, como reconstruir el bid/ask y **por que es correcto**, el
+tratamiento de los minutos sin barra, los limites verificados del plan, y el **paso a paso
+reproducible** de como se descargo.
+
+**Modo `estado` nuevo en `massive_premium_real.py`**: dice que hay y que falta sin tocar la API.
+⚠️ Se creo porque documente que `bajar 0` servia para consultar y **era FALSO**: con `minutos=0`
+la guarda `if minutos and ...` es falsa, no corta nunca y bajaria el plan entero (4,4 h). El
+error se detecto al verificar la documentacion contra el codigo antes de subirla. **La
+documentacion tambien necesita corrida en frio.**
+
+**Como continuar** (retoma solo, nunca repite):
+```powershell
+$env:MASSIVE_KEY = [Environment]::GetEnvironmentVariable("MASSIVE_KEY","User")
+python analisis/massive_premium_real.py estado      # que falta
+python analisis/massive_premium_real.py bajar 120   # otra tanda
+```
+NO borrar `massive_premium.db`: es el registro de lo ya hecho.

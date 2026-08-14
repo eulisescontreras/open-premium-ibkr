@@ -188,8 +188,49 @@ def bajar(minutos):
     return 0
 
 
+def estado():
+    """Que hay descargado y que falta. NO descarga nada ni toca la API.
+    OJO: `bajar 0` NO sirve para esto: con minutos=0 la guarda `if minutos` es falsa y el
+    script baja el plan ENTERO (4,4 h). Por eso existe este modo aparte."""
+    plan = cargar_plan()
+    if not os.path.exists(DB):
+        print("todavia no hay massive_premium.db: 0 de %d contratos" % len(plan))
+        return 0
+    c = sqlite3.connect("file:%s?mode=ro" % DB.replace("\\", "/"), uri=True)
+    hechos = {r[0] for r in c.execute("select ticker from hechos")}
+    pend = [p for p in plan if p["ticker"] not in hechos]
+    print("=" * 70)
+    print("ESTADO DE LA DESCARGA")
+    print("=" * 70)
+    print("  contratos en el plan : %d" % len(plan))
+    print("  ya descargados       : %d  (%.0f%%)" % (len(hechos), 100.0 * len(hechos) / len(plan)))
+    print("  PENDIENTES           : %d  -> %.1f h a %.1f/min"
+          % (len(pend), len(pend) * PAUSA / 3600.0, 60.0 / PAUSA))
+    for e, k in c.execute("select estado,count(*) from hechos group by estado order by 2 desc"):
+        print("    %-8s %d" % (e, k))
+    n = c.execute("select count(*) from aggs").fetchone()[0]
+    print("  barras de 1 min      : %d" % n)
+    r = c.execute("select min(fecha),max(fecha) from hechos").fetchone()
+    print("  periodo cubierto     : %s .. %s" % r)
+    nr = c.execute("select count(distinct fecha) from hechos where fecha>='2025-08-01'"
+                   ).fetchone()[0]
+    print("  sesiones del AÑO DE RESERVA (2025-08-01+): %d" % nr)
+    if pend:
+        pend.sort(key=lambda p: p["fecha"], reverse=True)
+        print("\n  lo siguiente que bajaria: %s %s" % (pend[0]["fecha"], pend[0]["ticker"]))
+        print("  lo mas antiguo pendiente: %s %s" % (pend[-1]["fecha"], pend[-1]["ticker"]))
+        print("\n  continuar con:  python analisis/massive_premium_real.py bajar [minutos]")
+        print("  (retoma donde quedo; nunca repite un contrato ya descargado)")
+    else:
+        print("\n  COMPLETO: no queda nada pendiente")
+    c.close()
+    return 0
+
+
 def main():
     modo = sys.argv[1] if len(sys.argv) > 1 else "plan"
+    if modo == "estado":
+        return estado()
     if modo == "plan":
         plan = construir_plan()
         print("contratos a descargar: %d" % len(plan))
