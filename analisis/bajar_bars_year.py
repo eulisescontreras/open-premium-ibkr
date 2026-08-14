@@ -12,11 +12,18 @@ from ib_insync import IB, Stock
 
 RAIZ = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 ET = timezone(timedelta(hours=-4))
-# argv: FIN INICIO DBname  (defaults = año 1 ya bajado)
+# argv: FIN INICIO DBname CLIENTID SIMBOLO  (defaults = año 1 de SPY, ya bajado)
 FIN = sys.argv[1] if len(sys.argv) > 1 else "20260813"
 INICIO = sys.argv[2] if len(sys.argv) > 2 else "20250801"
 DB = os.path.join(RAIZ, sys.argv[3] if len(sys.argv) > 3 else "spy_bars_year.db")
 CLIENTID = int(sys.argv[4]) if len(sys.argv) > 4 else 26
+# SIMBOLO parametrizable (2026-08-14): estaba fijo en "SPY". Se necesita el mismo historico de
+# QQQ/IWM/DIA para la via de confirmacion cruzada. Default SPY = comportamiento anterior.
+SIMBOLO = sys.argv[5].upper() if len(sys.argv) > 5 else "SPY"
+# PAUSA entre peticiones. IBKR limita el historico a ~60 peticiones por cada 10 min; pasarse
+# provoca pacing violations que afectan a TODA la conexion del Gateway, incluida la de la app
+# que opera en vivo. Con 11 s se queda en ~55/10min. Default 1.0 = comportamiento anterior.
+PAUSA = float(sys.argv[6]) if len(sys.argv) > 6 else 1.0
 CHUNK = "10 D"                   # por peticion
 
 def ensure(c):
@@ -27,9 +34,9 @@ def ensure(c):
 
 def main():
     db = sqlite3.connect(DB); ensure(db)
-    ib = IB(); print("conectando clientId=CLIENTID ...", flush=True)
+    ib = IB(); print(f"conectando clientId={CLIENTID} para {SIMBOLO} ...", flush=True)
     ib.connect("127.0.0.1", 4002, clientId=CLIENTID, timeout=20); print("conectado", flush=True)
-    spy = Stock("SPY", "SMART", "USD"); ib.qualifyContracts(spy)
+    spy = Stock(SIMBOLO, "SMART", "USD"); ib.qualifyContracts(spy)
     end = f"{FIN} 23:59:59 US/Eastern"
     lim = datetime.strptime(INICIO, "%Y%m%d")
     guard = 0

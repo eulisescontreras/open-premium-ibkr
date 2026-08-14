@@ -1820,3 +1820,53 @@ replica el if/elif de `_update_signal`. El sello del ST-3 imprime
   etiqueta errónea.
 - **Lección:** auditar el grafo buscando por los IDENTIFICADORES (`USAR_MEDIA`, `USAR_M1`), no por
   el texto que se imprime; cada pantalla usaba una palabra distinta ("MANDA", "DECIDE", "decide").
+
+## 17. ORB de apertura + max_trades=4 (spec congelada v2) — 2026-08-14
+Implementado en `spy_direction.py` desde `SISTEMA_ST3_ORB_CONGELADO_v2.md`.
+
+**Piezas nuevas:**
+- Constantes: `MAX_TRADES_DIA=4`, `ORB_ENABLED`, `ORB_RANGO_INI/FIN` (09:30/09:39),
+  `ORB_VENTANA_INI/FIN` (09:40/09:45 ESTRICTO), `ORB_RANGO_MIN=0.75`.
+- `_orb_check(rows)`: rango = max(high)/min(low) de 09:30-09:39; en la ventana, el primer CIERRE
+  de 1 min fuera del rango dispara por REVERSIÓN (encima del alto -> PUT; debajo del bajo -> CALL).
+  Mira solo barras CERRADAS (`rows[-2]`), igual que `_st3_dir`. Se llama desde `ta_poll` ANTES
+  del corte de 26 barras (dispara a las 09:40, no puede esperar a que el TA tenga historia).
+- **El ORB NO ejecuta**: deja la dirección en `self.orb_senal` y la consume `_update_signal`,
+  que ya sabe girar, avisar y fijar objetivo (R9: no se duplica el motor de entrada). El consumo
+  va DESPUÉS del bloque ST-3 y GANA, para que un ciclo retrasado en el límite de las 09:45 no
+  pueda pisar la señal de apertura.
+- Tope del día: `self.n_abiertas` cuenta operaciones ABIERTAS (no cerradas: con `n_trades`, que
+  solo sube al cerrar, una posición viva no contaría y se abriría una de más). Se repone desde
+  `trades` en `_load_intradia` para sobrevivir a reinicios. La guarda está en el ÚNICO punto por
+  el que pasan todas las aperturas, y NO afecta a las ventas.
+- Columna `trades.modulo` ('ORB'/'PRINCIPAL'), que pide el punto 3 de la spec.
+- Cold run propio: `coldruns/orb_maxtrades_coldrun.py` (0 fallos sobre 60 días reales), incluye
+  los dos A/B que exige el punto 6.2: `ORB_ENABLED=False` y `MAX_TRADES_DIA=None` -> idéntico a HEAD.
+
+**⚠️ EL 214 DE LA SPEC ESTÁ OBSOLETO — NO PERSEGUIRLO (VERIFICADO con datos):**
+Implementando la spec al pie de la letra salen **182 días** con señal sobre 511, no 214. Causa
+reproducida y confirmada de forma independiente:
+- `2025-07-31` está en `spy_bars_year.db` Y en `spy_bars_year2.db`, idéntico byte a byte:
+  261+251 = 512 filas pero **511 días únicos**. Ese es el "día 512".
+- Conteos medidos: estricta `<09:45` -> 182 (511) / 183 (512). Inclusiva `<=09:45` -> 213 / **214**.
+- Los **31 días de diferencia disparan TODOS exactamente en el minuto 09:45**, lo que contradice
+  la propia línea de la spec "horas de disparo: 09:40..09:44".
+- Cuadre: 214 + 113 filtrados + 185 sin salida = 512.
+=> El 214 procede de la versión ANTERIOR a la corrección que la propia spec documenta ("la ventana
+   es < 09:45, no <= 09:45… corregirlo valió +707$"): corrigieron código y prosa pero NO
+   recalcularon la tabla de la sección 3. La implementación estricta es la CORRECTA; los 31 días
+   extra son justo los que solaparían con la metodología principal.
+=> También mal etiquetada la línea "días que el filtro 0.75 descarta = 298": 298 es el complemento
+   (512-214); los filtrados por amplitud son **113** (22%).
+=> **Expectativa real del ORB: ~182 de 511 días (~36%), no "2 de cada 5".**
+
+**Distribución de la amplitud de apertura (511 días):** p5 0.31 | p25 0.78 | mediana 1.20 |
+p75 1.82 | p95 3.02 | min 0.12 | max 6.97. Por año, días bajo 0.75: 2024 32% / 2025 24% / 2026 13%
+(mediana 2026 = 1.60). En los últimos 60 días NINGUNO baja de 0.75: el filtro sigue vivo pero no
+muerde en el régimen actual.
+
+**Datos QQQ/IWM/DIA (punto 6.4 de la spec):** descargados 2 años de velas 1-min con premarket
+reutilizando `analisis/bajar_bars_year.py`, al que se le parametrizó el SÍMBOLO (antes fijo en
+"SPY") y la PAUSA entre peticiones. Salidas: `qqq_bars_year.db`/`qqq_bars_year2.db` y equivalentes
+`iwm_`/`dia_`, mismo esquema que el SPY. OJO al pacing: IBKR limita el histórico a ~60 peticiones
+por 10 min y pasarse afecta a TODA la conexión del Gateway, incluida la de la app en vivo.

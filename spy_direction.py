@@ -166,6 +166,31 @@ ST3_TF_MIN = 3              # timeframe del Supertrend en minutos (barra de deci
 ST3_PER = 7                 # periodo del ATR (Wilder), igual que el backtest
 ST3_MULT = 3.0              # multiplicador de bandas, igual que el backtest
 ST3_SKIP_OPEN = "09:45"     # no cambiar de estado (no entrar) antes de esta hora ET. "" = sin skip.
+# --- TOPE DE OPERACIONES POR DIA (spec congelada v2, 2026-08-14) -------------------------
+# Aporta +4.063$ en 2 años. Motivo empirico: de 511 sesiones NINGUN dia ganador tiene 5 o mas
+# operaciones. P&L medio por nº de ops del dia: 1op +247$ (84% dias +) / 2op +196$ (70%) /
+# 3op +43$ (51%) / 4op -99$ (23%) / 5op -234$ (10%) / 6op -391$ (0%) / 7+ -721$ (0%).
+# Ademas reduce la dependencia de los dias grandes: sin las 10 mejores sesiones el ST-3 puro
+# se iba a -152$, con el tope aguanta en +3.122$. Region: max=3 +18.024$ / max=4 +18.125$ /
+# max=5 +15.602$. CUENTA las operaciones ABIERTAS hoy, incluida la del ORB.
+# None = sin tope (comportamiento anterior, para el A/B diferencial).
+MAX_TRADES_DIA = 4
+# --- ORB DE APERTURA, POR REVERSION (spec congelada v2, 2026-08-14) ----------------------
+# Rango = alto/bajo de los primeros 10 min (09:30..09:39). Si el primer cierre de 1 min de la
+# ventana sale del rango, se compra EN CONTRA de la salida (reversion).
+# ⚠️ ES REVERSION, NO RUPTURA: la ruptura PIERDE en los 3 rangos probados (3m, 5m, 10m).
+#    Implementarlo al reves hace perder dinero.
+# ⚠️ La ventana es ESTRICTA hora < "09:45": el minuto 09:45 es de la principal. Corregirlo
+#    valio +707$. Dispara ~2 de cada 5 dias (214 de 512).
+ORB_ENABLED = True          # False -> sin apertura (comportamiento anterior, A/B diferencial)
+ORB_RANGO_INI = "09:30"     # primera barra de 1 min del rango
+ORB_RANGO_FIN = "09:39"     # ultima barra del rango, INCLUSIVE
+ORB_VENTANA_INI = "09:40"   # primer minuto que puede disparar
+ORB_VENTANA_FIN = "09:45"   # ESTRICTO: solo dispara con hora < este valor
+ORB_RANGO_MIN = 0.75        # puntos de SPY. Por debajo NO se opera la apertura: romper un
+                            # rango estrecho es ruido (0.12-0.74 aporta -1.629$ y solo gana el
+                            # 43% de los dias). Region: 0.75 +25.062$ / 1.00 +24.615$ /
+                            # 1.25 +23.850$.
 USAR_MEDIA = True           # False -> decide M1 (comportamiento anterior, A/B limpio)
 INVERTIR_SENAL = False      # 2026-08-13 ~11:10, peticion del usuario: vuelve a como estaba.
                             # UP -> CALL y DOWN -> PUT, que es lo que dicen las etiquetas.
@@ -857,6 +882,16 @@ class SpyDirection:
         self._pnl_dev_avisada = 0.0      # ultima desviacion avisada (evita spam en el log)
         self.n_trades = 0                # operaciones cerradas hoy
         self.n_wins = 0                  # de esas, cuantas en positivo
+        # TOPE DEL DIA: cuenta operaciones ABIERTAS, no cerradas. Con `n_trades` (que solo sube
+        # al CERRAR) una posicion viva no contaria y se podria abrir una operacion de mas.
+        # Se repone desde la BD al arrancar (_load_intradia) para que sobreviva a un reinicio.
+        self.n_abiertas = 0
+        # ORB de apertura: rango 09:30-09:39 y disparo unico en la ventana 09:40-09:44.
+        self.orb_hi = None               # alto del rango de apertura
+        self.orb_lo = None               # bajo del rango
+        self.orb_hecho = False           # ya se resolvio hoy (disparo, o descarte por rango)
+        self.orb_senal = None            # "UP"/"DOWN" pendiente de que la consuma _update_signal
+        self.orb_modulo = None           # marca la operacion que abra el ORB (columna `modulo`)
         # Estado inicial COHERENTE con la realidad. Antes ponia siempre "trading OFF" aunque
         # TRADING_ENABLED fuese True: como trade_poll solo escribe trade_msg cuando HACE algo,
         # con la posicion ya en el objetivo el panel se quedaba diciendo "trading OFF" durante
@@ -1261,7 +1296,12 @@ class SpyDirection:
                      # y con permanencias medianas de decenas de segundos la comision pesa.
                      # NULL cuando IBKR no ha entregado el commissionReport (llega asincrono):
                      # NULL es la verdad, un 0 seria mentira.
-                     "comision REAL"):
+                     "comision REAL",
+                     # QUE MODULO abrio la operacion: 'ORB' (apertura por reversion) o
+                     # 'PRINCIPAL' (flip del Supertrend). Lo pide la spec congelada v2: en paper
+                     # hay que saber cual de los dos se comporta como el backtest, y sin esta
+                     # columna habria que deducirlo por la hora, que es fragil.
+                     "modulo TEXT"):
             try:
                 c.execute("ALTER TABLE trades ADD COLUMN " + _col)
             except Exception:
@@ -1455,6 +1495,10 @@ class SpyDirection:
         # contadores de cuenta/P&L del dia (la base se recaptura en la 1a lectura)
         self.acct_net_open = None
         self.pnl_realizado = 0.0; self.n_trades = 0; self.n_wins = 0
+        # dia nuevo: el tope de operaciones y el ORB de apertura vuelven a empezar
+        self.n_abiertas = 0
+        self.orb_hi = None; self.orb_lo = None
+        self.orb_hecho = False; self.orb_senal = None; self.orb_modulo = None
         self.buys_pend = 0; self.last_buy_ts = 0.0
         ACT.info("NUEVO DIA - acumuladores intradia reiniciados (senal en 0)")
 
@@ -2095,6 +2139,18 @@ class SpyDirection:
                 "SELECT hora,net_call,net_put,pnl_realizado,n_trades,n_wins,"
                 "acct_net_open,estado FROM estado_intradia WHERE fecha=?", (hoy,)).fetchone()
             self._intradia_ok = True        # ya se consulto: a partir de aqui SI se persiste
+            # TOPE DEL DIA: las operaciones ABIERTAS hoy se cuentan de `trades`, que es donde
+            # queda constancia de cada apertura. Va ANTES del `return` de abajo: aunque no haya
+            # fila de estado_intradia, si hubo operaciones el tope tiene que respetarlas. Sin
+            # esto un reinicio pondria el contador a 0 y se abririan mas de MAX_TRADES_DIA.
+            try:
+                self.n_abiertas = int(self.db.execute(
+                    "SELECT COUNT(*) FROM trades WHERE fecha=?", (hoy,)).fetchone()[0] or 0)
+                if self.n_abiertas:
+                    ACT.info("TOPE DEL DIA repuesto: %d operaciones ya abiertas hoy (max %s)",
+                             self.n_abiertas, MAX_TRADES_DIA or "sin tope")
+            except Exception:
+                LOG.exception("Error contando las operaciones abiertas de hoy")
             if not r:
                 return                      # primer arranque del dia: se queda en 0, correcto
             self.net_call = float(r[1] or 0.0)
@@ -2376,8 +2432,8 @@ class SpyDirection:
                 "rsi_entrada,ta_score_entrada,ta_dir_entrada,atr_pct_entrada,bb_ancho_entrada,"
                 "dist_vwap_entrada,gex_entrada,regime_entrada,dist_flip_entrada,"
                 "dist_prem_center_entrada,dist_call_wall_entrada,dist_put_wall_entrada,"
-                "diff_entrada,thr_entrada,momentum_entrada,minuto_sesion_entrada) "
-                "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                "diff_entrada,thr_entrada,momentum_entrada,minuto_sesion_entrada,modulo) "
+                "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                 (now.strftime("%Y-%m-%d"), contract.lastTradeDateOrContractMonth,
                  contract.strike, contract.right, self.pos, now.strftime("%H:%M:%S"),
                  px, qty, self.spy_price,
@@ -2385,8 +2441,18 @@ class SpyDirection:
                  ctx["rsi"], ctx["ta_score"], ctx["ta_dir"], ctx["atr_pct"], ctx["bb_ancho"],
                  ctx["dist_vwap"], ctx["gex"], ctx["regime"], ctx["dist_flip"],
                  ctx["dist_prem_center"], ctx["dist_call_wall"], ctx["dist_put_wall"],
-                 self.last_diff, self.last_thr, self.last_momentum, ctx["minuto_sesion"]))
+                 self.last_diff, self.last_thr, self.last_momentum, ctx["minuto_sesion"],
+                 # QUE MODULO abrio: el ORB marca `orb_modulo` al disparar y se consume aqui,
+                 # en la PRIMERA apertura posterior. El resto del dia es 'PRINCIPAL'.
+                 self.orb_modulo or "PRINCIPAL"))
             self.db.commit()
+            # TOPE DEL DIA: se cuenta la operacion ABIERTA (no la cerrada), aqui, que es donde
+            # la apertura ya es un hecho consumado en la BD.
+            self.n_abiertas += 1
+            _mod = self.orb_modulo or "PRINCIPAL"
+            self.orb_modulo = None       # una sola operacion lleva la marca ORB
+            ACT.info("OPERACION %d/%s del dia | modulo=%s",
+                     self.n_abiertas, MAX_TRADES_DIA or "sin tope", _mod)
             self.trade_id = self.db.execute("SELECT last_insert_rowid()").fetchone()[0]
             self.trade_open = {"ts": time.monotonic(), "hora": now.strftime("%H:%M:%S")}
             # el recorrido arranca en la entrada: mfe/mae parten del propio precio de compra
@@ -2876,6 +2942,89 @@ class SpyDirection:
             lado = "PUT" if lado == "CALL" else "CALL"
         return lado
 
+    def _orb_check(self, rows):
+        """ORB DE APERTURA POR REVERSION (spec congelada v2, 2026-08-14).
+
+        Rango = alto/bajo de las barras de 1 min 09:30..09:39 (inclusive). En la ventana
+        09:40..09:44 el PRIMER cierre de 1 min que salga del rango dispara UNA sola operacion,
+        EN CONTRA de la salida:  cierra por ENCIMA del alto -> PUT ; por DEBAJO del bajo -> CALL.
+
+        ⚠️ ES REVERSION, NO RUPTURA. La ruptura pierde en los 3 rangos probados; al reves el
+           sistema pierde dinero.
+        ⚠️ La ventana es ESTRICTA `hora < ORB_VENTANA_FIN`: el minuto 09:45 es de la principal
+           (corregirlo valio +707$).
+
+        Solo mira barras CERRADAS (rows[-2]), igual que _st3_dir: rows[-1] esta en formacion, y
+        actuar sobre ella seria el mismo look-ahead que invalido el sistema anterior.
+
+        NO ejecuta nada: deja la direccion en self.orb_senal y la consume _update_signal, que ya
+        sabe girar la posicion, avisar y fijar el objetivo (R9: no se duplica el motor)."""
+        if not ORB_ENABLED or self.orb_hecho or self.demo:
+            return
+        if len(rows) < 2:
+            return
+        b = rows[-2]                      # ULTIMA BARRA CERRADA
+        dt = b.get("date")
+        if dt is None:
+            return
+        hhmm = dt.strftime("%H:%M")
+        if hhmm < ORB_VENTANA_INI:
+            return                        # todavia se esta formando el rango de apertura
+        if hhmm >= ORB_VENTANA_FIN:
+            self.orb_hecho = True         # ventana agotada sin disparo: hoy no hay ORB
+            ACT.info("ORB: ventana %s-%s cerrada sin disparo (rango alto=%s bajo=%s)",
+                     ORB_VENTANA_INI, ORB_VENTANA_FIN,
+                     ("%.2f" % self.orb_hi) if self.orb_hi else "-",
+                     ("%.2f" % self.orb_lo) if self.orb_lo else "-")
+            return
+        # --- rango de apertura: se calcula UNA vez, con las barras de HOY ---
+        if self.orb_hi is None:
+            hoy = dt.date()
+            ran = [r for r in rows
+                   if r.get("date") is not None and r["date"].date() == hoy
+                   and ORB_RANGO_INI <= r["date"].strftime("%H:%M") <= ORB_RANGO_FIN
+                   and r.get("high") is not None and r.get("low") is not None]
+            # R13: sin las 10 barras completas el rango no es el que se valido -> NO se inventa.
+            if len(ran) < 10:
+                self.orb_hecho = True
+                ACT.warning("ORB: solo %d de 10 barras del rango %s-%s (arranque tardio?) -> "
+                            "NO se opera la apertura", len(ran), ORB_RANGO_INI, ORB_RANGO_FIN)
+                return
+            self.orb_hi = max(r["high"] for r in ran)
+            self.orb_lo = min(r["low"] for r in ran)
+            amp = self.orb_hi - self.orb_lo
+            ACT.info("ORB rango %s-%s: alto=%.2f bajo=%.2f amplitud=%.2f (minimo %.2f)",
+                     ORB_RANGO_INI, ORB_RANGO_FIN, self.orb_hi, self.orb_lo, amp, ORB_RANGO_MIN)
+            if amp < ORB_RANGO_MIN:
+                self.orb_hecho = True
+                ACT.info("ORB DESCARTADO: amplitud %.2f < %.2f. Con apertura estrecha romper el "
+                         "rango es ruido (esa franja aporta -1.629$ en 2 años y solo gana el "
+                         "43%% de los dias)", amp, ORB_RANGO_MIN)
+                return
+        # --- disparo: primer cierre FUERA del rango ---
+        cl = b.get("close")
+        if cl is None:
+            return
+        if cl > self.orb_hi:
+            self.orb_senal = "DOWN"       # sale por ARRIBA -> REVERSION -> PUT
+        elif cl < self.orb_lo:
+            self.orb_senal = "UP"         # sale por ABAJO  -> REVERSION -> CALL
+        else:
+            return                        # sigue dentro del rango: se espera al siguiente cierre
+        self.orb_hecho = True             # UNA SOLA operacion de apertura por dia
+        self.orb_modulo = "ORB"
+        ACT.info("ORB DISPARO %s: cierre %.2f %s el rango [%.2f, %.2f] -> REVERSION, "
+                 "estado %s (objetivo %s)", hhmm, cl,
+                 "POR ENCIMA del alto" if self.orb_senal == "DOWN" else "POR DEBAJO del bajo",
+                 self.orb_lo, self.orb_hi, self.orb_senal,
+                 self._lado_del_estado_de(self.orb_senal))
+
+    def _lado_del_estado_de(self, estado):
+        """El lado que se compraria con un estado dado. Solo para LOG: la decision real sigue
+        saliendo de _lado_del_estado(), que es el unico sitio donde vive INVERTIR_SENAL."""
+        lado = "CALL" if estado == "UP" else "PUT"
+        return ("PUT" if lado == "CALL" else "CALL") if INVERTIR_SENAL else lado
+
     def _st3_log(self, clave, msg, *args, huella=None):
         """Log ANTI-SPAM del ST-3. El ciclo principal corre ~1 vez por segundo: si se logueara
         en cada pasada el fichero seria ilegible. Por cada `clave` solo se escribe cuando hay
@@ -3060,6 +3209,15 @@ class SpyDirection:
                         ACT.info("ST3 FLIP %s a las %s ET SUPRIMIDO por skip de apertura (<%s): "
                                  "no se opera, pero el flip queda consumido",
                                  "UP" if d == 1 else "DOWN", _hhmm, ST3_SKIP_OPEN)
+            # ORB DE APERTURA: va DESPUES del Supertrend y GANA, para que ni un ciclo retrasado
+            # justo en el limite de las 09:45 pueda pisar la señal de apertura. En la practica
+            # no compiten: el ORB solo dispara con hora < 09:45 y el ST-3 no entra antes de
+            # ST3_SKIP_OPEN=09:45 (verificado sobre 512 sesiones: 0 solapamientos). El ST-3
+            # conserva su `_st3_last` intacto, asi que despues girara la posicion en su flip,
+            # que es lo que hace el backtest: MANTENER y girar, no cerrar y reabrir.
+            if self.orb_senal in ("UP", "DOWN"):
+                new = self.orb_senal
+                self.orb_senal = None
         elif USAR_MEDIA:
             # DISPARADOR (2026-08-12): distancia a la media corta. Se compra HACIA la
             # media. Ver el bloque de constantes para los numeros y los controles pasados.
@@ -4290,6 +4448,20 @@ class SpyDirection:
                         self.trade_msg = (f"ya hay {self.pos_qty:g} contrato(s) en cartera "
                                           f"- NO se compra hasta cerrarlos")
                         return
+                    # TOPE DEL DIA (spec congelada v2): a la MAX_TRADES_DIA-esima operacion se
+                    # para. Va AQUI porque es el unico punto por el que pasan TODAS las
+                    # aperturas, y NO toca las ventas: cerrar tiene que poder hacerse siempre.
+                    # Cuenta las ABIERTAS (n_abiertas), incluida la del ORB.
+                    if MAX_TRADES_DIA and self.n_abiertas >= MAX_TRADES_DIA:
+                        if self.target != "FLAT":
+                            ACT.info("TOPE DEL DIA: ya hay %d operaciones abiertas hoy (max %d) "
+                                     "-> se IGNORA la señal %s. De 511 sesiones, ningun dia "
+                                     "ganador tuvo 5 o mas operaciones.",
+                                     self.n_abiertas, MAX_TRADES_DIA, self.target)
+                        self.trade_msg = (f"TOPE DEL DIA {self.n_abiertas}/{MAX_TRADES_DIA} "
+                                          f"- no se abren mas operaciones hoy")
+                        self.target = "FLAT"
+                        return
                     # RE-CENTRAR AHORA MISMO: hay que comprar el ATM de ESTE instante, no el
                     # de hace 20 s. Tras cerrar una posicion, _reconcile deja buy_call/buy_put
                     # apuntando al contrato que se acaba de vender; sin esto se recompraria
@@ -4471,6 +4643,9 @@ class SpyDirection:
             return
         self._chequear_barras(rows)
         self._guardar_barras(rows)
+        # ORB de apertura: va AQUI, antes del corte de 26 barras de mas abajo, porque dispara
+        # entre las 09:40 y las 09:44 y no puede depender de que el TA ya tenga historia.
+        self._orb_check(rows)
         self._calc_regimen(rows)
         # PRECIO EN VIVO: self.spy_price solo se fijaba en setup_contracts (1 vez por sesion),
         # asi que quedaba CONGELADO todo el dia -> transitions.spy, walls_snapshot.spot, el GEX
