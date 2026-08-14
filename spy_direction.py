@@ -900,10 +900,127 @@ class SpyDirection:
                                          # Unica historia de flujo: alimenta el momentum (GAP 5)
                                          # y las ventanas moviles. Sustituye a diff_hist, que
                                          # contaba EVENTOS y quedo sin uso al medir por tiempo.
-        # --- SQLite ---
-        self.db = sqlite3.connect(
-            os.path.join(_app_dir(), "spy_history_demo.db" if demo else "spy_history.db"))
+        # --- SQLite: UNA BD POR DIA ---
+        # El archivo lleva la fecha ET de la sesion (spy_history_YYYYMMDD.db). La rotacion en
+        # caliente, cuando el proceso cruza la medianoche sin reiniciarse, la dispara
+        # reset_day() -> _rotar_db(); aqui solo se abre la del dia en curso.
+        self.db_fecha = None
+        self._abrir_db(now_et().strftime("%Y%m%d"))
+
+    def _db_path(self, fecha):
+        """Ruta de la BD de un dia (fecha ET, YYYYMMDD). En demo, la BD unica de siempre."""
+        if self.demo:
+            return os.path.join(_app_dir(), "spy_history_demo.db")
+        return os.path.join(_app_dir(), "spy_history_%s.db" % fecha)
+
+    def _abrir_db(self, fecha):
+        """Abre (creando si hace falta) la BD del dia y deja el esquema completo.
+        Si nace vacia hereda el acumulado persistente del ultimo dia disponible."""
+        ruta = self._db_path(fecha)
+        nueva = not os.path.exists(ruta)
+        # uri=True para que la siembra pueda ATTACHear la BD fuente en SOLO-LECTURA
+        self.db = sqlite3.connect(ruta, uri=True)
+        self.db_fecha = fecha
         self._init_db()
+        self._sembrar_acumulado(fecha)
+        ACT.info("BD del dia: %s%s", os.path.basename(ruta), " (creada)" if nueva else "")
+
+    def _rotar_db(self):
+        """Dia nuevo: cierra la BD del dia que termina y abre la de hoy. Idempotente: si la
+        BD abierta ya es la de hoy (arranque normal) no hace nada."""
+        # Instancia que NO paso por __init__: los cold runs hacen SpyDirection.__new__() y se
+        # montan su propia BD (":memory:"/tempfile). Sin db_fecha no hay BD del dia que rotar y,
+        # sobre todo, un cold run JAMAS debe acabar enganchado a la BD real de produccion.
+        # El default de `demo` es True a proposito: ante la duda, NO rotar.
+        if getattr(self, "demo", True) or getattr(self, "db_fecha", None) is None:
+            return
+        hoy = now_et().strftime("%Y%m%d")
+        if self.db_fecha == hoy:
+            return
+        anterior = self.db_fecha
+        try:
+            self.db.commit()
+            self.db.close()
+        except Exception:
+            pass
+        self._abrir_db(hoy)
+        ACT.info("BD ROTADA: %s -> %s", anterior, hoy)
+
+    def _fuente_siembra(self, fecha):
+        """BD ANTERIOR a `fecha` que tenga acumulado real. Prioridad: BDs por dia (la mas
+        reciente primero) y, como ultimo recurso, la spy_history.db acumulada historica."""
+        dias = []
+        try:
+            for n in os.listdir(_app_dir()):
+                # solo el patron exacto spy_history_YYYYMMDD.db: descarta spy_history.db,
+                # spy_history_demo.db y los spy_history_backup_*.db
+                if (n.startswith("spy_history_") and n.endswith(".db")
+                        and len(n) == len("spy_history_YYYYMMDD.db")):
+                    d = n[len("spy_history_"):-len(".db")]
+                    if d.isdigit() and d < fecha:
+                        dias.append(d)
+        except Exception:
+            pass
+        rutas = [self._db_path(d) for d in sorted(dias, reverse=True)]
+        rutas.append(os.path.join(_app_dir(), "spy_history.db"))
+        for p in rutas:
+            if not os.path.exists(p):
+                continue
+            try:
+                c = sqlite3.connect("file:%s?mode=ro" % p.replace("\\", "/"), uri=True, timeout=10)
+                hay = c.execute("SELECT COUNT(*) FROM sqlite_master WHERE type='table' "
+                                "AND name='strike_accum'").fetchone()[0]
+                n_ac = c.execute("SELECT COUNT(*) FROM strike_accum").fetchone()[0] if hay else 0
+                c.close()
+                if n_ac:
+                    return p
+            except Exception:
+                pass
+        return None
+
+    def _sembrar_acumulado(self, fecha):
+        """BD del dia recien nacida: hereda SOLO strike_accum (el acumulado desde el primer dia
+        de uso, que lee _cargar_historico) y strike_daily (la comparacion apertura vs dia
+        previo). El resto de tablas -intradia- arranca vacio a proposito."""
+        if self.demo:
+            return
+        try:
+            if self.db.execute("SELECT COUNT(*) FROM strike_accum").fetchone()[0]:
+                return          # ya tiene datos: reinicio dentro del mismo dia, no se resiembra
+        except Exception:
+            return
+        src = self._fuente_siembra(fecha)
+        if not src:
+            ACT.warning("BD %s: sin fuente de siembra, el acumulado arranca en 0", fecha)
+            return
+        n = {}
+        try:
+            # SOLO-LECTURA: la BD fuente es data ya cerrada, esto jamas debe poder escribirla
+            self.db.execute("ATTACH DATABASE ? AS prev",
+                            ("file:%s?mode=ro" % src.replace("\\", "/"),))
+            for t in ("strike_accum", "strike_daily"):
+                # se copia por NOMBRE de columna, no con SELECT *: las dos tablas ganaron
+                # columnas por ALTER (cum_net/day_net) y el orden no tiene por que coincidir
+                cols = [r[1] for r in self.db.execute("PRAGMA table_info(%s)" % t)]
+                prev_cols = [r[1] for r in self.db.execute("PRAGMA prev.table_info(%s)" % t)]
+                comunes = [c for c in cols if c in prev_cols]
+                if not comunes:
+                    n[t] = 0
+                    continue
+                lista = ",".join(comunes)
+                self.db.execute("INSERT OR REPLACE INTO %s(%s) SELECT %s FROM prev.%s"
+                                % (t, lista, lista, t))
+                n[t] = self.db.execute("SELECT COUNT(*) FROM %s" % t).fetchone()[0]
+            self.db.commit()
+            ACT.info("BD %s sembrada desde %s: strike_accum=%d strike_daily=%d", fecha,
+                     os.path.basename(src), n.get("strike_accum", 0), n.get("strike_daily", 0))
+        except Exception as e:
+            ACT.error("BD %s: fallo la siembra desde %s (%s)", fecha, os.path.basename(src), e)
+        finally:
+            try:
+                self.db.execute("DETACH DATABASE prev")
+            except Exception:
+                pass
 
     def _init_db(self):
         c = self.db
@@ -1299,12 +1416,16 @@ class SpyDirection:
         self.prev_vol = {}; self.band_prev_vol = {}; self.prev_gamma = {}
         self._tick_prem_ids = set()   # dia nuevo: nadie ha contado nada todavia
         self.transitions = []; self.state = "-"; self._st3_last = None
+        self._st3_diag = {}          # dia nuevo: el log del ST-3 vuelve a contarlo todo
         # TAPE: el contador es del DIA. El buffer se vuelca antes de vaciarlo para no perder
         # las operaciones que quedaran pendientes del dia anterior.
         try:
             self._flush_tape(forzar=True)
         except Exception:
             pass
+        # UNA BD POR DIA: el tape pendiente acaba de volcarse ARRIBA, en la BD del dia que
+        # termina. SOLO AHORA se cambia de archivo, o esas operaciones se perderian.
+        self._rotar_db()
         self._tape_buf = []; self._tape_n = 0
         self._tape_err = 0; self._tape_err_last = ""
         self.flow_hist = []          # ventanas moviles: historia de AYER no vale para hoy
@@ -1432,6 +1553,8 @@ class SpyDirection:
         OOS vs +3210 del RTH-only). NO alimenta TA/walls/spy_price (esos siguen con self.bars).
         Si falla o no llega, _st3_dir cae a self.bars (RTH-only, tambien positivo en 2 años)."""
         if USAR_ST3 is False or self.spy_stock is None or not self.ib.isConnected():
+            ACT.info("ST3 serie premarket NO pedida (USAR_ST3=%s spy_stock=%s conectado=%s)",
+                     USAR_ST3, self.spy_stock is not None, self.ib.isConnected())
             return False
         if self.bars_st3 is not None:
             try:
@@ -1447,7 +1570,11 @@ class SpyDirection:
         except Exception:
             self.bars_st3 = None
             LOG.exception("Error pidiendo el stream de barras ST-3 (premarket)")
+            ACT.error("ST3 FALLO la serie con premarket -> el Supertrend caera a RTH-only "
+                      "(backtest Año2 OOS: +3210$ en vez de +7654$). NO es el mismo sistema.")
             return False
+        ACT.info("ST3 serie con premarket suscrita (useRTH=False, 1 min, keepUpToDate): "
+                 "el ATR calienta como el backtest validado")
         return True
 
     def setup_contracts(self):
@@ -2720,6 +2847,24 @@ class SpyDirection:
             lado = "PUT" if lado == "CALL" else "CALL"
         return lado
 
+    def _st3_log(self, clave, msg, *args, huella=None):
+        """Log ANTI-SPAM del ST-3. El ciclo principal corre ~1 vez por segundo: si se logueara
+        en cada pasada el fichero seria ilegible. Por cada `clave` solo se escribe cuando hay
+        CAMBIO respecto a lo ultimo escrito (transiciones, no estados).
+        `huella` = que se compara para decidir si hubo cambio. Sin ella se compara el texto
+        entero, lo que hace spam si el mensaje lleva datos que se mueven solos (nº de buckets,
+        close...): medido en frio, 233 lineas en 720 pasos. Con huella='dir=-1' solo se escribe
+        cuando cambia lo que de verdad importa."""
+        d = getattr(self, "_st3_diag", None)
+        if d is None:
+            d = self._st3_diag = {}
+        txt = (msg % args) if args else msg
+        cmp = txt if huella is None else huella
+        if d.get(clave) == cmp:
+            return
+        d[clave] = cmp
+        ACT.info("ST3 %s", txt)
+
     def _st3_dir(self):
         """Direccion actual del Supertrend de ST3_TF_MIN minutos, calculada SOLO sobre buckets
         CERRADOS (anti look-ahead): se descartan la barra 1-min en formacion (self.bars[-1]) y el
@@ -2730,13 +2875,22 @@ class SpyDirection:
         # Preferir la serie CON premarket (calienta el ATR como el backtest validado); si no
         # esta lista, caer a self.bars (RTH-only, tambien positivo en 2 años). R13: no inventar.
         fuente = self.bars_st3 if self.bars_st3 else self.bars
+        # QUE SERIE se esta usando es LO MAS IMPORTANTE que auditar: con premarket el backtest
+        # da Año2 OOS +7654$, RTH-only +3210$. Son sistemas distintos y hay que saber cual corre.
+        self._st3_log("fuente", "serie=%s (%s)",
+                      "PREMARKET(bars_st3)" if self.bars_st3 else "RTH-only(bars)",
+                      "como el backtest validado" if self.bars_st3
+                      else "DEGRADADO: la serie con premarket no esta disponible")
         if fuente is None:
+            self._st3_log("estado", "SIN BARRAS todavia -> sin direccion")
             return None
         try:
             rows = [(b.high, b.low, b.close, b.date) for b in fuente]
         except Exception:
+            self._st3_log("estado", "no se pudieron leer las barras -> sin direccion")
             return None
         if len(rows) < 2:
+            self._st3_log("estado", "solo %d barra(s) -> sin direccion", len(rows))
             return None
         # RESET DIARIO: usar SOLO las barras de HOY (misma fecha que la barra actual), para
         # replicar el backtest validado, que calcula el Supertrend por DIA (sen_Nmin por dia),
@@ -2762,6 +2916,11 @@ class SpyDirection:
             else:
                 a[0] = max(a[0], hi); a[1] = min(a[1], lo); a[2] = cl
         if len(buck) <= ST3_PER:         # sin suficientes buckets para tener ATR
+            # CALENTAMIENTO: hasta tener > ST3_PER buckets cerrados el ATR no existe y el ST-3
+            # NO puede opinar. Con 3-min y periodo 7 son ~21 min de sesion. Verlo en el log
+            # evita confundir "calentando" con "roto".
+            self._st3_log("estado", "calentando ATR: %d/%d buckets de %d min cerrados",
+                          len(buck), ST3_PER + 1, N)
             return None
         order = sorted(buck)
         HI = [buck[k][0] for k in order]
@@ -2769,7 +2928,15 @@ class SpyDirection:
         CL = [buck[k][2] for k in order]
         D = _supertrend_dir(HI, LO, CL)
         d = D[-1] if D else 0
-        return d if d in (1, -1) else None
+        if d in (1, -1):
+            # huella = solo la direccion: el detalle (buckets/close) se muestra pero NO dispara
+            # una linea nueva cada vez que se cierra un bucket.
+            self._st3_log("estado", "direccion=%s  buckets=%d  ultimo cerrado=%s  close=%.2f",
+                          "UP(+1)" if d == 1 else "DOWN(-1)", len(order),
+                          order[-1].strftime("%H:%M"), CL[-1], huella="dir=%d" % d)
+            return d
+        self._st3_log("estado", "supertrend sin direccion definida (d=%r)", d)
+        return None
 
     def _update_signal(self):
         # GAP 18: NO evaluar la senal hasta haber intentado restaurar el estado del dia.
@@ -2848,10 +3015,22 @@ class SpyDirection:
             if d in (1, -1):
                 if self._st3_last is None:
                     self._st3_last = d
+                    ACT.info("ST3 SIEMBRA: primera direccion del dia = %s -> NO se gira "
+                             "(el backtest solo opera en el FLIP, no en la primera lectura)",
+                             "UP" if d == 1 else "DOWN")
                 elif d != self._st3_last:
                     self._st3_last = d
-                    if (not ST3_SKIP_OPEN) or now_et().strftime("%H:%M") >= ST3_SKIP_OPEN:
+                    _hhmm = now_et().strftime("%H:%M")
+                    if (not ST3_SKIP_OPEN) or _hhmm >= ST3_SKIP_OPEN:
                         new = "UP" if d == 1 else "DOWN"
+                        ACT.info("ST3 FLIP %s a las %s ET -> objetivo %s", new, _hhmm,
+                                 "CALL" if new == "UP" else "PUT")
+                    else:
+                        # El flip se CONSUME igual (_st3_last ya cambio): no se opera, pero
+                        # tampoco se volvera a disparar por esta misma vuelta del Supertrend.
+                        ACT.info("ST3 FLIP %s a las %s ET SUPRIMIDO por skip de apertura (<%s): "
+                                 "no se opera, pero el flip queda consumido",
+                                 "UP" if d == 1 else "DOWN", _hhmm, ST3_SKIP_OPEN)
         elif USAR_MEDIA:
             # DISPARADOR (2026-08-12): distancia a la media corta. Se compra HACIA la
             # media. Ver el bloque de constantes para los numeros y los controles pasados.

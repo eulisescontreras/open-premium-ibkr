@@ -42,6 +42,11 @@ import spy_direction as S
 # Un test A/B tiene que FIJAR la variable que prueba, no heredarla del default (misma leccion
 # que ENTRADA_RETROCESO en gap14 el mismo dia).
 S.USAR_MEDIA = False
+S.INVERTIR_SENAL = False   # prueba M1 SIN la inversion del 2026-08-13
+S.USAR_ST3 = False         # 2026-08-14: este cold run prueba la MECANICA de M1/M2, no la señal.
+                           # Sin fijarlo hereda USAR_ST3=True y _update_signal entra en la rama
+                           # del Supertrend -> _st3_dir() toca self.bars_st3, que el stub montado
+                           # con __new__ no tiene. Mismo fix que spy_walls_coldrun y gapsA_coldrun.
 
 S.ENABLE_TOAST = False
 for _l in (S.ACT, S.LOG):

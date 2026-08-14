@@ -18,10 +18,18 @@ from datetime import datetime
 REPO = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 sys.path.insert(0, REPO); sys.path.insert(0, os.path.join(REPO, "analisis"))
 try:
+    import logging as _lg
+    import spy_direction as _S
     from spy_direction import _supertrend_dir, SpyDirection, ST3_TF_MIN, ST3_PER
     from exp_st_flip import sen_Nmin
 except Exception as e:
     print("FALLO import:", e); sys.exit(1)
+
+# 2026-08-14: desde que _st3_dir LOGUEA, este cold run escribia sus 720 pasos en el
+# spy_activity.log de PRODUCCION y ensuciaba la sesion real. Mismo silenciado que m1m2_coldrun.
+for _l in (_S.ACT, _S.LOG):
+    _l.handlers = []
+    _l.addHandler(_lg.NullHandler())
 
 DB = os.path.join(REPO, "spy_bars_year.db")
 DIA = "2026-03-10"

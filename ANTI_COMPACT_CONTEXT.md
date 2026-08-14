@@ -1690,3 +1690,73 @@ Diseño final (aprobado por el usuario; plan en `~/.claude/plans/structured-pond
   estado, de qué estar pendiente). Este `ANTI_COMPACT_CONTEXT.md` es el contexto vivo (leer primero).
 - Deploy de cambios: `git add -A && git commit && git push` (rama `main`). Los archivos de 53MB
   (exe/pkg) dan warning de GitHub (>50MB) pero suben bien.
+
+## 13. UNA BD POR DÍA (2026-08-14) — cambio en `spy_direction.py`
+- **Antes:** BD única `spy_history.db` acumulando todos los días (151,6 MB al 14/08).
+- **Ahora:** la app abre `spy_history_YYYYMMDD.db` (fecha **ET**, la misma que gobierna el rollover
+  de sesión). Decisión del usuario: nombre dinámico, aun sabiendo que rompe los scripts.
+- **Piezas nuevas** (todas en la clase `SpyDirection`, junto a `_init_db`): `_db_path`, `_abrir_db`,
+  `_rotar_db`, `_fuente_siembra`, `_sembrar_acumulado`.
+- **Rotación en caliente:** `reset_day()` llama a `_rotar_db()` **después** del `_flush_tape(forzar=True)`,
+  para que el tape pendiente caiga en la BD del día que termina. Idempotente: si la BD abierta ya es
+  la de hoy no hace nada (arranque normal). Cruzar medianoche sin reiniciar el proceso rota el archivo.
+- **Siembra:** una BD recién creada hereda SOLO `strike_accum` (acumulado desde el primer día, lo lee
+  `_load_accum`) y `strike_daily` (comparación apertura vs día previo). El resto arranca vacío. La
+  fuente se busca así: BDs `spy_history_YYYYMMDD.db` anteriores (más reciente primero) y, como último
+  recurso, `spy_history.db`. Se copia **por nombre de columna** (no `SELECT *`): ambas tablas ganaron
+  columnas por ALTER (`cum_net`/`day_net`) y el orden no tiene por qué coincidir. El ATTACH es
+  `mode=ro`: la BD fuente NUNCA puede escribirse.
+- **Corrida en frío (14/08 09:04, función real `SpyDirection()`, datos reales):** BD creada con 18
+  tablas; `strike_accum`=181 y `strike_daily`=467 sembradas desde `spy_history.db`; resto vacías;
+  `_load_accum()` cargó 181 accum + 181 accum_net + 100 `base_prev` del 2026-08-13; 2ª instancia no
+  duplicó; `_rotar_db()` no rota si no cambió el día y sí rota desde `20260813`; `spy_history.db`
+  quedó con sha idéntico (158.961.664 bytes).
+- **GAP ASUMIDO (consecuencia de la opción elegida):** los ~50 scripts de `analisis/`,
+  `investigacion/scripts/` y `simulador_st.py` abren literalmente `"spy_history.db"`, que ya NO
+  recibe el día en curso — se quedan con datos hasta el 2026-08-13. Hay que pasarles la BD del día
+  cuando se usen. NO se editaron (radio de cambio mínimo, R15).
+- **GAP:** `investigacion/scripts/partir_bd.py` genera el MISMO patrón de nombre
+  `spy_history_YYYYMMDD.db`. Ya no hace falta partir nada y volver a correrlo pisaría las BDs de la
+  app. Clasificado CANDIDATO A ELIMINACIÓN, no se tocó.
+- **GAP (no verificado):** el código mezcla `now_et()` (1 uso) y `datetime.now()` (4 usos) para la
+  fecha. En esta máquina es inocuo — la zona horaria de Windows ES *Eastern Standard Time*, local==ET
+  comprobado. En una máquina con otra zona, el nombre del archivo (ET) y las fechas escritas dentro
+  (local) se desalinearían. Preexistente, no se tocó.
+- **GAP (no verificado):** la rotación se probó forzando `db_fecha`, NO con un cruce de medianoche real.
+
+## 14. SESIÓN 2026-08-14: logs del ST-3 + cold run m1m2 reparado
+- **Contexto:** primera sesión paper del ST-3 (`USAR_ST3=True`), que es el GATE pendiente del
+  commit `16d2f8e` ("validar contra premium REAL"). App arrancada 09:17:45 sobre
+  `spy_history_20260814.db`. IB Gateway paper (4002) vivo.
+- **VERIFICADO en código puro** (`_update_signal`, línea ~2962): `if USAR_ST3:` es la PRIMERA rama
+  del if/elif -> el ST-3 tiene prioridad absoluta; `USAR_MEDIA`/`USAR_M1` ya no deciden, solo
+  registran. Flags activos: ST3_PER=7, ST3_MULT=3.0, ST3_TF_MIN=3, ST3_SKIP_OPEN="09:45",
+  TRADING_ENABLED=True, MINUTOS_POS=0, INVERTIR_SENAL=False, QTY=1.
+- **BUG QUE VENÍA DEL COMMIT (no lo introdujo esta sesión):** `coldruns/m1m2_coldrun.py` moría en
+  el paso [5] (exit 1, 18 líneas, sin traceback). Causa: fija `USAR_MEDIA=False` pero NO `USAR_ST3`,
+  así que heredaba True, `_update_signal` entraba en la rama ST-3 y `_st3_dir()` tocaba
+  `self.bars_st3`, que el stub de `__new__` no monta. El commit `16d2f8e` aplicó ese mismo fix a
+  `spy_walls_coldrun` y `gapsA_coldrun` y **se olvidó de m1m2** — o sea que el "26/26 verdes" del
+  mensaje de commit NO era cierto. **Diferencial que lo demuestra:** con `git stash` de
+  spy_direction.py (HEAD limpio) fallaba IGUAL. Fix: `S.USAR_ST3 = False`. Resultado: 18 líneas/exit 1
+  -> 93 líneas/exit 0, FALLOS: 0.
+- **LOGS NUEVOS del ST-3** (antes `_st3_dir` y la rama de decisión tenían CERO logs):
+  `_st3_log(clave, msg, *args, huella=None)` = log anti-spam (el ciclo corre a ~1 Hz). Se emite:
+  qué serie se usa (PREMARKET vs RTH-only DEGRADADO), calentamiento del ATR (n/8 buckets),
+  dirección al cambiar, SIEMBRA de la primera dirección del día, FLIP con hora y objetivo, y
+  FLIP SUPRIMIDO por el skip 09:45 (importante: el flip se CONSUME igual aunque no se opere).
+  `_subscribe_bars_st3` avisa si cae a RTH-only (Año2 OOS +3210$ vs +7654$: NO es el mismo sistema).
+- **Corrida en frío de los logs (datos reales, 721 barras del 2026-03-10, función real `_st3_dir`):**
+  detectó spam: 233 líneas "direccion=" en 720 pasos, porque la huella comparaba el texto entero y
+  `buckets=`/`close=` se mueven solos. Corregido con `huella="dir=%d"`. Resultado final: **17 líneas
+  en 720 pasos**, y las 8 de dirección == los 8 flips reales del día.
+- **Efecto secundario detectado y corregido:** al empezar `_st3_dir` a loguear,
+  `coldruns/st3_signal_coldrun.py` (que no silenciaba ACT) escribía sus 720 pasos en el
+  `spy_activity.log` de PRODUCCIÓN. Se le aplicó el silenciado NullHandler de m1m2_coldrun.
+  Verificado: log con 295 líneas antes y después de correrlo. ⚠️ Las líneas ST3 con timestamp
+  `09:17:41` del log de hoy son basura de ese cold run, NO de la sesión en vivo.
+- **Cold runs verdes tras los cambios:** gap15, cuenta, gap14, fase1, spy_walls, m1m2 (reparado),
+  st3_signal (720/720 anti look-ahead + flips ['C','P','C','P'] idénticos al backtest).
+- **NO VERIFICADO:** los logs de SIEMBRA / FLIP / FLIP SUPRIMIDO no se ejercitaron en frío (viven
+  dentro de `_update_signal`, que exige montar mucho estado); se verifican EN VIVO en la sesión de
+  hoy. Tampoco se ha validado el ST-3 contra premium REAL: eso es justamente lo que mide hoy.
