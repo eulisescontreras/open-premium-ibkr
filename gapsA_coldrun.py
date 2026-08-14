@@ -28,6 +28,9 @@ import spy_direction as S
 # Un test A/B tiene que FIJAR la variable que prueba, no heredarla del default (misma leccion
 # que ENTRADA_RETROCESO en gap14 el mismo dia).
 S.USAR_MEDIA = False
+S.USAR_ST3 = False   # 2026-08-14: idem para el disparador nuevo (Supertrend). Esta suite prueba
+                     # el giro por diff/thr; USAR_ST3=True usa self.bars (que la app minima no
+                     # tiene) y no giraria. El ST-3 tiene su cold run (coldruns/st3_signal_coldrun.py).
 
 S.ENABLE_TOAST = False
 S.ENABLE_SOUND = False

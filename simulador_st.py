@@ -152,7 +152,7 @@ def simular(fecha, senales=None, trail=TRAIL_PCT, mag_umbral=MAG_UMBRAL,
             modo=MODO_ENTRADA, per=P_ATR, mult=MULT, cap0=CAPITAL_0,
             db_velas=None, db_tape=None, expiry=None, verbose=False, mid=False, net_ext=None,
             size_cap=None, cooldown=0, hora_min=None, ventana_no=None,
-            stop_opt=None, max_trades=None, stop_racha=None):
+            stop_opt=None, max_trades=None, stop_racha=None, salir_en_flip=False):
     """senales: [(hora,'C'|'P')] fijas, o None para calcular el Supertrend.
        net_ext: dict {hora: magnitud} para INYECTAR una magnitud externa (p.ej. ficticia
        derivada del volumen), sobreescribiendo el NET del tape. None = usar el del tape."""
@@ -208,7 +208,9 @@ def simular(fecha, senales=None, trail=TRAIL_PCT, mag_umbral=MAG_UMBRAL,
                     if valnow <= pos["px_in"] * (1 - stop_opt):
                         salta = True
 
-            if salta or h >= CIERRE:
+            # SALIR EN FLIP OPUESTO DEL ST: cerrar cuando llega un giro contrario
+            flip_out = (salir_en_flip and gira and cambio_en[h] != pos["lado"])
+            if salta or flip_out or h >= CIERRE:
                 q = P.get((pos["k"], pos["rt"], h))
                 # venta: mid=(bid+ask)/2 ; si no, al BID (pesimista)
                 venta = ((q[0] + q[1]) / 2.0 if mid else q[0]) if q else pos["px_in"]

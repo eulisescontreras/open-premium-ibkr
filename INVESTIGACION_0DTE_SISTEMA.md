@@ -11,11 +11,23 @@
 > el sistema pasa a **NEGATIVO en AMBOS años** (año1 +16.075→−7.626, año2 +11.575→−9.455;
 > %verde 62%→31%). Ningún skip (hasta 11:00) ni +1min lo rescata. Evidencia:
 > `analisis/exp_timing_realista.py` y `analisis/exp_timing_skip.py`.
-> **ESTADO REAL: la estrategia tal como está especificada NO es rentable con timing ejecutable.**
-> Todo lo de abajo (config, sizing, días malos, premium sintético) describe el sistema CON
-> look-ahead y queda SUPEDITADO a este hallazgo. Antes de retomar: rediseñar el timing de
-> entrada a algo ejecutable y RE-VALIDAR desde cero. La reproducción de referencia (+524.40)
-> sigue dando igual porque es un replay de señales manuales fijas, NO la validación OOS.
+> **ESTADO REAL de esa config: NO es rentable con timing ejecutable.** Todo lo de abajo (config
+> con trail, sizing, días malos con look-ahead) queda SUPEDITADO a este hallazgo.
+
+> # ✅ CONTINUACIÓN (2026-08-14): SÍ hay un config EJECUTABLE positivo — ST-3 flip-exit
+> Rediseñando el timing a ejecutable y barriendo el espacio (timing, trail ancho/timeframe,
+> flip-exit, ST 1-10min, duales), el pico ROBUSTO y positivo en 2 años OOS es:
+> **Supertrend(7,3.0) en velas de 3-min, entrada al CIERRE del bucket (sin look-ahead), SIN
+> trail, dando vuelta la posición en el flip opuesto (flip-exit), skip 09:45.**
+> - Con premarket (= backtest validado): **Año1 +$7.195 / Año2 OOS +$7.654**. `analisis/exp_st_flip.py`.
+> - RTH-only (sin premarket): +$8.579 / +$3.210 (también positivo). Meseta positiva ST 3→10min.
+> - Insight: cualquier componente RÁPIDO (entrada O salida) rompe el edge — hay que entrar
+>   lento (ST-3) y AGUANTAR el swing. Refutados en 2 años: trail 2-min, trail ancho, ST-1 puro
+>   (−17k), entrar-ST3/salir-ST1 (−1.4k/−2.8k), entrar-ST1/salir-ST3 (−17k/−6.5k).
+> - **PENDIENTE (gate real):** validar contra premium REAL (todo es sintético). El paso de
+>   validación es correrlo EN VIVO en PAPER: implementado en `spy_direction.py` detrás del flag
+>   `USAR_ST3=True` (2a serie de barras con premarket `bars_st3` para calentar el ATR igual que
+>   el backtest; `salir_en_flip` en `simulador_st.py`). Cold run: `coldruns/st3_signal_coldrun.py`.
 
 ---
 

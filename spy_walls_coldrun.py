@@ -26,6 +26,11 @@ import spy_direction as S
 # Un test A/B tiene que FIJAR la variable que prueba, no heredarla del default (misma leccion
 # que ENTRADA_RETROCESO en gap14 el mismo dia).
 S.USAR_MEDIA = False
+# 2026-08-14: idem para el disparador NUEVO. USAR_ST3=True (default) usa el Supertrend sobre
+# self.bars, que las apps minimas de esta suite no tienen -> _st3_dir() devuelve None, el target
+# queda en FLAT y nada rota. Esta suite prueba la MECANICA de rotacion (agnostica de la señal);
+# el ST-3 tiene su propia cold run (coldruns/st3_signal_coldrun.py). Se fija la variable A/B.
+S.USAR_ST3 = False
 
 S.ENABLE_TOAST = False   # NO lanzar toasts de Windows durante el cold run (evita spam)
 

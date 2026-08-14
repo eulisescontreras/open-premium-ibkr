@@ -146,6 +146,26 @@ USAR_M1 = True              # 2026-08-11: disparador de flips = M1. False -> cri
 #
 # ⚠️ MUESTRA: 2 dias (08-12 completo, 08-11 solo desde las 11:48) y 37 operaciones. p=0.01 es
 # significativo pero NO es una validacion. La confirmacion es la primera sesion nueva.
+# --- DISPARADOR SUPERTREND 3-MIN, FLIP-EXIT (2026-08-14) ----------------------------------
+# NUEVO metodo, decidido esta sesion tras hallar que el ST look-ahead era el edge falso. Con
+# timing EJECUTABLE (barra cerrada) el unico config positivo en 2 años OOS (premium sintetico)
+# es: Supertrend(7,3.0) en velas de 3-min, SIN trail, dando vuelta la posicion en el flip
+# opuesto (el sistema en vivo YA rota en el giro con MINUTOS_POS=0), skip 09:45.
+#   backtest con premarket (validado): Año1 +7195$ / Año2 OOS +7654$ (skip 09:45).
+# A/B limpio: con USAR_ST3=False vuelve EXACTO a la media (rollback sin tocar codigo).
+# ⚠️ NO VERIFICADO contra premium REAL: correrlo en PAPER es el paso de validacion.
+# ⚠️ FIDELIDAD (VERIFICADO 2026-08-14): self.bars usa useRTH=True (SIN premarket) y _st3_dir
+#    RESETEA por dia (como el backtest). Sin premarket el ATR calienta con la propia sesion
+#    (~ST3_PER*ST3_TF_MIN = 21 min tras la apertura), da MENOS flips y una secuencia distinta
+#    a la version con premarket. Medido el edge con calentamiento RTH-only (lo que el vivo hace)
+#    en los 2 años: Año1 +8579$ (49.8% verde) / Año2 OOS +3210$ (49.4%). SIGUE positivo OOS,
+#    aunque el año2 es mas flojo que con premarket. Es un sistema cercano pero NO identico al
+#    validado con premarket; el paper de mañana es su prueba real.
+USAR_ST3 = True             # True -> decide el Supertrend 3-min. False -> decide la media.
+ST3_TF_MIN = 3              # timeframe del Supertrend en minutos (barra de decision)
+ST3_PER = 7                 # periodo del ATR (Wilder), igual que el backtest
+ST3_MULT = 3.0              # multiplicador de bandas, igual que el backtest
+ST3_SKIP_OPEN = "09:45"     # no cambiar de estado (no entrar) antes de esta hora ET. "" = sin skip.
 USAR_MEDIA = True           # False -> decide M1 (comportamiento anterior, A/B limpio)
 INVERTIR_SENAL = False      # 2026-08-13 ~11:10, peticion del usuario: vuelve a como estaba.
                             # UP -> CALL y DOWN -> PUT, que es lo que dicen las etiquetas.
@@ -662,6 +682,41 @@ class TAEngine:
                 "score": total, "dir": dirn, "bull": bull, "bear": bear}
 
 
+def _supertrend_dir(hi, lo, cl, per=ST3_PER, mult=ST3_MULT):
+    """Direccion del Supertrend por vela (+1 alcista / -1 bajista). COPIA EXACTA de la logica
+    del backtest (analisis/year_backtest.st_dir y simulador_st.supertrend, Wilder + arrastre de
+    bandas) para que la señal en vivo replique el metodo validado. NO se importa de analisis/
+    para que el .exe (PyInstaller) la empaquete (R9: se conecta el algoritmo, no el archivo)."""
+    n = len(cl)
+    if n == 0:
+        return []
+    tr = [0.0] * n
+    for i in range(1, n):
+        tr[i] = max(hi[i] - lo[i], abs(hi[i] - cl[i-1]), abs(lo[i] - cl[i-1]))
+    atr = [None] * n
+    if n > per:
+        atr[per] = sum(tr[1:per+1]) / per
+        for i in range(per+1, n):
+            atr[i] = (atr[i-1] * (per-1) + tr[i]) / per
+    tend = [0] * n
+    fu = fl = None
+    d = 1
+    for i in range(n):
+        if atr[i] is None:
+            continue
+        med = (hi[i] + lo[i]) / 2.0
+        bu = med + mult * atr[i]
+        bl = med - mult * atr[i]
+        fu = bu if (fu is None or bu < fu or cl[i-1] > fu) else fu
+        fl = bl if (fl is None or bl > fl or cl[i-1] < fl) else fl
+        if d == 1 and cl[i] < fl:
+            d = -1
+        elif d == -1 and cl[i] > fu:
+            d = 1
+        tend[i] = d
+    return tend
+
+
 class SpyDirection:
     def __init__(self, demo=False):
         self.ib = IB()
@@ -690,6 +745,8 @@ class SpyDirection:
         self.cl_hist = []; self.cl_efectivo = None   # igual para el CLASICO (solo registro)
         self.prev_vol = {}            # conId -> volumen acumulado previo (delta)
         self.state = "-"
+        self._st3_last = None            # ultima direccion del Supertrend-3min vista (+1/-1) para
+                                         # disparar SOLO en el flip (cambio), como el backtest.
         self.transitions = []
         self.status = "Iniciando..."
         # alertas
@@ -801,6 +858,9 @@ class SpyDirection:
         # --- TA de 1 min + registro por minuto ---
         self.ta = TAEngine()
         self.bars = None                 # BarDataList (reqHistoricalData keepUpToDate)
+        self.bars_st3 = None             # 2a serie 1-min CON premarket (useRTH=False) SOLO para
+                                         # calentar el ATR del Supertrend-3min como el backtest.
+                                         # Separada de self.bars para no tocar TA/walls (R15).
         self.ta_vals = None              # dict con ultimos indicadores
         self.last_bar_time = None        # detectar cierre de minuto
         # --- GAP 17: salud del stream de barras ---
@@ -1238,7 +1298,7 @@ class SpyDirection:
         self.today_net = {}          # el NETO del dia se reinicia; accum_net NO (es persistente)
         self.prev_vol = {}; self.band_prev_vol = {}; self.prev_gamma = {}
         self._tick_prem_ids = set()   # dia nuevo: nadie ha contado nada todavia
-        self.transitions = []; self.state = "-"
+        self.transitions = []; self.state = "-"; self._st3_last = None
         # TAPE: el contador es del DIA. El buffer se vuelca antes de vaciarlo para no perder
         # las operaciones que quedaran pendientes del dia anterior.
         try:
@@ -1366,6 +1426,30 @@ class SpyDirection:
         # nunca la INTENCION de haber pedido el stream.
         return True
 
+    def _subscribe_bars_st3(self):
+        """2a serie de barras 1-min CON premarket (useRTH=False) SOLO para el Supertrend-3min:
+        asi el ATR se calienta con el premarket del dia, como el backtest validado (+7654 año2
+        OOS vs +3210 del RTH-only). NO alimenta TA/walls/spy_price (esos siguen con self.bars).
+        Si falla o no llega, _st3_dir cae a self.bars (RTH-only, tambien positivo en 2 años)."""
+        if USAR_ST3 is False or self.spy_stock is None or not self.ib.isConnected():
+            return False
+        if self.bars_st3 is not None:
+            try:
+                self.ib.cancelHistoricalData(self.bars_st3)
+            except Exception:
+                pass
+        try:
+            # "1 D" alcanza para el premarket de HOY + la sesion (el reset diario de _st3_dir
+            # descarta lo anterior). useRTH=False = INCLUYE premarket/afterhours.
+            self.bars_st3 = self.ib.reqHistoricalData(
+                self.spy_stock, "", "1 D", "1 min", "TRADES",
+                useRTH=False, keepUpToDate=True)
+        except Exception:
+            self.bars_st3 = None
+            LOG.exception("Error pidiendo el stream de barras ST-3 (premarket)")
+            return False
+        return True
+
     def setup_contracts(self):
         spy = Stock(SYMBOL, "SMART", "USD")
         self.ib.qualifyContracts(spy)
@@ -1488,6 +1572,7 @@ class SpyDirection:
 
         # barras de 1 min en vivo (fuente del TA y de spy_price)
         self._subscribe_bars()
+        self._subscribe_bars_st3()      # 2a serie con premarket para el Supertrend-3min
 
         self.status = (f"OK  SPY={self.spy_price:.2f}  cercano={self.expiry}  "
                        f"senal C{call_strike:g}/P{put_strike:g} (ATM/ITM)  "
@@ -2635,6 +2720,57 @@ class SpyDirection:
             lado = "PUT" if lado == "CALL" else "CALL"
         return lado
 
+    def _st3_dir(self):
+        """Direccion actual del Supertrend de ST3_TF_MIN minutos, calculada SOLO sobre buckets
+        CERRADOS (anti look-ahead): se descartan la barra 1-min en formacion (self.bars[-1]) y el
+        bucket de 3-min en curso. Devuelve +1 (alcista) / -1 (bajista) / None (sin datos/ATR).
+        Reusa el mismo patron de lectura de barras que ta_poll (rows de self.bars) y el mismo
+        Supertrend que el backtest (_supertrend_dir). NOTA: self.bars es useRTH=True (sin
+        premarket); el ATR se calienta con la historia de la sesion previa ("2 D")."""
+        # Preferir la serie CON premarket (calienta el ATR como el backtest validado); si no
+        # esta lista, caer a self.bars (RTH-only, tambien positivo en 2 años). R13: no inventar.
+        fuente = self.bars_st3 if self.bars_st3 else self.bars
+        if fuente is None:
+            return None
+        try:
+            rows = [(b.high, b.low, b.close, b.date) for b in fuente]
+        except Exception:
+            return None
+        if len(rows) < 2:
+            return None
+        # RESET DIARIO: usar SOLO las barras de HOY (misma fecha que la barra actual), para
+        # replicar el backtest validado, que calcula el Supertrend por DIA (sen_Nmin por dia),
+        # no de forma continua. "Hoy" = fecha de la ultima barra (evita suponer zona horaria;
+        # las barras RTH no cruzan medianoche). Sin premarket (useRTH=True), el ATR se calienta
+        # con la propia sesion -> la direccion es fiable ~ST3_PER*ST3_TF_MIN min tras la apertura.
+        cur_date = rows[-1][3].date()
+        rows = [r for r in rows if r[3].date() == cur_date]
+        if len(rows) < 2:
+            return None
+        N = ST3_TF_MIN
+        def bkey(dt):
+            return dt.replace(minute=(dt.minute // N) * N, second=0, microsecond=0)
+        fk = bkey(rows[-1][3])           # bucket de la barra EN FORMACION: se excluye entero
+        buck = {}
+        for hi, lo, cl, dt in rows:
+            k = bkey(dt)
+            if k >= fk:                  # bucket en curso o posterior -> fuera (no cerrado)
+                continue
+            a = buck.get(k)
+            if a is None:
+                buck[k] = [hi, lo, cl]
+            else:
+                a[0] = max(a[0], hi); a[1] = min(a[1], lo); a[2] = cl
+        if len(buck) <= ST3_PER:         # sin suficientes buckets para tener ATR
+            return None
+        order = sorted(buck)
+        HI = [buck[k][0] for k in order]
+        LO = [buck[k][1] for k in order]
+        CL = [buck[k][2] for k in order]
+        D = _supertrend_dir(HI, LO, CL)
+        d = D[-1] if D else 0
+        return d if d in (1, -1) else None
+
     def _update_signal(self):
         # GAP 18: NO evaluar la senal hasta haber intentado restaurar el estado del dia.
         # setup_contracts suscribe el market data de la senal ANTES de _load_intradia, asi que
@@ -2703,8 +2839,21 @@ class SpyDirection:
                 break
         self.m1_efectivo = efec
 
-        if USAR_MEDIA:
-            # DISPARADOR VIGENTE (2026-08-12): distancia a la media corta. Se compra HACIA la
+        if USAR_ST3:
+            # DISPARADOR NUEVO (2026-08-14): Supertrend-3min sobre barras CERRADAS (ejecutable,
+            # sin look-ahead). Dispara SOLO en el FLIP (cambio de direccion), como el backtest;
+            # la primera lectura del dia SIEMBRA _st3_last sin girar. Skip 09:45 (ET). El resto
+            # (giro -> target -> trade_poll rota la posicion) es identico al de la media.
+            d = self._st3_dir()
+            if d in (1, -1):
+                if self._st3_last is None:
+                    self._st3_last = d
+                elif d != self._st3_last:
+                    self._st3_last = d
+                    if (not ST3_SKIP_OPEN) or now_et().strftime("%H:%M") >= ST3_SKIP_OPEN:
+                        new = "UP" if d == 1 else "DOWN"
+        elif USAR_MEDIA:
+            # DISPARADOR (2026-08-12): distancia a la media corta. Se compra HACIA la
             # media. Ver el bloque de constantes para los numeros y los controles pasados.
             # Sin media o sin precio NO se toca el estado: no se inventa direccion (regla 13).
             _lado = self._senal_media()
@@ -4823,6 +4972,7 @@ def run_gui(app):
                         app.bars_retries += 1
                         _sin = time.monotonic() - (app.bars_last_advance or time.monotonic())
                         if app._subscribe_bars():
+                            app._subscribe_bars_st3()   # repone tambien la serie ST-3 (premarket)
                             # OJO con el texto: se ha REPEDIDO, no se ha confirmado que llegue
                             # nada. Quien confirma es _chequear_barras al ver avanzar la barra.
                             ACT.info("BARRAS: stream repedido (intento %d, %.0fs sin avanzar). "
