@@ -1,5 +1,21 @@
 # SISTEMA 0DTE SPY — INVESTIGACIÓN COMPLETA (Supertrend momentum)
-> Documento maestro. Fecha: 2026-08-14. Estado: sistema validado en 2 años (OOS), con caveats de premium sintético. **NO PERDER — costó mucho llegar acá.**
+> Documento maestro. Fecha: 2026-08-14.
+
+> # 🚨🚨 CRÍTICO — LEER PRIMERO (hallazgo 2026-08-14): EL "VALIDADO" ERA LOOK-AHEAD
+> **El resultado titular (+$11-12k/año en 2 años OOS) está INVALIDADO.** El backtest entra
+> en la ETIQUETA del bucket de 2-min (su minuto de INICIO, ej. "09:50") usando el precio de
+> ese minuto, PERO el flip del ST 2-min recién se confirma con el cierre del bucket (final
+> de 09:51, se sabe a las 09:52). → **el sistema compraba 2 minutos hacia el futuro**; ese
+> impulso de 2-min "gratis" ERA todo el edge.
+> **Corrida diferencial con timing REALISTA (entrar cuando la vela de 2-min ya cerró):**
+> el sistema pasa a **NEGATIVO en AMBOS años** (año1 +16.075→−7.626, año2 +11.575→−9.455;
+> %verde 62%→31%). Ningún skip (hasta 11:00) ni +1min lo rescata. Evidencia:
+> `analisis/exp_timing_realista.py` y `analisis/exp_timing_skip.py`.
+> **ESTADO REAL: la estrategia tal como está especificada NO es rentable con timing ejecutable.**
+> Todo lo de abajo (config, sizing, días malos, premium sintético) describe el sistema CON
+> look-ahead y queda SUPEDITADO a este hallazgo. Antes de retomar: rediseñar el timing de
+> entrada a algo ejecutable y RE-VALIDAR desde cero. La reproducción de referencia (+524.40)
+> sigue dando igual porque es un replay de señales manuales fijas, NO la validación OOS.
 
 ---
 
