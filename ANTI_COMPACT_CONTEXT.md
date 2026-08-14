@@ -2167,3 +2167,50 @@ python analisis/massive_premium_real.py estado      # que falta
 python analisis/massive_premium_real.py bajar 120   # otra tanda
 ```
 NO borrar `massive_premium.db`: es el registro de lo ya hecho.
+
+## 26. 🚨 EL GATE SE CIERRA EN NEGATIVO — el edge no existe con precios reales (2026-08-14)
+`analisis/gate_premium_real.py` sobre **200 sesiones** del año de reserva (7x la muestra previa):
+```
+var           SINTETICO        REAL      diferencia    ops
+A intr+3m    +13813.07$     +427.46$   -13385.61$     465
+B descarta   +13813.07$    -3277.52$   -17090.59$     457
+C prev 5m    +13813.07$     +297.85$   -13515.22$     465
+
+SUBCONJUNTO LIMPIO (148 sesiones, 341 ops, SIN imputacion ninguna):
+  SINTETICO +4969.72$    REAL -2217.39$
+```
+**Con precios reales el sistema PIERDE.** El subconjunto limpio —el dato que no depende de
+ninguna convención— da **−2.217$** donde el sintético daba **+4.970$**. Con la muestra completa,
+el sintético dice +13.813$ y el real va de +427$ a −3.278$: **el edge desaparece entero**.
+
+**Cómo cambió al ampliar la muestra:**
+```
+ 30 sesiones: limpio  +997$  -> el real era el 68% del sintetico
+200 sesiones: limpio -2217$  -> el real es NEGATIVO
+```
+Con 30 podía ser ruido. Con 200 sesiones y 465 operaciones, no lo es.
+
+**POR QUÉ (y no es el spread):** ambas corridas aplican el mismo 2%, y está verificado que el
+precio ejecutado cae en el MID (sección 23A), así que no se cuenta dos veces. Lo que falla es el
+**modelo de extrínseco**: calibrado con 3 días de agosto de 2026 y extrapolado a 2 años de
+regímenes distintos. Ya se midió que se degrada de +3,5% a +21,9% en **48 horas** (sección 18).
+Con 465 operaciones basta un sesgo de pocos dólares por operación en el sitio equivocado —las
+salidas de las perdedoras, donde el modelo más se desvía (sección 19)— para convertir +13.813$
+en negativo. No hace falta que el modelo esté "muy mal": basta con que esté sistemáticamente
+sesgado donde importa.
+
+**A DECLARAR:**
+- 200 de 260 sesiones del año de reserva (77%). Faltan las 60 más antiguas.
+- **Las tres variantes DIFIEREN** ahora (−13.386 / −17.091 / −13.515), a diferencia de con 30
+  sesiones. El resultado depende en parte de la convención y hay que publicarlo así. **Pero las
+  tres son catastróficas** respecto al sintético.
+- Los huecos siguen sin concentrarse en un tipo de día: de 52 sesiones con hueco, 33 positivas y
+  19 negativas.
+- Los `minute_aggs` son precios EJECUTADOS, no bid/ask garantizados: es la mejor aproximación
+  disponible, no una certeza de ejecución.
+
+**CONSECUENCIA:** el titular de `SISTEMA_ST3_ORB_CONGELADO_v2.md` (+25.769$) NO se sostiene con
+precios reales. El propio documento decía que el premium sintético era "el único gate que
+importa" y que "solo lo levanta el paper". El gate se ha podido medir antes que el paper, y lo
+que dice es que no hay edge. Cualquier decisión de meter dinero real debería esperar a resolver
+esto.
