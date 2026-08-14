@@ -1,5 +1,17 @@
 # ANTI-COMPACT — SPY Direction (contexto vivo para continuar)
 
+> ═══════════════════════════════════════════════════════════════════════════════
+> 🟢 **ACTUALIZACIÓN 2026-08-14 — SISTEMA 0DTE MOMENTUM VALIDADO. LEER PRIMERO:**
+> **`INVESTIGACION_0DTE_SISTEMA.md`** (raíz del repo) — documento maestro con TODO:
+> config final, todo lo probado (funcionó/falló), resultados 2 años OOS, insights, caveats.
+> Y **`PROMPT_RECALL.md`** para retomar. Máquina ACTUAL de trabajo: `C:\Users\17862\open-premium-ibkr`.
+>
+> Config final: Supertrend(7,3.0) 2-min con premarket + trail 0.04% + skip apertura <09:45 +
+> magnitud OFF (tape ya no se usa) + sizing FIJO $400 + banco aparte. Premium SINTÉTICO.
+> Validado: ~+$11-12k/año/contrato, ~60% días verdes, ratio 2.2, replica en año1 y año2 (OOS).
+> Verificación anti-regresión: `python simulador_st.py` → TOTAL +524.40.
+> ═══════════════════════════════════════════════════════════════════════════════
+
 > Léeme primero tras compact/clear. Proyecto **independiente**, local, NO tiene relación con el
 > trading-bot del VPS. Idioma: español.
 > **Carpeta ACTUAL: `C:\Users\eulis\proyectos\open-premium-ibkr`** (antes `C:\Users\17862\...`,

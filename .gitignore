@@ -1,0 +1,10 @@
+# Bases de datos grandes (regenerables desde IBKR / modelo sintético) — no van a GitHub
+*.db
+*.db-journal
+# temporales de backtest
+_tmp*.db
+_all*.db
+_t*.db
+# python cache
+__pycache__/
+*.pyc
