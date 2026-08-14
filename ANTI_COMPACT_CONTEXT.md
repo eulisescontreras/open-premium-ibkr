@@ -1907,3 +1907,60 @@ DIA 08-14 (2 dias despues) · 7.800 contratos-minuto
   Tampoco se puede explicar aún la contradicción del tope 200$ vs 400$ (§6.3 de la spec).
 - La herramienta es REUTILIZABLE: cada día nuevo de paper añade datos reales; volver a correrla
   para ver si el modelo aguanta.
+
+## 19. EL BACKTEST YA ES REPRODUCIBLE — y el sesgo del premium INFLA el resultado
+**`analisis/backtest_st3_orb.py` + `analisis/orb_senal.py`** (los aportó el agente de
+investigación; no tiene credenciales de git, se descargaron del chat y se commitean aquí).
+Sustituyen al antiguo `/tmp/mantener.py`: hasta hoy **el resultado titular del sistema vivía en
+un directorio temporal** y nadie podía verificarlo.
+
+**RE-VERIFICADO EJECUTÁNDOLO AQUÍ (no es lo que dice el otro agente, es lo que sale al correrlo):**
+```
+ST-3 puro        A1  +7.654$ (251)  A2  +7.196$ (260)  TOTAL +14.850$
++ max_trades=4   A1 +10.730$        A2  +7.394$        TOTAL +18.125$
++ ORB apertura   A1 +13.983$        A2 +11.786$        TOTAL +25.769$
+dias con señal ORB: 182 de 511      511 sesiones unicas      OK - REPRODUCE
+T2: total +25.769$ | sin 5 +15.053$ | sin 10 +9.895$
+```
+=> Los **182 días coinciden con la implementación en vivo**. Queda VERIFICADO lo que estaba
+   pendiente: el P&L NO cambia con la ventana estricta. Incluir el minuto 09:45 da 214 días y
+   **+23.432$**, o sea PEOR que los +25.769$: la ventana estricta no solo es correcta, es mejor.
+
+**Modos del script:** sin argumentos = resultado titular | `ventanas` = A/B <09:45 vs <=09:45 |
+`capital` = barrido de size_cap 200-800$ | `dias` = P&L por sesión a CSV.
+
+**`spy_bars_pm.db` NO está en el repo** (lo excluye el .gitignore) y sin él el backtest NO
+ARRANCA en una máquina limpia. Se reconstruye con **`analisis/rehacer_bars_pm.py`**, que lo saca
+de `spy_bars_year.db` (las mismas velas 1-min de IBKR, solo cambia el envoltorio: `bars` ->
+`bars_pm`). Correrlo ANTES del backtest.
+
+**EL SIGNO DEL SESGO DEL PREMIUM: INFLA** (medido por el agente de investigación a partir de la
+auditoría de la sección 18; **pendiente de re-verificación propia**):
+```
+              n     prof ENTRADA  prof SALIDA  % sale en OTM/ATM
+GANADORAS   555         2,51          4,11            0%
+PERDEDORAS  853         2,49          1,59           27%
+```
+Entran igual (ITM ~2,5) pero salen en sitios opuestos: las ganadoras PROFUNDIZAN a ITM 4,11 y
+ninguna sale cerca del dinero; las perdedoras RETROCEDEN a ITM 1,59 y el 62% sale en tramos
+donde el modelo sobreestima entre 9% y 29%. Como el modelo sobreestima el precio de VENTA en esos
+tramos, **el backtest vende las perdedoras más caras de lo que valen: las pérdidas salen
+recortadas y los +25.769$ están inflados**. Estimación de servilleta del propio agente: 20-40$
+por operación perdedora × 853 = 17.000-34.000$ sobre un resultado de 25.769$; "podría llevárselo
+entero". **NO ES UNA MEDICIÓN** — la exacta se hace corriendo `backtest_st3_orb.py` con
+`db_velas` apuntando a la BD de precios REALES en vez de a la sintética, sobre los 4 días que ya
+existen (08-11, 08-12, 08-13, 08-14).
+
+**Correcciones adicionales a la spec confirmadas por su autor:** el duplicado de 2025-07-31
+contaminaba TODOS sus conteos, no solo el del ORB (P&L con duplicado +25.885$ vs +25.769$ sin él;
+la cifra publicada era correcta por casualidad, porque esa corrida indexaba por fecha en un dict).
+Y las **etiquetas de año estaban invertidas**: AÑO1 = 2024-07/2025-07 (251 sesiones, +13.983$) es
+el cronológicamente ANTERIOR; AÑO2 = 2025-08/2026-08 (260 sesiones, +11.786$) es el reciente y es
+la reserva OOS.
+
+**Scripts de verificación de esta sesión, todos ya en el repo** (antes vivían en el scratchpad):
+`coldruns/`: bd_por_dia_coldrun, logs_st3_coldrun, metodo_que_manda_coldrun, orb_maxtrades_coldrun.
+`analisis/`: verifica_214_orb, ab_criterio_orb, fidelidad_orb, amplitud_apertura,
+profundidad_operada, inventario_premium, buckets_st3_del_dia, monitor_sesion, ver_sello_sesion,
+chequeo_pre_cierre, fix_base_cuenta_dia, descargar_etfs, sondeo_bds, auditoria_premium_synth,
+rehacer_bars_pm, backtest_st3_orb, orb_senal.
