@@ -1,0 +1,24 @@
+============================================================================================
+PASO 2 (GATE) — TA-timing bajo direccion ORACULO. Liston 0DTE 56.7% (320)/54.4% (800).
+  exploracion 170 dias | reserva 85 dias | W=5 umbral=0.20 H=8
+============================================================================================
+                      modo |  EXPL n   acc%     EV$     mfav |   RES n   acc%     EV$     mfav
+     (i) oraculo puro s/TA |    7948   57.9   +7.66  +0.1163 |    3995   57.1   +7.11  +0.1097
+     (ii) TA sin direccion |    4991   49.7   -1.18  +0.0123 |    2673   50.7   -1.25  +0.0114
+(iii) TA + direccion oraculo |    3327   57.0   +9.03  +0.1324 |    1758   58.9  +10.07  +0.1446
+
+  barrido de umbral en (iii) TA+oraculo (reserva), por si el timing ayuda a algun nivel:
+   umbral |   n   acc%     EV$     mfav
+     0.10 | 2520  58.6   +8.86  +0.1303
+     0.15 | 2126  58.5   +8.93  +0.1312
+     0.20 | 1758  58.9  +10.07  +0.1446
+     0.25 | 1409  57.8   +9.82  +0.1417
+     0.30 | 1132  57.6  +10.18  +0.1459
+     0.40 |  745  56.2  +10.56  +0.1503
+
+============================================================================================
+LECTURA:
+  (i) mide cuanto rinde la direccion perfecta sola (cota superior del sesgo direccional).
+  (iii) vs (i): si el TA-timing NO sube el EV sobre (i), el TA no aporta timing.
+  Si (iii) NO da EV>0 en reserva -> el hibrido esta MUERTO aunque M1/M2 fuera perfecto.
+============================================================================================

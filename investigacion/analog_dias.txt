@@ -1,0 +1,25 @@
+============================================================================================
+ANALOGIA k-NN sobre forma del inicio — expl=170 dias, reserva=83 dias
+============================================================================================
+  baseline deriva (exploracion): dias que suben en la 2a mitad = 56.5%
+  baseline deriva (reserva): dias que suben en la 2a mitad = 54.2%
+
+  M=min de inicio | k=vecinos | acc=acierto direccion del resto del dia
+  (acc_conf = solo dias con acuerdo de vecinos >= 70%)
+  ------------------------------------------------------------------------------------
+  M= 15 k= 10 | EXPL acc= 41.8% (n=170)  conf70 acc= 31.4% (n=51) | RESERVA acc= 49.4% (n=83)  conf70 acc= 30.0% (n=20)
+  M= 15 k= 20 | EXPL acc= 47.6% (n=170)  conf70 acc= 40.0% (n=5) | RESERVA acc= 48.2% (n=83)  conf70 acc= 50.0% (n=4)
+  M= 15 k= 40 | EXPL acc= 48.2% (n=170)  conf70 acc=  0.0% (n=0) | RESERVA acc= 54.2% (n=83)  conf70 acc=  0.0% (n=0)
+  M= 30 k= 10 | EXPL acc= 48.2% (n=170)  conf70 acc= 46.4% (n=56) | RESERVA acc= 54.2% (n=83)  conf70 acc= 37.0% (n=27)
+  M= 30 k= 20 | EXPL acc= 43.5% (n=170)  conf70 acc= 20.0% (n=10) | RESERVA acc= 49.4% (n=83)  conf70 acc= 60.0% (n=5)
+  M= 30 k= 40 | EXPL acc= 39.4% (n=170)  conf70 acc=  0.0% (n=0) | RESERVA acc= 56.6% (n=83)  conf70 acc=  0.0% (n=0)
+  M= 60 k= 10 | EXPL acc= 53.5% (n=170)  conf70 acc= 50.0% (n=58) | RESERVA acc= 51.8% (n=83)  conf70 acc= 55.2% (n=29)
+  M= 60 k= 20 | EXPL acc= 51.8% (n=170)  conf70 acc= 70.4% (n=27) | RESERVA acc= 50.6% (n=83)  conf70 acc= 42.9% (n=14)
+  M= 60 k= 40 | EXPL acc= 57.6% (n=170)  conf70 acc= 53.3% (n=15) | RESERVA acc= 59.0% (n=83)  conf70 acc= 50.0% (n=8)
+
+============================================================================================
+COMO LEERLO:
+  - Si la RESERVA no bate claramente al baseline de deriva, la analogia no aporta.
+  - Para opciones 0DTE el liston sigue siendo ~56.7% de acierto direccional.
+  - acc de exploracion ALTA + reserva ~50% = sobreajuste (encontro parecidos por azar).
+============================================================================================

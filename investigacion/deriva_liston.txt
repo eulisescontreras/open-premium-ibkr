@@ -1,0 +1,16 @@
+============================================================================================
+DERIVA (siempre CALL) — acierto direccional y movimiento medio, por horizonte
+  LISTON de equilibrio: 56.7% (capital 320)  |  54.4% (capital 800)
+============================================================================================
+ H(min) | EXPL acc%  EXPL movfav  EV8_320$  EV8_800$ | RESERVA acc%  RES movfav   n_expl
+      8 |      50.0      +0.0006     -2.17     -2.15 |         50.6     +0.0044   7990
+     15 |      50.3      +0.0017    (n/a)    (n/a) |         52.0     +0.0086   4250
+     30 |      52.0      +0.0016    (n/a)    (n/a) |         53.3     +0.0251   2040
+     60 |      53.1      +0.0032    (n/a)    (n/a) |         54.0     +0.0502   1020
+    120 |      52.0      +0.0063    (n/a)    (n/a) |         53.8     +0.1004   510
+    240 |      54.7      -0.0211    (n/a)    (n/a) |         56.6     +0.4865   170
+    390 |       0.0      +0.0000    (n/a)    (n/a) |          0.0     +0.0000   0
+
+NOTA: EV en $ solo es fiel a H=8 (economia 0DTE conocida). A H largos, ver acierto+movimiento;
+      el P&L real de mantener la opcion horas necesita historico de primas que NO tenemos.
+============================================================================================

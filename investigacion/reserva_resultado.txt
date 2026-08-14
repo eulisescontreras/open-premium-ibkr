@@ -1,0 +1,7 @@
+==========================================================================================
+PRUEBA DE RESERVA (una sola pasada) — F3 rev tercil ALTO W=5 u=0.40 H=8
+  sesiones reserva: 85  (2026-04-13 a 2026-08-12)
+  n_ops=847  acc=48.76%  media_fav=-0.0185  EV=-3.79$
+  EXPLORACION daba: EV=+2.48 media_fav=+0.0553 n=1560
+  -> NO SOBREVIVE: se descarta, NO se reajusta (era el falso positivo esperado)
+==========================================================================================
