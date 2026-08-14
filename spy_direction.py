@@ -1974,8 +1974,20 @@ class SpyDirection:
             # distintos son INDISTINGUIBLES en la BD: el 2026-08-12 los arranques posteriores
             # al commit del ITM quedaron marcados igual que los anteriores y no hubo forma de
             # atribuir nada. Va en `notas` (columna que ya existe) para no tocar el esquema.
-            _dec = ("MEDIA(dist>=%.2f, %dmin)" % (MEDIA_DIST, MINUTOS_POS) if USAR_MEDIA
-                    else ("M1(retardo=%d)" % RETARDO_M1_MIN if USAR_M1 else "CLASICO diff/thr"))
+            # 2026-08-14: esta cuenta estaba copiada (mal) en cuatro sitios y ninguno conocia
+            # USAR_ST3, asi que las dos primeras sesiones EN VIVO del Supertrend quedaron
+            # selladas como "DECIDE=MEDIA" — exactamente el problema que estas lineas dicen
+            # querer evitar. Ahora la precedencia sale de _metodo_que_manda(), unica fuente.
+            _mm = _metodo_que_manda()
+            if _mm == "ST3":
+                _dec = "ST3(tf=%dmin, per=%d, mult=%.1f, skip=%s)" % (
+                    ST3_TF_MIN, ST3_PER, ST3_MULT, ST3_SKIP_OPEN or "-")
+            elif _mm == "MEDIA":
+                _dec = "MEDIA(dist>=%.2f, %dmin)" % (MEDIA_DIST, MINUTOS_POS)
+            elif _mm == "M1":
+                _dec = "M1(retardo=%d)" % RETARDO_M1_MIN
+            else:
+                _dec = "CLASICO diff/thr"
             notas = ("DECIDE=%s | EJECUCION_ITM=%s cap_frac=%.2f | USAR_M1=%s retardo=%d | "
                      "TAKE_PROFIT_USD=%s | ENTRADA_RETROCESO=%s || "
                      "momentum_win guarda SEGUNDOS (MOMENTUM_SECS), no numero de muestras: "
@@ -4640,8 +4652,12 @@ class SpyDirection:
                     "origen) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                     (fecha, hora, _spy_m, _med, _dst, abs(_dst) if _dst is not None else None,
                      self._senal_media(), self.state, self.target, self.pos, _seg,
+                     # `activo` se deja como esta: refleja el FLAG USAR_MEDIA (que sigue en True)
+                     # y hay analisis que ya lo leen con ese significado. `decide` en cambio dice
+                     # QUIEN MANDA, y hasta hoy escribia "MEDIA" aunque decidiera el Supertrend:
+                     # quinta copia de la misma cuenta, esta grabando una fila POR MINUTO.
                      1 if USAR_MEDIA else 0, MEDIA_DIST, MINUTOS_POS,
-                     "MEDIA" if USAR_MEDIA else ("M1" if USAR_M1 else "CLASICO"), None))
+                     _metodo_que_manda(), None))
             except Exception:
                 LOG.exception("Error registrando media_minute")
             # METODO ANTIGUO (diff/thr): NO decide, pero se registra igual para comparar.

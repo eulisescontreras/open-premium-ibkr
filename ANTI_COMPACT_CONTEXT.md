@@ -1790,3 +1790,33 @@ Diseño final (aprobado por el usuario; plan en `~/.claude/plans/structured-pond
   arranque, y 1-2 s de `ST3 serie=RTH-only(bars) (DEGRADADO)` en el hueco entre `_subscribe_bars`
   y `_subscribe_bars_st3`, que se corrige con `ST3 serie con premarket suscrita`. Solo es GRAVE si
   el RTH-only PERSISTE o si sale `ST3 FALLO la serie con premarket`.
+
+## 16. La precedencia del disparador estaba copiada en CINCO sitios
+Al activar `USAR_ST3` quedó decidiendo el Supertrend, pero las pantallas y los sellos seguían
+con la cuenta vieja. Auditoría completa (buscando por los FLAGS, no por la palabra "MANDA" —
+así se escaparon dos en la primera pasada):
+
+| # | Sitio | Decía | Corregido |
+|---|---|---|---|
+| 1 | log METODOS (`MANDA %s`) | `MANDA MEDIA` | sí |
+| 2 | log MEDIA (`<-MANDA`) | marcaba la media | sí |
+| 3 | panel GUI (`MANDA:`) | `MANDA: M1` | sí |
+| 4 | SELLO DE SESION `_dec` (~1977) → `sesion_config.notas` | `DECIDE=MEDIA(...)` | sí |
+| 5 | `media_minute.decide` (~4656), **una fila POR MINUTO** | `MEDIA` | sí |
+
+Todos preguntan ahora a `_metodo_que_manda()` (ST3 → MEDIA → M1 → CLASICO), única fuente que
+replica el if/elif de `_update_signal`. El sello del ST-3 imprime
+`ST3(tf=3min, per=7, mult=3.0, skip=09:45)`.
+
+- **NO se tocó `media_minute.activo`** (línea ~4655): refleja el FLAG `USAR_MEDIA` (que sigue en
+  True) y hay análisis que lo leen con ese significado. Solo se corrigió `decide`.
+- **DEUDA PENDIENTE (datos del 2026-08-14 ya grabados, la app NO se reinició para no interrumpir
+  la sesión en vivo):**
+  - `sesion_config`: las 2 filas de hoy (09:30 y 09:40) tienen `notas` con `DECIDE=MEDIA(dist>=0.20,
+    0min)`. La PRIMERA sesión en vivo del ST-3 está sellada como sesión "MEDIA".
+  - `media_minute`: todas las filas de hoy tienen `decide='MEDIA'`.
+  Ninguna de las dos afecta a la operativa, solo a la trazabilidad. Corregir al cierre con UPDATE
+  (con la app parada y backup previo), o dejar constancia de que los datos del 14/08 llevan esa
+  etiqueta errónea.
+- **Lección:** auditar el grafo buscando por los IDENTIFICADORES (`USAR_MEDIA`, `USAR_M1`), no por
+  el texto que se imprime; cada pantalla usaba una palabra distinta ("MANDA", "DECIDE", "decide").
