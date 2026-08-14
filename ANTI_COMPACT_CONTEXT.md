@@ -1760,3 +1760,33 @@ Diseño final (aprobado por el usuario; plan en `~/.claude/plans/structured-pond
 - **NO VERIFICADO:** los logs de SIEMBRA / FLIP / FLIP SUPRIMIDO no se ejercitaron en frío (viven
   dentro de `_update_signal`, que exige montar mucho estado); se verifican EN VIVO en la sesión de
   hoy. Tampoco se ha validado el ST-3 contra premium REAL: eso es justamente lo que mide hoy.
+
+## 15. INCIDENTE 2026-08-14: la base de cuenta se quedó en 179,60 tras reiniciar la paper
+- **Qué pasó:** el usuario reinició la cuenta paper de IBKR a 400$ DESPUÉS de que la app arrancara.
+  La app ya había capturado `CUENTA base del dia: NetLiquidation=179.60` (log 09:30:12).
+- **Lo sutil:** el panel mostraba 400 y parecía correcto. Son DOS variables distintas:
+  - `acct_net` / `acct_avail`: se refrescan en CADA ciclo desde `accountSummary()` (`_read_account`,
+    y `_can_afford` los relee en vivo). Estas SÍ tomaron los 400.
+  - `acct_net_open`: BASE del día para el P&L. Se fija en la 1ª lectura
+    (`if self.acct_net_open is None`) y quedó CLAVADA en 179,60.
+  Con esa base, el panel habría reportado **+220,40$ (+122%) de ganancia fantasma** — justo la
+  métrica que la sesión de hoy debe medir para validar el ST-3.
+- **Por qué reiniciar NO bastaba (VERIFICADO en código):** `_load_intradia` (líneas 2095-2096)
+  restaura `acct_net_open` desde `estado_intradia`, así que un reinicio limpio volvía a cargar
+  los 179,60. El estado persistido convierte un valor erróneo en algo que el reinicio NO cura.
+- **Solución aplicada** (con 0 trades y antes de que venciera el skip 09:45):
+  1. App parada. 2. Backup `spy_history_backup_pre-reset-cuenta_20260814.db` (3,96 MB).
+  3. `UPDATE estado_intradia SET acct_net_open=NULL WHERE fecha='2026-08-14'` — verificado que
+     SOLO cambió esa columna (net_call=398576, net_put=-185932, n_trades=0, pnl=0.0 intactos).
+  4. Rearranque.
+- **VERIFICADO tras el rearranque (PID 28952, 09:40:42 ET):**
+  `ESTADO INTRADIA restaurado ... | base del dia=-` (ya no restaura la vieja),
+  `ST3 serie con premarket suscrita`, `ST3 SIEMBRA: primera direccion del dia = DOWN`,
+  `CUENTA base del dia: NetLiquidation=400.00`.
+- **REGLA PRÁCTICA para el futuro:** si se reinicia la cuenta paper con la app YA arrancada, no
+  basta con reiniciar la app: hay que poner `acct_net_open` a NULL en `estado_intradia` del día.
+  Hacerlo SIEMPRE con la app parada y con backup previo.
+- **Ruido esperado en el log tras cada arranque (NO es anomalía):** una línea `ST3 SIEMBRA` por
+  arranque, y 1-2 s de `ST3 serie=RTH-only(bars) (DEGRADADO)` en el hueco entre `_subscribe_bars`
+  y `_subscribe_bars_st3`, que se corrige con `ST3 serie con premarket suscrita`. Solo es GRAVE si
+  el RTH-only PERSISTE o si sale `ST3 FALLO la serie con premarket`.

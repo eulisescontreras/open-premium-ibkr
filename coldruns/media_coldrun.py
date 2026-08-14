@@ -26,6 +26,12 @@ except Exception:
 sys.path.insert(0, r"C:\Users\eulis\proyectos\open-premium-ibkr")
 import spy_direction as S                                            # noqa: E402
 
+# Esta suite prueba la regla BASE (revertir, salida por reloj). El 2026-08-13 se activo
+# INVERTIR_SENAL=True y MINUTOS_POS=0 en produccion para una prueba en paper; sin fijar
+# aqui los valores, los checks medirian esa configuracion y no la que dicen probar.
+S.INVERTIR_SENAL = False
+S.MINUTOS_POS = 8
+
 S.ENABLE_TOAST = False
 S.ENABLE_SOUND = False
 import logging as _lg                                                # noqa: E402
@@ -129,6 +135,12 @@ def nueva(spy, media):
     a.trade_open = None
     a.spy_price = spy
     a.ta_vals = {"vwap": media}
+    # 2026-08-13: el lado se decide por el ESTADO persistente (`_lado_del_estado`),
+    # no por la señal instantanea. Se arranca con el estado que corresponde a la
+    # media inyectada: precio ARRIBA -> señal PUT -> estado DOWN.
+    if media and spy == spy:
+        a.state = "DOWN" if spy > media else "UP"
+
     a.buy_call = S.Option(S.SYMBOL, "20260812", 773, "C", "SMART", tradingClass=S.SYMBOL)
     a.buy_put = S.Option(S.SYMBOL, "20260812", 772, "P", "SMART", tradingClass=S.SYMBOL)
     a._colocadas = []
@@ -176,10 +188,21 @@ print()
 print("=" * 78)
 print("TEST 3 - trade_poll REAL: sin señal NO se abre nada")
 print("=" * 78)
-a = nueva(773.00, 773.00)                      # dentro de la banda
+# 2026-08-13: CAMBIO DE COMPORTAMIENTO pedido por el usuario. Antes, dentro de la banda el
+# sistema se quedaba FLAT (la señal instantanea devolvia None). Ahora manda el ESTADO, que
+# PERSISTE hasta el siguiente cruce, asi que se sigue en mercado aunque el precio vuelva a la
+# banda. Lo que ya NO debe operar es cuando no hay estado en absoluto.
+a = nueva(773.00, 773.00)                      # dentro de la banda, pero CON estado
+a.trade_poll()
+check(a._colocadas and a.target != "FLAT",
+      "dentro de la banda pero con estado %s: SI opera (target=%s, ordenes=%s)"
+      % (a.state, a.target, a._colocadas))
+
+a = nueva(773.00, 773.00)
+a.state = None                                 # sin estado: no hay direccion que seguir
 a.trade_poll()
 check(not a._colocadas and a.target == "FLAT",
-      "dentro de la banda: target=%s, ordenes=%s" % (a.target, a._colocadas))
+      "sin estado: NO se abre nada (target=%s, ordenes=%s)" % (a.target, a._colocadas))
 
 print()
 print("=" * 78)

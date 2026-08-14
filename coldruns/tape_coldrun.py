@@ -403,6 +403,92 @@ check(not _sin_233,
       f"{len(_subs_banda) - len(_sin_233)}/{len(_subs_banda)}"
       + (f"  *** SIN 233: {_sin_233[:3]} ***" if _sin_233 else ""))
 
+# ============================================================ 10: TAPE DEL SUBYACENTE
+print()
+print("=" * 78)
+print("10) TAPE DEL SPY (2026-08-13): se captura el subyacente SIN tocar la señal")
+print("=" * 78)
+
+
+def stk(conId=756733):
+    s = S.Stock(S.SYMBOL, "SMART", "USD")
+    s.conId = conId
+    return s
+
+
+# 10.1 EL CHECK CLAVE: el SPY no puede contaminar NADA de la ruta de opciones.
+S.TAPE_SPY = True
+a10 = nueva()
+sp = stk()
+a10._on_ticks([TK(sp, 640.00, 1_000_000, 639.99, 640.00)])          # 1o: solo fija prev_vol
+a10._on_ticks([TK(sp, 640.05, 1_005_000, 640.04, 640.05, lastSize=500)])
+check(a10.net_call == 0.0 and a10.net_put == 0.0,
+      "10.1 el SPY NO mueve la señal -> net_call=%s net_put=%s" % (a10.net_call, a10.net_put))
+check(not a10.accum and not a10.today_prem and not a10.accum_net and not a10.today_net,
+      "10.1 el SPY NO entra en los acumuladores de premium -> accum=%d today_prem=%d "
+      "accum_net=%d today_net=%d"
+      % (len(a10.accum), len(a10.today_prem), len(a10.accum_net), len(a10.today_net)))
+
+# 10.2 pero SI deja su fila, con el formato correcto
+a10._flush_tape(forzar=True)
+rs = a10.db.execute("SELECT expiry,strike,right,last,size,dvol,agresor,premium,premium_dvol,"
+                    "grupo FROM tape ORDER BY id").fetchall()
+check(len(rs) == 1, "10.2 se registro 1 operacion del SPY -> %d" % len(rs))
+if rs:
+    r = rs[0]
+    check(r[0] is None and r[1] is None and r[2] is None,
+          "10.2 expiry/strike/right van NULL (una accion no los tiene) -> %s" % (r[:3],))
+    check(r[9] == "SPY", "10.2 grupo='SPY' -> %s" % r[9])
+    check(r[4] == 500.0 and r[5] == 5000.0,
+          "10.2 size=%s (la operacion) y dvol=%s (el delta de volumen)" % (r[4], r[5]))
+    check(r[6] == "COMPRA", "10.2 agresor por la MISMA regla que en opciones -> %s" % r[6])
+    # EL x100 ES DE OPCIONES: en acciones el premium son dolares a secas
+    check(abs(r[8] - 640.05 * 5000) < 1e-6,
+          "10.2 premium SIN el x100 del multiplicador -> %s (esperado %.0f)"
+          % (r[8], 640.05 * 5000))
+    check(abs(r[7] - 640.05 * 500) < 1e-6,
+          "10.2 premium de ESTA operacion = last*lastSize -> %s" % r[7])
+
+# 10.3 REINICIO: con prev_vol vacio, el PRIMER tick no puede inventarse un dvol gigante.
+#      tk.volume de IBKR es el ACUMULADO del dia: sin el guard entraria una operacion de
+#      millones de acciones cada vez que se reinicia la app.
+a103 = nueva()
+a103._on_ticks([TK(stk(), 640.00, 12_000_000, 639.99, 640.00)])     # como tras un reinicio
+a103._flush_tape(forzar=True)
+n103 = a103.db.execute("SELECT COUNT(*) FROM tape WHERE grupo='SPY'").fetchone()[0]
+check(n103 == 0,
+      "10.3 tras un reinicio (prev_vol vacio) el 1er tick NO genera fila -> %d "
+      "(si fuera 1, seria una operacion falsa de 12M de acciones)" % n103)
+
+# 10.4 DIA NUEVO: el volumen de IBKR vuelve a 0 -> dvol negativo -> descartado
+a104 = nueva()
+a104._on_ticks([TK(stk(), 640.00, 12_000_000, 639.99, 640.00)])
+a104._on_ticks([TK(stk(), 640.00, 5_000, 639.99, 640.00)])          # dia nuevo: contador a 0
+a104._flush_tape(forzar=True)
+n104 = a104.db.execute("SELECT COUNT(*) FROM tape WHERE grupo='SPY'").fetchone()[0]
+check(n104 == 0, "10.4 dia nuevo (volumen reseteado) -> dvol<=0, no se registra -> %d" % n104)
+
+# 10.5 INTERRUPTOR: con TAPE_SPY=False no se captura nada, y las opciones siguen igual
+S.TAPE_SPY = False
+a105 = nueva()
+a105._on_ticks([TK(stk(), 640.00, 1_000_000, 639.99, 640.00)])
+a105._on_ticks([TK(stk(), 640.05, 1_005_000, 640.04, 640.05, lastSize=500)])
+c105 = opt(773, "C")
+a105.call = c105
+a105._on_ticks([TK(c105, 1.00, 1000, 0.99, 1.00)])
+a105._on_ticks([TK(c105, 0.75, 1100, 0.74, 0.75, lastSize=100)])
+a105._flush_tape(forzar=True)
+_spy = a105.db.execute("SELECT COUNT(*) FROM tape WHERE grupo='SPY'").fetchone()[0]
+_opt = a105.db.execute("SELECT COUNT(*) FROM tape WHERE grupo<>'SPY'").fetchone()[0]
+check(_spy == 0, "10.5 con TAPE_SPY=False no se captura el subyacente -> %d" % _spy)
+check(_opt == 1, "10.5 y las OPCIONES se siguen capturando igual -> %d" % _opt)
+S.TAPE_SPY = True
+
+# 10.6 la suscripcion del SPY pide 233: sin el, no llegan las operaciones (el bug de la banda)
+_src = open(S.__file__, encoding="utf-8").read()
+check('reqMktData(self.spy_stock, "233"' in _src,
+      "10.6 el subyacente se suscribe con RTVolume(233), no con '' (mismo bug que la banda)")
+
 print()
 print("=" * 78)
 print(("TODO VERDE" if not FAILS else f"{len(FAILS)} FALLOS: " + " | ".join(FAILS)))

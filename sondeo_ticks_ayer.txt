@@ -1,0 +1,8 @@
+Conectado clientId=33 (la app sigue con el 7, intacta)
+TRADES  -> 1160 ticks en 0.27s
+  primero: HistoricalTickLast(time=datetime.datetime(2026, 8, 12, 13, 30, tzinfo=datetime.timezone.utc), tickAttribLast=TickAttribLast(pastLimit=False, unreported=False), price=774.7, size=68.0, exchange='ARCA', specialConditions='  T ')
+  ultimo : HistoricalTickLast(time=datetime.datetime(2026, 8, 12, 13, 30, tzinfo=datetime.timezone.utc), tickAttribLast=TickAttribLast(pastLimit=False, unreported=False), price=774.78, size=100.0, exchange='FINRA', specialConditions='    ')
+  campos : ['count', 'exchange', 'index', 'price', 'size', 'specialConditions', 'tickAttribLast', 'time']
+BID_ASK -> 1954 ticks en 0.70s
+  primero: HistoricalTickBidAsk(time=datetime.datetime(2026, 8, 12, 13, 29, 59, tzinfo=datetime.timezone.utc), tickAttribBidAsk=TickAttribBidAsk(bidPastLow=False, askPastHigh=False), priceBid=774.66, priceAsk=774.7, sizeBid=80.0, sizeAsk=4280.0)
+Desconectado. La app de hoy no se ha tocado.
