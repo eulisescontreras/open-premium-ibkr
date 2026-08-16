@@ -30,6 +30,10 @@ _ET = ZoneInfo("America/New_York")
 RAIZ = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 MASSIVE = os.path.join(RAIZ, "massive_premium.db")
 
+# contadores de diagnóstico (no afectan el P&L): dias buenos, disparos de piramidar, P&L extra
+STATS = {"dias_buenos": 0, "pir_fires": 0, "pir_pnl": 0.0, "n_pos": 0, "n_vert": 0,
+         "pir_vert": 0, "rod_fires": 0, "dl_vert_valida": 0, "dl_vert_none": 0}
+
 
 # ─────────────────────────── greeks helpers (convención motor) ──────────────────────
 def iv(precio, S, K, T, esC):
@@ -180,6 +184,7 @@ def SIS70(SES, PREM, ETFB, extra=None, modo_strike="presupuesto", tope=None, pir
         nq = 1
         if C.DIABUENO and R.dia_bueno(cl_, ETFB.get("DIA", {}).get(fk), ETFB.get("TLT", {}).get(fk)):
             nq = 2
+            STATS["dias_buenos"] += 1
 
         # ── bucle por minuto ──
         tot = 0.0
@@ -215,6 +220,8 @@ def SIS70(SES, PREM, ETFB, extra=None, modo_strike="presupuesto", tope=None, pir
                 if s_:
                     d_, _, _ = greeks(Sx, pos['k'], T, s_, pos['rt'] == 'C')
                     dl = abs(d_) if d_ is not None else None
+                if pos.get('vert'):
+                    STATS["dl_vert_valida" if dl is not None else "dl_vert_none"] += 1
                 if (pir and not pos['extra'] and not gira and h < C.PIR_HASTA
                         and mm(h) - mm(pos['h0']) >= C.PIR_ESPERA_MIN
                         and dl is not None and pos['d0'] is not None and dl - pos['d0'] > C.PIR_DELTA):
@@ -222,6 +229,9 @@ def SIS70(SES, PREM, ETFB, extra=None, modo_strike="presupuesto", tope=None, pir
                     e = I.elegir(cd, Sx, h, pos['rt'], modo_strike, tope)
                     if e:
                         pos['extra'] = dict(k=e[0], ask=e[1][0] * 1.01, mid=e[1][0])
+                        STATS["pir_fires"] += 1
+                        if pos.get('vert'):
+                            STATS["pir_vert"] += 1
                 rodar = (not gira and pos['rod'] < C.ROD_MAX and h < C.ROD_HASTA
                          and dl is not None and dl < C.ROD_DELTA and not pos['extra'])
                 if pos['extra']:
@@ -231,7 +241,9 @@ def SIS70(SES, PREM, ETFB, extra=None, modo_strike="presupuesto", tope=None, pir
                 if gira or h >= aplan:
                     g = (pos['mid'] - pos['ask']) * 100 - C.COMISION
                     if pos['extra']:
-                        g += (pos['extra']['mid'] - pos['extra']['ask']) * 100 - C.COMISION
+                        _ge = (pos['extra']['mid'] - pos['extra']['ask']) * 100 - C.COMISION
+                        g += _ge
+                        STATS["pir_pnl"] += _ge * nq
                     tot += g * nq
                     hechas += 1
                     pos = None
@@ -278,7 +290,12 @@ def SIS70(SES, PREM, ETFB, extra=None, modo_strike="presupuesto", tope=None, pir
                             d0 = abs(dd) if dd is not None else None
                         pos = {'k': kl, 'ks': ksh, 'rt': rt, 'ask': (pl_ - psh) * 1.01,
                                'mid': pl_ - psh, 'rod': 0, 'extra': None, 'h0': h, 'd0': d0, 'vert': True}
-                        continue
+                        STATS["n_pos"] += 1
+                        STATS["n_vert"] += 1
+                    # ⚠️ continue INCONDICIONAL bajo `if ANCHO`: si no hay vertical disponible,
+                    # se DESCARTA la señal (no cae al single). Verbatim del motor validado; ponerlo
+                    # dentro del `if ev` abre 272 singles de más que inflan piramidar +26k (bug corregido).
+                    continue
                 e = I.elegir(cd, Sx, h, rt, modo_strike, tope)
                 if e:
                     T = _T(h)
@@ -289,6 +306,7 @@ def SIS70(SES, PREM, ETFB, extra=None, modo_strike="presupuesto", tope=None, pir
                         d0 = abs(dd) if dd is not None else None
                     pos = {'k': e[0], 'rt': rt, 'ask': e[1][0] * 1.01, 'mid': e[1][0],
                            'rod': 0, 'extra': None, 'h0': h, 'd0': d0}
+                    STATS["n_pos"] += 1
 
         D[fk] = tot
         hsd = sorted(cl_)
