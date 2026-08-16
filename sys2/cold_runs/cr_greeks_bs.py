@@ -45,7 +45,7 @@ def main():
     dias_mv = [r[0] for r in mv.execute("select distinct fecha from aggs order by fecha")]
     dias_bar = set(r[0] for r in con.execute("select distinct fecha from bars"))
     dias = [d for d in dias_mv if d in dias_bar]
-    muestra = dias[::40]
+    muestra = dias[::12]
     print("dias massive: %d | con bars: %d | muestreados: %d" % (len(dias_mv), len(dias), len(muestra)))
 
     n_iv = n_none = 0
@@ -106,8 +106,11 @@ def main():
                 fd_max = max(fd_max, abs(dnum - gk["delta"]))
                 # 3) rangos
                 dd = gk["delta"]
+                # banda REALISTA de IV 0DTE: ~1% (ATM barato) hasta >300% (deep-ITM con
+                # extrinseco minimo en dia de vol extrema, ej 2025-04-09). 5.0 = tope de la
+                # biseccion (si pega ahi = saturacion real, se sigue flagueando).
                 ok = ((right == "C" and 0 < dd < 1) or (right == "P" and -1 < dd < 0)) \
-                    and gk["gamma"] > 0 and gk["vega"] > 0 and 0.02 < iv < 3.0
+                    and gk["gamma"] > 0 and gk["vega"] > 0 and 0.005 < iv < 5.0
                 if not ok:
                     rango_mal += 1
                 # 5) delta de "comprables": ITM/ATM (|delta|>=0.5)
