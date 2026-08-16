@@ -39,10 +39,11 @@ SPY 0DTE, **verticales de débito de 4 puntos**. **6 entradas** (A ST-3, B ORB, 
 - `sys2/db/repo.py` — abrir (aplica schema), insertar OR REPLACE idempotente.
 - `sys2/db/migrar.py` — CORRIDO. Migró: `bars` 2 años 1-min continuos (2024-07-31→2026-08-13, **158.483 barras premarket**), `bars_etf` (DIA+TLT), `dia_anterior` (511), `operaciones` (41), `premium` live (los 4 días IBKR reales). `sys2.db` regenerable con `python -m sys2.db.migrar` (está en .gitignore, NO commitear).
 - `sys2/core/supertrend.py` — st_dir + buckets3 + flips_st3. **cr_supertrend VERDE**: idéntico a year_backtest.st_dir y sen_principal en 21 días reales.
-- Cold runs verdes: `cr_schema.py`, `cr_migracion.py`, `cr_supertrend.py`.
+- `sys2/core/entradas.py` — 6 entradas (A ST-3, B ORB §10.4, C pm_rev, D gap_fade, E v1, F ayer_rev) + descartar_cerca_orb. Bug `ap = next(...)` en gap_fade ELIMINADO. **cr_entradas VERDE**: ORB == orb_senal(0.75/ancla 09:40) EXACTO en **511/511 días** (0 difs, 0 excepciones); cada señal cumple su mecánica (reversión pm/v1/ayer/orb, fade en gap) contra barras reales; las 4 aperturas disparan (pm 418, gap 446, v1 459, ayer 449 días); descarte <5min del ORB respetado. Aportes [DEC] al P&L los juzgará el motor de backtest.
+- Cold runs verdes: `cr_schema.py`, `cr_migracion.py`, `cr_supertrend.py`, `cr_entradas.py`.
 
 ## WIP SIN VALIDAR (arreglar al retomar)
-- `sys2/core/entradas.py` — ORB (§10.4) + pm_rev/gap_fade/v1/ayer_rev. **FALTA cr_entradas.py**. BUG conocido: `gap_fade` tiene una línea basura `ap = next(...)` (borrarla; solo se usa `op`). Las 4 aperturas llevan decisiones `[DEC]` a validar por el motor de backtest (aporte esperado: v1 +8293, gap_fade +7621, pm_rev +7288, ayer_rev +5619).
+- (vacío — entradas.py ya validado; siguiente es el ROADMAP)
 
 ## ROADMAP (build por fases, lo que falta)
 - **Fase 0 resto:** `sys2/backtest/greeks.py` (Black-Scholes + IV, sobre massive, solo backtest); `sys2/data/backfill.py` + `captura.py` (IBKR; se prueban en paper); cold runs cr_backfill.

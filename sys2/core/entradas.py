@@ -76,8 +76,6 @@ def gap_fade(bars, cierre_ayer, gap_min=0.40, entrada="09:33"):
     [DEC] gap = open(09:30) - cierre_ayer. [DEC] entrada FIJA al 4o minuto (09:33)."""
     if cierre_ayer is None:
         return []
-    ap = next((cl for h, hi, lo, cl in bars if h == "09:30"
-               for cl in [_open_de(bars, "09:30")]), None)
     op = _open_de(bars, "09:30")
     if op is None:
         return []
