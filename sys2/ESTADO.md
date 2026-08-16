@@ -45,7 +45,7 @@ SPY 0DTE, **verticales de débito de 4 puntos**. **6 entradas** (A ST-3, B ORB, 
 - Cold runs verdes: `cr_schema.py`, `cr_migracion.py`, `cr_supertrend.py`, `cr_entradas.py`, `cr_greeks_bs.py`, `cr_rebote.py`.
 
 ## ⚠️ PENDIENTES DE RECONCILIACIÓN (hallazgos del agente, verificar con evidencia antes de tocar)
-1. **ST base**: entrada A (ST-3) y `core/supertrend.py`/`flips_st3` usan `st_dir` (backtest SINTÉTICO). El sistema validado usa `st_lin_p/sen_p`. Reconciliar entrada A a `sen_p` cuando se arme el motor (comparar flips sen_p vs flips_st3; probable que difieran en el primer flip RTH).
+1. **ST base — ✅ RESUELTO (VERIFICADO 2026-08-16, R8)**: diferencial `sen_p` vs `flips_st3` sobre los 511 días → **IDÉNTICOS** (1643=1643 flips, 0 días distintos). El `st_dir` sintético y el `st_lin_p` validado difieren por dentro pero emiten los mismos flips RTH desde 09:45 (el premarket calienta el ATR y borra la diferencia). Entrada A NO cambia; `supertrend.py` queda válido. El rebote usa `st_lin_p` solo por la `linea`/`o` por bucket. (El motor puede usar `sen_p` para obtener flips+L en una llamada, opcional.)
 2. **entradas.py descarte**: el real descarta aperturas a ≤5 min de **TODAS** las señales ya en `S` (no solo ORB), orden de llenado ORB→pm_rev→**v1→gap_fade**→ayer_rev (v1 antes que gap_fade), umbral `>5` (descarta en =5). Ajustar al armar la unión de señales del motor.
 3. **greeks.py**: el motor validado usa T=`max(1e-6,(960-mm(h))/(60*24*252))` (año 252 días) y **clampea** el precio al suelo intrínseco `max(precio,intrínseco)` antes de invertir (yo uso 365 y devuelvo None sub-intrínseco). Ajustar en el motor/greeks para reproducir cifras (corrección B_suelo, +70.769$).
 
