@@ -44,6 +44,17 @@ SPY 0DTE, **verticales de débito de 4 puntos**. **6 entradas** (A ST-3, B ORB, 
 - `sys2/core/rebote.py` — REGLA 1 (rebote, +33k). Transcripción **VERBATIM** del código real del sistema validado (`st_lin_p` + `sen_p` + `reb2` + clasificación), obtenida del agente dueño del análisis (claude.ai, 2026-08-16) porque el **PDF §10.5 estaba DESACTUALIZADO** (ventana 8 vs 12, cierre vs mecha). **cr_rebote VERDE — MATCH EXACTO bit a bit**: 1.411 flips, 479 días, grupos 675/393/243/100, split A1/A2 y falsos% TODOS idénticos al validado. ⚠️ Usa su PROPIA ST (`st_lin_p`), distinta de `st_dir` (ATR corrida desde i=0, d=-1 init, prev en premarket) → **la ST base del sistema validado (premium real) es `st_lin_p`, NO `st_dir`** (que era del backtest SINTÉTICO superado).
 - Cold runs verdes: `cr_schema.py`, `cr_migracion.py`, `cr_supertrend.py`, `cr_entradas.py`, `cr_greeks_bs.py`, `cr_rebote.py`.
 
+## ✅ SET DE REGLAS DEFINITIVO (agente, motor real, 2026-08-16) — el §41 del PDF está OBSOLETO
+El sistema que da **+71.396$** (base, aplanado 15:59) / **+61.999$** (operable, 15:53) es HÍBRIDO, **8 cosas**:
+- **Entradas (6)**: ST-3, ORB, pm_rev, gap_fade, v1, ayer_rev.
+- **Reglas (5)**: rebote ✓, descarte ST-1, ratio call/put, skew RETRASA, día bueno.
+- **Gestión (2, ACTIVAS)**: rodar (delta<0.35, máx 3, <15:30), piramidar (delta sube +0.03 sobre inicial, tras 10min, <15:20).
+- **Instrumento**: vertical débito 4pts, tope 320$ (single fallback).
+- **Config**: `RUMB=0.3, ANCHO=4.0, RETSK=0.04, tope=320, pir=True`. Se escala por UNIDADES (800$=2 contratos desde inicio), no por piramidación; la regla intra-op piramidar sigue viva.
+- **⚠️ CRÍTICO**: al RODAR o PIRAMIDAR sobre un vertical, el motor lo reconstruye como **SINGLE** (`pos` sin clave `'vert'`). Replicar idéntico o los números no cuadran.
+- Motor usa `iv(precio,S,K,T,esC)`/`greeks(...)` **sin r/q → r=0, q=0** (mi greeks.py usa 0.045/0.013 → llamarlo con r=0,q=0 en el motor).
+- Código verbatim del bucle principal + rodar/piramidar/ratio_otm/elegir_vert/suelo/elegir en scratchpad `motor_reglas_verbatim.md`. FALTA pedir verbatim: descarte ST-1 (params ST-1 + ventana), skew RETRASA (cómo RETSK modifica el grupo), día bueno, y construcción de `Sen` (unión 6 entradas).
+
 ## ⚠️ PENDIENTES DE RECONCILIACIÓN (hallazgos del agente, verificar con evidencia antes de tocar)
 1. **ST base — ✅ RESUELTO (VERIFICADO 2026-08-16, R8)**: diferencial `sen_p` vs `flips_st3` sobre los 511 días → **IDÉNTICOS** (1643=1643 flips, 0 días distintos). El `st_dir` sintético y el `st_lin_p` validado difieren por dentro pero emiten los mismos flips RTH desde 09:45 (el premarket calienta el ATR y borra la diferencia). Entrada A NO cambia; `supertrend.py` queda válido. El rebote usa `st_lin_p` solo por la `linea`/`o` por bucket. (El motor puede usar `sen_p` para obtener flips+L en una llamada, opcional.)
 2. **entradas.py descarte**: el real descarta aperturas a ≤5 min de **TODAS** las señales ya en `S` (no solo ORB), orden de llenado ORB→pm_rev→**v1→gap_fade**→ayer_rev (v1 antes que gap_fade), umbral `>5` (descarta en =5). Ajustar al armar la unión de señales del motor.
