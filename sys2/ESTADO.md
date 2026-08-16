@@ -68,8 +68,30 @@ en `premium` EXACTAMENTE los mismos campos con que se validó el backtest: bid/a
 day_vol, open_interest, iv/delta/gamma/theta/vega (reales de IBKR), 8+ strikes/lado. Hoy los
 4 días `live` tienen greeks NULL → captura.py los llenará y ahí cr_greeks_bs comparará BS vs real.
 
+## 🔧 MOTOR (backtest/motor.py = SIS70) — CONSTRUIDO, EN AJUSTE FINO (cr_motor ROJO por +13.6%)
+Construido verbatim del agente: config.py + core/st1.py + core/reglas.py + core/instrumento.py
++ backtest/motor.py + cr_motor.py + cr_motor. Corre end-to-end (485 días).
+- **cr_motor da +81.088$** (target +71.396, **+13.6% alto**). A1 +34.963 / A2 +46.125.
+- Fix ya aplicado: `continue` incondicional en apertura (era +97.762; el continue dentro del
+  `if ev` abría 272 singles de más → +26k en piramidar). Commit 7059903.
+- **Residual AISLADO al DÍA BUENO** (diferencial vs motor real del agente): base sin día bueno
+  +61.998 (≈ agente +64.963); día bueno aporta **+19.090 vs +6.433** documentado (3x), MISMOS 58
+  días. Falta el verbatim del cierre con `nq` (¿nq solo a la pata principal, o también extra/rodado?).
+- Falta también `señales_apertura` verbatim: mis aperturas `core/entradas.py` son **[DEC]**
+  reconstruidas → 1.115 posiciones vs 1.056 del agente (base -4.6%).
+- **AGENTE SE CAYÓ** 2026-08-16 (auth unavailable) con esas 2 preguntas sin responder.
+  Ver **`sys2/_agente_verbatim/00_PENDIENTE_AGENTE.md`** (preguntas + texto exacto enviado).
+- ⚠️ **piramidar = PENDIENTE DE REVISIÓN** (hallazgo del agente): su +56% del P&L se apoya en un
+  delta ESPURIO (invierte el débito del vertical como single en strike largo; dl=None 67%).
+  Artefacto de implementación, no mecanismo económico. Antes del paper: delta real del spread y
+  re-medir, o eliminar. El backtest es válido (precios reales, P&L bien contabilizado).
+- Instrumentación STATS en motor.py = diagnóstico temporal, LIMPIAR cuando quede verde.
+
+**Verbatim del agente PERSISTIDO en el repo** (el scratchpad muere con /clear):
+`sys2/_agente_verbatim/01_rebote_verbatim.md` y `02_motor_reglas_verbatim.md`.
+
 ## WIP SIN VALIDAR (arreglar al retomar)
-- (vacío — entradas.py y greeks.py validados; siguiente es el ROADMAP)
+- **motor.py**: cerrar el +13.6% con el verbatim de día bueno + señales_apertura (agente caído).
 
 ## ROADMAP (build por fases, lo que falta)
 - **Fase 0 resto:** `sys2/backtest/greeks.py` (Black-Scholes + IV, sobre massive, solo backtest); `sys2/data/backfill.py` + `captura.py` (IBKR; se prueban en paper); cold runs cr_backfill.
