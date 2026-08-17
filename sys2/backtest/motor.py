@@ -30,10 +30,6 @@ _ET = ZoneInfo("America/New_York")
 RAIZ = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 MASSIVE = os.path.join(RAIZ, "massive_premium.db")
 
-# contadores de diagnóstico (no afectan el P&L): dias buenos, disparos de piramidar, P&L extra
-STATS = {"dias_buenos": 0, "pir_fires": 0, "pir_pnl": 0.0, "n_pos": 0, "n_vert": 0,
-         "pir_vert": 0, "rod_fires": 0, "dl_vert_valida": 0, "dl_vert_none": 0}
-
 
 # ─────────────────────────── greeks helpers (convención motor) ──────────────────────
 def iv(precio, S, K, T, esC):
@@ -149,7 +145,7 @@ def SIS70(SES, PREM, ETFB, extra=None, modo_strike="presupuesto", tope=None, pir
         for h, d in sp:
             if h < "09:45":
                 continue
-            if giros(S1, k1, h, C.ST1_VENTANA) >= 1:      # descarte ST-1 ANTES del rebote
+            if C.ST1_ON and giros(S1, k1, h, C.ST1_VENTANA) >= 1:   # descarte ST-1 ANTES del rebote
                 continue
             if C.RETMOD:                                   # skew sobre RETRASA
                 _r = reb2(L, ks, ik, h, d)
@@ -175,7 +171,6 @@ def SIS70(SES, PREM, ETFB, extra=None, modo_strike="presupuesto", tope=None, pir
         nq = 1
         if C.DIABUENO and R.dia_bueno(cl_, ETFB.get("DIA", {}).get(fk), ETFB.get("TLT", {}).get(fk)):
             nq = 2
-            STATS["dias_buenos"] += 1
 
         # ── bucle por minuto ──
         tot = 0.0
@@ -203,6 +198,13 @@ def SIS70(SES, PREM, ETFB, extra=None, modo_strike="presupuesto", tope=None, pir
                     pos['mid'] = _long
 
             # gestión: gira / piramidar / rodar
+            # ⚠️ piramidar/rodar: el `dl` sale de invertir el DÉBITO como si fuera un single en el
+            # strike largo. `iv()` devuelve None cuando el débito < intrínseco de la pata larga
+            # (~67% del tiempo) -> ese None es en realidad un FILTRO BINARIO DE ESTADO del spread,
+            # no una delta económica. VERIFICADO por el agente (2026-08-16): es lo que produce el
+            # perfil validado (140 rojos/racha 4); reformularlo como métrica continua lo EMPEORA.
+            # Se replica tal cual (reproduce +71.396). Mejora opcional para vivo (determinista):
+            #   piramidar/rodar solo si  pos['mid'] > max(0, intrínseco_largo)  (== dl is not None).
             if pos:
                 gira = h in Sen and Sen[h] != pos['rt']
                 dl = None
@@ -211,8 +213,6 @@ def SIS70(SES, PREM, ETFB, extra=None, modo_strike="presupuesto", tope=None, pir
                 if s_:
                     d_, _, _ = greeks(Sx, pos['k'], T, s_, pos['rt'] == 'C')
                     dl = abs(d_) if d_ is not None else None
-                if pos.get('vert'):
-                    STATS["dl_vert_valida" if dl is not None else "dl_vert_none"] += 1
                 if (pir and not pos['extra'] and not gira and h < C.PIR_HASTA
                         and mm(h) - mm(pos['h0']) >= C.PIR_ESPERA_MIN
                         and dl is not None and pos['d0'] is not None and dl - pos['d0'] > C.PIR_DELTA):
@@ -220,9 +220,6 @@ def SIS70(SES, PREM, ETFB, extra=None, modo_strike="presupuesto", tope=None, pir
                     e = I.elegir(cd, Sx, h, pos['rt'], modo_strike, tope)
                     if e:
                         pos['extra'] = dict(k=e[0], ask=e[1][0] * 1.01, mid=e[1][0])
-                        STATS["pir_fires"] += 1
-                        if pos.get('vert'):
-                            STATS["pir_vert"] += 1
                 rodar = (not gira and pos['rod'] < C.ROD_MAX and h < C.ROD_HASTA
                          and dl is not None and dl < C.ROD_DELTA and not pos['extra'])
                 if pos['extra']:
@@ -236,7 +233,6 @@ def SIS70(SES, PREM, ETFB, extra=None, modo_strike="presupuesto", tope=None, pir
                     if pos['extra']:
                         _ge = (pos['extra']['mid'] - pos['extra']['ask']) * 100 - C.COMISION
                         g += _ge
-                        STATS["pir_pnl"] += _ge
                     tot += g
                     hechas += 1
                     pos = None
@@ -284,8 +280,6 @@ def SIS70(SES, PREM, ETFB, extra=None, modo_strike="presupuesto", tope=None, pir
                         pos = {'k': kl, 'ks': ksh, 'rt': rt, 'ask': (pl_ - psh) * 1.01,
                                'mid': pl_ - psh, 'rod': 0, 'extra': None, 'h0': h, 'd0': d0,
                                'vert': True, 'nq': nq}
-                        STATS["n_pos"] += 1
-                        STATS["n_vert"] += 1
                     # ⚠️ continue INCONDICIONAL bajo `if ANCHO`: si no hay vertical disponible,
                     # se DESCARTA la señal (no cae al single). Verbatim del motor validado; ponerlo
                     # dentro del `if ev` abre 272 singles de más que inflan piramidar +26k (bug corregido).
@@ -300,7 +294,6 @@ def SIS70(SES, PREM, ETFB, extra=None, modo_strike="presupuesto", tope=None, pir
                         d0 = abs(dd) if dd is not None else None
                     pos = {'k': e[0], 'rt': rt, 'ask': e[1][0] * 1.01, 'mid': e[1][0],
                            'rod': 0, 'extra': None, 'h0': h, 'd0': d0, 'nq': nq}
-                    STATS["n_pos"] += 1
 
         D[fk] = tot
         hsd = sorted(cl_)

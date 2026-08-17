@@ -23,6 +23,7 @@ REB_SEP = 1.5
 REB_PEGADO = 2
 
 # ── Descarte ST-1 ──
+ST1_ON = True                         # aplica el descarte por giro del ST-1 (False = off)
 ST1_VENTANA = 5                       # giros del ST-1 en [m0, m0+5)
 
 # ── Ratio call/put OTM ──

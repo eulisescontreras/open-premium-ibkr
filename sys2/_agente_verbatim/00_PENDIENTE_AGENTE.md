@@ -44,3 +44,42 @@ Con esas dos → re-correr `cr_motor` → debe dar ~+71.396$ (VERDE).
 - Fase 2 (paper): `data/ibkr.py` órdenes combinadas BAG + fills por pata; `data/captura.py`
   (debe guardar los MISMOS campos que el backtest: greeks reales IBKR, day_vol, 8+ strikes/lado).
 - Limpiar la instrumentación STATS de `backtest/motor.py` cuando el motor quede verde.
+
+## ===== RESUELTO: día bueno + señales_apertura (motor VERDE +72.375, +1.4%) =====
+## ===== PENDIENTE NUEVO (DECISIÓN DEL USUARIO): piramidar — medición del agente 2026-08-16 =====
+opción                          AÑO1     AÑO2    TOTAL   rojos racha drawdown disparos
+A · delta espuria (ACTUAL)    +31.569 +39.827 +71.396   140    4    -1.140    626
+B · delta REAL del spread     +30.483 +32.145 +62.628   187    7    -2.897    817
+C · sin piramidar             +16.741 +19.583 +36.325   188    7    -1.276      0
+
+- B (delta real spread): -12.3% P&L, MÁS rojos, racha 7, drawdown 2.5x peor, dispara MÁS (817).
+  => la delta del spread NO es la variable que importa.
+- C (sin piramidar): mitad del sistema. Piramidar aporta ~49% del P&L incluso bien medido.
+- A (espuria, actual): mejor P&L Y mejor perfil de riesgo (140 rojos/racha 4 vs 187/7).
+
+RECOMENDACIÓN DEL AGENTE (honesta): NINGUNA de las 3 tal cual. Replantear piramidar antes del paper.
+  A funciona "por accidente": la condición real = "el débito subió respecto al intrínseco de la
+  larga" = "el extrínseco del spread se expande". Puede tener sentido económico pero no está
+  validado como tal. Operar una regla que no se entiende = perder cuentas.
+  PLAN (≈2 días): (1) formular la métrica explícita: (débito_actual − intrínseco_largo) −
+  (débito_entrada − intrínseco_entrada) > umbral; validar con los 4 tests §2.1. (2) barrer el
+  umbral (el +0.03 se ajustó sobre la delta espuria; el óptimo real está en otro sitio).
+  (3) MIENTRAS TANTO para el paper: opción A tal cual, PERO marcada pendiente en el código +
+  guardar `senales.piramidar_metrica` en la BD para auditarla en vivo.
+  El agente se OFRECIÓ a correr AHORA el barrido de la métrica reformulada. => DECISIÓN DEL USUARIO.
+
+## ===== RESUELTO: piramidar (agente, medición de la métrica reformulada, 2026-08-16) =====
+El agente barrió la métrica reformulada (expansión del extrínseco) y NO reproduce:
+  expansión >0.02: +65.434 (170 rojos, racha 6)  |  >0.05: +64.901  |  >0.10: +65.098
+  => insensible al umbral => NO es lo que captura la "delta espuria".
+CONCLUSIÓN (agente): la condición real NO es continua, es un FILTRO BINARIO DE ESTADO.
+  iv() devuelve None cuando el débito < intrínseco de la pata larga (67% del tiempo), y ese
+  None BLOQUEA piramidar y rodar. Piramidar solo actúa en el 33% de minutos donde el spread
+  está en cierta config; ese filtro produce el perfil de 140 rojos / racha 4.
+RECOMENDACIÓN FINAL: DEJAR OPCIÓN A tal cual (mi motor ya la reproduce, +72.375). Documentarla
+  como filtro binario. Equivalente EXPLÍCITO sin BS (determinista, auditable en vivo):
+     piramidar_permitido = pos['mid'] > max(0.0, (Sx-pos['k']) if rt=='C' else (pos['k']-Sx))
+  Sugerencia: sustituir la inversión BS por esa comparación y verificar que reproduce los 626
+  disparos. En paper: guardar en BD la métrica que dispara Y la delta real del spread.
+  (El agente aclaró que su reco previa de reformular era prematura; la regla actual es mejor.)
+=> DECISIÓN: piramidar se queda (A). Mejora opcional: comparación explícita (pendiente, no bloquea).

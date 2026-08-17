@@ -42,7 +42,7 @@ SPY 0DTE, **verticales de débito de 4 puntos**. **6 entradas** (A ST-3, B ORB, 
 - `sys2/core/entradas.py` — 6 entradas (A ST-3, B ORB §10.4, C pm_rev, D gap_fade, E v1, F ayer_rev) + descartar_cerca_orb. Bug `ap = next(...)` en gap_fade ELIMINADO. **cr_entradas VERDE**: ORB == orb_senal(0.75/ancla 09:40) EXACTO en **511/511 días** (0 difs, 0 excepciones); cada señal cumple su mecánica (reversión pm/v1/ayer/orb, fade en gap) contra barras reales; las 4 aperturas disparan (pm 418, gap 446, v1 459, ayer 449 días); descarte <5min del ORB respetado. Aportes [DEC] al P&L los juzgará el motor de backtest.
 - `sys2/backtest/greeks.py` — Black-Scholes-Merton (math.erf, sin scipy) SOLO backtest. `parse_occ` (ticker OCC→expiry/right/strike), `t_years` (zoneinfo ET, no offset fijo §2.3), `bs_price`, `implied_vol` (bisección, suelo intrínseco §2.3), `greeks`, `desde_precio`. **Invierte el precio REAL de massive→IV→greeks (preserva la sonrisa); NUNCA fija precios** (§57: BS-IV-plana=60% error). **cr_greeks_bs VERDE** (muestra [::12]=41 días/2208 obs + verificación global 485 días): round-trip 1e-6, delta analítica=fin-dif 2e-5, 0 fuera de rango, 0 paridad (invariante a misma sigma `|dC|+|dP|=e^{-qT}`), delta comprables p5 0.518/mediana 0.710/p95 0.936 ≈ H3. Banda IV realista `0.005<iv<5.0` (0DTE va de ~1% ATM barato a >300% deep-ITM día crash como 2025-04-09; la banda vieja `[0.02,3.0]` daba 8 falsos rojos, greeks correctos). r=0.045 q=0.013 (constantes backtest; irán a config.py). Insight: las diferencias de IV call/put del mismo strike SON la sonrisa (skew), no un error.
 - `sys2/core/rebote.py` — REGLA 1 (rebote, +33k). Transcripción **VERBATIM** del código real del sistema validado (`st_lin_p` + `sen_p` + `reb2` + clasificación), obtenida del agente dueño del análisis (claude.ai, 2026-08-16) porque el **PDF §10.5 estaba DESACTUALIZADO** (ventana 8 vs 12, cierre vs mecha). **cr_rebote VERDE — MATCH EXACTO bit a bit**: 1.411 flips, 479 días, grupos 675/393/243/100, split A1/A2 y falsos% TODOS idénticos al validado. ⚠️ Usa su PROPIA ST (`st_lin_p`), distinta de `st_dir` (ATR corrida desde i=0, d=-1 init, prev en premarket) → **la ST base del sistema validado (premium real) es `st_lin_p`, NO `st_dir`** (que era del backtest SINTÉTICO superado).
-- Cold runs verdes: `cr_schema.py`, `cr_migracion.py`, `cr_supertrend.py`, `cr_entradas.py`, `cr_greeks_bs.py`, `cr_rebote.py`.
+- Cold runs verdes: `cr_schema.py`, `cr_migracion.py`, `cr_supertrend.py`, `cr_entradas.py`, `cr_greeks_bs.py`, `cr_rebote.py`, `cr_motor.py`, `cr_validacion.py`.
 
 ## ✅ SET DE REGLAS DEFINITIVO (agente, motor real, 2026-08-16) — el §41 del PDF está OBSOLETO
 El sistema que da **+71.396$** (base, aplanado 15:59) / **+61.999$** (operable, 15:53) es HÍBRIDO, **8 cosas**:
@@ -74,12 +74,17 @@ del agente. **cr_motor VERDE**: TOTAL **+72.375$ (+1.4%)** vs target +71.396; A1
 A2 +40.086 (+3.6%). Tolerancias: titular 2%, por año 5% (el P&L anual es sensible a la completitud
 de contratos massive, que difiere entre máquinas — no es bug de lógica).
 - Camino: +97.762 (bug continue) → +81.088 (fix continue) → **+72.375** (fix día bueno nq + señales_apertura verbatim).
-- **⚠️ piramidar = PENDIENTE DE REVISIÓN** (hallazgo del agente): aporta el **+56% del P&L** apoyado
-  en un delta ESPURIO (invierte el débito del vertical como single en el strike largo; dl=None 67%).
-  Artefacto de implementación, NO mecanismo económico. El backtest es válido (precios reales, P&L bien
-  contabilizado). **Antes del paper**: pedir al agente medir con la delta real del spread
-  (delta_larga − delta_corta) y decidir con el usuario: re-medir o eliminar.
-- **Limpiar la instrumentación STATS** de motor.py (diagnóstico temporal, ya no necesaria).
+- **✅ piramidar = RESUELTO** (agente, 2026-08-16): NO es un artefacto a eliminar. La inversión BS
+  del débito devuelve `None` cuando débito < intrínseco de la pata larga (67%) → es un **FILTRO
+  BINARIO DE ESTADO** del spread que produce el perfil validado (140 rojos/racha 4). Reformularlo
+  como métrica continua lo EMPEORA (+65k vs +71.396). **DECISIÓN: se queda (opción A)**, ya
+  documentado en motor.py. Mejora opcional para vivo (determinista): `pos['mid'] > intrínseco_largo`
+  en vez del solver BS (verificar 626 disparos). En paper: guardar métrica + delta real en BD.
+- **✅ STATS eliminado** de motor.py.
+- **✅ backtest/validacion.py + cr_validacion** (4 tests §2.1): día bueno (T4 80.4%≈ref 80) y skew
+  (78.6%≈82) PASAN robustamente. ⚠️ Hallazgo honesto: ratio y ST-1 (las 2 reglas más chicas) salen
+  neutras/negativas en el marginal del sistema COMPLETO (vs +3.030/+1.842 documentados incrementalmente).
+  day_vol acumulado no lo mejora. `ratio_otm` es verbatim. Confirmar con el agente si pasan §2.1 en su motor.
 
 **Verbatim del agente PERSISTIDO en el repo** (el scratchpad muere con /clear):
 `sys2/_agente_verbatim/01_rebote_verbatim.md`, `02_motor_reglas_verbatim.md`.
