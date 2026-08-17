@@ -26,14 +26,15 @@ class FakeExec:
 
 
 class FakeContract:
-    def __init__(self, strike, right):
+    def __init__(self, strike, right, secType="OPT"):
         self.strike = strike
         self.right = right
+        self.secType = secType
 
 
 class FakeFill:
-    def __init__(self, strike, right, side, price):
-        self.contract = FakeContract(strike, right)
+    def __init__(self, strike, right, side, price, secType="OPT"):
+        self.contract = FakeContract(strike, right, secType)
         self.execution = FakeExec(side, price)
 
 
@@ -113,8 +114,11 @@ def main():
     # ───────────────────── A) VERTICAL LLENO (2 patas) ─────────────────────
     C.ANCHO = 4.0
     s = _nuevo_sistema(con, fake)
-    fake._trade = FakeTrade([FakeFill(494.0, "C", "BOT", 7.0),      # larga comprada
-                             FakeFill(498.0, "C", "SLD", 4.5)])     # corta vendida
+    # ib_insync incluye el fill AGREGADO del combo (secType='BAG', strike=0) junto a las 2 patas:
+    # el sistema debe SALTARLO y persistir SOLO las patas reales (validado contra la doc de ib_insync).
+    fake._trade = FakeTrade([FakeFill(0.0, "", "BOT", 2.5, secType="BAG"),   # <- agregado del combo
+                             FakeFill(494.0, "C", "BOT", 7.0),               # larga comprada
+                             FakeFill(498.0, "C", "SLD", 4.5)])              # corta vendida
     notis.clear()
     s._abrir("09:45", 500.0, "C", _pm_calls())
     op = _ultima_op(con)
@@ -122,11 +126,14 @@ def main():
     llenas = [r for r in rows if r[3] == 1]
     parciales = [r for r in rows if r[4] == 1]
     alerta = any("PARCIAL" in m for _, m in notis)
-    print("A) vertical lleno: op#%s filas=%d llenas=%d parciales=%d alerta=%s"
-          % (op, len(rows), len(llenas), len(parciales), alerta))
+    bag = [r for r in rows if r[0] == 0.0]      # NO debe persistirse el fill del BAG
+    print("A) vertical lleno: op#%s filas=%d llenas=%d parciales=%d alerta=%s bag_filas=%d"
+          % (op, len(rows), len(llenas), len(parciales), alerta, len(bag)))
     if len(rows) != 2 or len(llenas) != 2 or parciales or alerta:
         fallos.append("A: esperado 2 filas / 2 llenas / 0 parciales / sin alerta; got "
                       "%d/%d/%d/%s" % (len(rows), len(llenas), len(parciales), alerta))
+    if bag:
+        fallos.append("A: el fill del BAG (strike=0) NO debe persistirse: %s" % bag)
     if {(r[0], r[2]) for r in rows} != {(494.0, "BUY"), (498.0, "SELL")}:
         fallos.append("A: patas/acciones incorrectas: %s" % rows)
 

@@ -347,6 +347,9 @@ class SistemaVivo:
                 c = getattr(f, "contract", None)
                 if ex is None or c is None:
                     continue
+                if getattr(c, "secType", "") == "BAG":
+                    continue          # ib_insync incluye el fill AGREGADO del combo (secType='BAG',
+                    #                    strike=0) ademas de las patas -> se salta (solo patas reales)
                 k = float(getattr(c, "strike", 0) or 0)
                 r = getattr(c, "right", "") or ""
                 accion = "BUY" if getattr(ex, "side", "") == "BOT" else "SELL"
