@@ -62,6 +62,9 @@ verificado: el motor sigue +72.375 tras usarlo). Grafo de decisión validado con
       backfill real (≥390 barras 0 huecos), captura con greeks reales, órdenes BAG (fills de ambas patas,
       <5% parciales si no → single), aplanado 15:50→mercado 15:55→plana <16:00. Buscar los "cabos sueltos"
       de integración (gates, auth, multi-thread) que el smoke NO revela.
+      NOTA: que ib_insync reporte los fills POR PATA está CONFIRMADO contra su source (Trade.filled: el
+      combo trae un Fill 'BAG' agregado + un Fill por pata; `_persistir_fills` salta el BAG). La incógnita
+      de mañana se reduce a si ambas patas efectivamente SE LLENAN (liquidez), no a cómo se reportan.
 
 ## ⏳ FALTA — Fase 3 (real, capital mínimo)
 - [ ] Autocalibración desde saldo real (arranque ~320$ operativos), regla de parada 12 días rojos.
