@@ -20,8 +20,77 @@
   sistema validado. Fixes clave: continue incondicional, día bueno nq (solo principal+rodado),
   señales_apertura verbatim (aperturas solo 09:30-10:00).
 
+## ✅ RESUELTO Y CERTIFICADO (2026-08-17) — el parche de la guarda de las aperturas
+`entradas.py senales_apertura`: la guarda fija `len(rth) < 20` se sustituyó por el mínimo real de
+cada mecánica → `{'pm_rev':1, 'ayer_rev':1, 'gap_fade':4, 'v1':5}.get(modo, 20)`.
+**Confirmado por el agente dueño del análisis** (era un filtro de completitud del histórico, no
+parte de la mecánica) y **certificado con corridas reales**:
+- diferencial de `senales_apertura` sobre **513 días**: **0 diferencias**.
+- `cr_motor` (con la massive COMPLETA) **antes y después**: **+72.375$ / A1 +32.289 / A2 +40.086
+  / 485 días / 333V-139R — IDÉNTICO** en las 3 corridas.
+- `cr_entradas`: VERDE. Ejecutabilidad con datos reales de hoy: **0 → 3 señales, desfase +0 min**.
+⚠️ Aplicado en disco; **el sistema en marcha sigue con el código viejo** (módulos en `sys.modules`,
+no hay `importlib.reload`): toma efecto en el próximo reinicio.
+
+## ⚠️ DATO SOBRE LA BASE DE DATOS DEL BACKTEST (2026-08-17)
+`massive_premium.db` suelta (62 MB) es **PARCIAL**: 1.268 contratos, mediana **3/día** → `cr_motor`
+da **+4.517$** y solo 24 días operados de 485. La buena es **`massive_premium.db.gz`** (→344 MB):
+6.881 contratos, mediana **14/día** → **+72.375$**. `motor.py:29` apunta a la suelta.
+**Hay que descomprimir el `.gz` sobre `massive_premium.db`.** El agente lo confirma: la suelta es
+un residuo de una descarga al 20%, y es la trampa C del MANUAL §2.3 (menú de contratos).
+Descarga real: 6.881 de 6.945 = **99,1%** (el "46%" del commit es de una fase intermedia).
+
+## ⚠️ CIFRAS NO CONFIABLES EN `ESTADO.md`
+`ESTADO.md:42` dice que las aperturas disparan "pm 418, gap 446, v1 459, ayer 449". El agente
+dueño del análisis **NO reconoce esos números**. Los medidos con el motor real son
+**pm_rev 265-266 · v1 427-428 · gap_fade 446-447 · ayer_rev 292-293**. No usar `ESTADO.md` como
+fuente de verdad numérica (R1: verificar contra código, nunca contra docs).
+
+## 🔴 CRÍTICO (hallazgo 2026-08-17, primera sesión en paper) — 4 de las 6 entradas NO se ejecutan en vivo
+**DEMOSTRADO por corrida en frío diferencial con la función real y datos reales de hoy.**
+Fallo **SILENCIOSO**: 0 ERROR / 0 WARN en 181 líneas de log, captura de 82 contratos/minuto
+impecable… y **ninguna operación**. Parece "no hubo señales" y en realidad hubo 3.
+- A) `construir_sen` con TODO el día → **3 señales**: 09:32 pm_rev C, 09:39 v1 C, 09:46 ayer_rev C.
+- B) `construir_sen` con datos ≤ minuto (como `paso()`) → **0 ejecutables**.
+- C) desfase: 09:32 visible a las 09:49 (**+17 min**), 09:39 → 09:49 (+10), 09:46 → 09:49 (+3).
+**Causa raíz (código puro):** `entradas.py:70-72` no devuelve nada hasta tener 20 barras RTH
+(~09:49) pero la hora que devuelve es la barra que rompió el rango, **siempre anterior**;
+`sistema.py:145` abre solo si `hora in Sen` con `hora` = minuto ACTUAL; `pipeline.py` NO aplica
+ningún shift; `salida.py:39 puede_abrir()` no rescata señales pasadas.
+**Alcance:** pm_rev, v1, gap_fade, ayer_rev inejecutables. SÍ funcionan ORB y ST-3.
+**Impacto estimado (NO verificado, cifras del docstring `entradas.py:14`):** ~28.800$ de
++72.375$ ≈ **40% del P&L**. Opciones: (1) ventana de tolerancia para señales recién pasadas
+—cambia el precio de entrada, hay que medirlo—; (2) reformular las aperturas para decidir con
+la barra en curso —cambia la señal, revalidar motor—; (3) asumir que en vivo solo operan
+ORB+ST-3 y recalcular la expectativa. Decidir con el usuario (R11), validar con R3/R8.
+
 ## 🔧 PENDIENTE INMEDIATO
 - [ ] **Limpiar la instrumentación `STATS`** de `backtest/motor.py` (diagnóstico temporal).
+- [ ] **`vivo/sistema.py` NO persiste la tabla `senales`** (hallazgo 2026-08-17, VERIFICADO por grep):
+      `schema.sql:39` la define como "TODA senal generada, se opere o no" y `cr_schema.py:12` la
+      valida, pero **nadie la escribe**. El único rastro en vivo es `L.log(...,"SENAL")` cuando
+      `ratio_otm` veta una apertura (`sistema.py:257`). Consecuencia: si una sesión no operó, no
+      queda registro auditable de qué señales hubo ni por qué se descartaron.
+      - Implementar: en `paso()`, tras `pipeline.construir_sen()`, insertar en `senales` con
+        `repo.insertar` (reutilizar, no duplicar). Es lógica que corre EN VIVO → cuidar el radio.
+      - Reconstruir sesiones pasadas: ⚠️ **NO se puede desde el log** (no las contiene). La vía
+        fiel es correr la función real `pipeline.construir_sen()` sobre lo que sí quedó en
+        `sys2.db` (`bars` con premarket + `premium` con la cadena real minuto a minuto).
+      - Exige corrida en frío real + diferencial (R3/R8): el motor debe seguir dando +72.375$.
+- [ ] **BUG `dia_anterior_spy()` trae ANTEAYER en premarket** (2026-08-17, VERIFICADO con datos):
+      `ibkr.py:87` toma `bars[-2]` de las barras diarias. En premarket la serie NO incluye hoy →
+      `[-1]`=ayer y `[-2]`=**anteayer**. Con mercado abierto `[-1]`=hoy(parcial) y `[-2]`=ayer (ok).
+      EVIDENCIA: arranque 08:53 cargó max=779.37/min=774.11 = jueves 13 (anteayer); arranque 09:52
+      cargó max=778.80 = viernes 14 (correcto). **Afecta `ayer_rev` y `gap_fade`** (2 de las 6
+      entradas). Fix: elegir la última barra diaria con `fecha < hoy`, no `[-2]` posicional.
+- [ ] **`dia_anterior` tiene DOS semánticas contradictorias → riesgo de LOOK-AHEAD**:
+      `schema.sql:21` y `migrar.py:96` = "fecha es la fecha cuyos datos se guardan";
+      `backfill.py:68` = "fecha es HOY con los valores de AYER"; `sistema.py:84` lee `fecha=HOY`
+      (espera la de backfill). Ambas conviven en la BD.
+      ⚠️ **PELIGRO: re-correr `python -m sys2.db.migrar`** (documentado como regenerable)
+      sobrescribe `dia_anterior[HOY]` con el max/min de HOY → el vivo los lee como de AYER =
+      look-ahead (trampa del MANUAL §2.3). Unificar semántica + guard en `derivar_dia_anterior`
+      para no escribir la fecha en curso. Cubrir con `cr_lookahead.py`.
 
 ## ⚠️ DECISIÓN ANTES DEL PAPER — piramidar
 Hallazgo del agente (VERIFICADO): piramidar aporta el **+56% del P&L** apoyado en un **delta

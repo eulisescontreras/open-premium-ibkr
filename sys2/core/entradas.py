@@ -68,7 +68,14 @@ def senales_apertura(bars, prev_hi, prev_lo, prev_cl, modo):
     pm_hi = max(B[h][0] for h in pm)
     pm_lo = min(B[h][1] for h in pm)
     rth = [h for h in hs if '09:30' <= h < '10:00']
-    if len(rth) < 20:
+    # MINIMO REAL de cada mecanica (antes: 20 fijo). La guarda de 20 hacia la señal INEJECUTABLE
+    # en vivo: no aparecia hasta ~09:49 y la hora que devuelve es la barra que rompio el rango,
+    # siempre anterior -> sistema.py `hora in Sen` nunca coincidia. En el backtest la guarda de 20
+    # NUNCA se activa (medido: 513/513 dias tienen 30 barras en 09:30-10:00), asi que este cambio
+    # no altera ninguna señal historica (verificado con cr_diferencial_aperturas + cr_motor).
+    # (default 20 a proposito: un modo nuevo cae al comportamiento antiguo, no al mas permisivo)
+    _min = {'pm_rev': 1, 'ayer_rev': 1, 'gap_fade': 4, 'v1': 5}.get(modo, 20)
+    if len(rth) < _min:
         return []
     op = B[rth[0]][2]
     if modo == 'pm_rev':
