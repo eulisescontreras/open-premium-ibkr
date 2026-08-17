@@ -104,17 +104,8 @@ def cargar(con, dias=None):
 
 # ─────────────────────────────── señales de apertura ────────────────────────────────
 def senales_apertura(bars, ph, pl, pc, ex):
-    """Dispatcher de las 4 aperturas (ph=max_ayer, pl=min_ayer, pc=cierre_ayer).
-    ⚠️ Usa core/entradas (mi implementación [DEC]); si cr_motor no cuadra, primer sospechoso."""
-    if ex == "pm_rev":
-        return E.pm_rev(bars)
-    if ex == "v1":
-        return E.v1(bars)
-    if ex == "gap_fade":
-        return E.gap_fade(bars, pc)
-    if ex == "ayer_rev":
-        return E.ayer_rev(bars, ph, pl)
-    return []
+    """Aperturas C-F (ph=max_ayer, pl=min_ayer, pc=cierre_ayer). VERBATIM del motor validado."""
+    return E.senales_apertura(bars, ph, pl, pc, ex)
 
 
 # ─────────────────────────────────── SIS70 (motor) ──────────────────────────────────
@@ -239,17 +230,19 @@ def SIS70(SES, PREM, ETFB, extra=None, modo_strike="presupuesto", tope=None, pir
                     q2 = PM[h].get((pos['rt'], pos['extra']['k']))
                     pos['extra']['mid'] = max(q2[0], _i2) if q2 else max(pos['extra']['mid'], _i2)
                 if gira or h >= aplan:
-                    g = (pos['mid'] - pos['ask']) * 100 - C.COMISION
+                    # VERBATIM: nq (día bueno) SOLO en la pata principal; el extra de piramidar
+                    # se suma SIN nq. nq vive en pos.get('nq',1) (se pierde tras rodar -> vuelve a 1).
+                    g = ((pos['mid'] - pos['ask']) * 100 - C.COMISION) * pos.get('nq', 1)
                     if pos['extra']:
                         _ge = (pos['extra']['mid'] - pos['extra']['ask']) * 100 - C.COMISION
                         g += _ge
-                        STATS["pir_pnl"] += _ge * nq
-                    tot += g * nq
+                        STATS["pir_pnl"] += _ge
+                    tot += g
                     hechas += 1
                     pos = None
                 elif rodar:
-                    # verbatim: el cierre por rodado NO lleva nq (solo el cierre principal)
-                    tot += (pos['mid'] - pos['ask']) * 100 - C.COMISION
+                    # VERBATIM: el cierre por rodado SÍ lleva nq (a diferencia del extra)
+                    tot += ((pos['mid'] - pos['ask']) * 100 - C.COMISION) * pos.get('nq', 1)
                     rt = pos['rt']
                     r2 = pos['rod'] + 1
                     h0 = pos['h0']
@@ -289,7 +282,8 @@ def SIS70(SES, PREM, ETFB, extra=None, modo_strike="presupuesto", tope=None, pir
                             dd, _, _ = greeks(Sx, kl, T, s_, rt == 'C')
                             d0 = abs(dd) if dd is not None else None
                         pos = {'k': kl, 'ks': ksh, 'rt': rt, 'ask': (pl_ - psh) * 1.01,
-                               'mid': pl_ - psh, 'rod': 0, 'extra': None, 'h0': h, 'd0': d0, 'vert': True}
+                               'mid': pl_ - psh, 'rod': 0, 'extra': None, 'h0': h, 'd0': d0,
+                               'vert': True, 'nq': nq}
                         STATS["n_pos"] += 1
                         STATS["n_vert"] += 1
                     # ⚠️ continue INCONDICIONAL bajo `if ANCHO`: si no hay vertical disponible,
@@ -305,7 +299,7 @@ def SIS70(SES, PREM, ETFB, extra=None, modo_strike="presupuesto", tope=None, pir
                         dd, _, _ = greeks(Sx, e[0], T, s_, rt == 'C')
                         d0 = abs(dd) if dd is not None else None
                     pos = {'k': e[0], 'rt': rt, 'ask': e[1][0] * 1.01, 'mid': e[1][0],
-                           'rod': 0, 'extra': None, 'h0': h, 'd0': d0}
+                           'rod': 0, 'extra': None, 'h0': h, 'd0': d0, 'nq': nq}
                     STATS["n_pos"] += 1
 
         D[fk] = tot

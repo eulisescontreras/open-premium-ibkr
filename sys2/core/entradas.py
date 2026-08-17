@@ -49,78 +49,70 @@ def orb(bars, anclas=("09:40", "11:00"), rango_min=0.40):
     return out
 
 
-# ─────────────────────────── C · pm_rev (rompe premarket) ──────────────────────────
-def pm_rev(bars, fin_pm="09:30", disparo_hasta="11:00"):
-    """Rompe el rango del PREMARKET (04:00-09:29) -> REVERSION.
-    [DEC] rango = high/low de barras con hora < fin_pm (04:00-09:29).
-    [DEC] disparo = primer CIERRE fuera del rango en [09:30, disparo_hasta). Una sola senal."""
-    pm = [(h, hi, lo, cl) for h, hi, lo, cl in bars if h < fin_pm]
+# ─────────────── C-F · aperturas (pm_rev/v1/gap_fade/ayer_rev) — VERBATIM ───────────────
+def senales_apertura(bars, prev_hi, prev_lo, prev_cl, modo):
+    """Generadores alternativos de apertura (C-F). Devuelve [(hora, 'C'|'P')] (a lo sumo una).
+    ⚠️ VERBATIM del motor validado (agente, 2026-08-16) — reemplaza las versiones [DEC] previas.
+    CLAVE: las aperturas SOLO miran los primeros 30 min (rth = '09:30' <= h < '10:00'); la
+    ruptura se evalua por CIERRE (B[h][2]); pm_hi/pm_lo usan hi/lo del premarket.
+      pm_rev  : rompe rango premarket -> REVERSION.   pm_seg: rompe premarket -> SEGUIR.
+      ayer_rev: rompe max/min de AYER -> REVERSION (prev_hi/prev_lo).
+      gap_fade: si |open - cierre_ayer| >= 0.40 -> dispara en rth[3] (4a barra), fade del gap.
+      v1      : rompe rango de la 1a vela de 5 min (>=0.30) desde 09:35 -> REVERSION.
+    prev_hi/prev_lo/prev_cl = max_ayer / min_ayer / cierre_ayer."""
+    B = {h: (hi, lo, cl) for h, hi, lo, cl in bars}
+    hs = sorted(B)
+    pm = [h for h in hs if h < '09:30']
     if not pm:
         return []
-    hi = max(x[1] for x in pm)
-    lo = min(x[2] for x in pm)
-    for h, H, L, C in bars:
-        if h < fin_pm or h >= disparo_hasta:
-            continue
-        if C > hi:
-            return [(h, "P")]
-        if C < lo:
-            return [(h, "C")]
-    return []
-
-
-# ─────────────────────────── D · gap_fade (cerrar el gap) ──────────────────────────
-def gap_fade(bars, cierre_ayer, gap_min=0.40, entrada="09:33"):
-    """Gap de apertura >= gap_min -> operar A FAVOR de cerrarlo (abre ARRIBA de ayer -> PUT,
-    abajo -> CALL). NO es reversion pura: opera hacia el cierre de ayer.
-    [DEC] gap = open(09:30) - cierre_ayer. [DEC] entrada FIJA al 4o minuto (09:33)."""
-    if cierre_ayer is None:
+    pm_hi = max(B[h][0] for h in pm)
+    pm_lo = min(B[h][1] for h in pm)
+    rth = [h for h in hs if '09:30' <= h < '10:00']
+    if len(rth) < 20:
         return []
-    op = _open_de(bars, "09:30")
-    if op is None:
-        return []
-    gap = op - cierre_ayer
-    if abs(gap) < gap_min:
-        return []
-    # abre por ENCIMA de ayer (gap>0) -> esperar que BAJE a cerrarlo -> PUT
-    lado = "P" if gap > 0 else "C"
-    return [(entrada, lado)] if _hay_barra(bars, entrada) else []
-
-
-# ──────────────────────── E · v1 (rompe 1a vela de 5 min) ──────────────────────────
-def v1(bars, ini="09:30", fin="09:35", rango_min=0.30, disparo_hasta="11:00"):
-    """Rompe el rango de la 1a vela de 5 min (09:30-09:34) -> REVERSION.
-    [DEC] rango = high/low de [09:30, 09:35). [DEC] disparo por CIERRE desde 09:35."""
-    v = [(h, hi, lo, cl) for h, hi, lo, cl in bars if ini <= h < fin]
-    if not v:
-        return []
-    hi = max(x[1] for x in v)
-    lo = min(x[2] for x in v)
-    if (hi - lo) < rango_min:
-        return []
-    for h, H, L, C in bars:
-        if h < fin or h >= disparo_hasta:
-            continue
-        if C > hi:
-            return [(h, "P")]
-        if C < lo:
-            return [(h, "C")]
-    return []
-
-
-# ───────────────────────── F · ayer_rev (rompe max/min ayer) ───────────────────────
-def ayer_rev(bars, max_ayer, min_ayer, ini="09:30", disparo_hasta="15:40"):
-    """Rompe el maximo/minimo de AYER -> REVERSION.
-    [DEC] disparo = primer CIERRE fuera de [min_ayer, max_ayer] desde 09:30."""
-    if max_ayer is None or min_ayer is None:
-        return []
-    for h, H, L, C in bars:
-        if h < ini or h >= disparo_hasta:
-            continue
-        if C > max_ayer:
-            return [(h, "P")]
-        if C < min_ayer:
-            return [(h, "C")]
+    op = B[rth[0]][2]
+    if modo == 'pm_rev':
+        for h in rth:
+            if B[h][2] > pm_hi:
+                return [(h, 'P')]
+            if B[h][2] < pm_lo:
+                return [(h, 'C')]
+    elif modo == 'pm_seg':
+        for h in rth:
+            if B[h][2] > pm_hi:
+                return [(h, 'C')]
+            if B[h][2] < pm_lo:
+                return [(h, 'P')]
+    elif modo == 'ayer_rev':
+        if prev_hi is None:
+            return []
+        for h in rth:
+            if B[h][2] > prev_hi:
+                return [(h, 'P')]
+            if B[h][2] < prev_lo:
+                return [(h, 'C')]
+    elif modo == 'gap_fade':
+        if prev_cl is None:
+            return []
+        g = op - prev_cl
+        if abs(g) < 0.4:
+            return []
+        return [(rth[3], 'P' if g > 0 else 'C')]
+    elif modo == 'v1':
+        p5 = [h for h in rth if h < '09:35']
+        if len(p5) < 4:
+            return []
+        h5 = max(B[h][0] for h in p5)
+        l5 = min(B[h][1] for h in p5)
+        if h5 - l5 < 0.30:
+            return []
+        for h in rth:
+            if h < '09:35':
+                continue
+            if B[h][2] > h5:
+                return [(h, 'P')]
+            if B[h][2] < l5:
+                return [(h, 'C')]
     return []
 
 
@@ -134,17 +126,3 @@ def descartar_cerca_orb(senales_apertura, senales_orb, min_dist=5):
             continue
         out.append((h, d))
     return out
-
-
-# ─────────────────────────────────── helpers ───────────────────────────────────────
-def _open_de(bars, hora):
-    """close de la barra 'hora' (proxy del precio de apertura de RTH; en 1-min el
-    close de 09:30 es el nivel de apertura efectivo tras el primer minuto)."""
-    for h, hi, lo, cl in bars:
-        if h == hora:
-            return cl
-    return None
-
-
-def _hay_barra(bars, hora):
-    return any(h == hora for h, _, _, _ in bars)

@@ -87,13 +87,13 @@ def main():
             if difs_orb <= 3:
                 print("  ORB DIFIERE %s: new=%s old=%s" % (fk, s_new, s_old))
 
-        # 2+3) correr las 6 entradas reales y validar mecanica contra barras
+        # 2+3) correr las aperturas reales (senales_apertura VERBATIM) y validar mecanica
         try:
             s_orb = E.orb(bars)
-            s_pm = E.pm_rev(bars)
-            s_gap = E.gap_fade(bars, cierre_ayer)
-            s_v1 = E.v1(bars)
-            s_ay = E.ayer_rev(bars, max_ayer, min_ayer)
+            s_pm = E.senales_apertura(bars, max_ayer, min_ayer, cierre_ayer, "pm_rev")
+            s_gap = E.senales_apertura(bars, max_ayer, min_ayer, cierre_ayer, "gap_fade")
+            s_v1 = E.senales_apertura(bars, max_ayer, min_ayer, cierre_ayer, "v1")
+            s_ay = E.senales_apertura(bars, max_ayer, min_ayer, cierre_ayer, "ayer_rev")
             # A (ST-3) se valida en cr_supertrend; aqui solo se comprueba que corre integrado
         except Exception as ex:
             excepciones.append("entradas %s: %r" % (fk, ex)); continue
@@ -105,44 +105,48 @@ def main():
             if sen:
                 n_disp[nom] += 1
 
-        # --- mecanica REVERSION: rompe arriba->P, abajo->C, cierre real en la hora ---
-        # pm_rev: rango premarket (<09:30)
+        # ventana RTH de las aperturas: 09:30 <= h < 10:00 (VERBATIM)
+        rth = [(h, hi, lo, cl) for h, hi, lo, cl in bars if "09:30" <= h < "10:00"]
+        rth_h = [x[0] for x in rth]
+
+        # --- mecanica REVERSION: rompe arriba->P, abajo->C, cierre real, ventana 09:30-10:00 ---
+        # pm_rev: rango premarket (<09:30), rompe por CIERRE
         pm = [(h, hi, lo, cl) for h, hi, lo, cl in bars if h < "09:30"]
         if s_pm and pm:
             h, d = s_pm[0]; c = _cierre_en(bars, h)
             hi = max(x[1] for x in pm); lo = min(x[2] for x in pm)
-            ok = c is not None and "09:30" <= h < "11:00" and \
+            ok = c is not None and "09:30" <= h < "10:00" and \
                 ((d == "P" and c > hi) or (d == "C" and c < lo))
             if not ok:
                 mecanica_mal.append("pm_rev %s %s hi=%.2f lo=%.2f c=%s" % (fk, s_pm[0], hi, lo, c))
 
-        # v1: rango [09:30,09:35)
+        # v1: rango [09:30,09:35), disparo desde 09:35, dentro de 10:00
         v = [(h, hi, lo, cl) for h, hi, lo, cl in bars if "09:30" <= h < "09:35"]
         if s_v1 and v:
             h, d = s_v1[0]; c = _cierre_en(bars, h)
             hi = max(x[1] for x in v); lo = min(x[2] for x in v)
-            ok = c is not None and h >= "09:35" and \
+            ok = c is not None and "09:35" <= h < "10:00" and \
                 ((d == "P" and c > hi) or (d == "C" and c < lo))
             if not ok:
                 mecanica_mal.append("v1 %s %s hi=%.2f lo=%.2f c=%s" % (fk, s_v1[0], hi, lo, c))
 
-        # ayer_rev: rompe max/min de ayer
+        # ayer_rev: rompe max/min de ayer por CIERRE, ventana 09:30-10:00
         if s_ay and max_ayer is not None:
             h, d = s_ay[0]; c = _cierre_en(bars, h)
-            ok = c is not None and h >= "09:30" and \
+            ok = c is not None and "09:30" <= h < "10:00" and \
                 ((d == "P" and c > max_ayer) or (d == "C" and c < min_ayer))
             if not ok:
                 mecanica_mal.append("ayer_rev %s %s max=%.2f min=%.2f c=%s"
                                     % (fk, s_ay[0], max_ayer, min_ayer, c))
 
-        # gap_fade: FADE (abre arriba->P), entrada 09:33, gap>=0.40
-        if s_gap and cierre_ayer is not None:
-            h, d = s_gap[0]; op = _cierre_en(bars, "09:30")
+        # gap_fade: FADE (abre arriba->P), entrada en rth[3] (4a barra RTH), gap>=0.40
+        if s_gap and cierre_ayer is not None and len(rth_h) > 3:
+            h, d = s_gap[0]; op = _cierre_en(bars, rth_h[0])
             gap = (op - cierre_ayer) if op is not None else 0.0
-            ok = op is not None and h == "09:33" and abs(gap) >= 0.40 and \
+            ok = op is not None and h == rth_h[3] and abs(gap) >= 0.40 and \
                 ((d == "P" and gap > 0) or (d == "C" and gap < 0))
             if not ok:
-                mecanica_mal.append("gap_fade %s %s gap=%.3f" % (fk, s_gap[0], gap))
+                mecanica_mal.append("gap_fade %s %s gap=%.3f rth3=%s" % (fk, s_gap[0], gap, rth_h[3]))
 
         # orb: reversion tambien
         for h, d in s_orb:

@@ -265,3 +265,63 @@ def SIS70(extra=('pm_rev','v1','gap_fade','ayer_rev'), modo_strike='presupuesto'
 # elegir presupuesto: if modo=='presupuesto': c=[(k,v) for k,v in cands if v[0]*100<=tope]; if not c: return None; return max(c,key=lambda x:x[1][0])
 # AVISOS: (1) valora ANTES de comprobar gira (señal contraria en mismo h: valora, luego cierra a ese precio).
 #         (2) for h in sorted(PM) itera minutos con premium; minuto con SPY pero sin contratos se SALTA.
+
+## ===== FIX día bueno (nq) + señales_apertura VERBATIM (agente, 2026-08-16) =====
+## (1) CIERRE con día bueno: nq SOLO en principal y rodado, NO en el extra. nq guardado en pos.
+if gira or h>="15:59":
+    g=((pos['mid']-pos['ask'])*100-1.72)*pos.get('nq',1)
+    if pos['extra']: g+=(pos['extra']['mid']-pos['extra']['ask'])*100-1.72   # extra SIN nq
+    tot+=g; hechas+=1; pos=None
+elif rodar:
+    tot+=((pos['mid']-pos['ask'])*100-1.72)*pos.get('nq',1)                   # rodado CON nq
+    rt=pos['rt']; r2=pos['rod']+1; h0=pos['h0']; pos=None
+    cd=[(k,v) for (r_,k),v in PM[h].items() if r_==rt]
+    e=elegir(cd,Sx,h,rt,modo_strike,tope)
+    if e:
+        T=max(1e-6,(960-mm(h))/(60*24*252)); s_=iv(e[1][0],Sx,e[0],T,rt=='C'); d0=None
+        if s_: dd,_,_=greeks(Sx,e[0],T,s_,rt=='C'); d0=abs(dd)
+        pos={'k':e[0],'rt':rt,'ask':e[1][0]*1.01,'mid':e[1][0],'rod':r2,'extra':None,'h0':h0,'d0':d0}
+        # <-- pos reconstruida SIN 'nq' -> tras el primer rodado vuelve a tamaño 1 aunque sea dia bueno
+# => nq se GUARDA en pos al abrir ('nq':nq). En cierre usar pos.get('nq',1). Extra sin nq.
+
+## (2) señales_apertura VERBATIM (aperturas SOLO miran 09:30-10:00; rupturas por CIERRE [2])
+def señales_apertura(bars, prev_hi, prev_lo, prev_cl, modo):
+    B={h:(hi,lo,cl) for h,hi,lo,cl in bars}
+    hs=sorted(B)
+    pm=[h for h in hs if h<'09:30']
+    if not pm: return []
+    pm_hi=max(B[h][0] for h in pm); pm_lo=min(B[h][1] for h in pm)
+    rth=[h for h in hs if '09:30'<=h<'10:00']
+    if len(rth)<20: return []
+    op=B[rth[0]][2]
+    if modo=='pm_rev':
+        for h in rth:
+            if B[h][2]>pm_hi: return [(h,'P')]
+            if B[h][2]<pm_lo: return [(h,'C')]
+    elif modo=='pm_seg':
+        for h in rth:
+            if B[h][2]>pm_hi: return [(h,'C')]
+            if B[h][2]<pm_lo: return [(h,'P')]
+    elif modo=='ayer_rev':
+        if prev_hi is None: return []
+        for h in rth:
+            if B[h][2]>prev_hi: return [(h,'P')]
+            if B[h][2]<prev_lo: return [(h,'C')]
+    elif modo=='gap_fade':
+        if prev_cl is None: return []
+        g=op-prev_cl
+        if abs(g)<0.4: return []
+        return [(rth[3],'P' if g>0 else 'C')]
+    elif modo=='v1':
+        p5=[h for h in rth if h<'09:35']
+        if len(p5)<4: return []
+        h5=max(B[h][0] for h in p5); l5=min(B[h][1] for h in p5)
+        if h5-l5<0.30: return []
+        for h in rth:
+            if h<'09:35': continue
+            if B[h][2]>h5: return [(h,'P')]
+            if B[h][2]<l5: return [(h,'C')]
+    return []
+# CLAVE: rth = '09:30'<=h<'10:00' (solo primeros 30 min); ruptura por CIERRE (B[h][2]);
+# pm_hi/pm_lo = hi/lo del premarket; gap_fade dispara en rth[3] (4a barra) si |gap|>=0.40;
+# v1 rango >=0.30 desde 09:35. prev_hi/lo/cl = max_ayer/min_ayer/cierre_ayer.
