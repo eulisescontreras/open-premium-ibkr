@@ -11,16 +11,14 @@
 - `backtest/greeks.py` (Black-Scholes, solo backtest) — cr_greeks_bs (round-trip 1e-6, 485 días).
 - `core/rebote.py` (REGLA 1) — **cr_rebote MATCH EXACTO bit a bit** (1.411 flips, 675/393/243/100).
 - `config.py` + `core/st1.py` (descarte ST-1) + `core/reglas.py` (ratio/skew/día bueno) +
-  `core/instrumento.py` (vertical/single) — construidos, verbatim del agente.
+  `core/instrumento.py` (vertical/single) — verbatim del agente.
+- **`backtest/motor.py` (SIS70)** — **cr_motor VERDE**: TOTAL **+72.375$ (+1.4%)** vs +71.396;
+  A1 +0.7%, A2 +3.6% (tol. titular 2%, año 5% por completitud de datos massive). Reproduce el
+  sistema validado. Fixes clave: continue incondicional, día bueno nq (solo principal+rodado),
+  señales_apertura verbatim (aperturas solo 09:30-10:00).
 
-## 🔧 EN AJUSTE FINO — `backtest/motor.py` (SIS70)
-Corre end-to-end (485 días). **cr_motor = +81.088$ vs target +71.396$ (+13.6% alto).**
-Bloqueado esperando 2 piezas verbatim del agente (ver `_agente_verbatim/00_PENDIENTE_AGENTE.md`):
-- [ ] **día bueno**: cómo aplica `nq` al cerrar (¿solo pata principal, o también extra/rodado?).
-      Mío aporta +19.090 vs +6.433 documentado (sobre-doblo, probablemente, el extra de piramidar).
-- [ ] **señales_apertura** verbatim (pm_rev/v1/gap_fade/ayer_rev). Mías son [DEC] → 1.115 pos vs 1.056.
-- [ ] Re-correr cr_motor → debe dar ~+71.396$ (VERDE) + A1 +32.071 / A2 +38.698.
-- [ ] Limpiar la instrumentación `STATS` de motor.py cuando quede verde.
+## 🔧 PENDIENTE INMEDIATO
+- [ ] **Limpiar la instrumentación `STATS`** de `backtest/motor.py` (diagnóstico temporal).
 
 ## ⚠️ DECISIÓN ANTES DEL PAPER — piramidar
 Hallazgo del agente (VERIFICADO): piramidar aporta el **+56% del P&L** apoyado en un **delta
