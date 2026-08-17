@@ -25,16 +25,22 @@ def construir_sen(bars, cl_, PM, ph, pl, pc, extra=None):
     ik = {k: i for i, k in enumerate(ks)}
     S1, k1 = st_full(bars, 1, C.ST_PER, C.ST_MULT)
 
+    orig = {}   # (hora,dir) -> origen ('ORB'/'pm_rev'/'ST-3'/'ST-3 SKEW'/...)
+
     # S = ORB (2 anclas) + aperturas (descarte >5 contra TODO S, en orden)
     S = []
     for a in C.ORB_ANCLAS:
         s = E.orb_en(bars, a)
         if s:
             S += s
+            for x in s:
+                orig[x] = "ORB"
     for ex in extra:
         sg = E.senales_apertura(bars, ph, pl, pc, ex)
         if sg and all(abs(mm(sg[0][0]) - mm(x[0])) > C.DESCARTE_MIN for x in S):
             S += sg
+            for x in sg:
+                orig[x] = ex
 
     # p = flips reclasificados (ST-1 antes del rebote, skew sobre RETRASA)
     p = []
@@ -57,9 +63,17 @@ def construir_sen(bars, cl_, PM, ph, pl, pc, extra=None):
                     if C.RETMOD == "quita" or _hh >= "15:40":
                         continue
                     if C.RETMOD == "invierte":
-                        p.append((_hh, 'P' if d == 'C' else 'C'))
+                        x = (_hh, 'P' if d == 'C' else 'C')
+                        p.append(x)
+                        orig[x] = "ST-3 SKEW"
                         continue
-        p += reb2(L, ks, ik, h, d)
+        rr = reb2(L, ks, ik, h, d)
+        p += rr
+        for x in rr:
+            # NORMAL = misma hora y dir; RETRASA = otra hora; INVIERTE = dir contraria
+            g = "NORMAL" if (x[0] == h and x[1] == d) else ("INVIERTE" if x[1] != d else "RETRASA")
+            orig[x] = "ST-3 " + g
 
     Sen = dict(sorted(set(S + p)))
-    return Sen, L, ks, ik, sp
+    origen = {h: orig.get((h, Sen[h])) for h in Sen}
+    return Sen, L, ks, ik, sp, origen

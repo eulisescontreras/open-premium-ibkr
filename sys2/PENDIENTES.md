@@ -12,6 +12,9 @@
 - `core/rebote.py` (REGLA 1) — **cr_rebote MATCH EXACTO bit a bit** (1.411 flips, 675/393/243/100).
 - `config.py` + `core/st1.py` (descarte ST-1) + `core/reglas.py` (ratio/skew/día bueno) +
   `core/instrumento.py` (vertical/single) — verbatim del agente.
+- **`vivo/sistema.py` persistencia de FILLS por pata** (`_persistir_fills`) — vertical Y single —
+  **cr_fills VERDE**: lleno (2 patas) / parcial (1 pata → parcial=1 + alerta) / single / trade=None.
+  Ejercita el chain REAL `_abrir`→`ib.comprar_*`→`_persistir_operacion`→`_persistir_fills`.
 - **`backtest/motor.py` (SIS70)** — **cr_motor VERDE**: TOTAL **+72.375$ (+1.4%)** vs +71.396;
   A1 +0.7%, A2 +3.6% (tol. titular 2%, año 5% por completitud de datos massive). Reproduce el
   sistema validado. Fixes clave: continue incondicional, día bueno nq (solo principal+rodado),
@@ -50,6 +53,9 @@ verificado: el motor sigue +72.375 tras usarlo). Grafo de decisión validado con
 - ✅ `core/salida.py` — flip + aplanar 15:50 + mercado 15:55 + verif plana <16:00 · **cr_salida VERDE**.
 - ✅ `core/pipeline.py` — Sen compartido (backtest+vivo), única fuente de verdad.
 - ✅ `vivo/sistema.py` — orquestador (arranque→backfill→captura→señales→reglas→ejecución→BD), logs exhaustivos.
+      Fills por pata persistidos en apertura de vertical y single (cr_fills). ⚠️ PENDIENTE menor: los
+      singles de **piramidar/rodar** NO persisten fills (no tienen fila `operaciones` a la que colgarlos;
+      requeriría guardar op_id en `pos` — cambio mayor, fuera de radio). No bloqueante para mañana.
 - ✅ `vivo/log.py` — logging exhaustivo (archivo diario) + notificaciones (sin dashboard).
 - ✅ `iniciar.sh` (toggle arranca/apaga) + `subir.sh` (push a git). Ejecutables.
 - [ ] **MAÑANA en paper** (lo único que falta, requiere mercado + IB Gateway 4002): validar conexión,

@@ -121,7 +121,7 @@ def SIS70(SES, PREM, ETFB, extra=None, modo_strike="presupuesto", tope=None, pir
         ph, pl, pc = prev if prev else (None, None, None)
 
         # ── señales: pipeline COMPARTIDO con el vivo (core/pipeline, única fuente de verdad) ──
-        Sen, L, ks, ik, sp = pipeline.construir_sen(bars, cl_, PM, ph, pl, pc, extra)
+        Sen, L, ks, ik, sp, _origen = pipeline.construir_sen(bars, cl_, PM, ph, pl, pc, extra)
 
         # ── día bueno (dobla unidades) ──
         nq = 1

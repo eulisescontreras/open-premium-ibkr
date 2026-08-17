@@ -49,6 +49,7 @@ class SistemaVivo:
         self.hechas = 0
         self.cfg = None            # autocalibración de la sesión
         self._saldo = 0.0          # cache del saldo (el panel usa la BD, no IBKR)
+        self._origen = {}          # {hora: origen de la señal} (ST-3/ORB/pm_rev/... para el panel)
         self.nq = 1                # unidades (día bueno dobla)
         self.fecha = None
         self.expiry = None         # 0DTE 'YYYYMMDD'
@@ -123,7 +124,8 @@ class SistemaVivo:
 
         # 2) señales (pipeline compartido) + día bueno
         ph, pl, pc = self.prev
-        Sen, L_, ks, ik, sp = pipeline.construir_sen(bars, cl_, PM, ph, pl, pc)
+        Sen, L_, ks, ik, sp, origen = pipeline.construir_sen(bars, cl_, PM, ph, pl, pc)
+        self._origen = origen
         dia = [(h, hi, lo, cl) for h, hi, lo, cl in self.con.execute(
             "select hora,close,close,close from bars_etf where ticker='DIA' and fecha=?", (self.fecha,))]
         tlt = [(h, hi, lo, cl) for h, hi, lo, cl in self.con.execute(
@@ -164,8 +166,19 @@ class SistemaVivo:
             capital = (self._saldo or 0.0) + pnl_hoy
             base_hoy = capital - pnl_hoy
             base_mes = capital - pnl_mes
+            # estrategia/entrada aplicada en este momento (para el label del panel)
+            if self.pos:
+                est = self.pos.get("origen") or "—"
+                if self.pos.get("rod", 0) > 0:
+                    est += " · RODADO x%d" % self.pos["rod"]
+                if self.pos.get("extra"):
+                    est += " · PIRAMIDA"
+            elif fase == "SEÑAL":
+                est = self._origen.get(hora) or "señal"
+            else:
+                est = "en espera"
             d = {
-                "fase": fase, "capital": capital,
+                "fase": fase, "estrategia": est, "capital": capital,
                 "pnl_hoy": pnl_hoy, "pnl_hoy_pct": (100 * pnl_hoy / base_hoy) if base_hoy else 0,
                 "pnl_mes": pnl_mes, "pnl_mes_pct": (100 * pnl_mes / base_mes) if base_mes else 0,
                 "reloj": hora, "conectado": self.ib.conectado(), "datos": "1m",
@@ -253,10 +266,12 @@ class SistemaVivo:
                 s_ = _iv(pl_, spot, kl, hora, rt == 'C')
                 if s_:
                     d0 = _delta(spot, kl, hora, s_, rt == 'C')
-                self.ib.comprar_vertical(self.expiry, kl, ksh, rt, pl_ - psh, self.nq)
+                trade = self.ib.comprar_vertical(self.expiry, kl, ksh, rt, pl_ - psh, self.nq)
                 self.pos = {'k': kl, 'ks': ksh, 'rt': rt, 'ask': (pl_ - psh) * 1.01, 'mid': pl_ - psh,
-                            'rod': 0, 'extra': None, 'h0': hora, 'd0': d0, 'vert': True, 'nq': self.nq}
-                self._persistir_operacion(hora, spot, "vertical", rt, kl, ksh, pl_ - psh, d0)
+                            'rod': 0, 'extra': None, 'h0': hora, 'd0': d0, 'vert': True, 'nq': self.nq,
+                            'origen': self._origen.get(hora)}
+                op_id = self._persistir_operacion(hora, spot, "vertical", rt, kl, ksh, pl_ - psh, d0)
+                self._persistir_fills(trade, op_id, hora, "vertical", [(kl, rt, "BUY"), (ksh, rt, "SELL")])
             # con ANCHO activo, si NO hay vertical disponible se DESCARTA la señal (espeja el motor:
             # no cae al single). Solo se opera single cuando ANCHO es None.
             return
@@ -265,10 +280,12 @@ class SistemaVivo:
             s_ = _iv(e[1][0], spot, e[0], hora, rt == 'C')
             if s_:
                 d0 = _delta(spot, e[0], hora, s_, rt == 'C')
-            self.ib.comprar_single(self.expiry, e[0], rt, e[1][0], self.nq)
+            trade = self.ib.comprar_single(self.expiry, e[0], rt, e[1][0], self.nq)
             self.pos = {'k': e[0], 'rt': rt, 'ask': e[1][0] * 1.01, 'mid': e[1][0], 'rod': 0,
-                        'extra': None, 'h0': hora, 'd0': d0, 'nq': self.nq}
-            self._persistir_operacion(hora, spot, "single", rt, e[0], None, e[1][0], d0)
+                        'extra': None, 'h0': hora, 'd0': d0, 'nq': self.nq,
+                        'origen': self._origen.get(hora)}
+            op_id = self._persistir_operacion(hora, spot, "single", rt, e[0], None, e[1][0], d0)
+            self._persistir_fills(trade, op_id, hora, "single", [(e[0], rt, "BUY")])
 
     def _cerrar(self, hora, spot, razon, a_mercado=False, rodando=False):
         p = self.pos
@@ -310,7 +327,51 @@ class SistemaVivo:
             "delta_entrada": d0, "moneyness": (spot - kl) if rt == 'C' else (kl - spot),
         }])
         self.con.commit()
-        L.log("operación abierta persistida: %s %s L=%s S=%s débito=%.2f" % (tipo, rt, kl, ks, debito), "POS")
+        op_id = self.con.execute("select last_insert_rowid()").fetchone()[0]
+        L.log("operación #%s abierta: %s %s L=%s S=%s débito=%.2f" % (op_id, tipo, rt, kl, ks, debito), "POS")
+        return op_id
+
+    def _persistir_fills(self, trade, op_id, hora, tipo, esperadas):
+        """Guarda los fills POR PATA del spread (tabla `fills`). Detecta parciales (crítico: si el
+        vertical no llena ambas patas). `esperadas` = [(strike, right, accion)]. Espera al fill.
+        ⚠️ Requiere IBKR real; con FakeIB (smoke) trade=None -> no persiste."""
+        if trade is None:
+            return
+        try:
+            self.ib.ib.sleep(3)              # dar tiempo a que lleguen los fills
+            fills = list(getattr(trade, "fills", []) or [])
+            filas = []
+            llenas = set()
+            for f in fills:
+                ex = getattr(f, "execution", None)
+                c = getattr(f, "contract", None)
+                if ex is None or c is None:
+                    continue
+                k = float(getattr(c, "strike", 0) or 0)
+                r = getattr(c, "right", "") or ""
+                accion = "BUY" if getattr(ex, "side", "") == "BOT" else "SELL"
+                llenas.add((k, r))
+                filas.append({"operacion_id": op_id, "fecha": self.fecha, "hora": hora,
+                              "strike": k, "right": r, "accion": accion,
+                              "precio_ordenado": None, "precio_lleno": getattr(ex, "price", None),
+                              "segundos_hasta_fill": None, "lleno": 1, "parcial": 0})
+            # parcial: patas esperadas que NO se llenaron (crítico en el vertical)
+            faltan = [e for e in esperadas if (e[0], e[1]) not in llenas]
+            for k, r, accion in faltan:
+                filas.append({"operacion_id": op_id, "fecha": self.fecha, "hora": hora,
+                              "strike": k, "right": r, "accion": accion,
+                              "precio_ordenado": None, "precio_lleno": None,
+                              "segundos_hasta_fill": None, "lleno": 0, "parcial": 1})
+            if filas:
+                repo.insertar(self.con, "fills", filas)
+                self.con.commit()
+            if faltan and tipo == "vertical":
+                L.notificar("⚠️ FILL PARCIAL del vertical (op #%s): faltó %s — vigilar regla >5%%→single"
+                            % (op_id, faltan), "FILL")
+            else:
+                L.log("fills op #%s: %d pata(s) llena(s)" % (op_id, len(llenas)), "POS")
+        except Exception as ex:
+            L.log("persistir fills op #%s: %r" % (op_id, ex), "WARN")
 
     def _persistir_cierre(self, hora, spot, razon, pnl):
         self.con.execute(

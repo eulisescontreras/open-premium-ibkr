@@ -39,8 +39,8 @@ class Panel:
         self.root = root
         root.title("SPY 0DTE")
         root.configure(bg=BG)
-        root.geometry("580x420")
-        root.minsize(540, 400)
+        root.geometry("580x452")
+        root.minsize(540, 430)
         self.w = {}       # labels dinámicos
         self.fase_lbl = {}
         self._build()
@@ -66,6 +66,12 @@ class Panel:
             l = self._lab(c, f, GRIS, ("Segoe UI", 10, "bold"), pady=6)
             l.pack(fill="both", expand=True)
             self.fase_lbl[f] = (c, l)
+
+        # 1b) ESTRATEGIA / entrada aplicada ahora (ST-3 / ORB / pm_rev / gap_fade / v1 / ayer_rev / RODAR / PIRAMIDA)
+        er = tk.Frame(self.root, bg=CARD); er.pack(fill="x", padx=6, pady=(0, 0))
+        self._lab(er, "ESTRATEGIA", GRIS, Fs).pack(side="left", padx=8, pady=3)
+        self.w["estrategia"] = self._lab(er, "—", VERDE, ("Segoe UI", 11, "bold"))
+        self.w["estrategia"].pack(side="left", padx=6)
 
         # 2) CAPITAL | P&L HOY | P&L MES
         row2 = tk.Frame(self.root, bg=BG); row2.pack(fill="x", padx=6, pady=3)
@@ -119,6 +125,7 @@ class Panel:
             act = (f == fase)
             l.config(fg=BG if act else GRIS, bg=(VERDE if act else CARD))
             c.config(bg=(VERDE if act else CARD))
+        self.w["estrategia"].config(text=(d.get("estrategia") or "—"))
         # capital / pnl
         cap = d.get("capital")
         self.w["capital"].config(text=("${:,.0f}".format(cap)) if cap is not None else "—", fg=VERDE)
