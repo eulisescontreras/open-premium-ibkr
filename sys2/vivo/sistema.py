@@ -145,9 +145,16 @@ class SistemaVivo:
         if self.pos:
             self._gestionar(hora, spot, Sen, pm_h)
 
-        # 5) apertura
-        if self.pos is None and hora in Sen and SAL.puede_abrir(hora, self.hechas):
-            self._abrir(hora, spot, Sen[hora], pm_h)
+        # 5) apertura — TODA señal se registra en `senales`, se opere o no (schema.sql:39).
+        # Es el registro que hace VISIBLE por qué un día no operó: sin él, 3 señales descartadas
+        # y 0 errores en el log son indistinguibles de "no hubo señales" (caso real 2026-08-17).
+        if hora in Sen:
+            if self.pos is not None:
+                self._persistir_senal(hora, Sen[hora], spot, pm_h, "pos_abierta")
+            elif not SAL.puede_abrir(hora, self.hechas):
+                self._persistir_senal(hora, Sen[hora], spot, pm_h, "limite_ops")
+            else:
+                self._abrir(hora, spot, Sen[hora], pm_h)
 
         # 6) verificación de posición plana al final
         if SAL.debe_verificar_plana(hora) and self.pos is not None:
@@ -259,6 +266,7 @@ class SistemaVivo:
             rr = R.ratio_otm(pm_h, spot)
             if rr is not None and ((rt == 'C' and rr < C.RUMB) or (rt == 'P' and rr > 1.0 / C.RUMB)):
                 L.log("apertura %s %s VETADA por ratio_otm=%.2f" % (hora, rt, rr), "SENAL")
+                self._persistir_senal(hora, rt, spot, pm_h, "RATIO")
                 return
         cd = [(k, v) for (r, k), v in pm_h.items() if r == rt]
         d0 = None
@@ -276,6 +284,11 @@ class SistemaVivo:
                             'origen': self._origen.get(hora)}
                 op_id = self._persistir_operacion(hora, spot, "vertical", rt, kl, ksh, pl_ - psh, d0)
                 self._persistir_fills(trade, op_id, hora, "vertical", [(kl, rt, "BUY"), (ksh, rt, "SELL")])
+                self._persistir_senal(hora, rt, spot, pm_h, None)      # operada
+            else:
+                # NO hay vertical dentro del tope: la señal se pierde. Es el caso mas frecuente
+                # con capital bajo (2026-08-17: tope 110$ y el mas barato costaba 113$).
+                self._persistir_senal(hora, rt, spot, pm_h, "sin_contrato")
             # con ANCHO activo, si NO hay vertical disponible se DESCARTA la señal (espeja el motor:
             # no cae al single). Solo se opera single cuando ANCHO es None.
             return
@@ -290,6 +303,9 @@ class SistemaVivo:
                         'origen': self._origen.get(hora)}
             op_id = self._persistir_operacion(hora, spot, "single", rt, e[0], None, e[1][0], d0)
             self._persistir_fills(trade, op_id, hora, "single", [(e[0], rt, "BUY")])
+            self._persistir_senal(hora, rt, spot, pm_h, None)          # operada
+        else:
+            self._persistir_senal(hora, rt, spot, pm_h, "sin_contrato")
 
     def _cerrar(self, hora, spot, razon, a_mercado=False, rodando=False):
         p = self.pos
@@ -322,6 +338,43 @@ class SistemaVivo:
                             'rod': r2, 'extra': None, 'h0': h0, 'd0': d0}
 
     # ─────────────────────────── persistencia ───────────────────────────
+    def _persistir_senal(self, hora, rt, spot, pm_h, descartada_por):
+        """Registra la señal en `senales` (schema.sql:39), se opere o no.
+        `descartada_por`: None si se operó | 'RATIO' | 'sin_contrato' | 'pos_abierta' | 'limite_ops'.
+
+        `origen` viene del pipeline ('ORB'|'pm_rev'|'v1'|'gap_fade'|'ayer_rev'|'ST-3 NORMAL'|
+        'ST-3 RETRASA'|'ST-3 INVIERTE'|'ST-3 SKEW'); de ahí se deriva `grupo` para los flips del
+        ST-3. NO se toca pipeline.py (núcleo compartido con el backtest): solo se persiste lo que
+        ya devuelve. Las columnas que exigirían cambiarlo (hora_efectiva, dist_linea, iv_atm,
+        giros_st1_5m, flip_falso) quedan NULL — documentado en PENDIENTES.md.
+        Idempotente: no duplica si ya hay fila para (fecha, hora, origen).
+        """
+        try:
+            org = self._origen.get(hora)
+            grupo = None
+            if org and org.startswith("ST-3 "):
+                grupo = org.split(" ", 1)[1]          # NORMAL | RETRASA | INVIERTE | SKEW
+            ya = self.con.execute(
+                "select 1 from senales where fecha=? and hora=? and ifnull(origen,'')=?",
+                (self.fecha, hora, org or "")).fetchone()
+            if ya:
+                return
+            rr = None
+            try:
+                rr = R.ratio_otm(pm_h, spot) if pm_h else None
+            except Exception:
+                pass
+            repo.insertar(self.con, "senales", [{
+                "fecha": self.fecha, "hora": hora, "origen": org,
+                "direccion": rt, "grupo": grupo, "direccion_final": rt,
+                "descartada_por": descartada_por, "spy": spot, "ratio_otm": rr,
+            }])
+            self.con.commit()
+            L.log("señal %s %s (%s) -> %s" % (hora, rt, org or "?",
+                  descartada_por or "OPERADA"), "SENAL")
+        except Exception as ex:
+            L.log("persistir señal %s: %r" % (hora, ex), "WARN")
+
     def _persistir_operacion(self, hora, spot, tipo, rt, kl, ks, debito, d0):
         repo.insertar(self.con, "operaciones", [{
             "fecha": self.fecha, "n_op_dia": self.hechas + 1, "tipo": tipo, "right": rt,
