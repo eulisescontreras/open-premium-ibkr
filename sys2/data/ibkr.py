@@ -92,9 +92,12 @@ class IBKR:
         return Option(C.SYMBOL, expiry, strike, right, "SMART", tradingClass=C.SYMBOL)
 
     def cadena(self, expiry, spot, n=None):
-        """Suscribe y devuelve la cadena 0DTE alrededor del spot: dict {(right,strike): datos}
+        """Suscribe, LEE y CANCELA la cadena 0DTE alrededor del spot: dict {(right,strike): datos}
         con bid/ask/mid/last/day_vol/oi + greeks REALES de IBKR (delta/gamma/theta/vega/iv).
-        n strikes por lado (1$ de paso en SPY)."""
+        Captura TODOS los strikes ITM+OTM (n por lado, 1$ de paso), calls Y puts, para registrar
+        el movimiento de las griegas de toda la cadena.
+        ⚠️ CANCELA la suscripción tras leer (si no, las líneas de reqMktData se acumulan minuto a
+        minuto y saturan el límite de IBKR (~100) en pocos minutos)."""
         n = n or C.N_STRIKES_LADO
         base = round(spot)
         strikes = [base + i for i in range(-n, n + 1)]
@@ -104,7 +107,7 @@ class IBKR:
                 contratos.append(self._opt(expiry, float(k), r))
         self.ib.qualifyContracts(*contratos)
         tickers = [self.ib.reqMktData(c, "", False, False) for c in contratos]
-        self.ib.sleep(1.5)           # dejar que lleguen bid/ask/greeks
+        self.ib.sleep(2.0)           # dejar que lleguen bid/ask/greeks (IBKR calcula los greeks)
         out = {}
         for c, t in zip(contratos, tickers):
             g = t.modelGreeks
@@ -120,7 +123,13 @@ class IBKR:
                 "gamma": g.gamma if g else None, "theta": g.theta if g else None,
                 "vega": g.vega if g else None,
             }
-        L.log("cadena %s: %d contratos suscritos (spot %.2f)" % (expiry, len(contratos), spot), "DATA")
+        for c in contratos:                     # liberar las líneas de datos (evita saturar IBKR)
+            try:
+                self.ib.cancelMktData(c)
+            except Exception:
+                pass
+        L.log("cadena %s: %d contratos (ITM+OTM C/P) capturados y cancelados (spot %.2f)"
+              % (expiry, len(contratos), spot), "DATA")
         return out
 
     # ─────────────────────────── órdenes ───────────────────────────

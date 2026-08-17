@@ -23,6 +23,7 @@ from sys2.data.ibkr import IBKR
 from sys2.data import backfill as BF, captura as CAP
 from sys2.db import repo
 from sys2.vivo import log as L
+from sys2.vivo import estado as ST
 
 _ET = ZoneInfo("America/New_York")
 
@@ -47,6 +48,7 @@ class SistemaVivo:
         self.pos = None            # posición abierta (mismo dict que el motor)
         self.hechas = 0
         self.cfg = None            # autocalibración de la sesión
+        self._saldo = 0.0          # cache del saldo (el panel usa la BD, no IBKR)
         self.nq = 1                # unidades (día bueno dobla)
         self.fecha = None
         self.expiry = None         # 0DTE 'YYYYMMDD'
@@ -63,6 +65,7 @@ class SistemaVivo:
 
         # autocalibración por saldo real
         saldo = self.ib.saldo()
+        self._saldo = saldo or 0.0            # cache: el panel usa la BD, NO consulta IBKR
         self.cfg = autocalibra.configuracion(saldo)
         if self.cfg is None:
             L.notificar("saldo insuficiente (%s) — NO se opera" % saldo, "ARRANQUE")
@@ -144,6 +147,52 @@ class SistemaVivo:
         if SAL.debe_verificar_plana(hora) and self.pos is not None:
             L.notificar("⚠️ POSICIÓN ABIERTA a las %s — forzando cierre a MERCADO (asignación §12)" % hora, "RIESGO")
             self._cerrar(hora, spot, "cierre", a_mercado=True)
+
+        # 7) volcar estado para el PANEL (desde la BD; el panel NO consulta IBKR)
+        fase = "ORDEN" if self.pos else ("SEÑAL" if hora in Sen else "ESPERA")
+        self._volcar_estado(hora, spot, fase)
+
+    def _volcar_estado(self, hora, spot, fase):
+        """Escribe estado.json para el panel. P&L calculado desde la BD (operaciones), NO de IBKR."""
+        try:
+            hoy = self.fecha
+            mes = self.fecha[:7]
+            r = self.con.execute("select coalesce(sum(pnl),0) from operaciones where fecha=?", (hoy,)).fetchone()
+            pnl_hoy = r[0] if r else 0.0
+            r = self.con.execute("select coalesce(sum(pnl),0) from operaciones where substr(fecha,1,7)=?", (mes,)).fetchone()
+            pnl_mes = r[0] if r else 0.0
+            capital = (self._saldo or 0.0) + pnl_hoy
+            base_hoy = capital - pnl_hoy
+            base_mes = capital - pnl_mes
+            d = {
+                "fase": fase, "capital": capital,
+                "pnl_hoy": pnl_hoy, "pnl_hoy_pct": (100 * pnl_hoy / base_hoy) if base_hoy else 0,
+                "pnl_mes": pnl_mes, "pnl_mes_pct": (100 * pnl_mes / base_mes) if base_mes else 0,
+                "reloj": hora, "conectado": self.ib.conectado(), "datos": "1m",
+                "ops": "%d/%d" % (self.hechas, C.MAX_TRADES),
+                "unidades": (self.pos.get("nq") if self.pos else self.nq),
+                "nivel": self.cfg["nivel"], "version": self.cfg["version"],
+                "tope": int(self.cfg["tope"]), "meta": self.cfg["meta"],
+                "contrato": None,
+            }
+            if self.pos:
+                p = self.pos
+                if p.get("vert"):
+                    d["contrato"] = "%s %.0f%s/%.0f%s" % (self.expiry, p["k"], p["rt"], p["ks"], p["rt"])
+                    d["debito"] = round(p["ask"] * 100 / 1.01)     # débito inicial $ (ask=(débito)*1.01)
+                else:
+                    d["contrato"] = "%s %.0f%s" % (self.expiry, p["k"], p["rt"])
+                    d["debito"] = round(p["ask"] * 100 / 1.01)
+                d["mid"] = round(p["mid"] * 100)
+                ent = p.get("h0")
+                d["entrada"] = ent
+                d["duracion"] = "%dm" % max(0, mm(hora) - mm(ent)) if ent else "—"
+                d["mid_pct"] = (100 * (p["mid"] - p["ask"]) / p["ask"]) if p["ask"] else 0
+                if p.get("rod", 0) > 0 or p.get("extra"):
+                    d["contrato_act"] = "rodado x%d" % p.get("rod", 0) if p.get("rod") else "+extra"
+            ST.escribir(d)
+        except Exception as ex:
+            L.log("volcar estado: %r" % ex, "WARN")
 
     def _valorar(self, spot, pm_h):
         p = self.pos

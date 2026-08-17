@@ -75,4 +75,6 @@ IBKR_CLIENT_ID = 17                   # propio, NO 7/24/25 (los usa el bot viejo
 SYMBOL = "SPY"
 ETFS = ("DIA", "TLT")                 # para la regla del día bueno
 BACKFILL_DUR = "2 D"                  # reqHistoricalData useRTH=False -> premarket 04:00→arranque
-N_STRIKES_LADO = 10                   # cadena: 8+ strikes por lado (MANUAL §4.1)
+N_STRIKES_LADO = 20                   # cadena: strikes por lado a CAPTURAR (ITM+OTM, C y P).
+#   Se guardan TODOS en `premium` cada minuto con sus griegas -> registro del movimiento de las
+#   griegas de toda la cadena. 20/lado = 82 contratos (<100 líneas de IBKR; se cancelan tras leer).

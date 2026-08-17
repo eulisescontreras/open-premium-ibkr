@@ -28,9 +28,13 @@ def main():
     # arranque: saldo < 200 -> None
     if A.configuracion(150) is not None or A.configuracion(0) is not None:
         fallos.append("saldo < 200 debería dar None")
-    # interpolación: 700 usa el nivel 600 (no el 800)
-    if A.configuracion(700)["nivel"] != 600:
-        fallos.append("saldo 700 debería usar el nivel 600")
+    # interpolación: 700 usa el tramo de cuenta 600 (no el 800)
+    if A.configuracion(700)["cuenta"] != 600:
+        fallos.append("saldo 700 debería usar el tramo de cuenta 600")
+    # meta y version presentes (para el panel)
+    c5 = A.configuracion(5400)
+    if c5.get("meta") != 8053 or c5.get("version") != "v4":
+        fallos.append("saldo 5400 -> meta/version incorrectos: %s/%s" % (c5.get("meta"), c5.get("version")))
     # tope duro: ninguna config supera 3 unidades
     for saldo in (5400, 8000, 12000, 20000, 100000):
         if A.configuracion(saldo)["unidades"] > A.TOPE_UNIDADES:
