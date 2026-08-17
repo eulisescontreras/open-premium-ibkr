@@ -16,7 +16,7 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 
 from sys2 import config as C
-from sys2.core.supertrend import mm
+from sys2.core.supertrend import mm, hhmm
 from sys2.core import pipeline, reglas as R, instrumento as I, salida as SAL, autocalibra
 from sys2.backtest import greeks as G
 from sys2.data.ibkr import IBKR
@@ -130,6 +130,14 @@ class SistemaVivo:
         ph, pl, pc = self.prev
         Sen, L_, ks, ik, sp, origen = pipeline.construir_sen(bars, cl_, PM, ph, pl, pc)
         self._origen = origen
+        # ── MINUTO DE DECISIÓN (h_dec) = la última barra CERRADA, o sea `hora` - 1 min ──────────
+        # Las señales se evalúan SOLO sobre barras cerradas; la cadena y el precio de ejecución son
+        # del minuto ACTUAL. Es la latencia física inevitable: no se puede actuar sobre el cierre
+        # de un minuto antes de que ese minuto termine. Antes se consultaba `Sen[hora]`, cuando la
+        # barra de `hora` aún no existía (y encima venía mal fechada, ver _sincronizar_barra),
+        # así que se decidía sobre una barra en formación.
+        h_dec = hhmm(mm(hora) - 1)
+        sen_dec = Sen.get(h_dec)
         dia = [(h, hi, lo, cl) for h, hi, lo, cl in self.con.execute(
             "select hora,close,close,close from bars_etf where ticker='DIA' and fecha=?", (self.fecha,))]
         tlt = [(h, hi, lo, cl) for h, hi, lo, cl in self.con.execute(
@@ -142,19 +150,22 @@ class SistemaVivo:
             self._valorar(spot, pm_h)
 
         # 4) gestión: salida (flip/aplanar/mercado) + rodar/piramidar
+        # El flip se evalúa con la señal del minuto CERRADO (h_dec); los tiempos de aplanado y
+        # mercado siguen usando `hora` (son horas de reloj, no dependen de la barra).
         if self.pos:
-            self._gestionar(hora, spot, Sen, pm_h)
+            self._gestionar(hora, spot, sen_dec, pm_h)
 
         # 5) apertura — TODA señal se registra en `senales`, se opere o no (schema.sql:39).
         # Es el registro que hace VISIBLE por qué un día no operó: sin él, 3 señales descartadas
         # y 0 errores en el log son indistinguibles de "no hubo señales" (caso real 2026-08-17).
-        if hora in Sen:
+        # La señal se registra con SU hora (h_dec); la ejecución ocurre en `hora` (1 min después).
+        if sen_dec is not None:
             if self.pos is not None:
-                self._persistir_senal(hora, Sen[hora], spot, pm_h, "pos_abierta")
-            elif not SAL.puede_abrir(hora, self.hechas):
-                self._persistir_senal(hora, Sen[hora], spot, pm_h, "limite_ops")
+                self._persistir_senal(h_dec, sen_dec, spot, pm_h, "pos_abierta")
+            elif not SAL.puede_abrir(h_dec, self.hechas):
+                self._persistir_senal(h_dec, sen_dec, spot, pm_h, "limite_ops")
             else:
-                self._abrir(hora, spot, Sen[hora], pm_h)
+                self._abrir(hora, spot, sen_dec, pm_h, h_dec)
 
         # 6) verificación de posición plana al final
         if SAL.debe_verificar_plana(hora) and self.pos is not None:
@@ -162,7 +173,7 @@ class SistemaVivo:
             self._cerrar(hora, spot, "cierre", a_mercado=True)
 
         # 7) volcar estado para el PANEL (desde la BD; el panel NO consulta IBKR)
-        fase = "ORDEN" if self.pos else ("SEÑAL" if hora in Sen else "ESPERA")
+        fase = "ORDEN" if self.pos else ("SEÑAL" if sen_dec is not None else "ESPERA")
         self._volcar_estado(hora, spot, fase)
 
     def _volcar_estado(self, hora, spot, fase):
@@ -233,9 +244,11 @@ class SistemaVivo:
         else:
             p['mid'] = _long
 
-    def _gestionar(self, hora, spot, Sen, pm_h):
+    def _gestionar(self, hora, spot, sen_dir, pm_h):
+        """`sen_dir` = dirección de la señal del minuto CERRADO ('C'/'P'/None), no el dict Sen:
+        el flip debe evaluarse sobre una barra cerrada. `hora` sigue siendo el reloj (aplanar/mercado)."""
         p = self.pos
-        razon = SAL.decidir_salida(p, Sen.get(hora), hora)
+        razon = SAL.decidir_salida(p, sen_dir, hora)
         if razon:
             self._cerrar(hora, spot, razon, a_mercado=(razon == "mercado"))
             return
@@ -260,13 +273,19 @@ class SistemaVivo:
             L.notificar("RODAR: delta %.2f<%.2f (rod %d)" % (dl, C.ROD_DELTA, p['rod'] + 1), "GESTION")
             self._cerrar(hora, spot, "rodar", a_mercado=False, rodando=True)
 
-    def _abrir(self, hora, spot, rt, pm_h):
+    def _abrir(self, hora, spot, rt, pm_h, h_sen=None):
+        """`hora` = minuto de EJECUCIÓN (precios de la cadena de ahora).
+        `h_sen` = minuto de la SEÑAL (la barra cerrada que la generó); si es None, se asume `hora`.
+        Se separan porque la señal se detecta al cerrar su minuto y la orden se manda al siguiente:
+        la operación y los greeks se fechan con la ejecución, el registro en `senales` con la señal.
+        """
+        h_sen = h_sen or hora
         # ratio call/put OTM (veto)
         if C.RUMB:
             rr = R.ratio_otm(pm_h, spot)
             if rr is not None and ((rt == 'C' and rr < C.RUMB) or (rt == 'P' and rr > 1.0 / C.RUMB)):
                 L.log("apertura %s %s VETADA por ratio_otm=%.2f" % (hora, rt, rr), "SENAL")
-                self._persistir_senal(hora, rt, spot, pm_h, "RATIO")
+                self._persistir_senal(h_sen, rt, spot, pm_h, "RATIO")
                 return
         cd = [(k, v) for (r, k), v in pm_h.items() if r == rt]
         d0 = None
@@ -281,14 +300,14 @@ class SistemaVivo:
                 trade = self.ib.comprar_vertical(self.expiry, kl, ksh, rt, pl_ - psh, self.nq)
                 self.pos = {'k': kl, 'ks': ksh, 'rt': rt, 'ask': (pl_ - psh) * 1.01, 'mid': pl_ - psh,
                             'rod': 0, 'extra': None, 'h0': hora, 'd0': d0, 'vert': True, 'nq': self.nq,
-                            'origen': self._origen.get(hora)}
+                            'origen': self._origen.get(h_sen)}
                 op_id = self._persistir_operacion(hora, spot, "vertical", rt, kl, ksh, pl_ - psh, d0)
                 self._persistir_fills(trade, op_id, hora, "vertical", [(kl, rt, "BUY"), (ksh, rt, "SELL")])
-                self._persistir_senal(hora, rt, spot, pm_h, None)      # operada
+                self._persistir_senal(h_sen, rt, spot, pm_h, None)     # operada
             else:
                 # NO hay vertical dentro del tope: la señal se pierde. Es el caso mas frecuente
                 # con capital bajo (2026-08-17: tope 110$ y el mas barato costaba 113$).
-                self._persistir_senal(hora, rt, spot, pm_h, "sin_contrato")
+                self._persistir_senal(h_sen, rt, spot, pm_h, "sin_contrato")
             # con ANCHO activo, si NO hay vertical disponible se DESCARTA la señal (espeja el motor:
             # no cae al single). Solo se opera single cuando ANCHO es None.
             return
@@ -300,12 +319,12 @@ class SistemaVivo:
             trade = self.ib.comprar_single(self.expiry, e[0], rt, e[1][0], self.nq)
             self.pos = {'k': e[0], 'rt': rt, 'ask': e[1][0] * 1.01, 'mid': e[1][0], 'rod': 0,
                         'extra': None, 'h0': hora, 'd0': d0, 'nq': self.nq,
-                        'origen': self._origen.get(hora)}
+                        'origen': self._origen.get(h_sen)}
             op_id = self._persistir_operacion(hora, spot, "single", rt, e[0], None, e[1][0], d0)
             self._persistir_fills(trade, op_id, hora, "single", [(e[0], rt, "BUY")])
             self._persistir_senal(hora, rt, spot, pm_h, None)          # operada
         else:
-            self._persistir_senal(hora, rt, spot, pm_h, "sin_contrato")
+            self._persistir_senal(h_sen, rt, spot, pm_h, "sin_contrato")
 
     def _cerrar(self, hora, spot, razon, a_mercado=False, rodando=False):
         p = self.pos
@@ -469,14 +488,35 @@ class SistemaVivo:
             self.con.close()
 
     def _sincronizar_barra(self, ahora):
-        """Trae la última barra 1-min del SPY y la guarda (fuente='live')."""
+        """Trae las últimas barras 1-min del SPY y las guarda CON SU PROPIA HORA (fuente='live').
+
+        ⚠️ BUG CORREGIDO 2026-08-17 (era GRAVE): antes hacía `b = bars[-1]` y la etiquetaba con
+        `h = ahora.strftime("%H:%M")`, o sea con la hora ACTUAL en vez de la de la barra. Como
+        reqHistoricalData devuelve la última barra CERRADA (la del minuto anterior), el sistema
+        archivaba el precio de las 11:03 como si fuera de las 11:04: un DESPLAZAMIENTO
+        SISTEMÁTICO de 1 minuto en toda la serie.
+        MEDIDO sobre la sesión del 2026-08-17 (391 minutos): solo 19 coincidían con el valor real
+        (4,9%), error mediano 0,06 pts y hasta 0,54. Con esos precios mal fechados se calculaban
+        el Supertrend, el ORB y todas las rupturas. Coste concreto de ese día: el ORB de las 11:04
+        no disparó (veía 775,44 en vez de 775,50 contra un techo de 775,48) y era una operación
+        de +125$ sobre una cuenta de 600$.
+        Se descarta la barra del minuto EN CURSO (todavía no ha cerrado).
+        """
         try:
             bars = self.ib.backfill_spy(dur="120 S", bar="1 min")
-            if bars:
-                b = bars[-1]
-                h = ahora.strftime("%H:%M")
+            h_actual = ahora.strftime("%H:%M")
+            n = 0
+            for b in (bars or []):
+                d = b.date
+                h = d.strftime("%H:%M") if hasattr(d, "strftime") else str(d)[11:16]
+                fk = d.strftime("%Y-%m-%d") if hasattr(d, "strftime") else str(d)[:10]
+                if fk != self.fecha or h >= h_actual:
+                    continue          # otra sesión, o barra aún en formación (no cerrada)
                 CAP.guardar_barra_spy(self.con, self.fecha, h, b.open, b.high, b.low, b.close,
                                       b.volume, getattr(b, "average", None))
+                n += 1
+            if n == 0:
+                L.log("sincronizar barra: sin barras cerradas nuevas (actual %s)" % h_actual, "WARN")
         except Exception as ex:
             L.log("sincronizar barra: %r" % ex, "WARN")
 

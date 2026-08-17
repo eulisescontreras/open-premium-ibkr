@@ -1298,3 +1298,9 @@
 🔔 2026-08-17 16:02:12 | FIN | Cierre de mercado — fin de sesión
 ════════════════════════════════════════════════════════════
 2026-08-17 16:02:12 | DATA   | IBKR desconectado
+2026-08-17 16:31:56 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=97
+2026-08-17 16:31:58 | DATA   | IBKR desconectado
+2026-08-17 16:33:36 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=97
+=== NOTIF === 2026-08-17 16:33:37 | IBKR | IBKR conectado (paper 4002)
+2026-08-17 16:33:37 | DATA   | backfill SPY 5 D 1 min useRTH=False
+2026-08-17 16:33:40 | DATA   | IBKR desconectado
