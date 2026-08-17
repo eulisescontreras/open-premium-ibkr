@@ -19,9 +19,7 @@ from zoneinfo import ZoneInfo
 
 from sys2 import config as C
 from sys2.core.supertrend import mm
-from sys2.core import entradas as E
-from sys2.core.rebote import sen_p, reb2
-from sys2.core.st1 import st_full, giros
+from sys2.core import pipeline
 from sys2.core import reglas as R
 from sys2.core import instrumento as I
 from sys2.backtest import greeks as G
@@ -98,12 +96,6 @@ def cargar(con, dias=None):
     return SES, PREM, ETFB
 
 
-# ─────────────────────────────── señales de apertura ────────────────────────────────
-def senales_apertura(bars, ph, pl, pc, ex):
-    """Aperturas C-F (ph=max_ayer, pl=min_ayer, pc=cierre_ayer). VERBATIM del motor validado."""
-    return E.senales_apertura(bars, ph, pl, pc, ex)
-
-
 # ─────────────────────────────────── SIS70 (motor) ──────────────────────────────────
 def SIS70(SES, PREM, ETFB, extra=None, modo_strike="presupuesto", tope=None, pir=None,
           desde=None, hasta=None, aplanado=None):
@@ -128,44 +120,8 @@ def SIS70(SES, PREM, ETFB, extra=None, modo_strike="presupuesto", tope=None, pir
         PM = PREM[fk]
         ph, pl, pc = prev if prev else (None, None, None)
 
-        # ── señales: sp (flips), L/ks (rebote), S (ORB+aperturas), p (flips reclasificados) ──
-        sp, L, ks = sen_p(bars, C.ST_PER, C.ST_MULT)
-        ik = {k: i for i, k in enumerate(ks)}
-        S1, k1 = st_full(bars, 1, C.ST_PER, C.ST_MULT)
-        S = []
-        for a in C.ORB_ANCLAS:
-            s = E.orb_en(bars, a)
-            if s:
-                S += s
-        for ex in extra:
-            sg = senales_apertura(bars, ph, pl, pc, ex)
-            if sg and all(abs(mm(sg[0][0]) - mm(x[0])) > C.DESCARTE_MIN for x in S):
-                S += sg
-        p = []
-        for h, d in sp:
-            if h < "09:45":
-                continue
-            if C.ST1_ON and giros(S1, k1, h, C.ST1_VENTANA) >= 1:   # descarte ST-1 ANTES del rebote
-                continue
-            if C.RETMOD:                                   # skew sobre RETRASA
-                _r = reb2(L, ks, ik, h, d)
-                _esret = bool(_r) and _r[0][0] != h and _r[0][1] == d
-                if _esret:
-                    _lado = 1 if d == 'C' else -1
-                    _S = cl_.get(h)
-                    _m = PM.get(h)
-                    _sk = R.skew_l2(_m, _S, h, _lado) if (_m and _S is not None) else None
-                    _mal = (_sk is not None and _sk > C.RETSK)
-                    if _mal:
-                        _hh = _r[0][0]
-                        if C.RETMOD == "quita" or _hh >= "15:40":
-                            continue
-                        if C.RETMOD == "invierte":
-                            p.append((_hh, 'P' if d == 'C' else 'C'))
-                            continue
-            p += reb2(L, ks, ik, h, d)
-        sen = sorted(set(S + p))
-        Sen = dict(sen)
+        # ── señales: pipeline COMPARTIDO con el vivo (core/pipeline, única fuente de verdad) ──
+        Sen, L, ks, ik, sp = pipeline.construir_sen(bars, cl_, PM, ph, pl, pc, extra)
 
         # ── día bueno (dobla unidades) ──
         nq = 1

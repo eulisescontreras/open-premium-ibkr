@@ -38,23 +38,24 @@ reales, P&L bien contabilizado) pero la cifra depende fuerte de una condición a
       sobre los mismos días (diferencial, R8). (Requiere el lado vivo.)
 - [ ] `cold_runs/cr_flips_grupos.py` — ya cubierto por cr_rebote (675/393/243/100); formalizar si hace falta.
 
-## ⏳ FALTA — LADO VIVO / PAPER (Fase 0 resto + Fase 2) — NADA EMPEZADO
-Todo el sistema en vivo con IBKR. Hasta ahora el trabajo fue backtest.
-- [ ] `data/ibkr.py` — conexión ib_insync (clientId propio, NO 7/24/25), reqHistoricalData,
-      **placeOrder combo BAG** (capacidad NUEVA, el bot viejo solo hacía single-leg) + fills por pata.
-- [ ] `data/backfill.py` — premarket 04:00→arranque (`reqHistoricalData useRTH=False "2 D"`) +
-      DIA/TLT 09:25-10:05 + dia_anterior → persiste en `bars`. + `cr_backfill` (≥390 barras, 0 huecos).
-- [ ] `data/captura.py` — loop minuto a minuto (`keepUpToDate`) + cadena 8+ strikes/lado con
-      **day_vol y greeks REALES de IBKR** (espejo backtest↔captura — requisito del usuario).
-- [ ] `core/autocalibra.py` — `configuracion(cuenta)`: modo/ancho/tope/unidades, tope duro 3
-      contratos, peor día ≤35% de la cuenta, solo al inicio de sesión. + cr_autocalibra (§13).
-- [ ] `core/salida.py` — flip del ST-3 + **aplanar 15:50/15:53** + orden a mercado 15:55 +
-      verificación explícita posición plana <16:00 (bloqueante de asignación §12).
-- [ ] `vivo/sistema.py` — orquestador: arranque → backfill → captura → señales → reglas →
-      ejecución → BD. Escribe TODA señal en `senales` (con grupo), operaciones, fills por pata.
-- [ ] Cold runs de paper: `cr_pone_ordenes` (envía combo BAG, detecta fill de ambas patas),
-      `cr_guarda_estadisticas` (todas las tablas pobladas), `cr_aplanado_asignacion` (15:50→mercado
-      15:55→plana <16:00). Criterio: <5% fills parciales del vertical, si no → single.
+## ✅ LADO VIVO / PAPER — CONSTRUIDO (validar en paper mañana)
+Todo el sistema en vivo con IBKR, TODO ACTIVO. Núcleo COMPARTIDO con el backtest (`core/pipeline`,
+verificado: el motor sigue +72.375 tras usarlo). Grafo de decisión validado con smoke sobre día real
+(2025-04-09): 0 crashes, abre verticales, gestiona piramidar/rodar, cierra por flip/aplanado, plana al final.
+- ✅ `data/ibkr.py` — ib_insync (clientId 17, puerto 4002 paper), backfill, cadena con greeks reales,
+      **órdenes combinadas BAG** (vertical) + single + cierres.
+- ✅ `data/backfill.py` — premarket SPY (useRTH=False "2 D") + DIA/TLT + día anterior → `bars`/`bars_etf`/`dia_anterior`.
+- ✅ `data/captura.py` — barra minuto a minuto + cadena 8+ strikes/lado con day_vol + greeks reales → `premium` (fuente='live').
+- ✅ `core/autocalibra.py` — configuracion(saldo) tabla §13.1, tope 3 · **cr_autocalibra VERDE**.
+- ✅ `core/salida.py` — flip + aplanar 15:50 + mercado 15:55 + verif plana <16:00 · **cr_salida VERDE**.
+- ✅ `core/pipeline.py` — Sen compartido (backtest+vivo), única fuente de verdad.
+- ✅ `vivo/sistema.py` — orquestador (arranque→backfill→captura→señales→reglas→ejecución→BD), logs exhaustivos.
+- ✅ `vivo/log.py` — logging exhaustivo (archivo diario) + notificaciones (sin dashboard).
+- ✅ `iniciar.sh` (toggle arranca/apaga) + `subir.sh` (push a git). Ejecutables.
+- [ ] **MAÑANA en paper** (lo único que falta, requiere mercado + IB Gateway 4002): validar conexión,
+      backfill real (≥390 barras 0 huecos), captura con greeks reales, órdenes BAG (fills de ambas patas,
+      <5% parciales si no → single), aplanado 15:50→mercado 15:55→plana <16:00. Buscar los "cabos sueltos"
+      de integración (gates, auth, multi-thread) que el smoke NO revela.
 
 ## ⏳ FALTA — Fase 3 (real, capital mínimo)
 - [ ] Autocalibración desde saldo real (arranque ~320$ operativos), regla de parada 12 días rojos.

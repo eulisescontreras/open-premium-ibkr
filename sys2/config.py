@@ -62,3 +62,17 @@ COMISION = 1.72                       # ida y vuelta por contrato
 # ── Greeks (convención del motor) ──
 GREEKS_R = 0.0                        # el motor invierte IV con r=0, q=0
 GREEKS_Q = 0.0
+
+# ── VIVO / PAPER (tiempos OPERABLES §12.4, NUNCA 15:59 en vivo) ──
+APLANADO_VIVO = "15:50"               # aplanar (cerrar) — operable (backtest = APLANADO 15:59)
+MERCADO_VIVO = "15:55"                # si sigue abierta, orden a MERCADO
+VERIF_PLANA = "15:59"                 # verificar posición plana antes de 16:00 (asignación §12)
+
+# ── IBKR (paper) ──
+IBKR_HOST = "127.0.0.1"
+IBKR_PORT = 4002                      # IB Gateway paper (live=4001; TWS 7497/7496)
+IBKR_CLIENT_ID = 17                   # propio, NO 7/24/25 (los usa el bot viejo/otros)
+SYMBOL = "SPY"
+ETFS = ("DIA", "TLT")                 # para la regla del día bueno
+BACKFILL_DUR = "2 D"                  # reqHistoricalData useRTH=False -> premarket 04:00→arranque
+N_STRIKES_LADO = 10                   # cadena: 8+ strikes por lado (MANUAL §4.1)
