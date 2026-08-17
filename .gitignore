@@ -11,3 +11,10 @@ __pycache__/
 
 # runtime del sistema vivo
 sys2/vivo/.vivo.pid
+
+# bases grandes/regenerables (NO subir)
+sys2.db
+massive_premium*.db
+spy_*.db
+*.db-wal
+*.db-shm
