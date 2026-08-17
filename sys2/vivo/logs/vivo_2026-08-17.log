@@ -1,0 +1,49 @@
+2026-08-17 08:53:08 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=99
+=== NOTIF === 2026-08-17 08:53:09 | IBKR | IBKR conectado (paper 4002)
+2026-08-17 08:53:09 | DATA   | backfill SPY 1 D 1 min useRTH=False
+2026-08-17 08:53:14 | DATA   | cadena 20260817: 14 contratos (ITM+OTM C/P) capturados y cancelados (spot 776.26)
+2026-08-17 08:53:14 | DATA   | IBKR desconectado
+=== NOTIF === 2026-08-17 08:56:12 | ARRANQUE | ARRANQUE del sistema vivo — 2026-08-17 (0DTE 20260817)
+2026-08-17 08:56:12 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=17
+=== NOTIF === 2026-08-17 08:56:12 | IBKR | IBKR conectado (paper 4002)
+=== NOTIF === 2026-08-17 08:56:12 | ARRANQUE | Autocalibra: saldo=200 nivel=1 ancho=2 tope=35 unidades=1
+=== NOTIF === 2026-08-17 08:56:12 | ARRANQUE | BACKFILL de arranque (SPY premarket + ETF + día anterior)
+2026-08-17 08:56:12 | DATA   | backfill SPY 2 D 1 min useRTH=False
+2026-08-17 08:56:13 | DATA   | backfill SPY: 297 barras persistidas (fecha 2026-08-17)
+2026-08-17 08:56:14 | DATA   | backfill DIA: 0 barras
+2026-08-17 08:56:14 | DATA   | backfill TLT: 0 barras
+2026-08-17 08:56:15 | DATA   | día anterior: cierre=777.88 máx=779.37 mín=774.11
+=== NOTIF === 2026-08-17 08:56:15 | ARRANQUE | Sistema EN MARCHA — esperando barras (todo activo)
+=== NOTIF === 2026-08-17 08:59:31 | ARRANQUE | ARRANQUE del sistema vivo — 2026-08-17 (0DTE 20260817)
+2026-08-17 08:59:31 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=17
+=== NOTIF === 2026-08-17 08:59:31 | IBKR | IBKR conectado (paper 4002)
+=== NOTIF === 2026-08-17 08:59:31 | ARRANQUE | Autocalibra: saldo=200 nivel=1 ancho=2 tope=35 unidades=1
+=== NOTIF === 2026-08-17 08:59:31 | ARRANQUE | BACKFILL de arranque (SPY premarket + ETF + día anterior)
+2026-08-17 08:59:31 | DATA   | backfill SPY 2 D 1 min useRTH=False
+2026-08-17 08:59:32 | DATA   | backfill SPY: 300 barras persistidas (fecha 2026-08-17)
+2026-08-17 08:59:32 | DATA   | backfill DIA: 0 barras
+2026-08-17 08:59:32 | DATA   | backfill TLT: 0 barras
+2026-08-17 08:59:32 | DATA   | día anterior: cierre=777.88 máx=779.37 mín=774.11
+=== NOTIF === 2026-08-17 08:59:32 | ARRANQUE | Sistema EN MARCHA — esperando barras (todo activo)
+=== NOTIF === 2026-08-17 09:00:14 | ARRANQUE | ARRANQUE del sistema vivo — 2026-08-17 (0DTE 20260817)
+2026-08-17 09:00:14 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=17
+=== NOTIF === 2026-08-17 09:00:14 | IBKR | IBKR conectado (paper 4002)
+=== NOTIF === 2026-08-17 09:00:14 | ARRANQUE | Autocalibra: saldo=200 nivel=1 ancho=2 tope=35 unidades=1
+=== NOTIF === 2026-08-17 09:00:14 | ARRANQUE | BACKFILL de arranque (SPY premarket + ETF + día anterior)
+2026-08-17 09:00:14 | DATA   | backfill SPY 2 D 1 min useRTH=False
+2026-08-17 09:00:15 | DATA   | backfill SPY: 301 barras persistidas (fecha 2026-08-17)
+2026-08-17 09:00:15 | DATA   | backfill DIA: 0 barras
+2026-08-17 09:00:15 | DATA   | backfill TLT: 0 barras
+2026-08-17 09:00:15 | DATA   | día anterior: cierre=777.88 máx=779.37 mín=774.11
+=== NOTIF === 2026-08-17 09:00:15 | ARRANQUE | Sistema EN MARCHA — esperando barras (todo activo)
+=== NOTIF === 2026-08-17 09:05:44 | ARRANQUE | ARRANQUE del sistema vivo — 2026-08-17 (0DTE 20260817)
+2026-08-17 09:05:44 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=17
+=== NOTIF === 2026-08-17 09:05:44 | IBKR | IBKR conectado (paper 4002)
+=== NOTIF === 2026-08-17 09:05:44 | ARRANQUE | Autocalibra: saldo=400 nivel=4 ancho=2 tope=75 unidades=1
+=== NOTIF === 2026-08-17 09:05:44 | ARRANQUE | BACKFILL de arranque (SPY premarket + ETF + día anterior)
+2026-08-17 09:05:44 | DATA   | backfill SPY 2 D 1 min useRTH=False
+2026-08-17 09:05:45 | DATA   | backfill SPY: 306 barras persistidas (fecha 2026-08-17)
+2026-08-17 09:05:45 | DATA   | backfill DIA: 0 barras
+2026-08-17 09:05:45 | DATA   | backfill TLT: 0 barras
+2026-08-17 09:05:45 | DATA   | día anterior: cierre=777.88 máx=779.37 mín=774.11
+=== NOTIF === 2026-08-17 09:05:45 | ARRANQUE | Sistema EN MARCHA — esperando barras (todo activo)
