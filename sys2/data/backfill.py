@@ -36,8 +36,10 @@ def backfill(ibkr, con, fecha_hoy):
     for b in bars:
         fk = _fecha(b)
         h = _hora(b)
-        if fk != fecha_hoy:
-            continue                          # solo la sesión de hoy (premarket incluido)
+        # HOY + la sesión ANTERIOR: `repo.prev_sesion` (ayer_rev/gap_fade) necesita los CIERRES
+        # del RTH de ayer, y ya vienen en este mismo "2 D" -> no hace falta otra llamada a IBKR.
+        if fk > fecha_hoy:
+            continue
         if h < "04:00" or h > "16:00":
             continue
         filas.append({"fecha": fk, "hora": h, "open": b.open, "high": b.high,
@@ -61,15 +63,25 @@ def backfill(ibkr, con, fecha_hoy):
         except Exception as ex:
             L.log("backfill ETF %s: %r" % (tk, ex), "WARN")
 
-    # 3) día anterior (cierre/máx/mín) -> gap_fade / ayer_rev
+    # 3) día anterior -> gap_fade / ayer_rev.
+    # Se DERIVA de las barras de 1 min que acabamos de guardar (max/min de los CIERRES del RTH),
+    # que es la definición del motor (motor.py:255-256). NO se usa ibkr.dia_anterior_spy(): esa
+    # devuelve el high/low de la barra DIARIA (rango más ancho -> menos señales que el backtest)
+    # y además, arrancando en premarket, devolvía ANTEAYER (bars[-2] sobre una serie sin hoy).
+    # Semántica de la tabla = la de schema.sql:21: `fecha` es la fecha CUYOS valores se guardan.
     try:
-        da = ibkr.dia_anterior_spy()
-        if da:
-            repo.insertar(con, "dia_anterior", [{"fecha": fecha_hoy, "cierre": da["cierre"],
-                                                 "maximo": da["maximo"], "minimo": da["minimo"]}])
+        mx, mn, cl = repo.prev_sesion(con, fecha_hoy)
+        if mx is not None:
+            f_prev = con.execute(
+                "select max(fecha) from bars where fecha < ? and hora >= '09:30' and hora <= '16:00'",
+                (fecha_hoy,)).fetchone()[0]
+            repo.insertar(con, "dia_anterior",
+                          [{"fecha": f_prev, "cierre": cl, "maximo": mx, "minimo": mn}])
             con.commit()
-            L.log("día anterior: cierre=%.2f máx=%.2f mín=%.2f"
-                  % (da["cierre"], da["maximo"], da["minimo"]), "DATA")
+            L.log("día anterior (%s, cierres RTH): cierre=%.2f máx=%.2f mín=%.2f"
+                  % (f_prev, cl, mx, mn), "DATA")
+        else:
+            L.log("día anterior: sin barras RTH de una sesión previa en la BD", "WARN")
     except Exception as ex:
         L.log("día anterior: %r" % ex, "WARN")
 

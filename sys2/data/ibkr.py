@@ -78,7 +78,14 @@ class IBKR:
                                          whatToShow="TRADES", useRTH=True, formatDate=1, keepUpToDate=False)
 
     def dia_anterior_spy(self):
-        """Cierre/máx/mín de la sesión RTH previa (para gap_fade / ayer_rev)."""
+        """⚠️ CANDIDATO A ELIMINACIÓN (2026-08-17) — YA NO SE USA. Sin callers: `backfill.py`
+        deriva el día anterior de `repo.prev_sesion` (max/min de los CIERRES del RTH, que es la
+        definición del motor). NO usar esta función: (1) devuelve el high/low de la barra DIARIA,
+        un rango más ancho que genera MENOS señales que el backtest; (2) `bars[-2]` es posicional
+        y, arrancando en premarket, la serie diaria no incluye hoy -> devolvía ANTEAYER.
+        Se conserva sin borrar hasta confirmar que nada externo la invoca (R12).
+
+        Cierre/máx/mín de la sesión RTH previa (para gap_fade / ayer_rev)."""
         bars = self.ib.reqHistoricalData(self._spy, endDateTime="", durationStr="3 D",
                                          barSizeSetting="1 day", whatToShow="TRADES",
                                          useRTH=True, formatDate=1, keepUpToDate=False)

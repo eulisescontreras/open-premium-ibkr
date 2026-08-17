@@ -16,6 +16,7 @@ sys2/vivo/.panel.pid
 # bases grandes/regenerables (NO subir)
 sys2.db
 massive_premium*.db
+massive_premium.db.parcial*
 spy_*.db
 *.db-wal
 *.db-shm

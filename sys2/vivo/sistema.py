@@ -81,10 +81,14 @@ class SistemaVivo:
 
         # backfill (premarket SPY + ETF + día anterior)
         BF.backfill(self.ib, self.con, self.fecha)
-        da = self.con.execute("select maximo,minimo,cierre from dia_anterior where fecha=?",
-                              (self.fecha,)).fetchone()
-        if da:
-            self.prev = (da[0], da[1], da[2])
+        # prev = max/min de los CIERRES del RTH de la sesión anterior + su último cierre.
+        # MISMA definición que el motor de backtest (motor.py:255-256). NO son el high/low de
+        # la barra diaria: ese rango es más ancho y generaría MENOS señales que lo validado.
+        self.prev = repo.prev_sesion(self.con, self.fecha)
+        L.log("día anterior (cierres RTH): max=%s min=%s cierre=%s" % self.prev, "DATA")
+        if self.prev[0] is None:
+            L.notificar("SIN datos de la sesión anterior — ayer_rev y gap_fade quedan inactivas",
+                        "DATA")
         return True
 
     # ─────────────────────────── datos del minuto ───────────────────────────

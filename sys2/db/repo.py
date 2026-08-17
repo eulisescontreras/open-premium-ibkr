@@ -51,6 +51,33 @@ def contar(con, tabla):
     return con.execute("select count(*) from %s" % tabla).fetchone()[0]
 
 
+def prev_sesion(con, fecha):
+    """(max_cierre, min_cierre, ultimo_cierre) del RTH de la ULTIMA sesion ANTERIOR a `fecha`.
+
+    ⚠️ Son max/min de los CIERRES de 1 minuto, NO el high/low (con mechas) de la barra diaria.
+    Es EXACTAMENTE lo que usa el motor de backtest (motor.py:255-256):
+        prev = (max(cl_.values()), min(cl_.values()), cl_[hsd[-1]])
+    con cl_ = cierres del RTH. El rango de mechas es mas ANCHO (medido: +0.29 pts de mediana,
+    hasta +10.90) y por tanto mas dificil de romper -> si el vivo usara high/low generaria MENOS
+    señales que el backtest (medido: ayer_rev 277 con mechas vs 293 con cierres).
+    Alimenta prev_hi/prev_lo/prev_cl de las entradas `ayer_rev` y `gap_fade`.
+
+    Devuelve (None, None, None) si no hay sesion anterior con datos RTH.
+    """
+    f = con.execute(
+        "select max(fecha) from bars where fecha < ? and hora >= '09:30' and hora <= '16:00'",
+        (fecha,)).fetchone()
+    if not f or not f[0]:
+        return (None, None, None)
+    r = con.execute(
+        "select max(close), min(close), "
+        "(select close from bars b2 where b2.fecha=? and b2.hora>='09:30' and b2.hora<='16:00' "
+        " order by b2.hora desc limit 1) "
+        "from bars where fecha=? and hora>='09:30' and hora<='16:00'",
+        (f[0], f[0])).fetchone()
+    return (r[0], r[1], r[2]) if r else (None, None, None)
+
+
 def log_migracion(con, origen, destino, filas):
     con.execute(
         "insert into migracion_log(cuando,origen,destino,filas) "

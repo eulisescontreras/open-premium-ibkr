@@ -89,10 +89,15 @@ def migrar_bars_etf(con):
 def derivar_dia_anterior(con):
     """dia_anterior = cierre/max/min RTH (09:30-16:00) de CADA fecha en bars.
     ayer_rev/gap_fade consultaran la fecha del dia habil previo."""
-    q = ("select fecha, max(high), min(low), "
+    # max/min de los CIERRES del RTH (NO high/low con mechas): es la definicion del motor
+    # (motor.py:255-256) y la que consume repo.prev_sesion en el vivo.
+    # Se EXCLUYE la fecha en curso: si se re-migra durante la sesion, escribir la fila de HOY
+    # con el max/min de HOY seria LOOK-AHEAD (trampa del MANUAL §2.3).
+    q = ("select fecha, max(close), min(close), "
          "(select close from bars b2 where b2.fecha=b1.fecha and b2.hora<='16:00' "
          " order by b2.hora desc limit 1) "
-         "from bars b1 where hora>='09:30' and hora<='16:00' group by fecha")
+         "from bars b1 where hora>='09:30' and hora<='16:00' "
+         "and fecha < date('now','localtime') group by fecha")
     filas = [dict(fecha=f, maximo=mx, minimo=mn, cierre=cl)
              for f, mx, mn, cl in con.execute(q)]
     n = repo.insertar(con, "dia_anterior", filas)
