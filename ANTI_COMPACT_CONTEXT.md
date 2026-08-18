@@ -18,6 +18,207 @@
 > otra máquina — los logs viejos del repo tienen esa ruta).
 
 ---
+# 🔴 MARTES 2026-08-18 — SISTEMA VIVO sys2: 3 SEÑALES, 0 OPERACIONES. CAUSAS ENCONTRADAS
+---
+
+**Sesión:** paper DU7154467. Arranque 09:25 con **200 $** (el usuario creía 600); tras reset
+manual a 600 $ se reinició 09:25 → `Autocalibra: saldo=600 nivel=6 ancho=2 tope=110 unidades=1`.
+
+**Las 3 señales del día, todas `sin_contrato` (se cayeron por menos de 2 $ cada una):**
+
+| Hora | Entrada | Dir | Vertical elegible | Se pasó por |
+|---|---|---|---|---|
+| 09:30 | `ayer_rev` | C | 768/770 = 110,00 $ | **1,42e-14 $** (bug flotante) |
+| 09:33 | `gap_fade` | C | 767/769 = 110,50 $ | 0,50 $ (presupuesto real) |
+| 09:54 | `ST-3 NORMAL` | P | 770/768 = 112,00 $ | 2,00 $ (presupuesto real) |
+
+**VERIFICADO (ejecutando funciones reales, no leyendo comentarios):**
+
+1. **BUG flotante en `core/instrumento.py:elegir_vert`.** `(2.035-0.935)*100` →
+   `110.00000000000001`; `<= 110` da **False**. FIX aplicado: `deb = round(..., 2)`.
+   Barrido de 8 tolerancias (1e-9 … medio centavo) sobre 485 sesiones: **todas dan el MISMO
+   resultado** → los casos afectados son empates exactos, no bordes. Motor: **+72.375 →
+   +72.024 $** (−351 $, −0,48 %), y la desviación vs target del MANUAL **baja de 1,4 % a 0,9 %**
+   (A1 de 0,7 % a −0,4 %). A2 sin cambio. No existe variante que arregle el bug y mueva menos.
+2. **`elegir_vert` es COMPARTIDA** vivo (`sistema.py:294`) ↔ motor (`motor.py:227`). Cualquier
+   cambio ahí mueve el backtest. `autocalibra` NO la usa el motor (solo `sistema.py:70` y `146`).
+3. **`mny < 0.5`** (`instrumento.py:23-25`) prohíbe la pata larga si no está ITM ≥0,5. A las
+   09:34 (spot 768.18) prohibió el vertical de **88,5 $ que SÍ cabía** y forzó al de 110,5 $.
+   Marcado VERBATIM del motor → **NO tocar** sin aceptar mover las cifras.
+4. **`bars_etf` vacío toda la sesión → `dia_bueno()` = False siempre** (nunca dobla unidades).
+   Causa: `data/backfill.py` pedía la ventana **09:25-10:05** pero corre **una sola vez** en
+   `arrancar()`; con arranque 09:25 esa ventana no existía. FIX: extraída `backfill.etf_dia()`
+   (reutilizable) + reintento único desde `paso()` pasadas las 10:06. `repo.insertar` es
+   INSERT OR REPLACE sobre PK (ticker,fecha,hora) → reintentar no duplica.
+5. **No había recalibración intradía.** `autocalibra.configuracion()` solo en `arrancar()`;
+   `_docs/plan_aprobado.md:87` lo especifica así ("solo al inicio de sesión"). FIX: método
+   `Sistema._recalibrar(hora)` llamado cada minuto — ajusta **tope y unidades**, `C.ANCHO`
+   CONGELADO, mantiene la última config válida si IBKR falla, y **no toca `self._saldo`**
+   (`sistema.py:188` hace `capital = _saldo + pnl_hoy` y NetLiq ya incluye el PnL → doble conteo).
+   ⚠️ Riesgo asumido: si el saldo cae 600→500 el tope baja a 90 $ y a 400 → 75 $, **por debajo
+   del costo del vertical elegible (88-135 $)**: una pérdida puede autoapagar el sistema.
+6. **ST-3 ciego antes de las 09:45** (`pipeline.py:47-49`). Ejecutado con `construir_sen` real:
+   flip alcista (`dir=C`) en la barra **09:42** descartado por esa regla. Es diseño, no bug.
+
+**LÍMITE FUNDAMENTAL DE LA MEDICIÓN (leer antes de confiar en el motor para esto):** la cadena
+del backtest tiene **3-14 contratos/día**, el vivo tiene **82/minuto**
+(`_agente_verbatim/00_DUDAS_PARA_EL_AGENTE_2026-08-17.md:101-102`). Un "sin cambio" en el motor
+**NO prueba inocuidad**: puede significar que el backtest no tiene los strikes intermedios donde
+el cambio decidiría. El motor sirve para **detectar daño**, no para certificar que algo es gratis.
+
+**Estado al escribir esto:** los 3 fixes están **en disco pero INACTIVOS** — el proceso vivo
+mantiene en memoria el código con el que arrancó. Requieren reinicio, que el usuario pidió
+posponer hasta cerrar todos los detalles. Batería completa de cold runs con los 3 cambios:
+solo se mueven `cr_motor` y `cr_validacion` por el fix de flotante; `cr_entradas`, `cr_fills`,
+`cr_autocalibra`, `cr_salida`, `cr_lookahead` **idénticos**.
+
+## RESUELTO EL MISMO DÍA — 7 fixes aplicados, 12/12 cold runs VERDE, reinicio 11:59 OK
+
+**Margen sobre el tope: se eligió +1 $** (`instrumento.py`, `if 20 <= deb <= tope + 1`).
+Criterio del usuario: "que no empeore nada, solo mejorar". Medido sobre 485 sesiones:
+racha **4 → 4**, drawdown **-1140 → -1140**, peor día **-648 → -648** (IDÉNTICOS);
+rojos 139 → 137 y +473 $. De los días afectados, el **83,3 % mejoran** (mejor ratio de todas).
+NO pasa el T1 de §2.1 (2/4 bloques) → su beneficio no es robusto, pero su NO-perjuicio sí.
+**+5 % sí pasa los 4 tests** (+74.519, T1 4/4, p<0.0001, 64,9 % de 37 días) **pero deja
+`cr_motor` en ROJO** (dif 4,4 % > 2 %): es un cambio de estrategia, no un arreglo. DESCARTADO
+a propósito — queda medido por si algún día se decide redefinir el sistema validado.
+
+**Motor final: +72.497 $ (dif 1,5 %), 335 verdes / 137 rojos. 12/12 cold runs VERDE.**
+Punto de partida era +72.375 / 333 / 139 → nada empeoró, dos cosas mejoraron.
+
+**Fixes 6 y 7 (añadidos tras encontrar más gaps):**
+6. **`_recuperar_posicion()`** en `arrancar()`: adopta la posición 0DTE abierta en IBKR al
+   reiniciar. Sin esto un reinicio la dejaba huérfana (sin flip ST-3 ni aplanado 15:50 §12).
+   Detecta la pirámide por diferencia contra las posiciones reales. El sistema ANTERIOR
+   (`spy_direction.py:3982 _sync_pos`) ya tenía esto; sys2 no lo heredó.
+7. **P&L con fills reales** (`_credito_real`) + **`_completar_entrada()`**: copia a
+   `operaciones` los precios REALMENTE ejecutados por pata y el bid/ask del momento (antes
+   solo vivían en `fills` y la fila quedaba con NULL). Op #131 rellenada: largo 1,52
+   (ask 1,54), corto 0,51 (bid 0,52) — ambas patas llenaron DENTRO del spread.
+   Panel: `mid_usd` muestra el cambio en $ además del %.
+
+**REINICIO 11:59 VERIFICADO en producción:** `Autocalibra: saldo=622` (lee el saldo real),
+`backfill DIA/TLT: 36 barras` (antes 0 → regla 5 revivida), `POSICIÓN RECUPERADA de IBKR:
+vertical C L=767/S=769 +pirámide 768`. BD íntegra, sin duplicados ni pérdidas.
+
+**Fixes 8-10 (registro completo en la BD, 12/12 cold runs VERDE tras aplicarlos; el diff
+contra la tanda anterior solo muestra datos vivos acumulándose, TOTAL/A1/A2 idénticos):**
+8. **La pirámide ya se persiste**: `_piramidar` captura el trade y guarda sus fills colgados de
+   la MISMA operación (`p['op_id']`), sin abrir fila nueva. OJO: `_persistir_fills` NO llama a
+   `_completar_entrada` cuando tipo=="piramide" — si lo hiciera, el precio de la pirámide
+   SOBRESCRIBIRÍA `precio_largo_pagado` de la pata original del vertical.
+9. **`senal_id`**: `_persistir_senal` devuelve su id (el existente si ya estaba, es idempotente)
+   y `_enlazar_senal` lo escribe en `operaciones`. Antes no se podía saber qué señal originó
+   cada operación.
+10. **`iv_entrada`**: la IV ya se calculaba para obtener la delta y se tiraba; ahora se guarda.
+   `_recuperar_posicion` también devuelve `op_id`, o una pirámide POSTERIOR a un reinicio
+   volvería a quedar huérfana.
+
+**PENDIENTE PRINCIPAL (encontrado, NO arreglado a propósito):**
+- **Falta sincronización PERIÓDICA con IBKR** (el `_sync_pos` viejo corría siempre, no solo
+  al arrancar). IBKR reporta órdenes `Cancelled` con `filled=0` que **se llenan igual** —
+  documentado en `spy_direction.py:4007` y ocurrido HOY a las 11:01 con la BAG del ORB.
+  A media sesión nadie detectaría esa divergencia.
+- El **aplanado 15:50 y el cierre** siguen sin ejecutarse nunca en real.
+
+## 🔴 CRÍTICO 2026-08-18 — EL CIERRE FALLÓ 3 VECES Y EL SISTEMA NO SE ENTERÓ
+
+**Lo que pasó (primera operación real del sistema: ORB 11:00, vertical 767C/769C + pirámide 768C):**
+- **15:16 flip**: BAG a límite (crédito 0,79) **NO se llenó**. `_cerrar` puso `pos=None` igual.
+  Posición HUÉRFANA: sin gestión, sin aplanado (todos exigen `pos is not None`).
+  Detectado por casualidad al preguntar el usuario por un número del panel.
+  Rescate: reabrir la op en la BD (`hora_salida=NULL`) + reiniciar -> `_recuperar_posicion` la adoptó.
+- **15:50 aplanado** (primer estreno real): cerró **PARCIAL** — el single 768 al límite 0,21 SÍ
+  llenó, el BAG del vertical (0,86) NO. Otra vez `pos=None` a ciegas.
+- **15:52 cierre manual con BAG a MERCADO**: **RECHAZADO por IBKR**
+  `Error 201: YOUR ORDER IS NOT ACCEPTED. PROJECTED POST EXPIRATION MARGIN DEFICIT IS 37901.96 USD`
+  (largo ITM + cuenta pequeña: IBKR proyecta el ejercicio y bloquea).
+- **15:53 cierre POR PATAS, CORTA PRIMERO, a mercado: LLENÓ A LA PRIMERA.** Cuenta PLANA 15:54.
+  Recomprar la corta elimina la obligación -> desaparece el déficit proyectado -> el largo se
+  vende sin objeción. Si se hace al revés queda un CORTO DESNUDO (peor y también rechazado).
+
+**Cierre real del día: 600 -> 485,60$ = -114,40$** (el sistema registró -93$; antes del fix de
+valoración de la pirámide había registrado -27$, que era solo el vertical).
+
+**FIX (implementado, NO VERIFICADO en cierre real — se estrena mañana):**
+`data/ibkr.py::cerrar_todo()` + `abiertas()`. Cascada con verificación contra IBKR en cada paso:
+BAG al MID -> verificar -> patas al MID (cortas primero) -> verificar -> patas a MERCADO
+(último recurso, §12) -> verificar. Devuelve `(plana, precios_reales)`.
+`sistema.py::_cerrar` ya **NO pone `pos=None` si IBKR dice que sigue viva**: la mantiene, avisa
+y reintenta al minuto siguiente (así el aplanado 15:50 / mercado 15:55 / verificación 15:59
+siguen actuando sobre ella). El P&L usa los precios REALMENTE ejecutados.
+
+**LECCIÓN:** el sistema mandaba órdenes y daba el resultado por hecho. `self.pos` es memoria;
+la verdad está en IBKR. Sigue PENDIENTE la sincronización PERIÓDICA (`_sync_pos` del sistema
+viejo, `spy_direction.py:3982`), que es la red que habría cazado los tres fallos.
+
+## DESCARTADO 2026-08-18 — 23 variantes medidas sobre 485 sesiones, NINGUNA mejora
+
+Criterio del usuario: racha ≤4, drawdown ≥-1140, peor día ≥-648 y TOTAL ≥+72.497 (no perder
+profit). Baseline verificado: los 3 barridos independientes dan +72.497 **idéntico día a día**.
+
+**1. Toma de beneficio por TOQUES a la línea del ST-3** (2/3/4 toques, con y sin beneficio):
+cuesta **-4.196 a -14.009 $**. T4 ≈ 49-53 % = ruido puro (p 0.75-0.95). Sube los días verdes
+(335→349) y baja el total: corta justo los movimientos largos que financian el sistema.
+Con MAX_TRADES 6/8 sigue costando -7.664 $ → NO era problema de cupo.
+OJO: el toque de ENTRADA (`rebote.reb2`) y este de SALIDA son cosas distintas; `rebote.py`
+nunca se tocó.
+
+**2. Subir MAX_TRADES solo** (6 u 8): +1.116 $ y 2 rojos menos, PERO el **peor día empeora
+-648 → -709 $** (con cuenta de 600$ eso es ruina) y no pasa T1/T4. DESCARTADO.
+
+**3. Soportes/resistencias por pivotes ±3** (filtro de entrada 0.5/1.0/2.0×ATR, salida al
+nivel, y combinado): **-18.212 a -56.290 $**. El filtro 2.0×ATR sube la RACHA a 5; las
+variantes de salida **duplican/triplican el drawdown** (-2.397 y -3.441). T4 31-41 % = daño
+SISTEMÁTICO, no ruido. El filtro descartaba señales buenas: verdes 335→259.
+
+**4. RAÍZ DEL FRACASO (medido aparte, sin motor, 250 sesiones): NO HAY SEÑAL en los niveles.**
+Tasa de rebote real vs control de niveles INVENTADOS al azar:
+  TF 1min 50.9% vs 49.8% | TF 3min 51.5% vs 48.6% | TF 5min 51.1% vs 50.8%
+  TF 15min 47.9% vs 48.0% | TF 30min 46.2% vs 51.2%
+El precio rebota en los niveles reales IGUAL que en precios al azar, en TODAS las
+temporalidades (en 15/30 min, peor). La ventaja de 1-3 puntos no cubre ni el spread.
+**NO volver a proponer soportes/resistencias intradía sin refutar antes este test.**
+Script: `scratchpad/test_niveles_info.py` (3 min de cómputo vs 30 del motor).
+
+Nota de método: un pivote ±N se confirma N velas DESPUÉS (anti look-ahead). En 3 min son 9
+minutos de retraso; subir la temporalidad EMPEORA eso (15 min → 45 min de retraso).
+
+**5. "NO ENTRAR EN MERCADO PLANO" (atr_pct) — NO APLICA A sys2.** Medido instrumentando el
+motor real: las **1.056 operaciones** de las 485 sesiones, con el ATR% (14 barras previas) al
+abrir vs su P&L, por deciles:
+  decil 1 (MÁS plano, 0.002-0.017): **+10.573$, media +101,7$, 62,5% verdes**  <- 3º MEJOR
+  decil 3 (0.024-0.029): -254$ (media -2,4$, ruido)  |  decil 9: +13.909$  |  decil 10: +12.044$
+9 de 10 deciles positivos, sin relación monótona. Filtrar el plano ELIMINARÍA uno de los
+mejores grupos de operaciones.
+**MOTIVO (importante para no volver a heredar hallazgos):** el `atr_pct -0,83` de
+`ANALISIS_ENTRADA_SALIDA.md:142` y `HIPOTESIS §1.6` se midió sobre el sistema ANTERIOR, que
+compraba **opciones SIMPLES** (theta completo → el plano las mata). `sys2` compra **verticales
+de débito**: la pata corta VENDE theta y compensa a la larga, así que el plano es inofensivo.
+Un hallazgo validado sobre otra ESTRUCTURA DE POSICIÓN no se hereda: cambió el instrumento,
+cambió la física. Script: `scratchpad/test_plano.py`.
+
+**6. TRAILING (descartado por el usuario + datos):** `GIROS_DINERO.txt` muestra que cuanto más
+ajustado, menos gana (trail 0.11% +652 | 0.096% +576 | 0.06% +312). Coherente con 1-3: este
+sistema NO tolera reglas que corten ganancias. `sys2` no tiene trailing y así se queda.
+
+**PATRÓN GENERAL DEL DÍA (4 líneas independientes, misma conclusión):** toda regla que corte
+ganancias antes de tiempo destruye el sistema (toques -4k/-14k · niveles -18k/-56k · salida al
+nivel -47k · trail ajustado la mitad). La esperanza vive en POCOS días grandes. Lo único que
+mejoró hoy fue corregir bugs (+122$ y 2 rojos menos, sin tocar el riesgo).
+
+**ESTADO DE VERIFICACIÓN (regla 7) — qué está probado y qué NO:**
+- VERIFICADO EN EJECUCIÓN REAL: fix flotante (motor + los 3 descartes de hoy), autocalibra con
+  saldo real (622$ leído tras el reinicio), backfill ETF (36+36 barras), `_recuperar_posicion`
+  (3 corridas contra la posición viva, incluida `op_id`), `_completar_entrada` (op #131
+  rellenada con fills reales), panel `mid_usd`.
+- **NO VERIFICADO en ejecución** (solo compila + cold runs verdes): persistencia de la
+  **pirámide** (hace falta que ocurra otra), **`senal_id`/`iv_entrada`** (hace falta una
+  apertura nueva), y **`_credito_real`** (hace falta un cierre). La op #131 conserva esos dos
+  campos en NULL porque se abrió ANTES del arreglo: no se rellenan a mano (regla 13).
+- El **margen +1$** tampoco se ha visto disparar en vivo: hace falta una señal en el filo.
+
+---
 # 🟢 MIÉRCOLES 2026-08-12 — CIERRE. LA SEÑAL DEL VWAP (lo primero que pasa TODOS los tests)
 ---
 

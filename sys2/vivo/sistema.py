@@ -49,6 +49,7 @@ class SistemaVivo:
         self.hechas = 0
         self.cfg = None            # autocalibración de la sesión
         self._saldo = 0.0          # cache del saldo (el panel usa la BD, no IBKR)
+        self._etf_hecho = False    # reintento del backfill ETF (una sola vez por sesión)
         self._origen = {}          # {hora: origen de la señal} (ST-3/ORB/pm_rev/... para el panel)
         self.nq = 1                # unidades (día bueno dobla)
         self.fecha = None
@@ -89,6 +90,9 @@ class SistemaVivo:
         if self.prev[0] is None:
             L.notificar("SIN datos de la sesión anterior — ayer_rev y gap_fade quedan inactivas",
                         "DATA")
+        # Reinicio a media sesión: si ya hay posición 0DTE abierta en IBKR hay que adoptarla,
+        # o queda sin gestión de salida (flip ST-3 / aplanado 15:50 §12).
+        self._recuperar_posicion()
         return True
 
     # ─────────────────────────── datos del minuto ───────────────────────────
@@ -108,6 +112,117 @@ class SistemaVivo:
         return PM
 
     # ─────────────────────────── paso por minuto ───────────────────────────
+    def _recuperar_posicion(self):
+        """Reconstruye self.pos si el proceso arranca con una posición YA abierta en IBKR.
+        Sin esto, un reinicio a media sesión deja la posición HUÉRFANA: nadie la valora, nadie
+        aplica el flip del ST-3 y —lo grave con 0DTE— nadie ejecuta el aplanado de las 15:50
+        (riesgo de asignación §12). Caso real 2026-08-18: vertical 767/769 + pirámide abiertos.
+        Fuente de verdad = IBKR (posiciones reales); la BD aporta hora de entrada, delta y origen.
+        El coste de entrada se toma del avgCost REAL de IBKR (incluye comisión), no del teórico.
+        Si IBKR tiene posición y la BD no tiene operación abierta, NO inventa: avisa y deja
+        self.pos=None para no operar a ciegas encima de una posición que no entiende."""
+        try:
+            abiertas = [p for p in self.ib.posiciones()
+                        if getattr(p.contract, "secType", "") == "OPT"
+                        and getattr(p.contract, "lastTradeDateOrContractMonth", "") == self.expiry
+                        and p.position != 0]
+        except Exception as ex:
+            L.log("recuperar posición: %r" % ex, "WARN")
+            return
+        if not abiertas:
+            return
+        fila = self.con.execute(
+            "select right, strike_largo, strike_corto, qty, hora_entrada, delta_entrada, id "
+            "from operaciones where fecha=? and hora_salida is null order by id desc limit 1",
+            (self.fecha,)).fetchone()
+        if fila is None:
+            L.notificar("⚠️ %d pata(s) 0DTE abiertas en IBKR SIN operación abierta en la BD — "
+                        "no se reconstruye; revisar y cerrar a mano" % len(abiertas), "RIESGO")
+            return
+        rt, kl, ks, qty, h0, d0, op_id = fila
+        coste = {float(p.contract.strike): abs(p.avgCost) / 100.0 for p in abiertas}
+        largos = sorted(float(p.contract.strike) for p in abiertas if p.position > 0)
+        es_vert = ks is not None and float(ks) in coste
+        ask = coste.get(float(kl), 0.0) - (coste.get(float(ks), 0.0) if es_vert else 0.0)
+        self.pos = {'k': float(kl), 'ks': float(ks) if es_vert else None, 'rt': rt,
+                    'ask': ask, 'mid': ask, 'rod': 0, 'extra': None,
+                    'h0': h0 or "09:30", 'd0': d0, 'vert': bool(es_vert),
+                    'nq': int(qty or 1), 'origen': "recuperada", 'op_id': op_id}
+        # pirámide: un largo extra que no es la pata larga del vertical (no se persiste en la BD,
+        # solo existía en memoria -> se detecta por diferencia contra las posiciones reales).
+        extra = [k for k in largos if k != float(kl)]
+        if extra:
+            self.pos['extra'] = {'k': extra[0], 'ask': coste[extra[0]], 'mid': coste[extra[0]]}
+        L.notificar("POSICIÓN RECUPERADA de IBKR: %s %s L=%.0f%s coste=%.2f%s (entrada %s)"
+                    % ("vertical" if es_vert else "single", rt, float(kl),
+                       "/S=%.0f" % float(ks) if es_vert else "", ask,
+                       " +pirámide %.0f" % extra[0] if extra else "", h0), "ARRANQUE")
+
+    def _sincronizar(self, hora):
+        """RED DE SEGURIDAD: la posición REAL de IBKR manda sobre self.pos, que es solo memoria
+        y PUEDE DIVERGIR. El 2026-08-18 divergió tres veces en una sola sesión: dos cierres que
+        no se llenaron (15:16 y 15:50) dejaron 0DTE vivas con el sistema creyéndose plano, sin
+        aplanado ni verificación posterior (§12). El sistema ANTERIOR ya tenía esto
+        (`spy_direction.py:3982 _sync_pos`) y sys2 no lo heredó.
+
+        Dos direcciones:
+          IBKR tiene y el sistema NO  -> ADOPTAR (reusa _recuperar_posicion).
+          el sistema tiene e IBKR NO  -> SOLTAR, pero solo tras 2 confirmaciones seguidas: un
+                                          fallo puntual de la API no puede hacernos abandonar
+                                          una posición viva. La fila de la BD se cierra con
+                                          razón 'externa' y pnl NULL: NO se inventa un precio
+                                          de salida que nadie ejecutó (regla 13)."""
+        try:
+            reales = self.ib.abiertas(self.expiry)
+        except Exception as ex:
+            L.log("sync: %r" % ex, "WARN")
+            return
+        if self.pos is None and reales:
+            L.notificar("SYNC %s: IBKR tiene %d pata(s) 0DTE y el sistema se creía PLANO — "
+                        "adoptando" % (hora, len(reales)), "RIESGO")
+            self._sync_falta = 0
+            self._recuperar_posicion()
+        elif self.pos is not None and not reales:
+            self._sync_falta = getattr(self, "_sync_falta", 0) + 1
+            if self._sync_falta >= 2:
+                L.notificar("SYNC %s: el sistema creía tener posición e IBKR está PLANA "
+                            "(2 confirmaciones) — se suelta y se cierra la fila como 'externa'"
+                            % hora, "RIESGO")
+                self.con.execute(
+                    "update operaciones set hora_salida=?, razon_salida='externa' "
+                    "where fecha=? and hora_salida is null", (hora, self.fecha))
+                self.con.commit()
+                self.pos = None
+                self._sync_falta = 0
+        else:
+            self._sync_falta = 0
+
+    def _recalibrar(self, hora):
+        """Relee el saldo REAL de IBKR y reajusta tope/unidades. Antes esto ocurría SOLO en
+        arrancar(), así que un reset de la cuenta (o el P&L del día) no movía el tope hasta
+        reiniciar el proceso (caso real 2026-08-18: cuenta pasada de 200$ a 600$ en caliente).
+        C.ANCHO queda CONGELADO al del arranque: cambiarlo a media sesión mezclaría dos
+        estrategias distintas (§13.1 pasa de 2 a 3 puntos en el nivel 800) en el mismo día.
+        Si IBKR no responde o el saldo cae bajo el mínimo de la tabla, se MANTIENE la última
+        configuración válida: nunca se interrumpe el bucle ni se deja el sistema sin tope.
+        NO toca self._saldo a propósito: _volcar_estado() calcula capital = _saldo + pnl_hoy y
+        NetLiquidation ya incluye el P&L realizado -> se contaría dos veces en el panel."""
+        saldo = self.ib.saldo()
+        cfg = autocalibra.configuracion(saldo) if saldo is not None else None
+        if cfg is None:
+            L.log("recalibra %s: saldo=%s sin configuración válida — se mantiene tope %.0f"
+                  % (hora, saldo, C.TOPE), "WARN")
+            return
+        if self.cfg is None or cfg["nivel"] != self.cfg["nivel"]:
+            L.notificar("RECALIBRA %s: saldo=%.0f nivel %s->%d tope %.0f->%.0f unidades %s->%d "
+                        "(ancho FIJO %.0f)"
+                        % (hora, saldo, self.cfg["nivel"] if self.cfg else "?", cfg["nivel"],
+                           C.TOPE, cfg["tope"], self.unidades_base, cfg["unidades"], C.ANCHO),
+                        "ARRANQUE")
+        self.cfg = cfg
+        C.TOPE = cfg["tope"]
+        self.unidades_base = cfg["unidades"]
+
     def paso(self, hora):
         """Un minuto de mercado (09:30-16:00). Captura, decide y ejecuta. Espeja motor.SIS70."""
         spot = self._spot()
@@ -138,10 +253,22 @@ class SistemaVivo:
         # así que se decidía sobre una barra en formación.
         h_dec = hhmm(mm(hora) - 1)
         sen_dec = Sen.get(h_dec)
+        # Reintento del backfill ETF: si el sistema arrancó ANTES de las 10:05, la ventana
+        # 09:25-10:05 que pide backfill.etf_dia aún no existía y bars_etf quedó vacío toda la
+        # sesión -> dia_bueno() devuelve False siempre (caso real 2026-08-18, arranque 09:25).
+        # Se reintenta UNA vez, ya cerrada la ventana. insertar() es OR REPLACE: no duplica.
+        if not self._etf_hecho and hora >= "10:06":
+            self._etf_hecho = True
+            if not self.con.execute("select 1 from bars_etf where fecha=? limit 1",
+                                    (self.fecha,)).fetchone():
+                L.notificar("bars_etf vacío — reintentando backfill ETF (%d barras)"
+                            % BF.etf_dia(self.ib, self.con, self.fecha), "DATA")
         dia = [(h, hi, lo, cl) for h, hi, lo, cl in self.con.execute(
             "select hora,close,close,close from bars_etf where ticker='DIA' and fecha=?", (self.fecha,))]
         tlt = [(h, hi, lo, cl) for h, hi, lo, cl in self.con.execute(
             "select hora,close,close,close from bars_etf where ticker='TLT' and fecha=?", (self.fecha,))]
+        self._sincronizar(hora)         # IBKR manda sobre self.pos (red de seguridad)
+        self._recalibrar(hora)          # tope/unidades al saldo real de AHORA (ancho fijo)
         self.nq = self.unidades_base * (2 if (C.DIABUENO and R.dia_bueno(cl_, dia, tlt)) else 1)
         self.nq = min(self.nq, autocalibra.TOPE_UNIDADES)
 
@@ -209,6 +336,9 @@ class SistemaVivo:
                 "nivel": self.cfg["nivel"], "version": self.cfg["version"],
                 "tope": int(self.cfg["tope"]), "meta": self.cfg["meta"],
                 "contrato": None,
+                # última notificación (compra/venta/arranque/riesgo) para que el panel la
+                # muestre: el print de notificar() se pierde con nohup y nadie lo ve.
+                "evento": L.ultima(),
             }
             if self.pos:
                 p = self.pos
@@ -218,11 +348,29 @@ class SistemaVivo:
                 else:
                     d["contrato"] = "%s %.0f%s" % (self.expiry, p["k"], p["rt"])
                     d["debito"] = round(p["ask"] * 100 / 1.01)
-                d["mid"] = round(p["mid"] * 100)
+                # TODAS las patas abiertas a la vista: la pirámide es un contrato más que se
+                # compró de verdad y no aparecía (solo la etiqueta "+extra"). `xN` = unidades.
+                if p.get("extra"):
+                    d["contrato"] += " +%.0f%s" % (p["extra"]["k"], p["rt"])
+                if p.get("nq", 1) > 1:
+                    d["contrato"] += " x%d" % p["nq"]
+                # La PIRÁMIDE se suma: es dinero de la MISMA posición. Antes el panel mostraba
+                # solo el vertical y ocultaba la mitad del P&L (2026-08-18: mostraba +28$ cuando
+                # la posición real ganaba +47$; el usuario lo detectó porque 600+17 no daba 653).
+                # _cerrar ya liquida las dos partes por separado: aquí se replica esa suma.
+                x = p.get("extra")
+                mid_t = p["mid"] + (x["mid"] if x else 0.0)
+                ask_t = p["ask"] + (x["ask"] if x else 0.0)
+                if x:
+                    d["debito"] = round(ask_t * 100 / 1.01)   # débito TOTAL (vertical + pirámide)
+                d["mid"] = round(mid_t * 100)
                 ent = p.get("h0")
                 d["entrada"] = ent
                 d["duracion"] = "%dm" % max(0, mm(hora) - mm(ent)) if ent else "—"
-                d["mid_pct"] = (100 * (p["mid"] - p["ask"]) / p["ask"]) if p["ask"] else 0
+                d["mid_pct"] = (100 * (mid_t - ask_t) / ask_t) if ask_t else 0
+                # cambio en DÓLARES de la posición (misma fórmula que el P&L de _cerrar, sin
+                # comisión): lo que se ganaría/perdería cerrando ahora al mid.
+                d["mid_usd"] = round((mid_t - ask_t) * 100)
                 if p.get("rod", 0) > 0 or p.get("extra"):
                     d["contrato_act"] = "rodado x%d" % p.get("rod", 0) if p.get("rod") else "+extra"
             ST.escribir(d)
@@ -243,6 +391,16 @@ class SistemaVivo:
             p['mid'] = _long - sh
         else:
             p['mid'] = _long
+        # La PIRÁMIDE también hay que revaluarla: sin esto extra['mid'] se queda CONGELADO en
+        # el precio de compra y su P&L sale siempre 0. El motor sí lo hace (motor.py:181-184);
+        # el vivo no lo hacía -> divergencia con lo validado. Caso real 2026-08-18: el panel
+        # mostraba -14$ cuando la posición perdía -82$, y el cierre por flip de las 15:16
+        # registró -27$ contando SOLO el vertical.
+        x = p.get('extra')
+        if x:
+            i2 = max(0.0, (spot - x['k']) if p['rt'] == 'C' else (x['k'] - spot))
+            q3 = pm_h.get((p['rt'], x['k']))
+            x['mid'] = max(q3[0], i2) if q3 else max(x.get('mid', i2), i2)
 
     def _gestionar(self, hora, spot, sen_dir, pm_h):
         """`sen_dir` = dirección de la señal del minuto CERRADO ('C'/'P'/None), no el dict Sen:
@@ -264,8 +422,13 @@ class SistemaVivo:
             cd = [(k, v) for (r, k), v in pm_h.items() if r == p['rt']]
             e = I.elegir(cd, spot, hora, p['rt'], "presupuesto", C.TOPE)
             if e:
-                self.ib.comprar_single(self.expiry, e[0], p['rt'], e[1][0], self.nq)
+                tr = self.ib.comprar_single(self.expiry, e[0], p['rt'], e[1][0], self.nq)
                 p['extra'] = {'k': e[0], 'ask': e[1][0] * 1.01, 'mid': e[1][0]}
+                # La pirámide NO se registraba en NINGUNA tabla: solo existía en p['extra'], en
+                # memoria (2026-08-18: se compró un C768 por 94$ que no figuraba en la BD y solo
+                # se detectó comparando con las posiciones reales de IBKR). Se cuelga de la MISMA
+                # operación —no abre fila nueva: es la misma posición, con una pata más.
+                self._persistir_fills(tr, p.get('op_id'), hora, "piramide", [(e[0], p['rt'], "BUY")])
                 L.notificar("PIRAMIDAR: +1 single %s %.0f" % (p['rt'], e[0]), "GESTION")
         # rodar
         elif (not p['extra'] and p['rod'] < C.ROD_MAX and hora < C.ROD_HASTA
@@ -301,9 +464,11 @@ class SistemaVivo:
                 self.pos = {'k': kl, 'ks': ksh, 'rt': rt, 'ask': (pl_ - psh) * 1.01, 'mid': pl_ - psh,
                             'rod': 0, 'extra': None, 'h0': hora, 'd0': d0, 'vert': True, 'nq': self.nq,
                             'origen': self._origen.get(h_sen)}
-                op_id = self._persistir_operacion(hora, spot, "vertical", rt, kl, ksh, pl_ - psh, d0)
+                op_id = self._persistir_operacion(hora, spot, "vertical", rt, kl, ksh,
+                                                  pl_ - psh, d0, s_)
+                self.pos['op_id'] = op_id          # para colgar la pirámide de ESTA operación
                 self._persistir_fills(trade, op_id, hora, "vertical", [(kl, rt, "BUY"), (ksh, rt, "SELL")])
-                self._persistir_senal(h_sen, rt, spot, pm_h, None)     # operada
+                self._enlazar_senal(op_id, self._persistir_senal(h_sen, rt, spot, pm_h, None))
             else:
                 # NO hay vertical dentro del tope: la señal se pierde. Es el caso mas frecuente
                 # con capital bajo (2026-08-17: tope 110$ y el mas barato costaba 113$).
@@ -320,26 +485,49 @@ class SistemaVivo:
             self.pos = {'k': e[0], 'rt': rt, 'ask': e[1][0] * 1.01, 'mid': e[1][0], 'rod': 0,
                         'extra': None, 'h0': hora, 'd0': d0, 'nq': self.nq,
                         'origen': self._origen.get(h_sen)}
-            op_id = self._persistir_operacion(hora, spot, "single", rt, e[0], None, e[1][0], d0)
+            op_id = self._persistir_operacion(hora, spot, "single", rt, e[0], None, e[1][0], d0, s_)
+            self.pos['op_id'] = op_id
             self._persistir_fills(trade, op_id, hora, "single", [(e[0], rt, "BUY")])
-            self._persistir_senal(hora, rt, spot, pm_h, None)          # operada
+            self._enlazar_senal(op_id, self._persistir_senal(hora, rt, spot, pm_h, None))
         else:
             self._persistir_senal(h_sen, rt, spot, pm_h, "sin_contrato")
 
     def _cerrar(self, hora, spot, razon, a_mercado=False, rodando=False):
         p = self.pos
+        # CIERRE GARANTIZADO de TODAS las patas (vertical + pirámide) en una sola llamada:
+        # BAG al mid -> patas al mid -> patas a mercado, VERIFICANDO contra IBKR en cada paso.
+        # Antes se mandaban 2 órdenes a límite y se daba el cierre por hecho sin comprobar: el
+        # 2026-08-18 eso dejó 0DTE vivas dos veces (15:16 y 15:50, cierre PARCIAL) con el
+        # sistema creyéndose plano, sin aplanado ni verificación posterior (§12 asignación).
+        mids = {p['k']: p['mid']}
+        if p.get('ks') is not None:
+            mids[p['ks']] = 0.0                      # la corta se recompra: mid propio abajo
+        if p.get('extra'):
+            mids[p['extra']['k']] = p['extra']['mid']
+        plana, px = self.ib.cerrar_todo(self.expiry, right=p['rt'],
+                                        credito=(p['mid'] if p.get('vert') else None),
+                                        qty=p.get('nq', 1), mids=mids)
+        # P&L con los precios REALMENTE ejecutados; el mid de la cadena queda de respaldo.
+        def _real(k, teorico):
+            return px[k] if k in px else teorico
         if p.get('vert'):
-            self.ib.cerrar_vertical(self.expiry, p['k'], p['ks'], p['rt'], p.get('nq', 1),
-                                    a_mercado=a_mercado, credito=p['mid'])
+            cred = _real(p['k'], p['_l'] if '_l' in p else p['mid']) - _real(p['ks'], p.get('_s', 0.0))
         else:
-            self.ib.cerrar_single(self.expiry, p['k'], p['rt'], p.get('nq', 1),
-                                  a_mercado=a_mercado, precio=p['mid'])
-        pnl = (p['mid'] - p['ask']) * 100 - C.COMISION
+            cred = _real(p['k'], p['mid'])
+        pnl = (cred - p['ask']) * 100 - C.COMISION
         if p['extra']:
-            self.ib.cerrar_single(self.expiry, p['extra']['k'], p['rt'], p.get('nq', 1),
-                                  a_mercado=a_mercado, precio=p['extra']['mid'])
-            pnl += (p['extra']['mid'] - p['extra']['ask']) * 100 - C.COMISION
-        L.notificar("CIERRE (%s) %s -> P&L≈%+.0f$ x%d" % (razon, p['rt'], pnl, p.get('nq', 1)), "CIERRE")
+            pnl += (_real(p['extra']['k'], p['extra']['mid']) - p['extra']['ask']) * 100 - C.COMISION
+        L.notificar("CIERRE (%s) %s -> P&L %s %+.0f$ x%d%s"
+                    % (razon, p['rt'], "REAL" if px else "estimado (sin fills)", pnl,
+                       p.get('nq', 1), "" if plana else "  ⚠️ NO PLANA"), "CIERRE")
+        if not plana:
+            # NO se suelta la posición: IBKR dice que sigue viva. Mantenerla en self.pos es lo
+            # que permite reintentar el cierre en el minuto siguiente y que el aplanado 15:50 /
+            # mercado 15:55 / verificación 15:59 sigan actuando sobre ella (todos exigen
+            # pos is not None). Poner pos=None a ciegas fue el fallo del 2026-08-18.
+            L.notificar("CIERRE NO CONFIRMADO (%s): la posición SIGUE ABIERTA en IBKR — se "
+                        "mantiene y se reintenta el próximo minuto" % razon, "RIESGO")
+            return
         self._persistir_cierre(hora, spot, razon, pnl)
         rt, r2, h0 = p['rt'], p['rod'] + 1, p['h0']
         self.pos = None
@@ -374,10 +562,10 @@ class SistemaVivo:
             if org and org.startswith("ST-3 "):
                 grupo = org.split(" ", 1)[1]          # NORMAL | RETRASA | INVIERTE | SKEW
             ya = self.con.execute(
-                "select 1 from senales where fecha=? and hora=? and ifnull(origen,'')=?",
+                "select id from senales where fecha=? and hora=? and ifnull(origen,'')=?",
                 (self.fecha, hora, org or "")).fetchone()
             if ya:
-                return
+                return ya[0]        # id de la señal ya registrada (para enlazar operaciones.senal_id)
             rr = None
             try:
                 rr = R.ratio_otm(pm_h, spot) if pm_h else None
@@ -391,16 +579,19 @@ class SistemaVivo:
             self.con.commit()
             L.log("señal %s %s (%s) -> %s" % (hora, rt, org or "?",
                   descartada_por or "OPERADA"), "SENAL")
+            return self.con.execute("select last_insert_rowid()").fetchone()[0]
         except Exception as ex:
             L.log("persistir señal %s: %r" % (hora, ex), "WARN")
+        return None
 
-    def _persistir_operacion(self, hora, spot, tipo, rt, kl, ks, debito, d0):
+    def _persistir_operacion(self, hora, spot, tipo, rt, kl, ks, debito, d0, iv=None):
         repo.insertar(self.con, "operaciones", [{
             "fecha": self.fecha, "n_op_dia": self.hechas + 1, "tipo": tipo, "right": rt,
             "strike_largo": kl, "strike_corto": ks, "ancho": C.ANCHO, "qty": self.nq,
             "nivel": self.cfg["nivel"], "modo": self.cfg["modo"], "tope": C.TOPE, "unidades": self.nq,
             "hora_entrada": hora, "spy_entrada": spot, "debito_neto": debito,
-            "delta_entrada": d0, "moneyness": (spot - kl) if rt == 'C' else (kl - spot),
+            "delta_entrada": d0, "iv_entrada": iv,      # la IV que YA se calcula para la delta
+            "moneyness": (spot - kl) if rt == 'C' else (kl - spot),
         }])
         self.con.commit()
         op_id = self.con.execute("select last_insert_rowid()").fetchone()[0]
@@ -444,6 +635,10 @@ class SistemaVivo:
             if filas:
                 repo.insertar(self.con, "fills", filas)
                 self.con.commit()
+                if tipo != "piramide":
+                    # la pirámide es una compra ADICIONAL sobre la misma operación: si se dejara
+                    # pasar, su precio sobrescribiría el precio_largo_pagado de la pata original.
+                    self._completar_entrada(op_id, hora, filas)
             if faltan and tipo == "vertical":
                 L.notificar("⚠️ FILL PARCIAL del vertical (op #%s): faltó %s — vigilar regla >5%%→single"
                             % (op_id, faltan), "FILL")
@@ -451,6 +646,71 @@ class SistemaVivo:
                 L.log("fills op #%s: %d pata(s) llena(s)" % (op_id, len(llenas)), "POS")
         except Exception as ex:
             L.log("persistir fills op #%s: %r" % (op_id, ex), "WARN")
+
+    def _enlazar_senal(self, op_id, sen_id):
+        """Enlaza operaciones.senal_id con la señal que la originó. Sin esto no se puede
+        reconstruir a posteriori QUÉ señal produjo cada operación (quedaba siempre NULL)."""
+        if not op_id or not sen_id:
+            return
+        try:
+            self.con.execute("update operaciones set senal_id=? where id=?", (sen_id, op_id))
+            self.con.commit()
+        except Exception as ex:
+            L.log("enlazar señal op #%s: %r" % (op_id, ex), "WARN")
+
+    def _completar_entrada(self, op_id, hora, filas):
+        """Copia a `operaciones` los precios REALMENTE pagados/cobrados por pata (que hasta
+        ahora solo vivían en `fills`) y el bid/ask del momento desde `premium`. Sin esto la
+        fila de la operación queda con precio_largo_pagado / precio_corto_cobrado / bid / ask
+        en NULL y es imposible auditar a posteriori a qué precio se entró de verdad."""
+        try:
+            d = {}
+            for f in filas:
+                if f.get("precio_lleno") is None:
+                    continue
+                col = "precio_largo_pagado" if f["accion"] == "BUY" else "precio_corto_cobrado"
+                d[col] = f["precio_lleno"]
+                lado = "largo" if f["accion"] == "BUY" else "corto"
+                q = self.con.execute(
+                    "select bid,ask from premium where fecha=? and hora=? and strike=? and right=?",
+                    (self.fecha, hora, f["strike"], f["right"])).fetchone()
+                if q:
+                    d["bid_%s" % lado], d["ask_%s" % lado] = q
+            if not d:
+                return
+            self.con.execute("update operaciones set %s where id=?"
+                             % ",".join("%s=?" % k for k in d),
+                             list(d.values()) + [op_id])
+            self.con.commit()
+            L.log("op #%s: entrada completada (%s)" % (op_id, ", ".join(sorted(d))), "POS")
+        except Exception as ex:
+            L.log("completar entrada op #%s: %r" % (op_id, ex), "WARN")
+
+    def _credito_real(self, trade):
+        """Crédito NETO por contrato realmente ejecutado en una orden de cierre, leyendo
+        execution.price de ib_insync (SELL suma, BUY resta). Devuelve None si no llegó ningún
+        fill -> el caller cae a la estimación teórica. Se separa del P&L teórico porque
+        `(mid - ask)` usa precios de la CADENA: sirve para decidir, no para contabilizar.
+        Salta el fill agregado del combo (secType='BAG'), igual que _persistir_fills."""
+        if trade is None:
+            return None
+        try:
+            self.ib.ib.sleep(3)
+            neto, hubo = 0.0, False
+            for f in list(getattr(trade, "fills", []) or []):
+                ex = getattr(f, "execution", None)
+                c = getattr(f, "contract", None)
+                if ex is None or c is None or getattr(c, "secType", "") == "BAG":
+                    continue
+                px = getattr(ex, "price", None)
+                if px is None:
+                    continue
+                hubo = True
+                neto += px if getattr(ex, "side", "") == "SLD" else -px
+            return neto if hubo else None
+        except Exception as ex:
+            L.log("crédito real: %r" % ex, "WARN")
+            return None
 
     def _persistir_cierre(self, hora, spot, razon, pnl):
         self.con.execute(

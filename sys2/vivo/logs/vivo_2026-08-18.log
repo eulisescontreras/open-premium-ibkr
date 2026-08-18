@@ -1,0 +1,1309 @@
+=== NOTIF === 2026-08-18 09:09:30 | ARRANQUE | ARRANQUE del sistema vivo — 2026-08-18 (0DTE 20260818)
+2026-08-18 09:09:30 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=17
+=== NOTIF === 2026-08-18 09:09:31 | IBKR | IBKR conectado (paper 4002)
+=== NOTIF === 2026-08-18 09:09:31 | ARRANQUE | Autocalibra: saldo=200 nivel=1 ancho=2 tope=35 unidades=1
+=== NOTIF === 2026-08-18 09:09:31 | ARRANQUE | BACKFILL de arranque (SPY premarket + ETF + día anterior)
+2026-08-18 09:09:31 | DATA   | backfill SPY 2 D 1 min useRTH=False
+2026-08-18 09:09:33 | DATA   | backfill SPY: 1031 barras persistidas (fecha 2026-08-18)
+2026-08-18 09:09:33 | DATA   | backfill DIA: 0 barras
+2026-08-18 09:09:34 | DATA   | backfill TLT: 0 barras
+2026-08-18 09:09:34 | DATA   | día anterior (2026-08-17, cierres RTH): cierre=772.64 máx=776.64 mín=772.58
+2026-08-18 09:09:34 | DATA   | día anterior (cierres RTH): max=776.64 min=772.58 cierre=772.64
+=== NOTIF === 2026-08-18 09:09:34 | ARRANQUE | Sistema EN MARCHA — esperando barras (todo activo)
+nohup: unknown option -- m
+Try 'nohup --help' for more information.
+2026-08-18 09:18:03 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=33
+=== NOTIF === 2026-08-18 09:18:04 | IBKR | IBKR conectado (paper 4002)
+2026-08-18 09:18:04 | DATA   | IBKR desconectado
+2026-08-18 09:24:34 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=33
+=== NOTIF === 2026-08-18 09:24:35 | IBKR | IBKR conectado (paper 4002)
+2026-08-18 09:24:35 | DATA   | IBKR desconectado
+════════════════════════════════════════════════════════════
+🔔 2026-08-18 09:25:00 | ARRANQUE | ARRANQUE del sistema vivo — 2026-08-18 (0DTE 20260818)
+════════════════════════════════════════════════════════════
+2026-08-18 09:25:00 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=17
+════════════════════════════════════════════════════════════
+🔔 2026-08-18 09:25:00 | IBKR | IBKR conectado (paper 4002)
+════════════════════════════════════════════════════════════
+════════════════════════════════════════════════════════════
+🔔 2026-08-18 09:25:00 | ARRANQUE | Autocalibra: saldo=600 nivel=6 ancho=2 tope=110 unidades=1
+════════════════════════════════════════════════════════════
+════════════════════════════════════════════════════════════
+🔔 2026-08-18 09:25:00 | ARRANQUE | BACKFILL de arranque (SPY premarket + ETF + día anterior)
+════════════════════════════════════════════════════════════
+2026-08-18 09:25:00 | DATA   | backfill SPY 2 D 1 min useRTH=False
+2026-08-18 09:25:01 | DATA   | backfill SPY: 1046 barras persistidas (fecha 2026-08-18)
+2026-08-18 09:25:01 | DATA   | backfill DIA: 0 barras
+2026-08-18 09:25:01 | DATA   | backfill TLT: 0 barras
+2026-08-18 09:25:01 | DATA   | día anterior (2026-08-17, cierres RTH): cierre=772.64 máx=776.64 mín=772.58
+2026-08-18 09:25:01 | DATA   | día anterior (cierres RTH): max=776.64 min=772.58 cierre=772.64
+════════════════════════════════════════════════════════════
+🔔 2026-08-18 09:25:01 | ARRANQUE | Sistema EN MARCHA — esperando barras (todo activo)
+════════════════════════════════════════════════════════════
+2026-08-18 09:30:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 09:30:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.69)
+2026-08-18 09:30:06 | DATA   | cadena persistida 2026-08-18 09:30: 82 filas (fuente=live)
+2026-08-18 09:31:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 09:31:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.68)
+2026-08-18 09:31:06 | DATA   | cadena persistida 2026-08-18 09:31: 82 filas (fuente=live)
+2026-08-18 09:31:06 | SENAL  | señal 09:30 C (ayer_rev) -> sin_contrato
+2026-08-18 09:32:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 09:32:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 769.26)
+2026-08-18 09:32:06 | DATA   | cadena persistida 2026-08-18 09:32: 82 filas (fuente=live)
+2026-08-18 09:33:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 09:33:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.41)
+2026-08-18 09:33:06 | DATA   | cadena persistida 2026-08-18 09:33: 82 filas (fuente=live)
+2026-08-18 09:34:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 09:34:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.18)
+2026-08-18 09:34:05 | DATA   | cadena persistida 2026-08-18 09:34: 82 filas (fuente=live)
+2026-08-18 09:34:05 | SENAL  | señal 09:33 C (gap_fade) -> sin_contrato
+2026-08-18 09:35:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 09:35:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.55)
+2026-08-18 09:35:05 | DATA   | cadena persistida 2026-08-18 09:35: 82 filas (fuente=live)
+2026-08-18 09:36:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 09:36:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.58)
+2026-08-18 09:36:05 | DATA   | cadena persistida 2026-08-18 09:36: 82 filas (fuente=live)
+2026-08-18 09:37:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 09:37:04 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.43)
+2026-08-18 09:37:04 | DATA   | cadena persistida 2026-08-18 09:37: 82 filas (fuente=live)
+2026-08-18 09:38:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 09:38:09 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.44)
+2026-08-18 09:38:09 | DATA   | cadena persistida 2026-08-18 09:38: 82 filas (fuente=live)
+2026-08-18 09:39:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 09:39:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.99)
+2026-08-18 09:39:08 | DATA   | cadena persistida 2026-08-18 09:39: 82 filas (fuente=live)
+2026-08-18 09:40:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 09:40:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 769.13)
+2026-08-18 09:40:08 | DATA   | cadena persistida 2026-08-18 09:40: 82 filas (fuente=live)
+2026-08-18 09:41:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 09:41:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 769.23)
+2026-08-18 09:41:08 | DATA   | cadena persistida 2026-08-18 09:41: 82 filas (fuente=live)
+2026-08-18 09:42:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 09:42:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 769.41)
+2026-08-18 09:42:07 | DATA   | cadena persistida 2026-08-18 09:42: 82 filas (fuente=live)
+2026-08-18 09:43:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 09:43:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 769.19)
+2026-08-18 09:43:07 | DATA   | cadena persistida 2026-08-18 09:43: 82 filas (fuente=live)
+2026-08-18 09:44:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 09:44:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 769.08)
+2026-08-18 09:44:07 | DATA   | cadena persistida 2026-08-18 09:44: 82 filas (fuente=live)
+2026-08-18 09:45:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 09:45:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.75)
+2026-08-18 09:45:06 | DATA   | cadena persistida 2026-08-18 09:45: 82 filas (fuente=live)
+2026-08-18 09:46:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 09:46:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.93)
+2026-08-18 09:46:06 | DATA   | cadena persistida 2026-08-18 09:46: 82 filas (fuente=live)
+2026-08-18 09:47:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 09:47:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.58)
+2026-08-18 09:47:06 | DATA   | cadena persistida 2026-08-18 09:47: 82 filas (fuente=live)
+2026-08-18 09:48:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 09:48:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.75)
+2026-08-18 09:48:05 | DATA   | cadena persistida 2026-08-18 09:48: 82 filas (fuente=live)
+2026-08-18 09:49:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 09:49:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.71)
+2026-08-18 09:49:05 | DATA   | cadena persistida 2026-08-18 09:49: 82 filas (fuente=live)
+2026-08-18 09:50:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 09:50:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.45)
+2026-08-18 09:50:05 | DATA   | cadena persistida 2026-08-18 09:50: 82 filas (fuente=live)
+2026-08-18 09:51:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 09:51:04 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.60)
+2026-08-18 09:51:04 | DATA   | cadena persistida 2026-08-18 09:51: 82 filas (fuente=live)
+2026-08-18 09:52:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 09:52:09 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.44)
+2026-08-18 09:52:09 | DATA   | cadena persistida 2026-08-18 09:52: 82 filas (fuente=live)
+2026-08-18 09:53:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 09:53:09 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.22)
+2026-08-18 09:53:09 | DATA   | cadena persistida 2026-08-18 09:53: 82 filas (fuente=live)
+2026-08-18 09:54:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 09:54:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.36)
+2026-08-18 09:54:08 | DATA   | cadena persistida 2026-08-18 09:54: 82 filas (fuente=live)
+2026-08-18 09:55:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 09:55:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.56)
+2026-08-18 09:55:08 | DATA   | cadena persistida 2026-08-18 09:55: 82 filas (fuente=live)
+2026-08-18 09:55:08 | SENAL  | señal 09:54 P (ST-3 NORMAL) -> sin_contrato
+2026-08-18 09:56:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 09:56:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.18)
+2026-08-18 09:56:07 | DATA   | cadena persistida 2026-08-18 09:56: 82 filas (fuente=live)
+2026-08-18 09:57:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 09:57:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.78)
+2026-08-18 09:57:07 | DATA   | cadena persistida 2026-08-18 09:57: 82 filas (fuente=live)
+2026-08-18 09:58:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 09:58:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.52)
+2026-08-18 09:58:07 | DATA   | cadena persistida 2026-08-18 09:58: 82 filas (fuente=live)
+2026-08-18 09:59:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 09:59:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.63)
+2026-08-18 09:59:06 | DATA   | cadena persistida 2026-08-18 09:59: 82 filas (fuente=live)
+2026-08-18 10:00:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 10:00:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.47)
+2026-08-18 10:00:06 | DATA   | cadena persistida 2026-08-18 10:00: 82 filas (fuente=live)
+2026-08-18 10:01:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 10:01:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.44)
+2026-08-18 10:01:06 | DATA   | cadena persistida 2026-08-18 10:01: 82 filas (fuente=live)
+2026-08-18 10:02:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 10:02:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.57)
+2026-08-18 10:02:05 | DATA   | cadena persistida 2026-08-18 10:02: 82 filas (fuente=live)
+2026-08-18 10:03:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 10:03:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.95)
+2026-08-18 10:03:05 | DATA   | cadena persistida 2026-08-18 10:03: 82 filas (fuente=live)
+2026-08-18 10:04:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 10:04:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.85)
+2026-08-18 10:04:05 | DATA   | cadena persistida 2026-08-18 10:04: 82 filas (fuente=live)
+2026-08-18 10:05:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 10:05:04 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.97)
+2026-08-18 10:05:04 | DATA   | cadena persistida 2026-08-18 10:05: 82 filas (fuente=live)
+2026-08-18 10:06:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 10:06:09 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.49)
+2026-08-18 10:06:09 | DATA   | cadena persistida 2026-08-18 10:06: 82 filas (fuente=live)
+2026-08-18 10:07:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 10:07:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.73)
+2026-08-18 10:07:08 | DATA   | cadena persistida 2026-08-18 10:07: 82 filas (fuente=live)
+2026-08-18 10:08:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 10:08:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 769.10)
+2026-08-18 10:08:08 | DATA   | cadena persistida 2026-08-18 10:08: 82 filas (fuente=live)
+2026-08-18 10:09:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 10:09:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.85)
+2026-08-18 10:09:08 | DATA   | cadena persistida 2026-08-18 10:09: 82 filas (fuente=live)
+2026-08-18 10:10:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 10:10:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.54)
+2026-08-18 10:10:08 | DATA   | cadena persistida 2026-08-18 10:10: 82 filas (fuente=live)
+2026-08-18 10:11:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 10:11:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.28)
+2026-08-18 10:11:07 | DATA   | cadena persistida 2026-08-18 10:11: 82 filas (fuente=live)
+2026-08-18 10:12:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 10:12:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.86)
+2026-08-18 10:12:07 | DATA   | cadena persistida 2026-08-18 10:12: 82 filas (fuente=live)
+2026-08-18 10:13:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 10:13:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.71)
+2026-08-18 10:13:07 | DATA   | cadena persistida 2026-08-18 10:13: 82 filas (fuente=live)
+2026-08-18 10:14:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 10:14:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.97)
+2026-08-18 10:14:06 | DATA   | cadena persistida 2026-08-18 10:14: 82 filas (fuente=live)
+2026-08-18 10:15:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 10:15:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.09)
+2026-08-18 10:15:06 | DATA   | cadena persistida 2026-08-18 10:15: 82 filas (fuente=live)
+2026-08-18 10:16:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 10:16:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.55)
+2026-08-18 10:16:06 | DATA   | cadena persistida 2026-08-18 10:16: 82 filas (fuente=live)
+2026-08-18 10:17:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 10:17:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.59)
+2026-08-18 10:17:05 | DATA   | cadena persistida 2026-08-18 10:17: 82 filas (fuente=live)
+2026-08-18 10:18:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+Error 10349, reqId 15192: Order TIF was set to DAY based on order preset.
+Canceled order: Trade(contract=Contract(secType='BAG', symbol='SPY', exchange='SMART', currency='USD', comboLegs=[ComboLeg(conId=908218863, ratio=1, action='BUY', exchange='SMART', openClose=0, shortSaleSlot=0, designatedLocation='', exemptCode=-1), ComboLeg(conId=908218953, ratio=1, action='SELL', exchange='SMART', openClose=0, shortSaleSlot=0, designatedLocation='', exemptCode=-1)]), order=LimitOrder(orderId=15192, clientId=17, action='BUY', totalQuantity=1, lmtPrice=1.02), orderStatus=OrderStatus(orderId=15192, status='Cancelled', filled=0.0, remaining=0.0, avgFillPrice=0.0, permId=0, parentId=0, lastFillPrice=0.0, clientId=0, whyHeld='', mktCapPrice=0.0), fills=[], log=[TradeLogEntry(time=datetime.datetime(2026, 8, 18, 15, 1, 10, 134171, tzinfo=datetime.timezone.utc), status='PendingSubmit', message='', errorCode=0), TradeLogEntry(time=datetime.datetime(2026, 8, 18, 15, 1, 11, 146607, tzinfo=datetime.timezone.utc), status='Cancelled', message='Error 10349, reqId 15192: Order TIF was set to DAY based on order preset.', errorCode=10349)], advancedError='')
+Error 10349, reqId 16844: Order TIF was set to DAY based on order preset.
+Canceled order: Trade(contract=Option(conId=908218908, symbol='SPY', lastTradeDateOrContractMonth='20260818', strike=768.0, right='C', multiplier='100', exchange='SMART', currency='USD', localSymbol='SPY   260818C00768000', tradingClass='SPY'), order=LimitOrder(orderId=16844, clientId=17, action='BUY', totalQuantity=1, lmtPrice=0.93), orderStatus=OrderStatus(orderId=16844, status='Cancelled', filled=0.0, remaining=0.0, avgFillPrice=0.0, permId=0, parentId=0, lastFillPrice=0.0, clientId=0, whyHeld='', mktCapPrice=0.0), fills=[], log=[TradeLogEntry(time=datetime.datetime(2026, 8, 18, 15, 11, 7, 797827, tzinfo=datetime.timezone.utc), status='PendingSubmit', message='', errorCode=0), TradeLogEntry(time=datetime.datetime(2026, 8, 18, 15, 11, 7, 881781, tzinfo=datetime.timezone.utc), status='Cancelled', message='Error 10349, reqId 16844: Order TIF was set to DAY based on order preset.', errorCode=10349)], advancedError='')
+2026-08-18 10:18:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.24)
+2026-08-18 10:18:05 | DATA   | cadena persistida 2026-08-18 10:18: 82 filas (fuente=live)
+2026-08-18 10:19:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 10:19:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.79)
+2026-08-18 10:19:05 | DATA   | cadena persistida 2026-08-18 10:19: 82 filas (fuente=live)
+2026-08-18 10:20:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 10:20:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.55)
+2026-08-18 10:20:05 | DATA   | cadena persistida 2026-08-18 10:20: 82 filas (fuente=live)
+2026-08-18 10:21:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 10:21:04 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.68)
+2026-08-18 10:21:04 | DATA   | cadena persistida 2026-08-18 10:21: 82 filas (fuente=live)
+2026-08-18 10:22:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 10:22:09 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.22)
+2026-08-18 10:22:09 | DATA   | cadena persistida 2026-08-18 10:22: 82 filas (fuente=live)
+2026-08-18 10:23:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 10:23:09 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.21)
+2026-08-18 10:23:09 | DATA   | cadena persistida 2026-08-18 10:23: 82 filas (fuente=live)
+2026-08-18 10:24:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 10:24:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.54)
+2026-08-18 10:24:08 | DATA   | cadena persistida 2026-08-18 10:24: 82 filas (fuente=live)
+2026-08-18 10:25:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 10:25:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.81)
+2026-08-18 10:25:08 | DATA   | cadena persistida 2026-08-18 10:25: 82 filas (fuente=live)
+2026-08-18 10:26:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 10:26:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.93)
+2026-08-18 10:26:08 | DATA   | cadena persistida 2026-08-18 10:26: 82 filas (fuente=live)
+2026-08-18 10:27:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 10:27:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 769.01)
+2026-08-18 10:27:07 | DATA   | cadena persistida 2026-08-18 10:27: 82 filas (fuente=live)
+2026-08-18 10:28:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 10:28:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.92)
+2026-08-18 10:28:07 | DATA   | cadena persistida 2026-08-18 10:28: 82 filas (fuente=live)
+2026-08-18 10:29:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 10:29:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.80)
+2026-08-18 10:29:06 | DATA   | cadena persistida 2026-08-18 10:29: 82 filas (fuente=live)
+2026-08-18 10:30:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 10:30:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.66)
+2026-08-18 10:30:06 | DATA   | cadena persistida 2026-08-18 10:30: 82 filas (fuente=live)
+2026-08-18 10:31:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 10:31:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 769.03)
+2026-08-18 10:31:06 | DATA   | cadena persistida 2026-08-18 10:31: 82 filas (fuente=live)
+2026-08-18 10:32:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 10:32:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.93)
+2026-08-18 10:32:06 | DATA   | cadena persistida 2026-08-18 10:32: 82 filas (fuente=live)
+2026-08-18 10:33:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 10:33:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 769.19)
+2026-08-18 10:33:05 | DATA   | cadena persistida 2026-08-18 10:33: 82 filas (fuente=live)
+2026-08-18 10:34:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 10:34:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 769.10)
+2026-08-18 10:34:05 | DATA   | cadena persistida 2026-08-18 10:34: 82 filas (fuente=live)
+2026-08-18 10:35:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 10:35:04 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.77)
+2026-08-18 10:35:04 | DATA   | cadena persistida 2026-08-18 10:35: 82 filas (fuente=live)
+2026-08-18 10:36:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 10:36:04 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.99)
+2026-08-18 10:36:04 | DATA   | cadena persistida 2026-08-18 10:36: 82 filas (fuente=live)
+2026-08-18 10:37:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 10:37:09 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 769.04)
+2026-08-18 10:37:09 | DATA   | cadena persistida 2026-08-18 10:37: 82 filas (fuente=live)
+2026-08-18 10:38:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 10:38:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.99)
+2026-08-18 10:38:08 | DATA   | cadena persistida 2026-08-18 10:38: 82 filas (fuente=live)
+2026-08-18 10:39:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 10:39:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.98)
+2026-08-18 10:39:08 | DATA   | cadena persistida 2026-08-18 10:39: 82 filas (fuente=live)
+2026-08-18 10:40:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 10:40:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 769.09)
+2026-08-18 10:40:08 | DATA   | cadena persistida 2026-08-18 10:40: 82 filas (fuente=live)
+2026-08-18 10:41:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 10:41:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.95)
+2026-08-18 10:41:07 | DATA   | cadena persistida 2026-08-18 10:41: 82 filas (fuente=live)
+2026-08-18 10:42:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 10:42:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.87)
+2026-08-18 10:42:07 | DATA   | cadena persistida 2026-08-18 10:42: 82 filas (fuente=live)
+2026-08-18 10:43:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 10:43:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.55)
+2026-08-18 10:43:07 | DATA   | cadena persistida 2026-08-18 10:43: 82 filas (fuente=live)
+2026-08-18 10:44:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 10:44:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.58)
+2026-08-18 10:44:07 | DATA   | cadena persistida 2026-08-18 10:44: 82 filas (fuente=live)
+2026-08-18 10:45:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 10:45:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.40)
+2026-08-18 10:45:06 | DATA   | cadena persistida 2026-08-18 10:45: 82 filas (fuente=live)
+2026-08-18 10:46:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 10:46:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.27)
+2026-08-18 10:46:06 | DATA   | cadena persistida 2026-08-18 10:46: 82 filas (fuente=live)
+2026-08-18 10:47:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 10:47:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.50)
+2026-08-18 10:47:06 | DATA   | cadena persistida 2026-08-18 10:47: 82 filas (fuente=live)
+2026-08-18 10:48:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 10:48:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.38)
+2026-08-18 10:48:06 | DATA   | cadena persistida 2026-08-18 10:48: 82 filas (fuente=live)
+2026-08-18 10:49:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 10:49:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.58)
+2026-08-18 10:49:05 | DATA   | cadena persistida 2026-08-18 10:49: 82 filas (fuente=live)
+2026-08-18 10:50:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 10:50:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.47)
+2026-08-18 10:50:05 | DATA   | cadena persistida 2026-08-18 10:50: 82 filas (fuente=live)
+2026-08-18 10:51:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 10:51:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.61)
+2026-08-18 10:51:05 | DATA   | cadena persistida 2026-08-18 10:51: 82 filas (fuente=live)
+2026-08-18 10:52:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 10:52:04 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.70)
+2026-08-18 10:52:04 | DATA   | cadena persistida 2026-08-18 10:52: 82 filas (fuente=live)
+2026-08-18 10:53:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 10:53:09 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.37)
+2026-08-18 10:53:09 | DATA   | cadena persistida 2026-08-18 10:53: 82 filas (fuente=live)
+2026-08-18 10:54:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 10:54:09 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.16)
+2026-08-18 10:54:09 | DATA   | cadena persistida 2026-08-18 10:54: 82 filas (fuente=live)
+2026-08-18 10:55:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 10:55:09 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.94)
+2026-08-18 10:55:09 | DATA   | cadena persistida 2026-08-18 10:55: 82 filas (fuente=live)
+2026-08-18 10:56:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 10:56:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.04)
+2026-08-18 10:56:08 | DATA   | cadena persistida 2026-08-18 10:56: 82 filas (fuente=live)
+2026-08-18 10:57:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 10:57:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.99)
+2026-08-18 10:57:08 | DATA   | cadena persistida 2026-08-18 10:57: 82 filas (fuente=live)
+2026-08-18 10:58:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 10:58:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.91)
+2026-08-18 10:58:08 | DATA   | cadena persistida 2026-08-18 10:58: 82 filas (fuente=live)
+2026-08-18 10:59:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 10:59:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.77)
+2026-08-18 10:59:08 | DATA   | cadena persistida 2026-08-18 10:59: 82 filas (fuente=live)
+2026-08-18 11:00:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 11:00:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.92)
+2026-08-18 11:00:07 | DATA   | cadena persistida 2026-08-18 11:00: 82 filas (fuente=live)
+2026-08-18 11:01:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 11:01:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.67)
+2026-08-18 11:01:07 | DATA   | cadena persistida 2026-08-18 11:01: 82 filas (fuente=live)
+════════════════════════════════════════════════════════════
+🔔 2026-08-18 11:01:10 | ORDEN | COMPRA VERTICAL SPY C L=767/S=769 x1 débito<=1.02
+════════════════════════════════════════════════════════════
+2026-08-18 11:01:10 | POS    | operación #131 abierta: vertical C L=767.0 S=769.0 débito=1.01
+2026-08-18 11:01:13 | POS    | fills op #131: 2 pata(s) llena(s)
+2026-08-18 11:01:13 | SENAL  | señal 11:00 C (ORB) -> OPERADA
+2026-08-18 11:02:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 11:02:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.56)
+2026-08-18 11:02:07 | DATA   | cadena persistida 2026-08-18 11:02: 82 filas (fuente=live)
+2026-08-18 11:03:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 11:03:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.74)
+2026-08-18 11:03:07 | DATA   | cadena persistida 2026-08-18 11:03: 82 filas (fuente=live)
+2026-08-18 11:04:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 11:04:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.08)
+2026-08-18 11:04:07 | DATA   | cadena persistida 2026-08-18 11:04: 82 filas (fuente=live)
+2026-08-18 11:05:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 11:05:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.22)
+2026-08-18 11:05:07 | DATA   | cadena persistida 2026-08-18 11:05: 82 filas (fuente=live)
+2026-08-18 11:06:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 11:06:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.23)
+2026-08-18 11:06:06 | DATA   | cadena persistida 2026-08-18 11:06: 82 filas (fuente=live)
+2026-08-18 11:07:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 11:07:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.28)
+2026-08-18 11:07:06 | DATA   | cadena persistida 2026-08-18 11:07: 82 filas (fuente=live)
+2026-08-18 11:08:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 11:08:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.26)
+2026-08-18 11:08:06 | DATA   | cadena persistida 2026-08-18 11:08: 82 filas (fuente=live)
+2026-08-18 11:09:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 11:09:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.01)
+2026-08-18 11:09:05 | DATA   | cadena persistida 2026-08-18 11:09: 82 filas (fuente=live)
+2026-08-18 11:10:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 11:10:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.77)
+2026-08-18 11:10:05 | DATA   | cadena persistida 2026-08-18 11:10: 82 filas (fuente=live)
+2026-08-18 11:11:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 11:11:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.78)
+2026-08-18 11:11:05 | DATA   | cadena persistida 2026-08-18 11:11: 82 filas (fuente=live)
+════════════════════════════════════════════════════════════
+🔔 2026-08-18 11:11:07 | ORDEN | COMPRA SINGLE SPY C 768 x1 <=0.93
+════════════════════════════════════════════════════════════
+════════════════════════════════════════════════════════════
+🔔 2026-08-18 11:11:07 | GESTION | PIRAMIDAR: +1 single C 768
+════════════════════════════════════════════════════════════
+seRTH=False
+2026-08-18 11:28:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.65)
+2026-08-18 11:28:08 | DATA   | cadena persistida 2026-08-18 11:28: 82 filas (fuente=live)
+2026-08-18 11:29:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 11:29:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.94)
+2026-08-18 11:29:08 | DATA   | cadena persistida 2026-08-18 11:29: 82 filas (fuente=live)
+2026-08-18 11:30:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 11:30:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.84)
+2026-08-18 11:30:07 | DATA   | cadena persistida 2026-08-18 11:30: 82 filas (fuente=live)
+2026-08-18 11:31:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 11:31:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.12)
+2026-08-18 11:31:07 | DATA   | cadena persistida 2026-08-18 11:31: 82 filas (fuente=live)
+2026-08-18 11:32:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 11:32:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.92)
+2026-08-18 11:32:07 | DATA   | cadena persistida 2026-08-18 11:32: 82 filas (fuente=live)
+2026-08-18 11:33:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 11:33:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.80)
+2026-08-18 11:33:06 | DATA   | cadena persistida 2026-08-18 11:33: 82 filas (fuente=live)
+2026-08-18 11:34:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 11:34:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.93)
+2026-08-18 11:34:06 | DATA   | cadena persistida 2026-08-18 11:34: 82 filas (fuente=live)
+2026-08-18 11:35:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 11:35:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.89)
+2026-08-18 11:35:06 | DATA   | cadena persistida 2026-08-18 11:35: 82 filas (fuente=live)
+2026-08-18 11:36:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 11:36:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.70)
+2026-08-18 11:36:05 | DATA   | cadena persistida 2026-08-18 11:36: 82 filas (fuente=live)
+2026-08-18 11:37:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 11:37:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.76)
+2026-08-18 11:37:05 | DATA   | cadena persistida 2026-08-18 11:37: 82 filas (fuente=live)
+2026-08-18 11:38:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 11:38:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.76)
+2026-08-18 11:38:05 | DATA   | cadena persistida 2026-08-18 11:38: 82 filas (fuente=live)
+2026-08-18 11:39:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 11:39:04 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.88)
+2026-08-18 11:39:04 | DATA   | cadena persistida 2026-08-18 11:39: 82 filas (fuente=live)
+2026-08-18 11:40:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 11:40:09 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.83)
+2026-08-18 11:40:09 | DATA   | cadena persistida 2026-08-18 11:40: 82 filas (fuente=live)
+2026-08-18 11:41:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 11:41:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.91)
+2026-08-18 11:41:08 | DATA   | cadena persistida 2026-08-18 11:41: 82 filas (fuente=live)
+2026-08-18 11:42:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 11:42:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.16)
+2026-08-18 11:42:08 | DATA   | cadena persistida 2026-08-18 11:42: 82 filas (fuente=live)
+2026-08-18 11:43:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 11:43:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.05)
+2026-08-18 11:43:08 | DATA   | cadena persistida 2026-08-18 11:43: 82 filas (fuente=live)
+2026-08-18 11:44:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 11:44:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.99)
+2026-08-18 11:44:08 | DATA   | cadena persistida 2026-08-18 11:44: 82 filas (fuente=live)
+2026-08-18 11:45:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 11:45:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.06)
+2026-08-18 11:45:07 | DATA   | cadena persistida 2026-08-18 11:45: 82 filas (fuente=live)
+2026-08-18 11:46:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 11:46:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.33)
+2026-08-18 11:46:07 | DATA   | cadena persistida 2026-08-18 11:46: 82 filas (fuente=live)
+2026-08-18 11:47:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 11:47:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.40)
+2026-08-18 11:47:06 | DATA   | cadena persistida 2026-08-18 11:47: 82 filas (fuente=live)
+2026-08-18 11:48:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 11:48:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.47)
+2026-08-18 11:48:06 | DATA   | cadena persistida 2026-08-18 11:48: 82 filas (fuente=live)
+2026-08-18 11:49:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 11:49:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.37)
+2026-08-18 11:49:06 | DATA   | cadena persistida 2026-08-18 11:49: 82 filas (fuente=live)
+2026-08-18 11:50:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 11:50:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.39)
+2026-08-18 11:50:05 | DATA   | cadena persistida 2026-08-18 11:50: 82 filas (fuente=live)
+2026-08-18 11:51:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 11:51:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.14)
+2026-08-18 11:51:05 | DATA   | cadena persistida 2026-08-18 11:51: 82 filas (fuente=live)
+2026-08-18 11:52:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 11:52:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.24)
+2026-08-18 11:52:05 | DATA   | cadena persistida 2026-08-18 11:52: 82 filas (fuente=live)
+2026-08-18 11:53:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 11:53:04 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.46)
+2026-08-18 11:53:04 | DATA   | cadena persistida 2026-08-18 11:53: 82 filas (fuente=live)
+2026-08-18 11:54:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 11:54:04 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.47)
+2026-08-18 11:54:04 | DATA   | cadena persistida 2026-08-18 11:54: 82 filas (fuente=live)
+2026-08-18 11:54:59 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=34
+=== NOTIF === 2026-08-18 11:55:00 | IBKR | IBKR conectado (paper 4002)
+=== NOTIF === 2026-08-18 11:55:00 | ARRANQUE | POSICIÓN RECUPERADA de IBKR: vertical C L=767/S=769 coste=1.03 +pirámide 768 (entrada 11:01)
+2026-08-18 11:55:00 | DATA   | IBKR desconectado
+2026-08-18 11:55:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 11:55:09 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.49)
+2026-08-18 11:55:09 | DATA   | cadena persistida 2026-08-18 11:55: 82 filas (fuente=live)
+2026-08-18 11:56:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 11:56:09 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.37)
+2026-08-18 11:56:09 | DATA   | cadena persistida 2026-08-18 11:56: 82 filas (fuente=live)
+2026-08-18 11:56:56 | POS    | op #131: entrada completada (ask_corto, ask_largo, bid_corto, bid_largo, precio_corto_cobrado, precio_largo_pagado)
+2026-08-18 11:57:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 11:57:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.30)
+2026-08-18 11:57:08 | DATA   | cadena persistida 2026-08-18 11:57: 82 filas (fuente=live)
+2026-08-18 11:58:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 11:58:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.12)
+2026-08-18 11:58:08 | DATA   | cadena persistida 2026-08-18 11:58: 82 filas (fuente=live)
+2026-08-18 11:59:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+=== NOTIF === 2026-08-18 11:59:22 | ARRANQUE | ARRANQUE del sistema vivo — 2026-08-18 (0DTE 20260818)
+2026-08-18 11:59:22 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=17
+=== NOTIF === 2026-08-18 11:59:22 | IBKR | IBKR conectado (paper 4002)
+=== NOTIF === 2026-08-18 11:59:23 | ARRANQUE | Autocalibra: saldo=622 nivel=6 ancho=2 tope=110 unidades=1
+=== NOTIF === 2026-08-18 11:59:23 | ARRANQUE | BACKFILL de arranque (SPY premarket + ETF + día anterior)
+2026-08-18 11:59:23 | DATA   | backfill SPY 2 D 1 min useRTH=False
+2026-08-18 11:59:23 | DATA   | backfill SPY: 1201 barras persistidas (fecha 2026-08-18)
+2026-08-18 11:59:23 | DATA   | backfill DIA: 36 barras
+2026-08-18 11:59:23 | DATA   | backfill TLT: 36 barras
+2026-08-18 11:59:23 | DATA   | día anterior (2026-08-17, cierres RTH): cierre=772.64 máx=776.64 mín=772.58
+2026-08-18 11:59:23 | DATA   | día anterior (cierres RTH): max=776.64 min=772.58 cierre=772.64
+=== NOTIF === 2026-08-18 11:59:23 | ARRANQUE | POSICIÓN RECUPERADA de IBKR: vertical C L=767/S=769 coste=1.03 +pirámide 768 (entrada 11:01)
+=== NOTIF === 2026-08-18 11:59:23 | ARRANQUE | Sistema EN MARCHA — esperando barras (todo activo)
+2026-08-18 11:59:23 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 11:59:28 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.11)
+2026-08-18 11:59:28 | DATA   | cadena persistida 2026-08-18 11:59: 82 filas (fuente=live)
+2026-08-18 12:00:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 12:00:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.35)
+2026-08-18 12:00:08 | DATA   | cadena persistida 2026-08-18 12:00: 82 filas (fuente=live)
+2026-08-18 12:01:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 12:01:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.48)
+2026-08-18 12:01:08 | DATA   | cadena persistida 2026-08-18 12:01: 82 filas (fuente=live)
+2026-08-18 12:02:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 12:02:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.41)
+2026-08-18 12:02:07 | DATA   | cadena persistida 2026-08-18 12:02: 82 filas (fuente=live)
+2026-08-18 12:03:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 12:03:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.55)
+2026-08-18 12:03:07 | DATA   | cadena persistida 2026-08-18 12:03: 82 filas (fuente=live)
+2026-08-18 12:04:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 12:04:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.52)
+2026-08-18 12:04:07 | DATA   | cadena persistida 2026-08-18 12:04: 82 filas (fuente=live)
+2026-08-18 12:04:21 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=34
+=== NOTIF === 2026-08-18 12:04:21 | IBKR | IBKR conectado (paper 4002)
+=== NOTIF === 2026-08-18 12:04:22 | ARRANQUE | POSICIÓN RECUPERADA de IBKR: vertical C L=767/S=769 coste=1.03 +pirámide 768 (entrada 11:01)
+2026-08-18 12:04:22 | DATA   | IBKR desconectado
+2026-08-18 12:05:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 12:05:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.57)
+2026-08-18 12:05:07 | DATA   | cadena persistida 2026-08-18 12:05: 82 filas (fuente=live)
+2026-08-18 12:06:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 12:06:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.60)
+2026-08-18 12:06:07 | DATA   | cadena persistida 2026-08-18 12:06: 82 filas (fuente=live)
+2026-08-18 12:07:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 12:07:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.41)
+2026-08-18 12:07:06 | DATA   | cadena persistida 2026-08-18 12:07: 82 filas (fuente=live)
+2026-08-18 12:08:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 12:08:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.51)
+2026-08-18 12:08:06 | DATA   | cadena persistida 2026-08-18 12:08: 82 filas (fuente=live)
+2026-08-18 12:09:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 12:09:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.48)
+2026-08-18 12:09:06 | DATA   | cadena persistida 2026-08-18 12:09: 82 filas (fuente=live)
+2026-08-18 12:10:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 12:10:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.37)
+2026-08-18 12:10:05 | DATA   | cadena persistida 2026-08-18 12:10: 82 filas (fuente=live)
+2026-08-18 12:11:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 12:11:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.56)
+2026-08-18 12:11:05 | DATA   | cadena persistida 2026-08-18 12:11: 82 filas (fuente=live)
+2026-08-18 12:12:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 12:12:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.64)
+2026-08-18 12:12:05 | DATA   | cadena persistida 2026-08-18 12:12: 82 filas (fuente=live)
+2026-08-18 12:13:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 12:13:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.65)
+2026-08-18 12:13:05 | DATA   | cadena persistida 2026-08-18 12:13: 82 filas (fuente=live)
+2026-08-18 12:14:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 12:14:04 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.67)
+2026-08-18 12:14:04 | DATA   | cadena persistida 2026-08-18 12:14: 82 filas (fuente=live)
+=== NOTIF === 2026-08-18 12:14:52 | ARRANQUE | ARRANQUE del sistema vivo — 2026-08-18 (0DTE 20260818)
+2026-08-18 12:14:52 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=17
+=== NOTIF === 2026-08-18 12:14:53 | IBKR | IBKR conectado (paper 4002)
+=== NOTIF === 2026-08-18 12:14:53 | ARRANQUE | Autocalibra: saldo=653 nivel=6 ancho=2 tope=110 unidades=1
+=== NOTIF === 2026-08-18 12:14:53 | ARRANQUE | BACKFILL de arranque (SPY premarket + ETF + día anterior)
+2026-08-18 12:14:53 | DATA   | backfill SPY 2 D 1 min useRTH=False
+2026-08-18 12:14:53 | DATA   | backfill SPY: 1216 barras persistidas (fecha 2026-08-18)
+2026-08-18 12:14:53 | DATA   | backfill DIA: 36 barras
+2026-08-18 12:14:54 | DATA   | backfill TLT: 36 barras
+2026-08-18 12:14:54 | DATA   | día anterior (2026-08-17, cierres RTH): cierre=772.64 máx=776.64 mín=772.58
+2026-08-18 12:14:54 | DATA   | día anterior (cierres RTH): max=776.64 min=772.58 cierre=772.64
+=== NOTIF === 2026-08-18 12:14:54 | ARRANQUE | POSICIÓN RECUPERADA de IBKR: vertical C L=767/S=769 coste=1.03 +pirámide 768 (entrada 11:01)
+=== NOTIF === 2026-08-18 12:14:54 | ARRANQUE | Sistema EN MARCHA — esperando barras (todo activo)
+2026-08-18 12:14:54 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 12:14:58 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.57)
+2026-08-18 12:14:58 | DATA   | cadena persistida 2026-08-18 12:14: 82 filas (fuente=live)
+2026-08-18 12:15:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 12:15:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.55)
+2026-08-18 12:15:08 | DATA   | cadena persistida 2026-08-18 12:15: 82 filas (fuente=live)
+2026-08-18 12:15:46 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=33
+=== NOTIF === 2026-08-18 12:15:46 | IBKR | IBKR conectado (paper 4002)
+2026-08-18 12:15:46 | DATA   | IBKR desconectado
+2026-08-18 12:16:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 12:16:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.39)
+2026-08-18 12:16:08 | DATA   | cadena persistida 2026-08-18 12:16: 82 filas (fuente=live)
+2026-08-18 12:17:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 12:17:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.36)
+2026-08-18 12:17:08 | DATA   | cadena persistida 2026-08-18 12:17: 82 filas (fuente=live)
+2026-08-18 12:18:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 12:18:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.43)
+2026-08-18 12:18:07 | DATA   | cadena persistida 2026-08-18 12:18: 82 filas (fuente=live)
+2026-08-18 12:19:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 12:19:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.23)
+2026-08-18 12:19:07 | DATA   | cadena persistida 2026-08-18 12:19: 82 filas (fuente=live)
+2026-08-18 12:20:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 12:20:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.31)
+2026-08-18 12:20:07 | DATA   | cadena persistida 2026-08-18 12:20: 82 filas (fuente=live)
+2026-08-18 12:21:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 12:21:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.52)
+2026-08-18 12:21:07 | DATA   | cadena persistida 2026-08-18 12:21: 82 filas (fuente=live)
+2026-08-18 12:22:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 12:22:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.64)
+2026-08-18 12:22:06 | DATA   | cadena persistida 2026-08-18 12:22: 82 filas (fuente=live)
+2026-08-18 12:23:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 12:23:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.79)
+2026-08-18 12:23:06 | DATA   | cadena persistida 2026-08-18 12:23: 82 filas (fuente=live)
+2026-08-18 12:24:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 12:24:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.70)
+2026-08-18 12:24:06 | DATA   | cadena persistida 2026-08-18 12:24: 82 filas (fuente=live)
+2026-08-18 12:25:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 12:25:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.68)
+2026-08-18 12:25:06 | DATA   | cadena persistida 2026-08-18 12:25: 82 filas (fuente=live)
+2026-08-18 12:26:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 12:26:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.67)
+2026-08-18 12:26:06 | DATA   | cadena persistida 2026-08-18 12:26: 82 filas (fuente=live)
+=== NOTIF === 2026-08-18 12:26:31 | ARRANQUE | ARRANQUE del sistema vivo — 2026-08-18 (0DTE 20260818)
+2026-08-18 12:26:31 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=17
+=== NOTIF === 2026-08-18 12:26:31 | IBKR | IBKR conectado (paper 4002)
+=== NOTIF === 2026-08-18 12:26:31 | ARRANQUE | Autocalibra: saldo=646 nivel=6 ancho=2 tope=110 unidades=1
+=== NOTIF === 2026-08-18 12:26:31 | ARRANQUE | BACKFILL de arranque (SPY premarket + ETF + día anterior)
+2026-08-18 12:26:31 | DATA   | backfill SPY 2 D 1 min useRTH=False
+2026-08-18 12:26:31 | DATA   | backfill SPY: 1228 barras persistidas (fecha 2026-08-18)
+2026-08-18 12:26:32 | DATA   | backfill DIA: 36 barras
+2026-08-18 12:26:32 | DATA   | backfill TLT: 36 barras
+2026-08-18 12:26:32 | DATA   | día anterior (2026-08-17, cierres RTH): cierre=772.64 máx=776.64 mín=772.58
+2026-08-18 12:26:32 | DATA   | día anterior (cierres RTH): max=776.64 min=772.58 cierre=772.64
+=== NOTIF === 2026-08-18 12:26:32 | ARRANQUE | POSICIÓN RECUPERADA de IBKR: vertical C L=767/S=769 coste=1.03 +pirámide 768 (entrada 11:01)
+=== NOTIF === 2026-08-18 12:26:32 | ARRANQUE | Sistema EN MARCHA — esperando barras (todo activo)
+2026-08-18 12:26:32 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 12:26:36 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.62)
+2026-08-18 12:26:36 | DATA   | cadena persistida 2026-08-18 12:26: 82 filas (fuente=live)
+2026-08-18 12:27:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 12:27:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.50)
+2026-08-18 12:27:06 | DATA   | cadena persistida 2026-08-18 12:27: 82 filas (fuente=live)
+2026-08-18 12:28:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+════════════════════════════════════════════════════════════
+🔔 2026-08-18 12:28:05 | ARRANQUE | ARRANQUE del sistema vivo — 2026-08-18 (0DTE 20260818)
+════════════════════════════════════════════════════════════
+2026-08-18 12:28:05 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=17
+════════════════════════════════════════════════════════════
+🔔 2026-08-18 12:28:05 | IBKR | IBKR conectado (paper 4002)
+════════════════════════════════════════════════════════════
+════════════════════════════════════════════════════════════
+🔔 2026-08-18 12:28:05 | ARRANQUE | Autocalibra: saldo=628 nivel=6 ancho=2 tope=110 unidades=1
+════════════════════════════════════════════════════════════
+════════════════════════════════════════════════════════════
+🔔 2026-08-18 12:28:05 | ARRANQUE | BACKFILL de arranque (SPY premarket + ETF + día anterior)
+════════════════════════════════════════════════════════════
+2026-08-18 12:28:05 | DATA   | backfill SPY 2 D 1 min useRTH=False
+2026-08-18 12:28:05 | DATA   | backfill SPY: 1230 barras persistidas (fecha 2026-08-18)
+2026-08-18 12:28:06 | DATA   | backfill DIA: 36 barras
+2026-08-18 12:28:06 | DATA   | backfill TLT: 36 barras
+2026-08-18 12:28:06 | DATA   | día anterior (2026-08-17, cierres RTH): cierre=772.64 máx=776.64 mín=772.58
+2026-08-18 12:28:06 | DATA   | día anterior (cierres RTH): max=776.64 min=772.58 cierre=772.64
+════════════════════════════════════════════════════════════
+🔔 2026-08-18 12:28:06 | ARRANQUE | POSICIÓN RECUPERADA de IBKR: vertical C L=767/S=769 coste=1.03 +pirámide 768 (entrada 11:01)
+════════════════════════════════════════════════════════════
+════════════════════════════════════════════════════════════
+🔔 2026-08-18 12:28:06 | ARRANQUE | Sistema EN MARCHA — esperando barras (todo activo)
+════════════════════════════════════════════════════════════
+2026-08-18 12:28:06 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 12:28:10 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.32)
+2026-08-18 12:28:10 | DATA   | cadena persistida 2026-08-18 12:28: 82 filas (fuente=live)
+2026-08-18 12:29:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 12:29:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.17)
+2026-08-18 12:29:05 | DATA   | cadena persistida 2026-08-18 12:29: 82 filas (fuente=live)
+2026-08-18 12:30:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 12:30:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.21)
+2026-08-18 12:30:05 | DATA   | cadena persistida 2026-08-18 12:30: 82 filas (fuente=live)
+2026-08-18 12:31:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 12:31:04 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.23)
+2026-08-18 12:31:04 | DATA   | cadena persistida 2026-08-18 12:31: 82 filas (fuente=live)
+2026-08-18 12:32:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 12:32:09 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.15)
+2026-08-18 12:32:09 | DATA   | cadena persistida 2026-08-18 12:32: 82 filas (fuente=live)
+2026-08-18 12:33:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 12:33:09 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.31)
+2026-08-18 12:33:09 | DATA   | cadena persistida 2026-08-18 12:33: 82 filas (fuente=live)
+2026-08-18 12:34:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 12:34:09 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.23)
+2026-08-18 12:34:09 | DATA   | cadena persistida 2026-08-18 12:34: 82 filas (fuente=live)
+2026-08-18 12:35:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 12:35:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.31)
+2026-08-18 12:35:08 | DATA   | cadena persistida 2026-08-18 12:35: 82 filas (fuente=live)
+2026-08-18 12:36:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 12:36:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.25)
+2026-08-18 12:36:08 | DATA   | cadena persistida 2026-08-18 12:36: 82 filas (fuente=live)
+2026-08-18 12:37:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 12:37:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.23)
+2026-08-18 12:37:08 | DATA   | cadena persistida 2026-08-18 12:37: 82 filas (fuente=live)
+2026-08-18 12:38:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 12:38:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.33)
+2026-08-18 12:38:08 | DATA   | cadena persistida 2026-08-18 12:38: 82 filas (fuente=live)
+2026-08-18 12:39:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 12:39:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.47)
+2026-08-18 12:39:07 | DATA   | cadena persistida 2026-08-18 12:39: 82 filas (fuente=live)
+2026-08-18 12:40:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 12:40:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.46)
+2026-08-18 12:40:07 | DATA   | cadena persistida 2026-08-18 12:40: 82 filas (fuente=live)
+2026-08-18 12:41:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 12:41:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.50)
+2026-08-18 12:41:07 | DATA   | cadena persistida 2026-08-18 12:41: 82 filas (fuente=live)
+2026-08-18 12:42:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 12:42:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.47)
+2026-08-18 12:42:07 | DATA   | cadena persistida 2026-08-18 12:42: 82 filas (fuente=live)
+2026-08-18 12:43:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 12:43:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.37)
+2026-08-18 12:43:06 | DATA   | cadena persistida 2026-08-18 12:43: 82 filas (fuente=live)
+2026-08-18 12:44:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 12:44:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.26)
+2026-08-18 12:44:06 | DATA   | cadena persistida 2026-08-18 12:44: 82 filas (fuente=live)
+2026-08-18 12:45:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 12:45:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.37)
+2026-08-18 12:45:06 | DATA   | cadena persistida 2026-08-18 12:45: 82 filas (fuente=live)
+2026-08-18 12:46:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 12:46:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.22)
+2026-08-18 12:46:06 | DATA   | cadena persistida 2026-08-18 12:46: 82 filas (fuente=live)
+2026-08-18 12:47:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 12:47:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.59)
+2026-08-18 12:47:06 | DATA   | cadena persistida 2026-08-18 12:47: 82 filas (fuente=live)
+2026-08-18 12:48:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 12:48:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.59)
+2026-08-18 12:48:05 | DATA   | cadena persistida 2026-08-18 12:48: 82 filas (fuente=live)
+2026-08-18 12:49:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 12:49:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.84)
+2026-08-18 12:49:05 | DATA   | cadena persistida 2026-08-18 12:49: 82 filas (fuente=live)
+2026-08-18 12:50:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 12:50:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.77)
+2026-08-18 12:50:05 | DATA   | cadena persistida 2026-08-18 12:50: 82 filas (fuente=live)
+2026-08-18 12:51:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 12:51:04 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.81)
+2026-08-18 12:51:04 | DATA   | cadena persistida 2026-08-18 12:51: 82 filas (fuente=live)
+2026-08-18 12:52:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 12:52:04 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.77)
+2026-08-18 12:52:04 | DATA   | cadena persistida 2026-08-18 12:52: 82 filas (fuente=live)
+2026-08-18 12:53:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 12:53:09 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.70)
+2026-08-18 12:53:09 | DATA   | cadena persistida 2026-08-18 12:53: 82 filas (fuente=live)
+2026-08-18 12:54:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 12:54:09 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.81)
+2026-08-18 12:54:09 | DATA   | cadena persistida 2026-08-18 12:54: 82 filas (fuente=live)
+2026-08-18 12:55:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 12:55:09 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.83)
+2026-08-18 12:55:09 | DATA   | cadena persistida 2026-08-18 12:55: 82 filas (fuente=live)
+2026-08-18 12:56:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 12:56:09 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.66)
+2026-08-18 12:56:09 | DATA   | cadena persistida 2026-08-18 12:56: 82 filas (fuente=live)
+2026-08-18 12:57:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 12:57:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.69)
+2026-08-18 12:57:08 | DATA   | cadena persistida 2026-08-18 12:57: 82 filas (fuente=live)
+2026-08-18 12:58:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 12:58:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.66)
+2026-08-18 12:58:08 | DATA   | cadena persistida 2026-08-18 12:58: 82 filas (fuente=live)
+2026-08-18 12:59:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 12:59:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.66)
+2026-08-18 12:59:08 | DATA   | cadena persistida 2026-08-18 12:59: 82 filas (fuente=live)
+2026-08-18 13:00:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 13:00:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.63)
+2026-08-18 13:00:07 | DATA   | cadena persistida 2026-08-18 13:00: 82 filas (fuente=live)
+2026-08-18 13:01:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 13:01:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.52)
+2026-08-18 13:01:07 | DATA   | cadena persistida 2026-08-18 13:01: 82 filas (fuente=live)
+2026-08-18 13:02:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 13:02:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.40)
+2026-08-18 13:02:07 | DATA   | cadena persistida 2026-08-18 13:02: 82 filas (fuente=live)
+2026-08-18 13:03:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 13:03:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.58)
+2026-08-18 13:03:06 | DATA   | cadena persistida 2026-08-18 13:03: 82 filas (fuente=live)
+2026-08-18 13:04:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 13:04:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.67)
+2026-08-18 13:04:06 | DATA   | cadena persistida 2026-08-18 13:04: 82 filas (fuente=live)
+2026-08-18 13:05:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 13:05:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.55)
+2026-08-18 13:05:06 | DATA   | cadena persistida 2026-08-18 13:05: 82 filas (fuente=live)
+2026-08-18 13:06:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 13:06:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.55)
+2026-08-18 13:06:06 | DATA   | cadena persistida 2026-08-18 13:06: 82 filas (fuente=live)
+2026-08-18 13:07:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 13:07:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.53)
+2026-08-18 13:07:05 | DATA   | cadena persistida 2026-08-18 13:07: 82 filas (fuente=live)
+2026-08-18 13:08:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 13:08:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.48)
+2026-08-18 13:08:05 | DATA   | cadena persistida 2026-08-18 13:08: 82 filas (fuente=live)
+2026-08-18 13:09:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 13:09:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.61)
+2026-08-18 13:09:05 | DATA   | cadena persistida 2026-08-18 13:09: 82 filas (fuente=live)
+2026-08-18 13:10:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 13:10:04 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.76)
+2026-08-18 13:10:04 | DATA   | cadena persistida 2026-08-18 13:10: 82 filas (fuente=live)
+2026-08-18 13:11:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 13:11:09 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.67)
+2026-08-18 13:11:09 | DATA   | cadena persistida 2026-08-18 13:11: 82 filas (fuente=live)
+2026-08-18 13:12:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 13:12:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.52)
+2026-08-18 13:12:08 | DATA   | cadena persistida 2026-08-18 13:12: 82 filas (fuente=live)
+2026-08-18 13:13:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 13:13:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.70)
+2026-08-18 13:13:08 | DATA   | cadena persistida 2026-08-18 13:13: 82 filas (fuente=live)
+2026-08-18 13:14:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 13:14:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.61)
+2026-08-18 13:14:08 | DATA   | cadena persistida 2026-08-18 13:14: 82 filas (fuente=live)
+2026-08-18 13:15:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 13:15:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.62)
+2026-08-18 13:15:08 | DATA   | cadena persistida 2026-08-18 13:15: 82 filas (fuente=live)
+2026-08-18 13:16:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 13:16:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.46)
+2026-08-18 13:16:07 | DATA   | cadena persistida 2026-08-18 13:16: 82 filas (fuente=live)
+2026-08-18 13:17:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 13:17:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.41)
+2026-08-18 13:17:07 | DATA   | cadena persistida 2026-08-18 13:17: 82 filas (fuente=live)
+2026-08-18 13:18:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 13:18:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.41)
+2026-08-18 13:18:07 | DATA   | cadena persistida 2026-08-18 13:18: 82 filas (fuente=live)
+2026-08-18 13:19:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 13:19:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.37)
+2026-08-18 13:19:06 | DATA   | cadena persistida 2026-08-18 13:19: 82 filas (fuente=live)
+2026-08-18 13:20:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 13:20:11 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.30)
+2026-08-18 13:20:11 | DATA   | cadena persistida 2026-08-18 13:20: 82 filas (fuente=live)
+2026-08-18 13:21:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 13:21:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.35)
+2026-08-18 13:21:06 | DATA   | cadena persistida 2026-08-18 13:21: 82 filas (fuente=live)
+2026-08-18 13:22:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 13:22:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.48)
+2026-08-18 13:22:06 | DATA   | cadena persistida 2026-08-18 13:22: 82 filas (fuente=live)
+2026-08-18 13:23:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 13:23:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.37)
+2026-08-18 13:23:08 | DATA   | cadena persistida 2026-08-18 13:23: 82 filas (fuente=live)
+2026-08-18 13:24:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 13:24:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.31)
+2026-08-18 13:24:08 | DATA   | cadena persistida 2026-08-18 13:24: 82 filas (fuente=live)
+2026-08-18 13:25:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 13:25:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.26)
+2026-08-18 13:25:07 | DATA   | cadena persistida 2026-08-18 13:25: 82 filas (fuente=live)
+2026-08-18 13:26:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 13:26:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.09)
+2026-08-18 13:26:07 | DATA   | cadena persistida 2026-08-18 13:26: 82 filas (fuente=live)
+2026-08-18 13:27:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 13:27:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.16)
+2026-08-18 13:27:07 | DATA   | cadena persistida 2026-08-18 13:27: 82 filas (fuente=live)
+2026-08-18 13:28:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 13:28:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.12)
+2026-08-18 13:28:06 | DATA   | cadena persistida 2026-08-18 13:28: 82 filas (fuente=live)
+════════════════════════════════════════════════════════════
+🔔 2026-08-18 13:28:07 | ARRANQUE | RECALIBRA 13:28: saldo=590 nivel 6->5 tope 110->90 unidades 1->1 (ancho FIJO 2)
+════════════════════════════════════════════════════════════
+2026-08-18 13:29:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 13:29:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.22)
+2026-08-18 13:29:06 | DATA   | cadena persistida 2026-08-18 13:29: 82 filas (fuente=live)
+2026-08-18 13:30:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 13:30:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.30)
+2026-08-18 13:30:06 | DATA   | cadena persistida 2026-08-18 13:30: 82 filas (fuente=live)
+2026-08-18 13:31:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 13:31:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.10)
+2026-08-18 13:31:05 | DATA   | cadena persistida 2026-08-18 13:31: 82 filas (fuente=live)
+════════════════════════════════════════════════════════════
+🔔 2026-08-18 13:31:05 | ARRANQUE | RECALIBRA 13:31: saldo=600 nivel 5->6 tope 90->110 unidades 1->1 (ancho FIJO 2)
+════════════════════════════════════════════════════════════
+2026-08-18 13:32:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 13:32:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.30)
+2026-08-18 13:32:05 | DATA   | cadena persistida 2026-08-18 13:32: 82 filas (fuente=live)
+2026-08-18 13:33:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 13:33:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.31)
+2026-08-18 13:33:05 | DATA   | cadena persistida 2026-08-18 13:33: 82 filas (fuente=live)
+2026-08-18 13:34:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 13:34:04 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.28)
+2026-08-18 13:34:04 | DATA   | cadena persistida 2026-08-18 13:34: 82 filas (fuente=live)
+════════════════════════════════════════════════════════════
+🔔 2026-08-18 13:34:05 | ARRANQUE | RECALIBRA 13:34: saldo=595 nivel 6->5 tope 110->90 unidades 1->1 (ancho FIJO 2)
+════════════════════════════════════════════════════════════
+2026-08-18 13:35:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 13:35:04 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.19)
+2026-08-18 13:35:04 | DATA   | cadena persistida 2026-08-18 13:35: 82 filas (fuente=live)
+2026-08-18 13:36:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 13:36:09 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.21)
+2026-08-18 13:36:09 | DATA   | cadena persistida 2026-08-18 13:36: 82 filas (fuente=live)
+2026-08-18 13:37:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 13:37:09 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.05)
+2026-08-18 13:37:09 | DATA   | cadena persistida 2026-08-18 13:37: 82 filas (fuente=live)
+2026-08-18 13:38:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 13:38:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.10)
+2026-08-18 13:38:08 | DATA   | cadena persistida 2026-08-18 13:38: 82 filas (fuente=live)
+2026-08-18 13:39:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 13:39:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.38)
+2026-08-18 13:39:08 | DATA   | cadena persistida 2026-08-18 13:39: 82 filas (fuente=live)
+2026-08-18 13:40:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 13:40:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.22)
+2026-08-18 13:40:08 | DATA   | cadena persistida 2026-08-18 13:40: 82 filas (fuente=live)
+════════════════════════════════════════════════════════════
+🔔 2026-08-18 13:40:08 | ARRANQUE | RECALIBRA 13:40: saldo=606 nivel 5->6 tope 90->110 unidades 1->1 (ancho FIJO 2)
+════════════════════════════════════════════════════════════
+2026-08-18 13:41:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 13:41:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.17)
+2026-08-18 13:41:07 | DATA   | cadena persistida 2026-08-18 13:41: 82 filas (fuente=live)
+2026-08-18 13:42:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 13:42:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.13)
+2026-08-18 13:42:07 | DATA   | cadena persistida 2026-08-18 13:42: 82 filas (fuente=live)
+2026-08-18 13:43:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 13:43:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.14)
+2026-08-18 13:43:07 | DATA   | cadena persistida 2026-08-18 13:43: 82 filas (fuente=live)
+════════════════════════════════════════════════════════════
+🔔 2026-08-18 13:43:07 | ARRANQUE | RECALIBRA 13:43: saldo=584 nivel 6->5 tope 110->90 unidades 1->1 (ancho FIJO 2)
+════════════════════════════════════════════════════════════
+2026-08-18 13:44:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 13:44:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.11)
+2026-08-18 13:44:07 | DATA   | cadena persistida 2026-08-18 13:44: 82 filas (fuente=live)
+2026-08-18 13:45:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 13:45:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.09)
+2026-08-18 13:45:06 | DATA   | cadena persistida 2026-08-18 13:45: 82 filas (fuente=live)
+2026-08-18 13:46:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 13:46:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.09)
+2026-08-18 13:46:06 | DATA   | cadena persistida 2026-08-18 13:46: 82 filas (fuente=live)
+2026-08-18 13:47:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 13:47:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.02)
+2026-08-18 13:47:06 | DATA   | cadena persistida 2026-08-18 13:47: 82 filas (fuente=live)
+2026-08-18 13:48:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 13:48:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.04)
+2026-08-18 13:48:05 | DATA   | cadena persistida 2026-08-18 13:48: 82 filas (fuente=live)
+2026-08-18 13:49:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 13:49:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.06)
+2026-08-18 13:49:05 | DATA   | cadena persistida 2026-08-18 13:49: 82 filas (fuente=live)
+2026-08-18 13:50:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 13:50:04 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.01)
+2026-08-18 13:50:04 | DATA   | cadena persistida 2026-08-18 13:50: 82 filas (fuente=live)
+2026-08-18 13:51:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 13:51:04 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.01)
+2026-08-18 13:51:04 | DATA   | cadena persistida 2026-08-18 13:51: 82 filas (fuente=live)
+2026-08-18 13:52:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 13:52:09 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.05)
+2026-08-18 13:52:09 | DATA   | cadena persistida 2026-08-18 13:52: 82 filas (fuente=live)
+2026-08-18 13:53:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 13:53:09 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.11)
+2026-08-18 13:53:09 | DATA   | cadena persistida 2026-08-18 13:53: 82 filas (fuente=live)
+2026-08-18 13:54:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 13:54:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.12)
+2026-08-18 13:54:08 | DATA   | cadena persistida 2026-08-18 13:54: 82 filas (fuente=live)
+2026-08-18 13:55:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 13:55:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.07)
+2026-08-18 13:55:08 | DATA   | cadena persistida 2026-08-18 13:55: 82 filas (fuente=live)
+2026-08-18 13:56:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 13:56:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.00)
+2026-08-18 13:56:08 | DATA   | cadena persistida 2026-08-18 13:56: 82 filas (fuente=live)
+2026-08-18 13:57:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 13:57:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.90)
+2026-08-18 13:57:07 | DATA   | cadena persistida 2026-08-18 13:57: 82 filas (fuente=live)
+2026-08-18 13:58:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 13:58:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.80)
+2026-08-18 13:58:07 | DATA   | cadena persistida 2026-08-18 13:58: 82 filas (fuente=live)
+2026-08-18 13:59:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 13:59:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.77)
+2026-08-18 13:59:07 | DATA   | cadena persistida 2026-08-18 13:59: 82 filas (fuente=live)
+2026-08-18 14:00:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 14:00:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.62)
+2026-08-18 14:00:06 | DATA   | cadena persistida 2026-08-18 14:00: 82 filas (fuente=live)
+2026-08-18 14:01:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 14:01:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.61)
+2026-08-18 14:01:06 | DATA   | cadena persistida 2026-08-18 14:01: 82 filas (fuente=live)
+2026-08-18 14:02:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 14:02:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.60)
+2026-08-18 14:02:06 | DATA   | cadena persistida 2026-08-18 14:02: 82 filas (fuente=live)
+2026-08-18 14:03:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 14:03:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.60)
+2026-08-18 14:03:05 | DATA   | cadena persistida 2026-08-18 14:03: 82 filas (fuente=live)
+2026-08-18 14:04:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 14:04:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.57)
+2026-08-18 14:04:05 | DATA   | cadena persistida 2026-08-18 14:04: 82 filas (fuente=live)
+2026-08-18 14:05:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 14:05:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.63)
+2026-08-18 14:05:05 | DATA   | cadena persistida 2026-08-18 14:05: 82 filas (fuente=live)
+2026-08-18 14:06:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 14:06:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.56)
+2026-08-18 14:06:05 | DATA   | cadena persistida 2026-08-18 14:06: 82 filas (fuente=live)
+2026-08-18 14:07:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 14:07:04 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.57)
+2026-08-18 14:07:04 | DATA   | cadena persistida 2026-08-18 14:07: 82 filas (fuente=live)
+2026-08-18 14:08:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 14:08:09 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.63)
+2026-08-18 14:08:09 | DATA   | cadena persistida 2026-08-18 14:08: 82 filas (fuente=live)
+2026-08-18 14:09:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 14:09:09 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.58)
+2026-08-18 14:09:09 | DATA   | cadena persistida 2026-08-18 14:09: 82 filas (fuente=live)
+2026-08-18 14:10:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 14:10:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.49)
+2026-08-18 14:10:08 | DATA   | cadena persistida 2026-08-18 14:10: 82 filas (fuente=live)
+2026-08-18 14:11:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 14:11:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.50)
+2026-08-18 14:11:08 | DATA   | cadena persistida 2026-08-18 14:11: 82 filas (fuente=live)
+2026-08-18 14:12:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 14:12:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.56)
+2026-08-18 14:12:08 | DATA   | cadena persistida 2026-08-18 14:12: 82 filas (fuente=live)
+2026-08-18 14:13:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 14:13:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.67)
+2026-08-18 14:13:08 | DATA   | cadena persistida 2026-08-18 14:13: 82 filas (fuente=live)
+2026-08-18 14:14:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 14:14:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.98)
+2026-08-18 14:14:07 | DATA   | cadena persistida 2026-08-18 14:14: 82 filas (fuente=live)
+2026-08-18 14:15:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 14:15:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.06)
+2026-08-18 14:15:07 | DATA   | cadena persistida 2026-08-18 14:15: 82 filas (fuente=live)
+2026-08-18 14:16:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 14:16:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.14)
+2026-08-18 14:16:07 | DATA   | cadena persistida 2026-08-18 14:16: 82 filas (fuente=live)
+2026-08-18 14:17:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 14:17:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.11)
+2026-08-18 14:17:07 | DATA   | cadena persistida 2026-08-18 14:17: 82 filas (fuente=live)
+2026-08-18 14:18:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 14:18:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.21)
+2026-08-18 14:18:06 | DATA   | cadena persistida 2026-08-18 14:18: 82 filas (fuente=live)
+2026-08-18 14:19:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 14:19:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.30)
+2026-08-18 14:19:06 | DATA   | cadena persistida 2026-08-18 14:19: 82 filas (fuente=live)
+2026-08-18 14:19:06 | SENAL  | señal 14:18 C (ST-3 NORMAL) -> pos_abierta
+2026-08-18 14:20:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 14:20:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.41)
+2026-08-18 14:20:06 | DATA   | cadena persistida 2026-08-18 14:20: 82 filas (fuente=live)
+2026-08-18 14:21:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 14:21:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.33)
+2026-08-18 14:21:05 | DATA   | cadena persistida 2026-08-18 14:21: 82 filas (fuente=live)
+2026-08-18 14:22:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 14:22:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.48)
+2026-08-18 14:22:05 | DATA   | cadena persistida 2026-08-18 14:22: 82 filas (fuente=live)
+2026-08-18 14:23:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 14:23:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.33)
+2026-08-18 14:23:05 | DATA   | cadena persistida 2026-08-18 14:23: 82 filas (fuente=live)
+2026-08-18 14:24:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 14:24:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.25)
+2026-08-18 14:24:05 | DATA   | cadena persistida 2026-08-18 14:24: 82 filas (fuente=live)
+2026-08-18 14:25:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 14:25:04 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.27)
+2026-08-18 14:25:04 | DATA   | cadena persistida 2026-08-18 14:25: 82 filas (fuente=live)
+2026-08-18 14:26:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 14:26:09 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.15)
+2026-08-18 14:26:09 | DATA   | cadena persistida 2026-08-18 14:26: 82 filas (fuente=live)
+2026-08-18 14:27:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 14:27:09 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.27)
+2026-08-18 14:27:09 | DATA   | cadena persistida 2026-08-18 14:27: 82 filas (fuente=live)
+2026-08-18 14:28:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 14:28:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.26)
+2026-08-18 14:28:08 | DATA   | cadena persistida 2026-08-18 14:28: 82 filas (fuente=live)
+2026-08-18 14:29:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 14:29:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.34)
+2026-08-18 14:29:08 | DATA   | cadena persistida 2026-08-18 14:29: 82 filas (fuente=live)
+2026-08-18 14:30:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 14:30:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.36)
+2026-08-18 14:30:08 | DATA   | cadena persistida 2026-08-18 14:30: 82 filas (fuente=live)
+2026-08-18 14:31:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 14:31:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.34)
+2026-08-18 14:31:07 | DATA   | cadena persistida 2026-08-18 14:31: 82 filas (fuente=live)
+2026-08-18 14:32:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 14:32:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.38)
+2026-08-18 14:32:07 | DATA   | cadena persistida 2026-08-18 14:32: 82 filas (fuente=live)
+2026-08-18 14:33:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 14:33:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.21)
+2026-08-18 14:33:07 | DATA   | cadena persistida 2026-08-18 14:33: 82 filas (fuente=live)
+2026-08-18 14:34:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 14:34:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.18)
+2026-08-18 14:34:06 | DATA   | cadena persistida 2026-08-18 14:34: 82 filas (fuente=live)
+Error 10349, reqId 44741: Order TIF was set to DAY based on order preset.
+Canceled order: Trade(contract=Contract(secType='BAG', symbol='SPY', exchange='SMART', currency='USD', comboLegs=[ComboLeg(conId=908218863, ratio=1, action='SELL', exchange='SMART', openClose=0, shortSaleSlot=0, designatedLocation='', exemptCode=-1), ComboLeg(conId=908218953, ratio=1, action='BUY', exchange='SMART', openClose=0, shortSaleSlot=0, designatedLocation='', exemptCode=-1)]), order=LimitOrder(orderId=44741, clientId=17, action='SELL', totalQuantity=1, lmtPrice=0.79), orderStatus=OrderStatus(orderId=44741, status='Cancelled', filled=0.0, remaining=0.0, avgFillPrice=0.0, permId=0, parentId=0, lastFillPrice=0.0, clientId=0, whyHeld='', mktCapPrice=0.0), fills=[], log=[TradeLogEntry(time=datetime.datetime(2026, 8, 18, 19, 16, 7, 588537, tzinfo=datetime.timezone.utc), status='PendingSubmit', message='', errorCode=0), TradeLogEntry(time=datetime.datetime(2026, 8, 18, 19, 16, 7, 915782, tzinfo=datetime.timezone.utc), status='Cancelled', message='Error 10349, reqId 44741: Order TIF was set to DAY based on order preset.', errorCode=10349)], advancedError='')
+Error 201, reqId 44741: Order rejected - reason:Riskless combination orders are not allowed. You have reached the maximum limit of active<br>riskless/guaranteed-loss combination orders. Please wait for existing orders to complete or cancel one before<br>submitting a new order.
+Error 10349, reqId 44743: Order TIF was set to DAY based on order preset.
+Canceled order: Trade(contract=Option(conId=908218908, symbol='SPY', lastTradeDateOrContractMonth='20260818', strike=768.0, right='C', multiplier='100', exchange='SMART', currency='USD', localSymbol='SPY   260818C00768000', tradingClass='SPY'), order=LimitOrder(orderId=44743, clientId=17, action='SELL', totalQuantity=1, lmtPrice=0.94), orderStatus=OrderStatus(orderId=44743, status='Cancelled', filled=0.0, remaining=0.0, avgFillPrice=0.0, permId=0, parentId=0, lastFillPrice=0.0, clientId=0, whyHeld='', mktCapPrice=0.0), fills=[], log=[TradeLogEntry(time=datetime.datetime(2026, 8, 18, 19, 16, 10, 638366, tzinfo=datetime.timezone.utc), status='PendingSubmit', message='', errorCode=0), TradeLogEntry(time=datetime.datetime(2026, 8, 18, 19, 16, 10, 649621, tzinfo=datetime.timezone.utc), status='Cancelled', message='Error 10349, reqId 44743: Order TIF was set to DAY based on order preset.', errorCode=10349)], advancedError='')
+SPY 120 S 1 min useRTH=False
+2026-08-18 14:57:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.80)
+2026-08-18 14:57:05 | DATA   | cadena persistida 2026-08-18 14:57: 82 filas (fuente=live)
+2026-08-18 14:58:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 14:58:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.80)
+2026-08-18 14:58:05 | DATA   | cadena persistida 2026-08-18 14:58: 82 filas (fuente=live)
+2026-08-18 14:59:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 14:59:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.74)
+2026-08-18 14:59:05 | DATA   | cadena persistida 2026-08-18 14:59: 82 filas (fuente=live)
+2026-08-18 15:00:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 15:00:04 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.70)
+2026-08-18 15:00:04 | DATA   | cadena persistida 2026-08-18 15:00: 82 filas (fuente=live)
+2026-08-18 15:01:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 15:01:09 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.73)
+2026-08-18 15:01:09 | DATA   | cadena persistida 2026-08-18 15:01: 82 filas (fuente=live)
+2026-08-18 15:02:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 15:02:09 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.79)
+2026-08-18 15:02:09 | DATA   | cadena persistida 2026-08-18 15:02: 82 filas (fuente=live)
+2026-08-18 15:03:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 15:03:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.82)
+2026-08-18 15:03:08 | DATA   | cadena persistida 2026-08-18 15:03: 82 filas (fuente=live)
+2026-08-18 15:04:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 15:04:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.81)
+2026-08-18 15:04:08 | DATA   | cadena persistida 2026-08-18 15:04: 82 filas (fuente=live)
+2026-08-18 15:05:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 15:05:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.75)
+2026-08-18 15:05:08 | DATA   | cadena persistida 2026-08-18 15:05: 82 filas (fuente=live)
+2026-08-18 15:06:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 15:06:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.71)
+2026-08-18 15:06:08 | DATA   | cadena persistida 2026-08-18 15:06: 82 filas (fuente=live)
+2026-08-18 15:07:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 15:07:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.71)
+2026-08-18 15:07:07 | DATA   | cadena persistida 2026-08-18 15:07: 82 filas (fuente=live)
+2026-08-18 15:08:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 15:08:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.78)
+2026-08-18 15:08:07 | DATA   | cadena persistida 2026-08-18 15:08: 82 filas (fuente=live)
+2026-08-18 15:09:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 15:09:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.89)
+2026-08-18 15:09:07 | DATA   | cadena persistida 2026-08-18 15:09: 82 filas (fuente=live)
+2026-08-18 15:10:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 15:10:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.83)
+2026-08-18 15:10:07 | DATA   | cadena persistida 2026-08-18 15:10: 82 filas (fuente=live)
+2026-08-18 15:11:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 15:11:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.91)
+2026-08-18 15:11:06 | DATA   | cadena persistida 2026-08-18 15:11: 82 filas (fuente=live)
+2026-08-18 15:12:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 15:12:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.70)
+2026-08-18 15:12:06 | DATA   | cadena persistida 2026-08-18 15:12: 82 filas (fuente=live)
+2026-08-18 15:13:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 15:13:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.63)
+2026-08-18 15:13:06 | DATA   | cadena persistida 2026-08-18 15:13: 82 filas (fuente=live)
+2026-08-18 15:14:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 15:14:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.65)
+2026-08-18 15:14:05 | DATA   | cadena persistida 2026-08-18 15:14: 82 filas (fuente=live)
+=== NOTIF === 2026-08-18 15:14:22 | ORDEN | COMPRA VERTICAL SPY C L=767/S=769 x1 debito<=1.02
+2026-08-18 15:15:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 15:15:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.62)
+2026-08-18 15:15:05 | DATA   | cadena persistida 2026-08-18 15:15: 82 filas (fuente=live)
+=== NOTIF === 2026-08-18 15:15:05 | ARRANQUE | RECALIBRA 15:15: saldo=499 nivel 5->4 tope 90->75 unidades 1->1 (ancho FIJO 2)
+2026-08-18 15:16:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 15:16:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.67)
+2026-08-18 15:16:05 | DATA   | cadena persistida 2026-08-18 15:16: 82 filas (fuente=live)
+=== NOTIF === 2026-08-18 15:16:05 | ARRANQUE | RECALIBRA 15:16: saldo=504 nivel 4->5 tope 75->90 unidades 1->1 (ancho FIJO 2)
+=== NOTIF === 2026-08-18 15:16:07 | ORDEN | CIERRE VERTICAL SPY C L=767/S=769 x1 crédito 0.79
+=== NOTIF === 2026-08-18 15:16:10 | ORDEN | CIERRE SPY C 768 x1 límite 0.94
+=== NOTIF === 2026-08-18 15:16:13 | CIERRE | CIERRE (flip) C -> P&L estimado (sin fills) -27$ x1
+2026-08-18 15:16:13 | SENAL  | señal 15:15 P (ST-3 NORMAL) -> sin_contrato
+2026-08-18 15:17:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 15:17:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.74)
+2026-08-18 15:17:08 | DATA   | cadena persistida 2026-08-18 15:17: 82 filas (fuente=live)
+2026-08-18 15:18:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 15:18:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.70)
+2026-08-18 15:18:08 | DATA   | cadena persistida 2026-08-18 15:18: 82 filas (fuente=live)
+2026-08-18 15:18:14 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=33
+=== NOTIF === 2026-08-18 15:18:14 | IBKR | IBKR conectado (paper 4002)
+2026-08-18 15:18:15 | DATA   | IBKR desconectado
+2026-08-18 15:19:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 15:19:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.80)
+2026-08-18 15:19:07 | DATA   | cadena persistida 2026-08-18 15:19: 82 filas (fuente=live)
+2026-08-18 15:20:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 15:20:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.85)
+2026-08-18 15:20:07 | DATA   | cadena persistida 2026-08-18 15:20: 82 filas (fuente=live)
+=== NOTIF === 2026-08-18 15:20:12 | ARRANQUE | ARRANQUE del sistema vivo — 2026-08-18 (0DTE 20260818)
+2026-08-18 15:20:12 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=17
+=== NOTIF === 2026-08-18 15:20:13 | IBKR | IBKR conectado (paper 4002)
+=== NOTIF === 2026-08-18 15:20:13 | ARRANQUE | Autocalibra: saldo=519 nivel=5 ancho=2 tope=90 unidades=1
+=== NOTIF === 2026-08-18 15:20:13 | ARRANQUE | BACKFILL de arranque (SPY premarket + ETF + día anterior)
+2026-08-18 15:20:13 | DATA   | backfill SPY 2 D 1 min useRTH=False
+2026-08-18 15:20:14 | DATA   | backfill SPY: 1402 barras persistidas (fecha 2026-08-18)
+2026-08-18 15:20:14 | DATA   | backfill DIA: 36 barras
+2026-08-18 15:20:14 | DATA   | backfill TLT: 36 barras
+2026-08-18 15:20:14 | DATA   | día anterior (2026-08-17, cierres RTH): cierre=772.64 máx=776.64 mín=772.58
+2026-08-18 15:20:14 | DATA   | día anterior (cierres RTH): max=776.64 min=772.58 cierre=772.64
+=== NOTIF === 2026-08-18 15:20:14 | ARRANQUE | POSICIÓN RECUPERADA de IBKR: vertical C L=767/S=769 coste=1.03 +pirámide 768 (entrada 11:01)
+=== NOTIF === 2026-08-18 15:20:14 | ARRANQUE | Sistema EN MARCHA — esperando barras (todo activo)
+2026-08-18 15:20:14 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 15:20:19 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.78)
+2026-08-18 15:20:19 | DATA   | cadena persistida 2026-08-18 15:20: 82 filas (fuente=live)
+2026-08-18 15:21:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 15:21:09 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.85)
+2026-08-18 15:21:09 | DATA   | cadena persistida 2026-08-18 15:21: 82 filas (fuente=live)
+2026-08-18 15:22:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 15:22:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.82)
+2026-08-18 15:22:08 | DATA   | cadena persistida 2026-08-18 15:22: 82 filas (fuente=live)
+2026-08-18 15:23:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 15:23:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.02)
+2026-08-18 15:23:08 | DATA   | cadena persistida 2026-08-18 15:23: 82 filas (fuente=live)
+2026-08-18 15:23:55 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=36
+=== NOTIF === 2026-08-18 15:23:56 | IBKR | IBKR conectado (paper 4002)
+=== NOTIF === 2026-08-18 15:23:56 | ARRANQUE | POSICIÓN RECUPERADA de IBKR: vertical C L=767/S=769 coste=1.03 +pirámide 768 (entrada 11:01)
+2026-08-18 15:23:56 | DATA   | IBKR desconectado
+2026-08-18 15:24:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 15:24:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.97)
+2026-08-18 15:24:08 | DATA   | cadena persistida 2026-08-18 15:24: 82 filas (fuente=live)
+Error 10349, reqId 49210: Order TIF was set to DAY based on order preset.
+Canceled order: Trade(contract=Contract(secType='BAG', symbol='SPY', exchange='SMART', currency='USD', comboLegs=[ComboLeg(conId=908218863, ratio=1, action='SELL', exchange='SMART', openClose=0, shortSaleSlot=0, designatedLocation='', exemptCode=-1), ComboLeg(conId=908218953, ratio=1, action='BUY', exchange='SMART', openClose=0, shortSaleSlot=0, designatedLocation='', exemptCode=-1)]), order=LimitOrder(orderId=49210, clientId=17, action='SELL', totalQuantity=1, lmtPrice=0.86), orderStatus=OrderStatus(orderId=49210, status='Cancelled', filled=0.0, remaining=0.0, avgFillPrice=0.0, permId=0, parentId=0, lastFillPrice=0.0, clientId=0, whyHeld='', mktCapPrice=0.0), fills=[], log=[TradeLogEntry(time=datetime.datetime(2026, 8, 18, 19, 50, 9, 866170, tzinfo=datetime.timezone.utc), status='PendingSubmit', message='', errorCode=0), TradeLogEntry(time=datetime.datetime(2026, 8, 18, 19, 50, 9, 882024, tzinfo=datetime.timezone.utc), status='Cancelled', message='Error 10349, reqId 49210: Order TIF was set to DAY based on order preset.', errorCode=10349)], advancedError='')
+Error 201, reqId 49210: Order rejected - reason:Riskless combination orders are not allowed. You have reached the maximum limit of active<br>riskless/guaranteed-loss combination orders. Please wait for existing orders to complete or cancel one before<br>submitting a new order.
+Error 10349, reqId 49212: Order TIF was set to DAY based on order preset.
+Canceled order: Trade(contract=Option(conId=908218908, symbol='SPY', lastTradeDateOrContractMonth='20260818', strike=768.0, right='C', multiplier='100', exchange='SMART', currency='USD', localSymbol='SPY   260818C00768000', tradingClass='SPY'), order=LimitOrder(orderId=49212, clientId=17, action='SELL', totalQuantity=1, lmtPrice=0.21), orderStatus=OrderStatus(orderId=49212, status='Cancelled', filled=0.0, remaining=0.0, avgFillPrice=0.0, permId=0, parentId=0, lastFillPrice=0.0, clientId=0, whyHeld='', mktCapPrice=0.0), fills=[], log=[TradeLogEntry(time=datetime.datetime(2026, 8, 18, 19, 50, 12, 935536, tzinfo=datetime.timezone.utc), status='PendingSubmit', message='', errorCode=0), TradeLogEntry(time=datetime.datetime(2026, 8, 18, 19, 50, 12, 940536, tzinfo=datetime.timezone.utc), status='Cancelled', message='Error 10349, reqId 49212: Order TIF was set to DAY based on order preset.', errorCode=10349)], advancedError='')
+════════════════════════════════════════════════════════════
+🔔 2026-08-18 15:24:20 | ARRANQUE | ARRANQUE del sistema vivo — 2026-08-18 (0DTE 20260818)
+════════════════════════════════════════════════════════════
+2026-08-18 15:24:20 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=17
+════════════════════════════════════════════════════════════
+🔔 2026-08-18 15:24:20 | IBKR | IBKR conectado (paper 4002)
+════════════════════════════════════════════════════════════
+════════════════════════════════════════════════════════════
+🔔 2026-08-18 15:24:20 | ARRANQUE | Autocalibra: saldo=538 nivel=5 ancho=2 tope=90 unidades=1
+════════════════════════════════════════════════════════════
+════════════════════════════════════════════════════════════
+🔔 2026-08-18 15:24:20 | ARRANQUE | BACKFILL de arranque (SPY premarket + ETF + día anterior)
+════════════════════════════════════════════════════════════
+2026-08-18 15:24:20 | DATA   | backfill SPY 2 D 1 min useRTH=False
+2026-08-18 15:24:20 | DATA   | backfill SPY: 1406 barras persistidas (fecha 2026-08-18)
+2026-08-18 15:24:21 | DATA   | backfill DIA: 36 barras
+2026-08-18 15:24:21 | DATA   | backfill TLT: 36 barras
+2026-08-18 15:24:21 | DATA   | día anterior (2026-08-17, cierres RTH): cierre=772.64 máx=776.64 mín=772.58
+2026-08-18 15:24:21 | DATA   | día anterior (cierres RTH): max=776.64 min=772.58 cierre=772.64
+════════════════════════════════════════════════════════════
+🔔 2026-08-18 15:24:21 | ARRANQUE | POSICIÓN RECUPERADA de IBKR: vertical C L=767/S=769 coste=1.03 +pirámide 768 (entrada 11:01)
+════════════════════════════════════════════════════════════
+════════════════════════════════════════════════════════════
+🔔 2026-08-18 15:24:21 | ARRANQUE | Sistema EN MARCHA — esperando barras (todo activo)
+════════════════════════════════════════════════════════════
+2026-08-18 15:24:21 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 15:24:26 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.03)
+2026-08-18 15:24:26 | DATA   | cadena persistida 2026-08-18 15:24: 82 filas (fuente=live)
+2026-08-18 15:25:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 15:25:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.15)
+2026-08-18 15:25:05 | DATA   | cadena persistida 2026-08-18 15:25: 82 filas (fuente=live)
+2026-08-18 15:26:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 15:26:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.11)
+2026-08-18 15:26:05 | DATA   | cadena persistida 2026-08-18 15:26: 82 filas (fuente=live)
+2026-08-18 15:27:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 15:27:04 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.09)
+2026-08-18 15:27:04 | DATA   | cadena persistida 2026-08-18 15:27: 82 filas (fuente=live)
+2026-08-18 15:28:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 15:28:04 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.10)
+2026-08-18 15:28:04 | DATA   | cadena persistida 2026-08-18 15:28: 82 filas (fuente=live)
+2026-08-18 15:29:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 15:29:09 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.08)
+2026-08-18 15:29:09 | DATA   | cadena persistida 2026-08-18 15:29: 82 filas (fuente=live)
+2026-08-18 15:30:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 15:30:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.02)
+2026-08-18 15:30:08 | DATA   | cadena persistida 2026-08-18 15:30: 82 filas (fuente=live)
+2026-08-18 15:31:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 15:31:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.07)
+2026-08-18 15:31:08 | DATA   | cadena persistida 2026-08-18 15:31: 82 filas (fuente=live)
+2026-08-18 15:31:08 | SENAL  | señal 15:30 C (ST-3 INVIERTE) -> pos_abierta
+2026-08-18 15:32:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 15:32:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.00)
+2026-08-18 15:32:08 | DATA   | cadena persistida 2026-08-18 15:32: 82 filas (fuente=live)
+2026-08-18 15:33:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 15:33:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 768.02)
+2026-08-18 15:33:07 | DATA   | cadena persistida 2026-08-18 15:33: 82 filas (fuente=live)
+2026-08-18 15:34:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 15:34:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.95)
+2026-08-18 15:34:07 | DATA   | cadena persistida 2026-08-18 15:34: 82 filas (fuente=live)
+2026-08-18 15:35:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 15:35:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.89)
+2026-08-18 15:35:07 | DATA   | cadena persistida 2026-08-18 15:35: 82 filas (fuente=live)
+2026-08-18 15:36:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 15:36:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.90)
+2026-08-18 15:36:06 | DATA   | cadena persistida 2026-08-18 15:36: 82 filas (fuente=live)
+2026-08-18 15:37:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 15:37:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.88)
+2026-08-18 15:37:06 | DATA   | cadena persistida 2026-08-18 15:37: 82 filas (fuente=live)
+2026-08-18 15:38:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 15:38:06 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.97)
+2026-08-18 15:38:06 | DATA   | cadena persistida 2026-08-18 15:38: 82 filas (fuente=live)
+2026-08-18 15:39:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 15:39:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.96)
+2026-08-18 15:39:05 | DATA   | cadena persistida 2026-08-18 15:39: 82 filas (fuente=live)
+2026-08-18 15:40:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 15:40:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.95)
+2026-08-18 15:40:05 | DATA   | cadena persistida 2026-08-18 15:40: 82 filas (fuente=live)
+2026-08-18 15:41:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 15:41:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.84)
+2026-08-18 15:41:05 | DATA   | cadena persistida 2026-08-18 15:41: 82 filas (fuente=live)
+2026-08-18 15:42:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 15:42:04 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.78)
+2026-08-18 15:42:04 | DATA   | cadena persistida 2026-08-18 15:42: 82 filas (fuente=live)
+2026-08-18 15:43:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 15:43:09 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.86)
+2026-08-18 15:43:09 | DATA   | cadena persistida 2026-08-18 15:43: 82 filas (fuente=live)
+2026-08-18 15:44:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 15:44:09 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.88)
+2026-08-18 15:44:09 | DATA   | cadena persistida 2026-08-18 15:44: 82 filas (fuente=live)
+2026-08-18 15:45:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 15:45:09 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.89)
+2026-08-18 15:45:09 | DATA   | cadena persistida 2026-08-18 15:45: 82 filas (fuente=live)
+2026-08-18 15:46:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 15:46:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.89)
+2026-08-18 15:46:08 | DATA   | cadena persistida 2026-08-18 15:46: 82 filas (fuente=live)
+2026-08-18 15:47:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 15:47:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.86)
+2026-08-18 15:47:08 | DATA   | cadena persistida 2026-08-18 15:47: 82 filas (fuente=live)
+2026-08-18 15:48:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 15:48:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.71)
+2026-08-18 15:48:07 | DATA   | cadena persistida 2026-08-18 15:48: 82 filas (fuente=live)
+2026-08-18 15:49:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 15:49:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.73)
+2026-08-18 15:49:07 | DATA   | cadena persistida 2026-08-18 15:49: 82 filas (fuente=live)
+2026-08-18 15:50:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 15:50:07 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.89)
+2026-08-18 15:50:07 | DATA   | cadena persistida 2026-08-18 15:50: 82 filas (fuente=live)
+════════════════════════════════════════════════════════════
+🔔 2026-08-18 15:50:09 | ORDEN | CIERRE VERTICAL SPY C L=767/S=769 x1 crédito 0.86
+════════════════════════════════════════════════════════════
+════════════════════════════════════════════════════════════
+🔔 2026-08-18 15:50:12 | ORDEN | CIERRE SPY C 768 x1 límite 0.21
+════════════════════════════════════════════════════════════
+════════════════════════════════════════════════════════════
+🔔 2026-08-18 15:50:15 | CIERRE | CIERRE (aplanar) C -> P&L estimado (sin fills) -93$ x1
+════════════════════════════════════════════════════════════
+2026-08-18 15:51:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 15:51:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.83)
+2026-08-18 15:51:05 | DATA   | cadena persistida 2026-08-18 15:51: 82 filas (fuente=live)
+2026-08-18 15:52:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 15:52:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.69)
+2026-08-18 15:52:05 | DATA   | cadena persistida 2026-08-18 15:52: 82 filas (fuente=live)
+════════════════════════════════════════════════════════════
+🔔 2026-08-18 15:52:05 | ARRANQUE | RECALIBRA 15:52: saldo=499 nivel 5->4 tope 90->75 unidades 1->1 (ancho FIJO 2)
+════════════════════════════════════════════════════════════
+2026-08-18 15:53:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 15:53:05 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.69)
+2026-08-18 15:53:05 | DATA   | cadena persistida 2026-08-18 15:53: 82 filas (fuente=live)
+2026-08-18 15:54:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 15:54:04 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.60)
+2026-08-18 15:54:04 | DATA   | cadena persistida 2026-08-18 15:54: 82 filas (fuente=live)
+2026-08-18 15:55:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 15:55:09 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.42)
+2026-08-18 15:55:09 | DATA   | cadena persistida 2026-08-18 15:55: 82 filas (fuente=live)
+2026-08-18 15:56:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 15:56:09 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.46)
+2026-08-18 15:56:09 | DATA   | cadena persistida 2026-08-18 15:56: 82 filas (fuente=live)
+2026-08-18 15:57:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 15:57:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.36)
+2026-08-18 15:57:08 | DATA   | cadena persistida 2026-08-18 15:57: 82 filas (fuente=live)
+2026-08-18 15:58:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 15:58:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.24)
+2026-08-18 15:58:08 | DATA   | cadena persistida 2026-08-18 15:58: 82 filas (fuente=live)
+2026-08-18 15:59:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-18 15:59:08 | DATA   | cadena 20260818: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 767.41)
+2026-08-18 15:59:08 | DATA   | cadena persistida 2026-08-18 15:59: 82 filas (fuente=live)
+════════════════════════════════════════════════════════════
+🔔 2026-08-18 16:00:03 | FIN | Cierre de mercado — fin de sesión
+════════════════════════════════════════════════════════════
+2026-08-18 16:00:03 | DATA   | IBKR desconectado
+2026-08-18 16:00:05 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=33
+=== NOTIF === 2026-08-18 16:00:05 | IBKR | IBKR conectado (paper 4002)
+2026-08-18 16:00:05 | DATA   | IBKR desconectado
+2026-08-18 16:10:49 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=43
+=== NOTIF === 2026-08-18 16:10:49 | IBKR | IBKR conectado (paper 4002)
+=== NOTIF === 2026-08-18 16:10:49 | RIESGO | SYNC 16:11: el sistema creía tener posición e IBKR está PLANA (2 confirmaciones) — se suelta y se cierra la fila como 'externa'
+2026-08-18 16:10:49 | DATA   | IBKR desconectado

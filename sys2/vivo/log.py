@@ -47,12 +47,26 @@ def log(msg, cat="INFO"):
     _escribir(linea)
 
 
+_ULTIMA = None          # última notificación emitida (para que el PANEL pueda mostrarla)
+
+
+def ultima():
+    """Última notificación como dict(ts, tipo, msg), o None. La consume _volcar_estado."""
+    return _ULTIMA
+
+
 def notificar(msg, tipo="AVISO"):
-    """Notificación VISIBLE (compra/venta/arranque/error). Se ve en consola resaltada + log."""
+    """Notificación VISIBLE (compra/venta/arranque/error). Consola + log + `ultima()`.
+    OJO: el sistema arranca con `nohup ... >> log 2>&1`, así que el print NO se ve en ninguna
+    consola y además ib_insync escribe al mismo stdout y puede PISAR la línea (pasó el
+    2026-08-18 11:01: el aviso de COMPRA VERTICAL quedó ilegible). Por eso se guarda también
+    en memoria: el panel la lee de estado.json y la muestra, que es el canal que sí se ve."""
+    global _ULTIMA
     barra = "═" * 60
     bloque = "%s\n🔔 %s | %s | %s\n%s" % (barra, _ahora(), tipo, msg, barra)
     print(bloque)
     _escribir("=== NOTIF === %s | %s | %s" % (_ahora(), tipo, msg))
+    _ULTIMA = {"ts": _ahora(), "tipo": tipo, "msg": msg}
 
 
 def error(msg, exc=None):

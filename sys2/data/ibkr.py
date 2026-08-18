@@ -165,6 +165,94 @@ class IBKR:
         L.notificar("COMPRA SINGLE %s %s %.0f x%d <=%.2f" % (C.SYMBOL, right, k, qty, lim), "ORDEN")
         return self.ib.placeOrder(c, orden)
 
+    def abiertas(self, expiry):
+        """Posiciones REALES de opciones de ese vencimiento: [(strike, right, cantidad)].
+        Fuente de verdad para saber si una posición está cerrada de verdad."""
+        out = []
+        for p in self.posiciones():
+            c = p.contract
+            if (getattr(c, "secType", "") == "OPT" and getattr(c, "symbol", "") == C.SYMBOL
+                    and getattr(c, "lastTradeDateOrContractMonth", "") == expiry and p.position):
+                out.append((float(c.strike), c.right, float(p.position)))
+        return out
+
+    def cerrar_todo(self, expiry, right=None, credito=None, qty=1, espera=8, mids=None):
+        """CIERRE GARANTIZADO de TODAS las patas abiertas del vencimiento. Devuelve
+        (plana: bool, precios: {strike: precio_ejecutado}).
+
+        Cascada (2026-08-18: los tres cierres del día fallaron por no tener esto):
+          1) BAG al MID  -> ejecución atómica y mejor precio cuando hay contrapartida.
+          2) VERIFICAR contra las posiciones reales. El sistema NO puede dar por cerrado
+             lo que no ha comprobado: hoy el BAG a límite no llenó (15:16 y 15:50) y el
+             sistema puso pos=None igual, dejando 0DTE vivas creyéndolas cerradas.
+          3) FALLBACK pata a pata a MERCADO, **primero las CORTAS**: mientras exista la pata
+             corta, IBKR ve la obligación del vencimiento y RECHAZA las órdenes por margen
+             (Error 201: "PROJECTED POST EXPIRATION MARGIN DEFICIT"). Recomprando el corto
+             primero, la obligación desaparece y el largo se vende sin objeción. Verificado
+             en real el 2026-08-18 15:53: llenó a la primera tras rechazar el BAG a mercado.
+          4) VERIFICAR de nuevo y devolver si quedó plana.
+        """
+        precios = {}
+
+        def _fills(trade):
+            for f in list(getattr(trade, "fills", []) or []):
+                ex, c = getattr(f, "execution", None), getattr(f, "contract", None)
+                if ex is None or c is None or getattr(c, "secType", "") == "BAG":
+                    continue
+                if getattr(ex, "price", None) is not None:
+                    precios[float(c.strike)] = ex.price
+
+        abiertas = self.abiertas(expiry)
+        if not abiertas:
+            return True, precios
+
+        # 1) BAG al mid (solo si hay exactamente un largo y un corto del mismo right)
+        largos = [x for x in abiertas if x[2] > 0]
+        cortos = [x for x in abiertas if x[2] < 0]
+        if credito is not None and len(largos) == 1 and len(cortos) == 1 and largos[0][1] == cortos[0][1]:
+            try:
+                tr = self.cerrar_vertical(expiry, largos[0][0], cortos[0][0], largos[0][1],
+                                          qty, a_mercado=False, credito=credito)
+                self.ib.sleep(espera)
+                _fills(tr)
+            except Exception as ex:
+                L.log("cerrar_todo BAG: %r" % ex, "WARN")
+
+        # 2) ¿quedó algo? -> 3) fallback pata a pata, CORTAS PRIMERO, al MID y luego a MERCADO
+        for intento, a_mkt in ((1, False), (2, True)):
+            resto = self.abiertas(expiry)
+            if not resto:
+                break
+            L.notificar("BAG no cerró (%d pata/s viva/s) — cierre por patas %s"
+                        % (len(resto), "a MERCADO (último recurso)" if a_mkt else "al MID"),
+                        "RIESGO")
+            for k, r, n in sorted(resto, key=lambda x: x[2]):     # negativas (cortas) primero
+                try:
+                    c = self._opt(expiry, k, r)
+                    self.ib.qualifyContracts(c)
+                    accion = "BUY" if n < 0 else "SELL"
+                    px = (mids or {}).get(k)
+                    if a_mkt or px is None:
+                        orden = MarketOrder(accion, abs(int(n)))
+                        L.notificar("CIERRE MERCADO %s %s %.0f x%d"
+                                    % (C.SYMBOL, r, k, abs(int(n))), "ORDEN")
+                    else:
+                        orden = LimitOrder(accion, abs(int(n)), round(float(px), 2))
+                        L.notificar("CIERRE MID %s %s %.0f x%d @%.2f"
+                                    % (C.SYMBOL, r, k, abs(int(n)), px), "ORDEN")
+                    tr = self.ib.placeOrder(c, orden)
+                    self.ib.sleep(espera)
+                    _fills(tr)
+                except Exception as ex:
+                    L.log("cerrar_todo pata %.0f%s: %r" % (k, r, ex), "WARN")
+
+        # 4) verificación final contra IBKR
+        queda = self.abiertas(expiry)
+        if queda:
+            L.notificar("⚠️ NO SE PUDO CERRAR: %s — CERRAR A MANO ANTES DE LAS 16:00 (§12)"
+                        % queda, "RIESGO")
+        return (not queda), precios
+
     def cerrar_single(self, expiry, k, right, qty=1, a_mercado=False, precio=None):
         c = self._opt(expiry, float(k), right)
         self.ib.qualifyContracts(c)

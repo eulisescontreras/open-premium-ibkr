@@ -104,10 +104,32 @@ class Panel:
         self.w["nivel_extra"] = self._lab(c5, "", GRIS, F); self.w["nivel_extra"].pack(side="left", padx=8)
         self.w["meta"] = self._lab(c5, "", VERDE, F); self.w["meta"].pack(side="right", padx=8)
 
+        # 5-bis) ALERTAS (compra/venta/riesgo). Interruptor del usuario, por defecto OFF:
+        # el sistema SIEMPRE publica el evento en estado.json; el panel decide si lo pinta.
+        # Así el interruptor no toca en absoluto la lógica de trading.
+        self.alertas = False
+        c5b = self._card(self.root); c5b.pack(fill="x", padx=6, pady=3)
+        self.w["btn_alerta"] = tk.Button(
+            c5b, text="🔕 ALERTAS OFF", command=self._toggle_alertas,
+            bg=CARD, fg=GRIS, activebackground=LINE, activeforeground=BLANCO,
+            relief="flat", font=Fs, cursor="hand2", borderwidth=0)
+        self.w["btn_alerta"].pack(side="left", padx=8, pady=5)
+        self.w["evento"] = self._lab(c5b, "", GRIS, Fs); self.w["evento"].pack(side="left", padx=8)
+
         # 6) status
         c6 = tk.Frame(self.root, bg=BG); c6.pack(fill="x", padx=6, pady=(3, 6))
         self.w["conx"] = self._lab(c6, "● SIN DATOS", GRIS, Fs, bg=BG); self.w["conx"].pack(side="left")
         self.w["status"] = self._lab(c6, "", GRIS, Fs, bg=BG); self.w["status"].pack(side="right")
+
+    def _toggle_alertas(self):
+        """ON/OFF de las alertas visibles. Estado SOLO del panel: no se persiste ni se envía
+        al sistema, así que encenderlas o apagarlas nunca puede afectar a una operación."""
+        self.alertas = not self.alertas
+        self.w["btn_alerta"].config(
+            text="🔔 ALERTAS ON" if self.alertas else "🔕 ALERTAS OFF",
+            fg=VERDE if self.alertas else GRIS)
+        if not self.alertas:
+            self.w["evento"].config(text="")
 
     # ── refresco ──
     def _tick(self):
@@ -138,7 +160,9 @@ class Panel:
         self.w["contrato_act"].config(text=d.get("contrato_act") or "")
         self.w["debito"].config(text=("DÉBITO: $%s" % d["debito"]) if d.get("debito") is not None else "")
         mid = d.get("mid")
-        self.w["mid"].config(text=("MID: $%s (%+.1f%%)" % (mid, d.get("mid_pct", 0))) if mid is not None else "",
+        self.w["mid"].config(text=("MID: $%s (%+d$ · %+.1f%%)"
+                                   % (mid, d.get("mid_usd", 0), d.get("mid_pct", 0)))
+                             if mid is not None else "",
                              fg=_col(d.get("mid_pct", 0)))
         # info
         self.w["reloj"].config(text=d.get("reloj") or "—")
@@ -157,6 +181,13 @@ class Panel:
         self.w["conx"].config(text="● CONECTADO: IBKR" if conx else "● DESCONECTADO",
                               fg=(VERDE if conx else ROJO))
         self.w["status"].config(text="DATOS: %s   ÚLT: %s" % (d.get("datos") or "1m", d.get("ultima_act") or "—"))
+
+        # alerta: solo si el usuario la encendió (por defecto OFF)
+        ev = d.get("evento")
+        if self.alertas and isinstance(ev, dict):
+            tipo = ev.get("tipo") or ""
+            col = ROJO if tipo in ("RIESGO", "ERROR") else (VERDE if tipo in ("ORDEN", "POS", "CIERRE") else GRIS)
+            self.w["evento"].config(text="%s  %s" % ((ev.get("ts") or "")[-8:], (ev.get("msg") or "")[:64]), fg=col)
 
 
 def main():

@@ -28,8 +28,22 @@ def elegir_vert(cands, S, h, rt, tope, ancho):
         if not cand_s:
             continue
         ksh, vsh = cand_s[0]
-        deb = (vl[0] - vsh[0]) * 100
-        if 20 <= deb <= tope:
+        # round a centavos: sin él, un débito de exactamente 110,00$ se evalúa como
+        # 110.00000000000001 y se rechaza contra un tope de 110$ (caso real 2026-08-18 09:31:
+        # vertical 768/770 perdido por 1.4e-14$). Medido sobre 485 sesiones, TODAS las
+        # tolerancias entre 1e-9 y medio centavo dan el MISMO resultado: los casos afectados
+        # son empates exactos, no verticales cercanos al borde. Motor: +72375 -> +72024$.
+        deb = round((vl[0] - vsh[0]) * 100, 2)
+        # margen de 1$ sobre el tope: sin él se pierden señales cuyo vertical se pasa por
+        # centavos (2026-08-18: gap_fade a 110,50$ con tope 110$, descartada por 0,50$).
+        # Medido sobre las 485 sesiones, NO degrada nada: racha 4, drawdown -1140 y peor día
+        # -648 IDÉNTICOS al sistema sin margen; rojos 139 -> 137 y +473$. De los días que
+        # toca, el 83,3% mejoran (el mejor ratio de todas las variantes probadas).
+        # cr_motor sigue VERDE (+72.497, dif 1,5% < 2%). NO pasa el T1 de §2.1 (2/4 bloques):
+        # su beneficio no es estadísticamente robusto, pero su NO-perjuicio sí está medido.
+        # El +5% sí pasa los 4 tests (+74.519) pero deja cr_motor en ROJO (dif 4,4% > 2%):
+        # es un cambio de estrategia, no un arreglo -> se descartó aquí a propósito.
+        if 20 <= deb <= tope + 1:
             return (kl, vl[0], ksh, vsh[0])
     return None
 

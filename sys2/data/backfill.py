@@ -26,6 +26,28 @@ def _fecha(bar):
     return str(d)[:10]
 
 
+def etf_dia(ibkr, con, fecha_hoy):
+    """DIA/TLT 09:25-10:05 de `fecha_hoy` -> bars_etf (regla 5, día bueno). Devuelve nº de barras.
+    Se llama en el arranque Y se reintenta desde el vivo: si el sistema arranca ANTES de las
+    10:05 esa ventana todavía no existe y trae 0 barras (caso real 2026-08-18: arranque 09:25,
+    bars_etf vacío toda la sesión -> dia_bueno() False permanente). `repo.insertar` es
+    INSERT OR REPLACE sobre PK (ticker,fecha,hora): reintentar NO duplica."""
+    total = 0
+    for tk in C.ETFS:
+        try:
+            eb = ibkr.backfill_etf(tk, dur="1 D", bar="1 min")
+            fetf = [{"ticker": tk, "fecha": _fecha(b), "hora": _hora(b), "close": b.close}
+                    for b in eb if _fecha(b) == fecha_hoy and "09:25" <= _hora(b) <= "10:05"]
+            if fetf:
+                repo.insertar(con, "bars_etf", fetf)
+                con.commit()
+            total += len(fetf)
+            L.log("backfill %s: %d barras" % (tk, len(fetf)), "DATA")
+        except Exception as ex:
+            L.log("backfill ETF %s: %r" % (tk, ex), "WARN")
+    return total
+
+
 def backfill(ibkr, con, fecha_hoy):
     """Corre el backfill completo para la sesión `fecha_hoy` ('YYYY-MM-DD'). Devuelve nº de barras SPY."""
     L.notificar("BACKFILL de arranque (SPY premarket + ETF + día anterior)", "ARRANQUE")
@@ -51,17 +73,7 @@ def backfill(ibkr, con, fecha_hoy):
     L.log("backfill SPY: %d barras persistidas (fecha %s)" % (len(filas), fecha_hoy), "DATA")
 
     # 2) DIA / TLT (para la regla del día bueno)
-    for tk in C.ETFS:
-        try:
-            eb = ibkr.backfill_etf(tk, dur="1 D", bar="1 min")
-            fetf = [{"ticker": tk, "fecha": _fecha(b), "hora": _hora(b), "close": b.close}
-                    for b in eb if _fecha(b) == fecha_hoy and "09:25" <= _hora(b) <= "10:05"]
-            if fetf:
-                repo.insertar(con, "bars_etf", fetf)
-                con.commit()
-            L.log("backfill %s: %d barras" % (tk, len(fetf)), "DATA")
-        except Exception as ex:
-            L.log("backfill ETF %s: %r" % (tk, ex), "WARN")
+    etf_dia(ibkr, con, fecha_hoy)
 
     # 3) día anterior -> gap_fade / ayer_rev.
     # Se DERIVA de las barras de 1 min que acabamos de guardar (max/min de los CIERRES del RTH),
