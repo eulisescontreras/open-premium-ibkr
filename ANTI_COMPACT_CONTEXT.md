@@ -121,6 +121,52 @@ contra la tanda anterior solo muestra datos vivos acumulándose, TOTAL/A1/A2 id�
   A media sesión nadie detectaría esa divergencia.
 - El **aplanado 15:50 y el cierre** siguen sin ejecutarse nunca en real.
 
+## 🔴🔴 CRÍTICO 2026-08-18 — LOOK-AHEAD EN LA CLASIFICACIÓN DE FLIPS: -43% DEL SISTEMA
+
+**EL PROBLEMA (VERIFICADO):** `reb2` clasifica cada flip del ST-3 mirando hasta **12 buckets
+DESPUÉS** (36 min). El motor llama a `construir_sen(bars…)` **UNA VEZ con TODAS las barras del
+día** (`motor.py:124`), ANTES del bucle de minutos -> al llegar al minuto del flip ya "sabe" si
+era falso, usando datos que en VIVO no existen. El vivo llama a `construir_sen` cada minuto con
+las barras hasta ese momento: con ~1 bucket, el bucle de reb2 no tiene nada que recorrer y
+devuelve **NORMAL siempre**.
+
+**Demostrado con los 2 flips reales del 2026-08-18** (reevaluados con ventana creciente):
+  14:18 C -> NORMAL con 1-8 buckets, **DESCARTA con 12**
+  15:15 P -> NORMAL con 1-2 buckets, **DESCARTA con 4**
+El vivo obedeció los dos (el de 15:15 cerró la posición). El backtest los habría ignorado.
+
+**MAGNITUD (comparación limpia: mismo código, solo cambia lo que VE):**
+```
+ve el DÍA COMPLETO    +67.153   330 verdes  142 rojos  racha 4  dd -1.140
+ve 12 min (vis=4)     +51.243   300         172        racha 6  dd -1.596
+ve 6 min  (vis=2)     +40.589   286         189        racha 5  dd -2.061
+ve 3 min = EL VIVO    +38.289   277         198        racha 5  dd -3.013
+```
+**-28.864$ = -43% del sistema.** Y el riesgo empeora MÁS que el beneficio: +56 días rojos,
+racha 4->5, **drawdown 2,6x peor (-1.140 -> -3.013)**. Progresión monótona en las 4 variantes.
+
+**CONTROL DE LA MEDICIÓN (regla 8):** mi reconstrucción con visión COMPLETA da +67.153 y no
++72.497 -> **-5.344$ son artefacto mío** (el script omite el bloque RETMOD/skew del pipeline;
+-5.344 coincide EXACTO con el aporte de `skew_RETRASA` que reporta cr_validacion). Por eso la
+brecha se mide **vis1 vs ctrl** (ambos con mi código), no contra el motor original.
+VERIFICADO: la brecha existe, su dirección y su monotonía. HIPÓTESIS: la magnitud exacta —
+falta medirlo tocando el pipeline de verdad, no reconstruyéndolo por fuera.
+Script: `scratchpad/barrido_brecha.py`.
+
+**CONSECUENCIAS:**
+1. Los **+71.396$** validados NO son la expectativa del sistema en vivo. Lo realista con visión
+   honesta es **~+38.000$/2 años** y **drawdown -3.013$** (sobre 600$ de cuenta, riesgo de ruina
+   de otra categoría).
+2. `cr_lookahead` NO lo detecta: comprueba las 6 trampas del MANUAL §2.3 y **ninguna es
+   "la clasificación de señales usa datos futuros"**. Está VERDE por revisar otras cosas.
+3. Reencuadra el juez de salida (+857$): se midió sobre el motor CON look-ahead, o sea sobre un
+   sistema que ya esquivaba los flips falsos gratis. En el sistema real podría valer mucho más.
+
+**PENDIENTE:** (a) confirmarlo tocando el pipeline; (b) **enseñar al vivo a ESPERAR antes de
+obedecer un flip** (detectar, esperar N min, reevaluar y entrar solo si sigue válido) — OJO: las
+variantes vis2/vis4 de arriba NO son eso (entran en el minuto del flip usando datos posteriores);
+hay que medir la espera real, con entrada desplazada al momento de la confirmación.
+
 ## 🔴 CRÍTICO 2026-08-18 — EL CIERRE FALLÓ 3 VECES Y EL SISTEMA NO SE ENTERÓ
 
 **Lo que pasó (primera operación real del sistema: ORB 11:00, vertical 767C/769C + pirámide 768C):**
