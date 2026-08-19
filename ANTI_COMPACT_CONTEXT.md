@@ -121,6 +121,373 @@ contra la tanda anterior solo muestra datos vivos acumulándose, TOTAL/A1/A2 id�
   A media sesión nadie detectaría esa divergencia.
 - El **aplanado 15:50 y el cierre** siguen sin ejecutarse nunca en real.
 
+## 🏆 2026-08-19 (noche) — SISTEMA REAL SIN LOOK-AHEAD: 600$ → 89.638$ (149x). CONFIG COMPLETA
+
+**AUTORIZACIÓN DEL USUARIO:** "puedes cambiar todo, el ancho, el monto, ORB... no me interesa si
+desarmas el sistema, siempre y cuando sean datos REALES". Y: capital máx 800$, racha máx 2-3.
+
+### CONFIGURACIÓN GANADORA (todo VERIFICADO, cero look-ahead)
+```
+capital 600$ · sizing = 18% del saldo con SUELO 140$ · parar si saldo < 3.5×suelo (490$)
+pausa tras 3 días rojos · stop diario 15% · MAX_TRADES 4 (subirlo EMPEORA)
+filtro por CADENA DE OPCIONES score>=2 (umbrales p25 de A1: costv<=0.195 IV<=0.150 skew>=0.031)
+objetivo de salida = 95% del ANCHO del vertical
+-> 89.638$ (149,4x) · racha 3 · drawdown -21,1% · 318 verdes / 147 rojos · 0 quiebras en 7 arranques
+```
+Scripts: `scratchpad/barrido_{realista,compuesto,sizing,riesgo,exprimir,final,afinado,ruina,
+survival,aguante,tp,dinamico,ejecucion}.py` (todos parchean motor.py/pipeline.py por os.environ
+y corren N variantes EN PARALELO: 8-14 variantes en 6-9 min; **máx 8-14 procesos**, con 24 el
+sistema se queda sin recursos).
+
+### 🔑 EL CUELLO DE BOTELLA REAL: `sin_contrato` (VERIFICADO en días reales + 2 años)
+**La brecha backtest↔realidad NO es look-ahead ni ejecución: es que el sistema NO PUEDE COMPRAR.**
+Días reales (cadena viva, 82 contratos/min con bid/ask, tabla `premium` de sys2.db):
+```
+             backtest   REALIDAD    señales -> operaciones
+2026-08-17   +402,52    no operó    3 señales, 2 "sin_contrato", 0 ops
+2026-08-18    +83,02     -92,58     7 señales, 4 "sin_contrato" + 2 "pos_abierta", 1 op
+2026-08-19    +87,13     -53,33    12 señales, 3 "sin_contrato" + 3 "pos_abierta", 4 ops
+TOTAL        +572,67    -145,91    -> 9 de 22 señales perdidas por "sin_contrato"
+```
+Quitar los 3 look-ahead solo explica 92$ de los 718$. Valorar al ask/bid: 454-499$ (tampoco).
+Runner: `scratchpad/_dump_D3.py` (RL_DIAS, RL_PRECIO=mid|ask|bid) + `barrido_live3.py`.
+
+**CAUSA MECÁNICA:** `elegir_vert` (instrumento.py:21-24) ordena por moneyness DESCENDENTE y
+coge el ITM MÁS PROFUNDO, que cuesta casi el ancho completo. **Con ANCHO 2 ese vertical vale
+~200$ y NO CABE en un tope de 110-140$** -> `sin_contrato`. Medido sobre 485 sesiones:
+```
+ancho FIJO 2 -> 413$ (1 sola operación en 485 días)   ancho FIJO 3 -> 71.348$ (118,9x)
+ancho FIJO 4 -> 89.645$ (149,4x)                      ancho AUTO   -> 89.638$ (149,4x)
+```
+**El vivo llevaba días con ancho 2 + tope 110: la peor combinación posible.**
+
+### TOPE Y CAPITAL — LOS LÍMITES (medido)
+```
+suelo del tope:  110$ -> 88.001$ (dd -32,4%) | 140$ -> 89.638$ (dd -21,1%) <- ÓPTIMO
+                 200$ y 250$ -> NO OPERA NUNCA (3,5x200=700 > capital 600)
+capital inicial: 490$ -> 180,8x (dd -36,0%)  <- MÍNIMO ABSOLUTO (por debajo no arranca)
+                 550$ -> 163,0x (dd -18,6%)  <- MEJOR EQUILIBRIO
+                 600$ -> 149,4x (dd -21,1%)   800$ -> 112,4x (dd -24,7%)
+                1000$ ->  90,2x (dd -31,1%)  1500$ ->  59,7x (dd -39,2%)
+```
+⚠️ **El PROFIT FINAL es el mismo (88,5-90,2k$) con cualquier capital entre 490 y 1.500$.** El
+capital no cambia el destino, cambia el camino: **más capital = MÁS drawdown** (con poca cuenta
+el suelo 140 actúa de freno; con cuenta grande manda el 18% y arriesga más).
+
+### ⛔ RESTRICCIÓN DE IBKR NO MODELADA (medida en real 2026-08-19 15:17, cuenta 1.500$)
+IBKR **rechaza** las órdenes con `Error 201: PROJECTED POST EXPIRATION MARGIN DEFICIT` cuando la
+pata larga puede acabar ITM (proyecta el ejercicio: 100 acciones de SPY ~77.000$).
+```
+C 771/773 (largo OTM -1,13) mid 0,060 -> LLENÓ en 0,7s
+C 770/772 (-0,13) · P 770/768 (+0,13) · C 769/771 (+0,87) · P 771/769 (+1,13) -> RECHAZADOS
+```
+5 de 6 bloqueadas, incluso CRUZANDO el spread -> **no es el mercado, es el broker**.
+Y el sistema compra deliberadamente el largo ITM (`mny>=0.5`) = justo lo que IBKR bloquea.
+**POR LA MAÑANA SÍ LLENA** (op132/133/134 entre 09:31 y 09:52) -> **PENDIENTE: medir a qué hora
+empieza a rechazar.** Si el corte es a media tarde, media sesión está bloqueada.
+SPREADS REALES medidos (15:14, peor momento del día): verticales de 0,82-1,16$ (los que opera el
+sistema) tienen spread de **3,4-4,8%**; los baratos 16-33%. Datos en `spreads_reales.json`.
+
+### CAMINO RECORRIDO (cada paso, medido)
+```
+motor original CON look-ahead ........................ 72.497$ (cuenta equivalente 1.800$)
+- fix reb2 (1 bucket, lo que ve el vivo) ............. 35.878$
+- fix ORB futuro ..................................... 34.375$   (-1.503)
+- fix dia_bueno desde 10:31 .......................... 32.620$   (-1.132)   <- BASE HONESTA
+- con el tamaño REAL del vivo (tope 110) .............. 6.442$   (-26.178)
++ COMPOSICIÓN (autocalibra por saldo, como el vivo) ... 38.012$ desde 1.000$ (600$ MUERE)
++ HISTÉRESIS (el nivel sube pero nunca baja) ......... 37.540$ desde 600$ (62,6x)
++ sizing 18% del saldo con suelo 140 ................. 48.689$ (81,1x)
++ PAUSA tras 3 días rojos ............................ 49.354$ (82,3x) y racha 7 -> 3
++ SCORE DE OPCIONES (score>=2) ....................... 61.711$ (102,9x)
++ REGLA DE SUPERVIVENCIA (parar si saldo<3,5×suelo) ... igual profit, RUINA 33% -> 0%
++ OBJETIVO 95% del ANCHO ............................. 89.638$ (149,4x)
+```
+
+### ⚠️ LO QUE DECIDE SI ESTO ES REAL: EL COSTE DE EJECUCIÓN
+El motor cierra al MID del vertical. Aplicando un descuento a TODOS los cierres:
+```
+descuento   0%      2%       5%       10%
+2024-08-15  149x    129x     100x     0,8x  <- MUERE
+2025-02-18  111x     95x     0,7x     0,7x  <- MUERE ya al 5%
+2025-10-15   89x     77x      65x      42x
+```
+**Con 10% de coste NO HAY SISTEMA.** Motivo: ~465 operaciones COMPUESTAS -> el coste se aplica
+465 veces sobre capital creciente (por eso 2%->-14%, 5%->-33%, 10%->-99%).
+**Única evidencia real:** op131 (2026-08-18) llenó a 1,52 con ask 1,54 y 0,51 con bid 0,52 ->
+DENTRO del spread (~2-4%). Los otros 6 fills están en NULL por el bug de registro.
+**PRIORIDAD MÁXIMA: medir el coste de ejecución real en vivo.** Vale más que cualquier señal.
+
+### RIESGO DE RUINA (12 arranques distintos, config completa)
+Sin la regla de supervivencia: **4 de 12 QUIEBRAN** (saldo negativo). Con ella: **0 de 7**.
+Pero 4 de 7 quedan **vivas y CONGELADAS** en ~460$ (no vuelven a operar). Reparto honesto:
+~43% multiplica x88-x149 · ~57% se queda en 0,8x. El 149x es el mejor arranque de los doce.
+
+### LO QUE NO FUNCIONÓ (medido, no repetir)
+- **Suelo dinámico** (operar más pequeño en vez de parar): **-594$**. Operar herido alarga la
+  sangría: 6 operaciones en vez de 1 y la cuenta baja de 462 a 161. El "estado absorbente"
+  NO es un bug, es protección.
+- **Subir la fracción**: 25% -> 46.538 (dd -63%), 50% -> 46.645 (dd -71%), 100% -> 46.827
+  (dd -88%, saldo mín 99$). El 18% ya era el óptimo (Kelly). **Y sigue siéndolo con el score.**
+- **MAX_TRADES 6/8/99**: 44.848/46.096/46.096 vs 48.589. Menos profit y peor día -1.547/-1.715.
+  El cupo de 4 no era limitación, era protección.
+- **Stops por operación**: -30% deja la cuenta en 469$; -50% -> 40.746; -70% -> 48.108. Cuanto
+  más ajustado, peor. **Cortar pérdidas mata este sistema.**
+- **Objetivo al 50% del débito** (479$) y **tiempo máx 60 min** (464$): destruyen. El objetivo
+  solo funciona atado al ANCHO (techo físico del vertical), no al débito ni al tiempo.
+- **Freno de tamaño tras racha**: drawdown y racha IDÉNTICOS con y sin él. La racha es una
+  propiedad de la SEÑAL, no del sizing; solo la corta la PAUSA (no operar) o el stop diario.
+- **Reacción honesta** (reevaluar reb2 con ventana creciente para INVIERTE): **-4.772$**.
+
+### CORRECCIONES DE ERRORES MÍOS (para no repetirlos)
+1. **MFE no es la métrica**: coincide con "pierde dinero" solo el 44,6% de las veces.
+2. **El proxy de P&L mintió en la descomposición**: decía DESCARTA 62% / RETRASA 9%; el motor
+   real dice **RETRASA +12.763 (5,08σ) · INVIERTE +13.640 · DESCARTA +3.904**. Usar el MOTOR.
+3. **"El vivo siempre ve NORMAL" (fase 4) era FALSO**: mi simulación hacía `break` en la primera
+   coincidencia. PRUEBA REAL: las señales 16 y 19 del 2026-08-19 tienen origen `ST-3 INVIERTE`.
+4. **El ruido NO es fijo**: depende de cuántos días toque la regla. 420 días -> ±5.000$;
+   80 días -> ±1.918$. Un filtro QUIRÚRGICO se detecta con mucho menos aporte.
+5. **"Peor día -1.412" no era un fallo**: con composición hay que medir en % (era -5,8%).
+6. **Un `replace` que no se aplica da resultados IDÉNTICOS y parece un hallazgo.** Poner SIEMPRE
+   `assert N_X in tm` tras cada parche (pasó con el descuento de ejecución).
+
+## 🟢🟢 2026-08-19 (noche) — SEÑAL EN LA CADENA DE OPCIONES (sin coste de tiempo)
+
+**LA IDEA:** todo lo probado exige ESPERAR velas y el retraso se come la señal. Pero en el minuto
+EXACTO del flip ya existe la cadena de opciones. **Coste de tiempo CERO.**
+Estaba delante todo el tiempo: el sistema ya calcula `skew_l2` … pero solo lo consulta sobre los
+flips que clasifican RETRASA (`pipeline.py:57`), el 25% de los casos.
+
+**MEDIDO (485 sesiones, 1.520 flips con cadena, `scratchpad/fase2_opciones.py`).**
+Objetivo: el precio termina el tramo EN CONTRA (`neto<=0`); base **57,4% pierden**.
+Cuantiles, con desglose A1/A2:
+```
+costoVert (precio del vertical ATM / ancho)   %pierde   A1     A2      <- EL MEJOR
+  Q1  0.00-0.16                                72.9%   74.6   71.0
+  Q2  0.16-0.28                                64.7%   67.2   62.2
+  Q3  0.28-0.35                                55.0%   54.5   55.6
+  Q4  0.35-0.43                                58.5%   59.9   56.9
+  Q5  0.43-1.14                                34.1%   30.5   37.7
+IV_ATM                                        %pierde   A1     A2      <- monotono perfecto
+  Q1 0.01-0.13  74.5% (81.7/69.8) … Q5 0.31+   41.6%   44.7   36.1
+skew (IV puts - IV calls en el sentido del flip)
+  Q1 muy negativo 37.3%  …  Q5 0.04-0.87       80.0%   82.4   77.1     <- 80% de fallo
+dIV_5min  Q1 63.3% -> Q5 51.9%  (mas debil pero mismo sentido)
+put/call · volumen · vol_rel                   PLANOS, sin señal
+```
+**Lectura económica (por eso NO es sobreajuste):** vertical barato = el mercado no cobra por el
+movimiento -> no viene. IV baja = mercado dormido. Skew a favor de la dirección CONTRARIA = están
+pagando protección contra tu flip. **El ST-3 no es un mal indicador: es CIEGO AL PRECIO DE LA
+INCERTIDUMBRE.** Sabe que hubo cruce, no sabe si alguien paga por él.
+
+**PENDIENTE:** combinar los 3 (cobertura × precisión) y llevarlo al motor. Dataset volcado en
+`scratchpad/fase2_dataset.json` (recomputarlo cuesta ~10 min; con el JSON es instantáneo).
+⚠️ La cadena de `massive` trae solo los contratos QUE COTIZARON ese minuto (~13, no 82) -> hay que
+construir un **libro vigente** con el último precio conocido (<=10 min, solo pasado). Sin eso
+salen 0 flips.
+
+## 🔴🔴 SUELO DE RUIDO — EL LISTÓN DE TODO (medido 2026-08-19)
+
+**La base mueve 385 $ de desviación típica AL DÍA.** Sobre ~420 días afectados, el ruido pareado
+(sd de las diferencias × √n) es **±4.000-6.000 $ (1σ)**. Las **12 variantes** medidas hoy caben
+TODAS entre **-1,03σ y +0,27σ** -> ninguna, buena ni mala, es distinguible del azar (p 0,47-0,58).
+```
+variante        n_afec   aporte   ruido1σ  sigmas        variante      aporte  sigmas
+9m_dult075        420    +1.166    4.249    0.27         esp_k4        -4.358  -0.75
+esp_9min          421      +613    4.170    0.15         esp_k6        -6.051  -1.03
+esp_3min          412      +600    2.362    0.25         cond_nf       -3.912  -0.76
+```
+**CONSECUENCIA OPERATIVA: solo un cambio de ~8.000-12.000 $ (2σ) es DEMOSTRABLE con 485 sesiones.**
+Perseguir mejoras de 1.000-3.000 $ es perseguir ruido: no se pueden confirmar ni descartar.
+(Y explica los +17.477$ de ayer: superaban el ruido porque no eran señal, era futuro.)
+
+## 🔴 LA MÉTRICA IMPORTA — `MFE` NO ES LO QUE COBRA EL SISTEMA (2026-08-19)
+
+Todo lo medido hasta esta sección usaba `falso = recorrido favorable MÁXIMO < 1.0 ATR`
+(`rebote.clasificar_dia:177`). **Es la métrica equivocada** y por eso las señales "existían" en
+estadística y se evaporaban en dinero: coincide con "pierde dinero" solo en el **44,6%** de los
+flips. El sistema compra un **vertical de débito** que SATURA en el ancho y liquida por DÓNDE
+ESTÁ EL PRECIO AL CERRAR, no por dónde llegó a estar.
+```
+                          MFE          NETO        P&L aprox
+vivo (entra siempre)   4.794 ATR     377 ATR      -203.266$
+reb2 (ve el futuro)    4.422 ATR   1.244 ATR      -172.482$
+                        -372 ATR    +867 ATR       +30.784$   <- reproduce la brecha real (-28.864)
+```
+Con MFE reb2 PIERDE; con la métrica correcta GANA. **Usar `neto` / P&L saturado, nunca MFE.**
+
+### DESCOMPOSICIÓN DEL LOOK-AHEAD (ancho 2, débito 46% = los valores REALES operados)
+`reb2` con visión de futuro no hace una cosa, hace cuatro. Reparto del valor:
+```
+decision    n     % flips    valor      A1      A2     % del total
+DESCARTA   148     9.9%    +10.235$  +4.828  +5.407      62%      <- LA PIEZA CLAVE
+INVIERTE   237    15.8%     +4.836$  +2.828  +2.008      29%
+RETRASA    383    25.5%     +1.514$    +468  +1.046       9%
+NORMAL     734    48.9%          0 (identico al vivo)
+```
+Y **reb2 reduce el riesgo a la mitad**: MAE -2,52 -> -1,27 (RETRASA), -2,80 -> -2,03 (INVIERTE).
+Ahí está el drawdown que no se consigue bajar sin romper otra métrica.
+**EL PROBLEMA REDUCIDO:** identificar **148 flips de 1.502** sin ver el futuro. Es lo único con
+tamaño suficiente para superar el suelo de ruido. `scratchpad/fase1b_metrica_correcta.py`.
+(Sensibilidad al débito: con 41% -> DESCARTA +8.755; con 51% -> +11.715. La conclusión no cambia.)
+
+## 🔴 CORRECCIÓN 2026-08-19 (tarde) — EL +17.477$ ERA FALSO. LA SEÑAL, EN CAMBIO, ES REAL
+
+Se auditaron el test y el barrido que produjeron el hallazgo de la mañana (sección siguiente).
+**Dos defectos VERIFICADOS en código puro. La conclusión de la mañana (+17.477$, "pasa los 4
+tests") NO es válida. La idea del usuario SÍ lo es, medida como toca.**
+
+**DEFECTO 1 — FUGA DE OBJETIVO en `test_aprox_post.py:37-38` (el 49% vs 21% es circular).**
+El test definía `malo = (not r) or (r[0][1] != d)` con `r = reb2(...)`. Pero `reb2` DEFINE
+DESCARTA como "la mecha tocó la línea a <=1.0·ATR" (`rebote.py:122` `d_ac <= cerca*atr`,
+`rebote.py:135` `return [] if toco else [(h,d)]`) — **el mismo criterio que el predictor**, con
+la misma ATR (ambos `range(i-10, i+1)`). Predictor y objetivo son la misma variable en ventanas
+distintas (k=4 vs 12 buckets). Medido: con objetivo `reb2` la brecha es **+28.6 pts**; con
+objetivo independiente (mercado) baja a **+15.2 pts**. La mitad del hallazgo era tautología.
+
+**DEFECTO 2 — LOOK-AHEAD en `barrido_aprox.py` (variantes `ap_ent_*`).** El filtro consulta los
+buckets `_i+1.._i+k` (12 min tras el flip) pero registra la señal con la hora del flip
+(`_ap2.setdefault(_r[0], ...)`, y `reb2` con `ks[:_i+2]` solo puede devolver `[(h,d)]` o `[]`).
+El motor abre ahí mismo (`motor.py:215` `if pos is None and h in Sen`). O sea: **compra en el
+minuto del flip sabiendo lo que hacen las 4 velas siguientes.** Es la trampa contra la que ya
+avisaba la sección de la brecha ("vis2/vis4 NO son eso… hay que medir la espera real, con
+entrada desplazada"). Coherente: ver 12 min vale +12.954$ (`br_vis4` vs `br_vis1`) y la
+"regla" aportaba +17.477$.
+
+**LA SEÑAL, MEDIDA HONESTAMENTE, EXISTE** (`scratchpad/test_aprox_honesto2.py`, 485 sesiones,
+5.503 registros). Objetivo INDEPENDIENTE: recorrido favorable real del precio **desde el minuto
+de la decisión** (no desde el flip), malo = `< 1.0 ATR` (mismo criterio que `clasificar_dia:177`):
+```
+filtro (k=4 velas tras el flip)        n   %malos SI  %malos NO   brecha   A1     A2
+d2 <= 0.50 ATR  (mejor de las 2 ult.)  74     64.9       34.9     +29.9   +34.0  +26.3  <- mejor
+dult <= 0.75 Y acercandose             96     62.5       34.6     +27.9   +30.3  +25.5
+dult <= 0.75                          105     61.0       34.5     +26.4   +29.3  +23.6
+dmin <= 0.50                           87     60.9       34.9     +26.0   +30.4  +22.2
+```
+- **k=4 (12 min de observación) domina** todo el barrido de k=2/3/4/6.
+- **`dult`/`d2` (seguir PEGADO al decidir) supera a `dmin` (tocó y se fue)** — es literalmente lo
+  que describe el usuario mirando el gráfico.
+- Consistente en **los dos años por separado**.
+- ⚠️ CONTRAPESO: los flips filtrados aún recorren **1.82-2.10 ATR a favor de media** (vs 3.0 los
+  no filtrados). Son PEORES, no basura. La estadística puede mejorar sin que el dinero la siga
+  (el sistema vive de pocas operaciones grandes) -> **manda el motor**.
+
+### CRITERIO DE ACEPTACIÓN DEFINITIVO (usuario, 2026-08-19 tarde) — SUSTITUYE AL ANTERIOR
+> *"bajar el drawdown, más días verdes y menos rojos, bajar las rachas y subir el profit. Si sube
+> el profit y lo demás se mantiene igual también es válido. La cosa es que SIEMPRE mejore."*
+
+**Una señal se acepta solo si NO EMPEORA NINGUNA métrica y MEJORA AL MENOS UNA** (dominancia):
+profit · drawdown · racha · verdes · rojos · peor día. Implementado en `analiza_honesto.py`
+(imprime `DOMINA` o `empeora: <lista>`).
+⚠️ **El criterio VIEJO (racha ≤4, dd ≥-1.140, peor ≥-648) ya NO sirve**: se fijó sobre el sistema
+CON look-ahead (+72.497). La base honesta arranca en **racha 5, dd -3.779, peor -760** — incumple
+tres de los cuatro antes de tocar nada. Todo se compara contra la BASE HONESTA `hn_base`
+(+35.878 / 273 verdes / 202 rojos / racha 5 / dd -3.779 / peor -760), verificada ≡ `ap_base`.
+
+### RESULTADOS EN EL MOTOR (485 sesiones, base honesta) — NINGUNA VARIANTE DOMINA AÚN
+```
+variante                     profit   vs base  verd rojo racha drawdown  peor   veredicto
+BASE hn_base                +35.878        0    273  202    5    -3.779  -760   --
+esperar 3 min (sin filtro)  +36.477     +600    271  205    6    -3.784  -831   solo mejora profit
+filtro dmin<=0.50 (15 min)  +34.016   -1.862    271  203    6    -3.376  -870   solo mejora dd
+filtro dult<=0.75 (15 min)  +33.671   -2.207    270  205    6    -3.214  -870   solo mejora dd
+filtro dult<=1.00 (21 min)  +32.166   -3.711    268  205    7    -3.170  -890   solo mejora dd
+espera CONDICIONAL (idea)   +31.966   -3.912    267  208    7    -3.197  -831   solo mejora dd
+retraso 15 min solo         +31.522   -4.356    267  209    6    -3.282  -870   solo mejora dd
+retraso 21 min solo         +29.828   -6.049    261  215    7    -2.877  -750   mejora dd y peor
+```
+**PATRÓN (4ª línea independiente que lo confirma):** todo lo que quita o retrasa operaciones
+**baja el drawdown y SUBE la racha**, siempre. Para dominar hay que tocar MUY POCAS operaciones
+y que sean las peores.
+
+**LAS DOS CONSTANTES MEDIDAS:**
+1. **El filtro de aproximación vale ~+2.300$** de forma estable: +2.494 (dmin050 vs esp15),
+   +2.149 (dult075 vs esp15), +2.338 (dult100 vs esp21). Tres montajes, mismo valor.
+2. **El coste del retraso NO es lineal**: 3 min **+600** · 12 min -3.912 · 15 min -4.356 ·
+   21 min -6.049. (Una extrapolación lineal 290$/min entre 15 y 21 predecía -870 a los 3 min:
+   **FALSA**, refutada por medición. No extrapolar esta curva.)
+
+**LA ESPERA CONDICIONAL (idea del usuario) NO FUNCIONA: -3.912$.** Entrar a h+3 si la 1ª vela
+post-flip avanza y esperar a h+12 si no. Motivo: el grupo "no avanza" tiene más malos (37.2% vs
+25.0%) pero sus operaciones valen demasiado como para llegar 12 min tarde.
+Estadística que la respaldaba (1.458 flips, objetivo honesto): 1ª vela avanza >=0.15 ATR ->
+**25.0% malos y 3.50 ATR** (A1 25.8/A2 24.0) vs base 30.9%/3.27. La **2ª vela NO aporta**
+(30.7% ≈ base): cuando cierra, el movimiento ya se consumió. `test_espera_condicional.py`.
+
+**A LOS 3 MINUTOS NO HAY SEÑAL (VERIFICADO, `test_corte_3min.py`):** el mejor corte por avance
+(<= -1.00 ATR, 6.8% cobertura) da 43.0% malos pero **solo +3.3 pts en el AÑO 2** (35.6 vs 32.3).
+Y los filtros de distancia a la línea **ni aparecen**: hay menos de 25 casos en 1.481 con el
+precio cerca de la línea a los 3 min. Es estructural — el ST acaba de saltar al otro lado, la
+línea está lejos por construcción. **El acercamiento NECESITA TIEMPO PARA EXISTIR** (empieza a
+separar hacia los 9 min), y ahí está el conflicto con el coste del retraso.
+
+**EN CURSO (tanda 4):** localizar el **CODO** de la curva de coste entre 3 y 12 min (sin medir):
+controles `hn_esp_6min`/`hn_esp_9min` + filtros a 9 min (`dult<=1.00` es el mejor allí, brecha
++25.7 con A1 +31.3/A2 +19.0). Es la única ventana donde la señal ya existe y el peaje podría ser
+pequeño. Reutiliza `barrido_aprox_honesto.py` (K buckets -> retraso 3*(K+1) min).
+
+**HISTÓRICO:** barrido en el motor con **entrada desplazada** a `ks[_i+k]+3` (la vela k ya cerró,
+convención `shift_sen` +3) y CONTROL OBLIGATORIO `hn_esp_k*` = mismo retraso SIN filtro (regla 8;
+sin él no se sabe si el delta viene del filtro o de entrar más tarde).
+Dato previo que lo hace imprescindible: **esperar sin filtro PIERDE** (`esp_e4` del 18: -5.180$).
+Script: `scratchpad/barrido_aprox_honesto.py` -> `Dh/`; analizador `analiza_honesto.py`.
+⚠️ Al montarlo: NO filtrar señales por `>= "15:40"` — `Sen` también CIERRA por giro
+(`motor.py:165`); hacerlo movía 52 días y -234$ contra la base (detectado por el control
+`hn_base` ≡ `ap_base`, que por eso es obligatorio en cada tanda).
+
+## 🟢 2026-08-19 (mañana) — HALLAZGO: LA APROXIMACIÓN A LA LÍNEA DEL ST SÍ ANTICIPA EL FLIP FALSO
+> ⚠️ **LEER ANTES LA CORRECCIÓN DE ARRIBA**: las cifras de esta sección (+17.477$, "49% vs 21%",
+> "pasa los 4 tests") están INVALIDADAS por fuga de objetivo + look-ahead. Se conserva por el
+> razonamiento y porque la señal, remedida como toca, sí existe.
+
+**Idea del usuario mirando el gráfico:** *"veo clarísimo cómo las velas, a medida que se forman,
+se van acercando al soporte/resistencia del ST — no hace falta saber el futuro"*. Tenía razón:
+todo lo medido hasta entonces usaba la distancia a la línea **en UN instante** (el del flip) o
+las velas **anteriores**. Nadie había medido **la trayectoria de acercamiento en las velas
+POSTERIORES al flip**, que en el minuto de decidir YA están formadas (no es look-ahead).
+
+**MEDIDO (485 sesiones, 1552 flips, `scratchpad/test_aprox_post.py`):**
+```
+velas post   "ya tocó" (<=1.0 ATR)      d_ult        ya tocó -> % malos   vs no tocó
+   2            sep -0.314              +0.463         46.8% (n=124)        24.4%
+   3            sep -0.404              +0.535         47.3% (n=186)        23.3%
+   4            sep -0.543              +0.557         49.1% (n=269)        21.4%
+   6            sep -0.671              +0.653         47.7% (n=413)        18.3%
+   (base de malos: 26.2%)
+```
+**El que toca la línea es falso el ~49% de las veces vs 21% si no toca.** Separación 0.54-0.67:
+**la señal más fuerte encontrada** (todo lo anterior: 0.33 como máximo). Y la DISTANCIA separa
+aún más que el toque consumado (+0.557 vs -0.543 con k=4) -> **acercarse ya es señal**, no hace
+falta esperar al toque. Nota: de esta misma observación nació `reb2`, pero reb2 da un veredicto
+BINARIO a los 36 min; esto lo mide vela a vela y mucho antes.
+**PENDIENTE:** barrido en el motor (9 variantes: filtro de ENTRADA y criterio de SALIDA, k=2/3/4,
+umbral 1.0 y 1.5 ATR) — `scratchpad/barrido_aprox.py`.
+
+**DESCARTADO el mismo día:**
+- **Secuencias de velas previas** (patrones +/-/0, aceleración, expansión, posición del cierre):
+  separación 0.02-0.24, PEOR que las variables sueltas. Los patrones con n>200 se quedan todos
+  en 24-27% de malos contra base 26.2%. `scratchpad/test_secuencias.py`.
+- **Trayectoria de aproximación ANTES del flip**: separaciones -0.10 a +0.03. Nada.
+- **Tape / order flow**: solo hay 2 sesiones (`spy_tape_ayer.db`=2026-08-12 identificada por
+  OPEN 774.70 y cierre; `spy_tape_20260813.db`=2026-08-13). 7 flips -> muestra inservible.
+  **FECHA YA ESCRITA en ambas BD** (columna `fecha`, 411.939 trades) para no volver a deducirla.
+  `analisis/descarga_tape_spy.py` baja histórico de IBKR con fecha correcta (no usado: lento).
+
+## 🔴 2026-08-19 — LA BRECHA TIENE 3 FUENTES, NO 1 (las 2 nuevas SIN MEDIR)
+
+Pregunta del usuario: *"¿lo único dañado es la detección de flips falsos?"* -> **NO**:
+1. **`reb2` clasifica flips con 12 buckets futuros** — MEDIDO: -28.864$ (-43%).
+2. **Descarte de aperturas por ORB futuro** (`pipeline.py:38-41`): una apertura de las 09:38 se
+   descarta por estar a <5 min del ORB de las **09:40**, que aún no ha ocurrido. En vivo esa
+   apertura SÍ entra. **SIN MEDIR.**
+3. **`dia_bueno` aplicado desde el minuto 1** (`motor.py:127-129`): `nq` se calcula UNA VEZ antes
+   del bucle; `dia_bueno` necesita los primeros 60 min + ETF 09:30-10:00, así que el motor
+   **dobla unidades a las 09:35 con datos de las 10:30**. El vivo devuelve False hasta pasadas
+   las 10:30 (`reglas.py:60`). Es el más caro: no cambia SI entra sino CUÁNTO (aporte +6.398$
+   según cr_validacion). **SIN MEDIR.**
+Esto explica que la brecha medida por dos caminos diera -28.864$ y +36.561$ (algo más bajo):
+hay fuentes adicionales.
+
 ## 🔴🔴 CRÍTICO 2026-08-18 — LOOK-AHEAD EN LA CLASIFICACIÓN DE FLIPS: -43% DEL SISTEMA
 
 **EL PROBLEMA (VERIFICADO):** `reb2` clasifica cada flip del ST-3 mirando hasta **12 buckets

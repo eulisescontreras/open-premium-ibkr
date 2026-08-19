@@ -19,6 +19,8 @@ from zoneinfo import ZoneInfo
 
 from sys2 import config as C
 from sys2.core.supertrend import mm
+from sys2.core.rebote import reb2 as _reb2          # visión honesta (C.VISION_HONESTA)
+from sys2.core import autocalibra as _AC            # sizing por saldo (composición real)
 from sys2.core import pipeline
 from sys2.core import reglas as R
 from sys2.core import instrumento as I
@@ -98,14 +100,23 @@ def cargar(con, dias=None):
 
 # ─────────────────────────────────── SIS70 (motor) ──────────────────────────────────
 def SIS70(SES, PREM, ETFB, extra=None, modo_strike="presupuesto", tope=None, pir=None,
-          desde=None, hasta=None, aplanado=None):
-    """Corre el sistema completo. Devuelve D = {fecha: pnl_dia}. Params por config."""
+          desde=None, hasta=None, aplanado=None, capital=None):
+    """Corre el sistema completo. Devuelve D = {fecha: pnl_dia}. Params por config.
+
+    `capital` activa la COMPOSICIÓN REAL (2026-08-19): el tamaño se recalcula CADA DÍA con el
+    saldo acumulado, igual que hace el vivo con `autocalibra`. Sin él, el motor corre los 485
+    días con el tamaño congelado — que es lo que hacía y por eso no se parecía a la realidad.
+    Medido con capital=600: 89.638$ (149,4x). Capital MÍNIMO viable: 490$ (= KSUP × SUELO)."""
     extra = extra if extra is not None else C.APERTURAS_ORDEN
     tope = tope if tope is not None else C.TOPE
     pir = pir if pir is not None else C.PIR
     aplan = aplanado if aplanado is not None else C.APLANADO
     D = {}
     prev = None
+    _saldo = float(capital) if capital else None
+    _racha = 0                      # días rojos consecutivos (para C.PAUSA_ROJOS)
+    _anc_dia = C.ANCHO or 2.0       # ancho vigente (lo mueve la composición)
+    _uni_dia = 1                    # unidades del nivel vigente
     for fk, bars, rth in SES:
         if desde and fk < desde:
             continue
@@ -120,13 +131,50 @@ def SIS70(SES, PREM, ETFB, extra=None, modo_strike="presupuesto", tope=None, pir
         PM = PREM[fk]
         ph, pl, pc = prev if prev else (None, None, None)
 
+        # ── COMPOSICIÓN + CONTROL DE RIESGO (2026-08-19) ────────────────────────────────
+        # PAUSA: tres días rojos seguidos no son mala suerte, son un régimen en el que este
+        # sistema pierde. Saltar el siguiente corta la racha de 7 a 3 Y GANA MÁS (+665$).
+        if C.PAUSA_ROJOS and _racha >= C.PAUSA_ROJOS:
+            D[fk] = 0.0
+            _racha = 0                       # el día en pausa CORTA la racha
+            continue
+        if _saldo is not None:
+            _cfg = _AC.sizing(_saldo)
+            if _cfg is None:                 # regla de supervivencia: la cuenta no lo soporta
+                D[fk] = 0.0
+                continue
+            tope = _cfg["tope"]
+            _anc_dia = _cfg["ancho"]
+            _uni_dia = _cfg["unidades"]
+
         # ── señales: pipeline COMPARTIDO con el vivo (core/pipeline, única fuente de verdad) ──
         Sen, L, ks, ik, sp, _origen = pipeline.construir_sen(bars, cl_, PM, ph, pl, pc, extra)
 
+        # ── VISIÓN HONESTA (fix look-ahead crítico, 2026-08-19) ──────────────────────────
+        # `construir_sen` se llama UNA vez con TODAS las barras del día, así que `reb2` clasifica
+        # cada flip mirando hasta 12 buckets (36 min) HACIA DELANTE. El vivo lo llama cada minuto
+        # con las barras hasta ese momento: con ~1 bucket, el bucle de reb2 no tiene nada que
+        # recorrer y devuelve NORMAL siempre (verificado con los flips reales del 2026-08-18).
+        # Aquí se reproduce esa ceguera. Coste: 72.497$ -> 35.878$ (-43%). Es lo REAL.
+        if C.VISION_HONESTA:
+            _ap = {k: v for k, v in Sen.items() if not (_origen.get(k) or "").startswith("ST-3")}
+            for _h, _d in sp:
+                if _h < "09:45":
+                    continue
+                _i = ik.get((mm(_h) // 3) * 3)
+                if _i is None:
+                    continue            # (los descartes del pipeline ya vienen fuera de `sp`)
+                _n = min(_i + 1, len(ks) - 1)
+                _ks2 = ks[:_n + 1]
+                _ik2 = {_k: _q for _q, _k in enumerate(_ks2)}
+                for _r in _reb2(L, _ks2, _ik2, _h, _d):
+                    _ap.setdefault(_r[0], _r[1])
+            Sen = dict(sorted(_ap.items()))
+
         # ── día bueno (dobla unidades) ──
-        nq = 1
+        nq = _uni_dia if _saldo is not None else 1
         if C.DIABUENO and R.dia_bueno(cl_, ETFB.get("DIA", {}).get(fk), ETFB.get("TLT", {}).get(fk)):
-            nq = 2
+            nq = min(nq * 2, _AC.TOPE_UNIDADES)
 
         # ── bucle por minuto ──
         tot = 0.0
@@ -182,7 +230,14 @@ def SIS70(SES, PREM, ETFB, extra=None, modo_strike="presupuesto", tope=None, pir
                     _i2 = max(0.0, (Sx - pos['extra']['k']) if pos['rt'] == 'C' else (pos['extra']['k'] - Sx))
                     q2 = PM[h].get((pos['rt'], pos['extra']['k']))
                     pos['extra']['mid'] = max(q2[0], _i2) if q2 else max(pos['extra']['mid'], _i2)
-                if gira or h >= aplan:
+                # OBJETIVO DE BENEFICIO (2026-08-19, +9.010$): el vertical NO puede valer más
+                # que su ancho. Al 95% ya capturó casi todo y lo que queda es riesgo sin
+                # recompensa. Atado al ANCHO (techo físico del instrumento), NO al débito.
+                # Medido: 95% del ancho -> 149,4x | 100% del débito -> 117,9x | sin objetivo
+                # -> 102,9x. Al 50% del débito DESTRUYE (0,8x): eso sí es cortar una ganancia.
+                _tp = (C.TP_ANCHO and pos.get('vert')
+                       and pos['mid'] >= C.TP_ANCHO * _anc_dia)
+                if gira or h >= aplan or _tp:
                     # VERBATIM: nq (día bueno) SOLO en la pata principal; el extra de piramidar
                     # se suma SIN nq. nq vive en pos.get('nq',1) (se pierde tras rodar -> vuelve a 1).
                     g = ((pos['mid'] - pos['ask']) * 100 - C.COMISION) * pos.get('nq', 1)
@@ -212,7 +267,9 @@ def SIS70(SES, PREM, ETFB, extra=None, modo_strike="presupuesto", tope=None, pir
                                'rod': r2, 'extra': None, 'h0': h0, 'd0': d0}
 
             # apertura
-            if pos is None and h in Sen and hechas < C.MAX_TRADES and h < C.ABRIR_HASTA:
+            # STOP DIARIO: si el día ya perdió C.STOP_DIARIO del saldo, no se abre más.
+            if (pos is None and h in Sen and hechas < C.MAX_TRADES and h < C.ABRIR_HASTA
+                    and not (C.STOP_DIARIO and _saldo and tot <= -(C.STOP_DIARIO * _saldo))):
                 rt = Sen[h]
                 if C.RUMB:
                     rr = R.ratio_otm(PM[h], Sx)
@@ -222,9 +279,9 @@ def SIS70(SES, PREM, ETFB, extra=None, modo_strike="presupuesto", tope=None, pir
                         if rt == 'P' and rr > 1.0 / C.RUMB:
                             continue
                 cd = [(k, v) for (r_, k), v in PM[h].items() if r_ == rt]
-                if C.ANCHO:
+                if _anc_dia:
                     cd2 = [(k, I.suelo(k, v, Sx, rt)) for k, v in cd]
-                    ev = I.elegir_vert(cd2, Sx, h, rt, tope, C.ANCHO)
+                    ev = I.elegir_vert(cd2, Sx, h, rt, tope, _anc_dia)
                     if ev:
                         kl, pl_, ksh, psh = ev
                         T = _T(h)
@@ -235,7 +292,7 @@ def SIS70(SES, PREM, ETFB, extra=None, modo_strike="presupuesto", tope=None, pir
                             d0 = abs(dd) if dd is not None else None
                         pos = {'k': kl, 'ks': ksh, 'rt': rt, 'ask': (pl_ - psh) * 1.01,
                                'mid': pl_ - psh, 'rod': 0, 'extra': None, 'h0': h, 'd0': d0,
-                               'vert': True, 'nq': nq}
+                               'vert': True, 'nq': (nq if h >= C.DIABUENO_DESDE else 1)}
                     # ⚠️ continue INCONDICIONAL bajo `if ANCHO`: si no hay vertical disponible,
                     # se DESCARTA la señal (no cae al single). Verbatim del motor validado; ponerlo
                     # dentro del `if ev` abre 272 singles de más que inflan piramidar +26k (bug corregido).
@@ -249,9 +306,13 @@ def SIS70(SES, PREM, ETFB, extra=None, modo_strike="presupuesto", tope=None, pir
                         dd, _, _ = greeks(Sx, e[0], T, s_, rt == 'C')
                         d0 = abs(dd) if dd is not None else None
                     pos = {'k': e[0], 'rt': rt, 'ask': e[1][0] * 1.01, 'mid': e[1][0],
-                           'rod': 0, 'extra': None, 'h0': h, 'd0': d0, 'nq': nq}
+                           'rod': 0, 'extra': None, 'h0': h, 'd0': d0,
+                           'nq': (nq if h >= C.DIABUENO_DESDE else 1)}
 
         D[fk] = tot
+        if _saldo is not None:
+            _saldo += tot                      # COMPOSICIÓN: el saldo alimenta el sizing
+        _racha = (_racha + 1) if tot < 0 else 0
         hsd = sorted(cl_)
         prev = (max(cl_.values()), min(cl_.values()), cl_[hsd[-1]])
     return D

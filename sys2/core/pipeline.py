@@ -37,10 +37,19 @@ def construir_sen(bars, cl_, PM, ph, pl, pc, extra=None):
                 orig[x] = "ORB"
     for ex in extra:
         sg = E.senales_apertura(bars, ph, pl, pc, ex)
-        if sg and all(abs(mm(sg[0][0]) - mm(x[0])) > C.DESCARTE_MIN for x in S):
+        # FIX LOOK-AHEAD (2026-08-19): el descarte solo puede compararse contra señales YA
+        # OCURRIDAS. Antes, una apertura de las 09:38 se descartaba por estar a <5 min del ORB
+        # de las 09:40 — que aún no había pasado. En vivo esa apertura SÍ entra.
+        # Medido sobre 485 sesiones: -1.503$ (el backtest estaba inflado en esa cantidad).
+        if sg and all(abs(mm(sg[0][0]) - mm(x[0])) > C.DESCARTE_MIN
+                      for x in S if mm(x[0]) <= mm(sg[0][0])):
             S += sg
             for x in sg:
                 orig[x] = ex
+
+    # libro de opciones vigente (solo pasado) para el score; se calcula UNA vez por día
+    _LIB = R.libro_vigente(PM) if (C.SCORE_OPCIONES and PM) else None
+    _desc = set()          # flips descartados por el score (se quitan también de `sp`)
 
     # p = flips reclasificados (ST-1 antes del rebote, skew sobre RETRASA)
     p = []
@@ -49,6 +58,13 @@ def construir_sen(bars, cl_, PM, ph, pl, pc, extra=None):
             continue
         if C.ST1_ON and giros(S1, k1, h, C.ST1_VENTANA) >= 1:
             continue
+        # FILTRO POR CADENA DE OPCIONES (2026-08-19, +9.606$): el mercado de opciones desmiente
+        # el flip. Coste de tiempo CERO (usa la cadena del MINUTO del flip, no espera velas).
+        if _LIB is not None:
+            _sc = R.score_opciones(_LIB.get(h), cl_.get(h), h, 1 if d == 'C' else -1, d)
+            if _sc >= C.SCORE_OPCIONES:
+                _desc.add((h, d))       # fuera también de `sp` (lo consume la visión honesta)
+                continue
         if C.RETMOD:
             _r = reb2(L, ks, ik, h, d)
             _esret = bool(_r) and _r[0][0] != h and _r[0][1] == d
@@ -76,4 +92,6 @@ def construir_sen(bars, cl_, PM, ph, pl, pc, extra=None):
 
     Sen = dict(sorted(set(S + p)))
     origen = {h: orig.get((h, Sen[h])) for h in Sen}
+    if _desc:
+        sp = [x for x in sp if x not in _desc]      # el score también los quita de `sp`
     return Sen, L, ks, ik, sp, origen

@@ -63,6 +63,49 @@ COMISION = 1.72                       # ida y vuelta por contrato
 GREEKS_R = 0.0                        # el motor invierte IV con r=0, q=0
 GREEKS_Q = 0.0
 
+# ═══════════════════════════════════════════════════════════════════════════════════════
+# SISTEMA HONESTO (2026-08-19) — ver investigacion/2026-08-19_sistema_real/README.md
+# Todo lo de aquí es CONFIGURABLE: poniéndolo a False/None se vuelve al comportamiento viejo.
+# Medido sobre 485 sesiones sin look-ahead: 600$ -> 89.638$ (149,4x), racha 3, drawdown -21,1%.
+# ═══════════════════════════════════════════════════════════════════════════════════════
+
+# ── FIXES ANTI-LOOK-AHEAD (hacen BAJAR el backtest; es el precio de la honestidad) ──
+VISION_HONESTA = True                 # reb2 con 1 bucket = lo que ve el vivo. 72.497 -> 35.878$
+DIABUENO_DESDE = "10:31"              # `dia_bueno` necesita 60 barras (reglas.py:60): antes de
+                                      # esa hora el dato NO existe. Sin esto: -1.132$ inflados.
+                                      # "00:00" = comportamiento viejo (doblar desde el minuto 1)
+
+# ── FILTRO POR CADENA DE OPCIONES (+9.606$) — coste de tiempo CERO ──
+# Cuenta condiciones adversas EN EL MINUTO DEL FLIP. Umbrales del percentil 25 del AÑO 1
+# (el año 2 nunca se miró al elegirlos). Validación out-of-sample: score 0 -> 51,0% pierden,
+# 1 -> 59,1%, 2 -> 74,1%, 3 -> 89,3%. p=0,0000 contra muestras aleatorias.
+SCORE_OPCIONES = 2                    # descartar el flip con >= N señales adversas (0 = off)
+SCORE_COSTV = 0.195                   # vertical ATM barato -> el mercado no paga el movimiento
+SCORE_IV = 0.150                      # IV muerta -> sin recorrido esperado
+SCORE_SKEW = 0.031                    # pagan protección CONTRA la dirección del flip
+
+# ── SALIDA POR OBJETIVO (+9.010$) ──
+# El vertical NO puede valer más que su ancho: al 95% ya capturó casi todo y lo que queda es
+# riesgo sin recompensa. Atado al ANCHO (techo físico), no al débito (que varía con la entrada).
+TP_ANCHO = 0.95                       # cerrar si mid >= TP_ANCHO * ancho (None = off)
+
+# ── CONTROL DE RIESGO ──
+PAUSA_ROJOS = 3                       # no operar tras N días rojos seguidos (0 = off).
+                                      # Corta la racha de 7 a 3 Y GANA MÁS (+665$): tres días
+                                      # rojos seguidos son un régimen malo, no mala suerte.
+STOP_DIARIO = 0.15                    # dejar de ABRIR si el día ya perdió este % del saldo
+
+# ── SIZING POR FRACCIÓN DEL SALDO (sustituye la tabla de autocalibra) ──
+# La tabla bajaba de nivel al perder -> con tope 75$ no cabe ningún vertical (cuestan 88-135$)
+# -> el sistema se AUTOAPAGABA (6 días operados de 485 con 600$).
+SIZING_FRAC = 0.18                    # tope = 18% del saldo (medido óptimo; 25% y 50% son PEORES)
+SIZING_SUELO = 140.0                  # suelo del tope. Con 110 el drawdown pasa de -21% a -32%;
+                                      # con 90 la cuenta llega a saldo NEGATIVO.
+SIZING_KSUP = 3.5                     # REGLA DE SUPERVIVENCIA: no operar si saldo < K * suelo.
+                                      # Riesgo de ruina 33% -> 0% y NO cuesta profit (los
+                                      # arranques sanos dan el mismo número al céntimo).
+                                      # Fija el CAPITAL MÍNIMO: 3,5 x 140 = 490$.
+
 # ── VIVO / PAPER (tiempos OPERABLES §12.4, NUNCA 15:59 en vivo) ──
 APLANADO_VIVO = "15:50"               # aplanar (cerrar) — operable (backtest = APLANADO 15:59)
 MERCADO_VIVO = "15:55"                # si sigue abierta, orden a MERCADO

@@ -13,9 +13,21 @@ from sys2.backtest import motor
 from sys2.db import repo
 
 CORTE = "2025-08-01"
-TARGET_TOTAL = 71396.0
-TARGET_A1 = 32071.0
-TARGET_A2 = 38698.0
+# ⚠️ TARGETS ACTUALIZADOS 2026-08-19 — SISTEMA HONESTO (sin look-ahead).
+# Los targets ANTERIORES (+71.396 / +32.071 / +38.698) correspondían al sistema que VEÍA EL
+# FUTURO: `construir_sen` se llamaba una vez con todas las barras del día y `reb2` clasificaba
+# cada flip mirando 12 buckets (36 min) hacia delante. El vivo NO puede hacer eso.
+# Estos targets son con C.VISION_HONESTA + fix del ORB futuro + `dia_bueno` desde 10:31 + el
+# filtro por cadena de opciones, SIN composición (tamaño fijo, que es como corre este cold run).
+# Con composición desde 600$: 89.188$ (148,6x). Ver investigacion/2026-08-19_sistema_real/.
+TARGET_TOTAL = 48022.0
+TARGET_A1 = 18800.0
+TARGET_A2 = 29222.0
+TARGET_VIEJO_LOOKAHEAD = 71396.0        # se conserva para poder comparar la brecha (-32,7%)
+# ⚠️ PENDIENTE (2026-08-19): en una medición previa este mismo cold run dio +51.030 con el
+# pipeline en el MISMO orden. No se ha explicado la diferencia de 3.008$ — INVESTIGAR antes
+# de fiarse de este target al céntimo. El orden de filtros SÍ está medido: score ANTES del
+# skew da 89.188$ y DESPUÉS da 83.805$ (con composición desde 600$).
 # El TITULAR (+71.396$) es el criterio duro: 2%. Los desgloses por AÑO llevan una cota más
 # laxa (5%) porque el P&L por año es sensible a la completitud de contratos de massive, que
 # difiere entre máquinas (el propio agente notó que "falta de contratos descargados" mueve la

@@ -23,3 +23,7 @@ spy_*.db
 
 sys2/vivo/estado.json
 sys2/vivo/logs/panel.log
+
+# EXCEPCIÓN: los datos reales exportados para investigación SÍ se suben (son pequeños y
+# son la única fuente con bid/ask + griegas de sesiones reales del sistema vivo)
+!investigacion/**/*.db

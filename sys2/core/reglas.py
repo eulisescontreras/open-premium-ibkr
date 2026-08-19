@@ -51,6 +51,49 @@ def skew_l2(m, S, h, lado):
     return (_st.median(ivp) - _st.median(ivc)) * lado
 
 
+# ────────────── REGLA 6 · SCORE DE OPCIONES (2026-08-19, +9.606$) ──────────────
+def libro_vigente(PM, ventana=10):
+    """{hora: cadena vigente} con el ÚLTIMO precio conocido de cada strike (<= `ventana` min).
+    HACE FALTA porque la cadena histórica solo trae los contratos QUE COTIZARON ese minuto
+    (~13 de 82): sin esto el score no tiene datos y no dispara nunca.
+    Solo usa el PASADO -> no introduce look-ahead."""
+    vig, out = {}, {}
+    for h in sorted(PM):
+        for k, v in PM[h].items():
+            vig[k] = (v[0], v[1] if len(v) > 1 else 0.0, mm(h))
+        lim = mm(h) - ventana
+        out[h] = {k: (v[0], v[1]) for k, v in vig.items() if v[2] >= lim}
+    return out
+
+
+def score_opciones(m, S, h, lado, rt, ancho=2.0):
+    """Cuenta 0-3 condiciones ADVERSAS de la cadena EN EL MINUTO DEL FLIP (coste de tiempo CERO).
+    Validado out-of-sample (umbrales del percentil 25 del AÑO 1, año 2 nunca visto al elegirlos):
+      score 0 -> 51,0% pierden | 1 -> 59,1% | 2 -> 74,1% | 3 -> 89,3%   (p=0,0000 vs azar)
+    Lectura económica: vertical barato = el mercado no paga el movimiento; IV muerta = sin
+    recorrido; skew alto = pagan protección CONTRA la dirección del flip."""
+    if not m or S is None:
+        return 0
+    sc = 0
+    sk = skew_l2(m, S, h, lado)
+    if sk is not None and sk >= C.SCORE_SKEW:
+        sc += 1
+    ks = sorted({k for (r_, k) in m if r_ == rt}, key=lambda k: abs(k - S))
+    if not ks:
+        return sc
+    katm = ks[0]
+    vl = m.get((rt, katm))
+    vc = m.get((rt, katm + ancho * lado))
+    if vl and vl[0] > 0.01:
+        iv = _iv(vl[0], S, katm, h, rt == 'C')
+        if iv is not None and iv <= C.SCORE_IV:
+            sc += 1
+    if vl and vc and vl[0] > 0 and vc[0] > 0:
+        if (vl[0] - vc[0]) / ancho <= C.SCORE_COSTV:
+            sc += 1
+    return sc
+
+
 # ─────────────────────────── REGLA 5 · día bueno (dobla) ────────────────────────────
 def dia_bueno(cl_, dia_bars, tlt_bars):
     """True si efic60<E60B y mov_DIA>MDB y mov_TLT<MTB -> dobla unidades (nq=2).
