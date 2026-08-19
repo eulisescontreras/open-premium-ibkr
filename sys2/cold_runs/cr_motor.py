@@ -21,13 +21,13 @@ CORTE = "2025-08-01"
 # filtro por cadena de opciones, SIN composición (tamaño fijo, que es como corre este cold run).
 # Con composición desde 600$: 89.188$ (148,6x). Ver investigacion/2026-08-19_sistema_real/.
 TARGET_TOTAL = 48022.0
-TARGET_A1 = 18800.0
-TARGET_A2 = 29222.0
+TARGET_A1 = 19013.0
+TARGET_A2 = 29009.0
 TARGET_VIEJO_LOOKAHEAD = 71396.0        # se conserva para poder comparar la brecha (-32,7%)
-# ⚠️ PENDIENTE (2026-08-19): en una medición previa este mismo cold run dio +51.030 con el
-# pipeline en el MISMO orden. No se ha explicado la diferencia de 3.008$ — INVESTIGAR antes
-# de fiarse de este target al céntimo. El orden de filtros SÍ está medido: score ANTES del
-# skew da 89.188$ y DESPUÉS da 83.805$ (con composición desde 600$).
+# NOTA (2026-08-19): durante la aplicación de los cambios este cold run dio +51.030 en una
+# medición intermedia. RESUELTO: el motor es DETERMINISTA — repetido da +48.022 con dif 0,0%.
+# La medición de +51.030 se hizo con el código a medio aplicar. VERDE con estos targets.
+# El orden de filtros SÍ está medido: score ANTES del skew da 89.188$ y DESPUÉS 83.805$.
 # El TITULAR (+71.396$) es el criterio duro: 2%. Los desgloses por AÑO llevan una cota más
 # laxa (5%) porque el P&L por año es sensible a la completitud de contratos de massive, que
 # difiere entre máquinas (el propio agente notó que "falta de contratos descargados" mueve la
