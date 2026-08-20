@@ -131,6 +131,42 @@ Días operados: 464 con P&L != 0 + 21 días a cero (el README dice 465, un día 
   ser TAMBIÉN el mejor corte en P&L (12:00 cuesta el triple) — esa coincidencia hay que mirarla
   con desconfianza; el corte se sostiene por el mapa medido, no por el P&L.
 
+## 💵 QUÉ SIGNIFICAN LOS NÚMEROS (aclarado al usuario el 2026-08-20; había confusión)
+
+Todos son **el mismo sistema**. Lo que cambia es **cuánta realidad lleva dentro**. Ninguno tiene
+look-ahead: la diferencia NO es ver el futuro, es suponer **ejecución perfecta**.
+
+```
+83.805$  señales limpias, SIN look-ahead. Supone que IBKR acepta TODO y que TODO llena. FALSO.
+97.631$  lo mismo + compresión d8. Misma suposición falsa de base.
+92.179$  lo mismo + filtro OTM desde las 14h. DESCARTADO (ver abajo). Ignorar este número.
+41.122$  EL REAL (mediana de 8 semillas). Cuenta rechazos, fills reales y coste de salida.
+46.410$  el real + compresión.
+```
+
+**LA CIFRA HONESTA: ~41.000$ desde 600$ (68x), ~46.000$ con compresión (77x).** La mitad del papel.
+
+**Se pierde la mitad por tres cosas, todas MEDIDAS hoy:**
+1. Por la tarde IBKR rechaza (12h el ITM, 14h hasta el ATM): esas operaciones no existen.
+2. Aunque acepte, el fill real va del 50% al 84% según el contrato: el resto se queda colgado.
+3. **139 de 139 ventas se forzaron a mercado.** Coste de salida -1,15% a -5,38% según débito.
+
+**LO MÁS GRAVE NO ES EL DINERO: 3 de cada 8 arranques MUEREN** (4 de 8 con compresión). No pierden
+poco a poco: empiezan con 600$, las primeras operaciones no llenan o las rechazan, la cuenta baja
+de 490$ (`KSUP × SUELO`) y el sistema **se autoapaga para siempre**. Operan 2-4 días y se quedan.
+Frase honesta: *"cuando arranca bien multiplica por 68, pero 3 de cada 8 veces no arranca"*.
+
+**LÍMITE:** la superficie de ejecución sale de UN SOLO DÍA. Con un día no se puede prometer que
+41.000$ sea el número; sí se puede afirmar que **83.805$ NO lo es**.
+
+**POR QUÉ SE DESCARTÓ EL FILTRO OTM** (el usuario lo cuestionó con razón): no mejora nada, y su
+premisa es FALSA — los OTM profundos (mny -2/-3/-5) tienen débitos de 2-14$ y **no llegan al
+mínimo de 20$ del sistema** (0 de 68 en mny -5); el único OTM operable (-1) llena el 59% frente
+al 84% del ATM. Integrarlo en el motor cambiaría el comportamiento del vivo sin dar nada a cambio.
+Y "no abrir desde las 14h" (78.339$) sale casi igual que "OTM desde las 14h" (79.394$): **da
+igual lo que se haga por la tarde**. El valor de la investigación de fills no fue cambiar el
+sistema, fue saber que el número bueno no era alcanzable.
+
 ## PENDIENTES POR PRIORIDAD
 1. 🔴 **Cerrar el punto anterior con la ventana 15:00-15:45 medida con saldo ALTO** (cuenta
    recargada a 1.556 $ a las 14:15). Si no hay rechazos, la hora queda descartada como causa.

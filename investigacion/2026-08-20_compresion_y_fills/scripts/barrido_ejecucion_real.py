@@ -36,6 +36,12 @@ A_IMP = "from sys2.core import pipeline"
 N_IMP = '''from sys2.core import pipeline
 import os as _os, json as _json, random as _rnd
 _EJEC = int(_os.environ.get("RL_EJEC", "0"))
+# DESCOMPOSICIÓN (2026-08-20, pregunta del usuario: "si quito el bloqueo de IBKR, ¿recupero los
+# 40.000$?"). Cada causa se puede activar por separado para saber cuánto cuesta CADA UNA en el
+# MISMO montaje — sumar resultados de barridos distintos no vale.
+_XRECH = int(_os.environ.get("RL_XRECH", "1"))   # rechazo por margen de IBKR
+_XFILL = int(_os.environ.get("RL_XFILL", "1"))   # que no haya contrapartida
+_XSAL = int(_os.environ.get("RL_XSAL", "1"))     # coste de la venta forzada a mercado
 _SEM = int(_os.environ.get("RL_SEM", "1"))
 _COMPR = int(_os.environ.get("RL_COMPR", "0"))
 _RNG = _rnd.Random(_SEM)
@@ -93,23 +99,31 @@ A_EV = "                    if ev:\n                        kl, pl_, ksh, psh = 
 N_EV = ("                    if ev and _EJEC:\n"
         "                        _kl0, _pl0, _ks0, _ps0 = ev\n"
         "                        _mny0 = (Sx - _kl0) if rt == 'C' else (_kl0 - Sx)\n"
-        "                        if _RNG.random() < _p_rech(h, _mny0):\n"
+        "                        if _XRECH and _RNG.random() < _p_rech(h, _mny0):\n"
         "                            ev = None          # IBKR rechaza: la señal se PIERDE\n"
-        "                        elif _RNG.random() > _p_fill(_mny0):\n"
+        "                        elif _XFILL and _RNG.random() > _p_fill(_mny0):\n"
         "                            ev = None          # nadie al otro lado: no llena\n"
         "                    if ev:\n"
         "                        kl, pl_, ksh, psh = ev")
 
 # slippage de salida al cerrar, según el débito de entrada
 A_CIERRE = "                    g = ((pos['mid'] - pos['ask']) * 100 - C.COMISION) * pos.get('nq', 1)"
-N_CIERRE = ("                    _sv = _slip_salida(pos.get('_deb', 0)) if _EJEC else 0.0\n"
+N_CIERRE = ("                    _sv = _slip_salida(pos.get('_deb', 0)) if (_EJEC and _XSAL) else 0.0\n"
             "                    g = ((pos['mid'] * (1.0 - _sv) - pos['ask']) * 100 "
             "- C.COMISION) * pos.get('nq', 1)")
 
 SEMILLAS = [1, 2, 3, 4, 5, 6, 7, 8]
-V = [("z_control", "0", "0", "0")]
-V += [("z_real_s%d" % s, "1", str(s), "0") for s in SEMILLAS]
-V += [("z_comp_s%d" % s, "1", str(s), "8") for s in SEMILLAS]
+SEM4 = [1, 2, 3, 4]
+# (nombre, RL_EJEC, RL_SEM, RL_COMPR, RL_XRECH, RL_XFILL, RL_XSAL)
+V = [("z_control", "0", "0", "0", "1", "1", "1")]
+V += [("z_real_s%d" % s, "1", str(s), "0", "1", "1", "1") for s in SEMILLAS]
+V += [("z_comp_s%d" % s, "1", str(s), "8", "1", "1", "1") for s in SEMILLAS]
+# ── DESCOMPOSICIÓN: ¿cuánto cuesta CADA causa por separado? ──────────────────────────
+# Pregunta del usuario (2026-08-20): "si IBKR deja de bloquear, ¿recupero los 40.000$?".
+# Hay que medirlo en el MISMO montaje: sumar resultados de barridos distintos no vale.
+V += [("y_rech_s%d" % s, "1", str(s), "0", "1", "0", "0") for s in SEM4]   # solo el rechazo
+V += [("y_fill_s%d" % s, "1", str(s), "0", "0", "1", "0") for s in SEM4]   # solo el fill
+V += [("y_sal", "1", "1", "0", "0", "0", "1")]                             # solo la salida (determinista)
 
 assert not [x for x in os.listdir(os.path.dirname(MOT)) if x.endswith(".bak")], "otro barrido vivo"
 base = open(MOT, encoding="utf-8").read()
@@ -126,8 +140,16 @@ shutil.copy2(MOT, BAK)
 try:
     open(MOT, "w", encoding="utf-8").write(txt)
     procs = []
-    for nombre, ejec, sem, compr in V:
-        env = dict(os.environ, RL_EJEC=ejec, RL_SEM=sem, RL_COMPR=compr)
+    for nombre, ejec, sem, compr, xr, xf, xs in V:
+        # con los tres flags a 1 el parche es equivalente al anterior: los resultados ya en
+        # disco siguen siendo válidos y no se re-corren (el control lo confirma).
+        # el CONTROL se re-corre SIEMPRE: es lo que demuestra que el parche nuevo no cambió nada.
+        if (nombre != "z_control" and os.path.exists(os.path.join(OUT, nombre + ".json"))
+                and (xr, xf, xs) == ("1", "1", "1")):
+            print("ya corrida, se salta: %s" % nombre, flush=True)
+            continue
+        env = dict(os.environ, RL_EJEC=ejec, RL_SEM=sem, RL_COMPR=compr,
+                   RL_XRECH=xr, RL_XFILL=xf, RL_XSAL=xs)
         p = subprocess.Popen([sys.executable, HIJO, os.path.join(OUT, nombre + ".json")],
                              cwd=RAIZ, env=env, stdout=subprocess.PIPE,
                              stderr=subprocess.PIPE, text=True)

@@ -3651,3 +3651,12 @@
 2026-08-20 16:24:17 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
 2026-08-20 16:29:19 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
 2026-08-20 16:34:21 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-20 16:39:23 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+=== NOTIF === 2026-08-20 16:42:13 | IBKR | TAPE OK (tickbytick): primer tick px=774.79 size=79 bid=774.79 ask=774.81 signo=V — 10 ticks en este minuto
+2026-08-20 16:42:13 | WARN   | TAPE sin ticks: 1 min seguidos (modo=tickbytick, total sesión=10, err=0)
+2026-08-20 16:42:13 | WARN   | TAPE sin ticks: 1 min seguidos (modo=tickbytick, total sesión=10, err=0)
+=== NOTIF === 2026-08-20 16:42:13 | RIESGO | TAPE: 3 min seguidos SIN un solo tick por tick-by-tick (errores=0) → cayendo a RTVolume
+2026-08-20 16:42:13 | WARN   | tape_rtvolume(): ConnectionError('Not connected') — se sigue SIN tape
+2026-08-20 16:44:25 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-20 16:49:27 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-20 16:54:29 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35

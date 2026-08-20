@@ -41,7 +41,48 @@ Los resultados de **ejecución real** del día 20: el sistema pasa de 83.805 $ (
 (4 de 8 con compresión). El usuario ha dicho que estos resultados **no le gustan** y quiere
 discutirlos. NO están aplicados a nada: son una medición, no un cambio del sistema.
 
-## 🟢 5. RESCATE PENDIENTE
+## 🔴 5. PRUEBA NUEVA LISTA PARA LANZAR: 0DTE vs 1DTE (idea del usuario)
+
+`investigacion/2026-08-20_compresion_y_fills/scripts/barrido_0dte_vs_1dte.py`
+**Lanzarlo a partir de las 13:00** (`python barrido_0dte_vs_1dte.py 13:00`), que es cuando el
+rechazo del 0DTE ya está activo.
+
+**LA IDEA:** IBKR rechaza con `PROJECTED POST EXPIRATION MARGIN DEFICIT` — proyecta el ejercicio
+**al vencimiento de HOY**. Si el contrato vence MAÑANA, hoy no hay expiración que proyectar.
+El mapa medido lo respalda: el rechazo NO es "por la tarde", es **por proximidad al vencimiento**
+(0% antes de las 12h → 100% del ATM a las 15h; y el OTM, que nunca se proyecta ejercido, NUNCA
+se rechaza).
+
+**⚠️ MAÑANA ES VIERNES: NO HAY 1DTE.** El siguiente vencimiento del SPY sería el LUNES, o sea
+**3 días naturales**, no 1 (lo señaló el usuario). El script ya lo calcula bien (salta el fin de
+semana) y registra los **días REALES** en la columna `dte`, no un 0/1 que mentiría. Verificado:
+jueves→1d · **viernes→3d (lunes)** · lunes→1d.
+Efecto asimétrico, y el usuario decidió probarlo igual:
+ - **para el MARGEN es una prueba MÁS exigente y más informativa** (3 días es aún más lejos del
+   vencimiento: si con eso IBKR sigue rechazando, la idea está muerta del todo).
+ - **para la RENTABILIDAD un viernes es el PEOR día** (3 días de valor temporal, fin de semana
+   incluido, están aún más lejos de saturar en el ancho). El 1DTE puro se prueba el LUNES.
+
+**MÉTODO:** pareado — la misma combinación se lanza en 0DTE y en el siguiente vencimiento una
+detrás de otra, para que
+la comparación no dependa de la hora (el error que hoy hizo confundir "hora" con "saldo").
+Solo COMPRA: mide si IBKR acepta y si llena. Lo que llene se cierra al instante.
+⚠️ El `finally` cierra AMBOS vencimientos: **un 1DTE olvidado es exposición toda la noche.**
+
+**VALIDADO sin mercado:** importa y reutiliza `barrido_fills_total` (no duplica), el 1DTE salta
+el fin de semana (viernes → lunes), la tabla `dte_cmp` se crea.
+**NO VALIDADO:** las órdenes reales. Es lo que se prueba mañana.
+
+**⚠️ ESTO SOLO RESPONDE LA MITAD.** Si el 1DTE pasa el margen, queda la pregunta que de verdad
+decide: **¿sigue siendo rentable?** El sistema gana porque el vertical **SATURA en el ancho**
+(objetivo al 95% del ancho = 139,7x; por % del débito DESTRUYE = 479$). Un 0DTE satura porque el
+tiempo se acaba HOY; un **1DTE tiene un día entero de valor temporal por delante y puede no
+llegar nunca al 95% intradía**. Eso necesita datos de 1DTE en el backtest, y está VERIFICADO que
+`massive_premium.db` NO tiene ni uno (2.616.094 filas, 100% 0DTE). El usuario los está bajando.
+Efectos secundarios a vigilar: el 1DTE **cuesta más** (más valor temporal → caben menos con el
+mismo tope) y es **menos líquido** que el 0DTE del SPY → peor spread, que es el otro problema.
+
+## 🟢 6. RESCATE PENDIENTE
 Volcar a `tape_und` los 3 días de tape existentes (12, 13 y 14 de agosto), normalizando los
 tres formatos distintos. Solo el 13/08 trae bid/ask y agresor. NO HECHO.
 
