@@ -111,6 +111,15 @@ APLANADO_VIVO = "15:50"               # aplanar (cerrar) — operable (backtest 
 MERCADO_VIVO = "15:55"                # si sigue abierta, orden a MERCADO
 VERIF_PLANA = "15:59"                 # verificar posición plana antes de 16:00 (asignación §12)
 
+# ── MODO SOLO CAPTURA (2026-08-20) ──
+# Con True el sistema hace TODO menos ABRIR posiciones: captura barras, cadena (82 contratos/min
+# con bid/ask y griegas), registra las señales en `senales` con descartada_por='solo_captura' y
+# mantiene la gestión de cualquier posición que ya existiera (cerrar/aplanar siguen activos: NUNCA
+# se deja una 0DTE huérfana). Sirve para no perder la sesión mientras se hacen pruebas de fills
+# por fuera — el sondeo de margen y el sistema NO pueden coexistir operando: `ibkr.cerrar_todo`
+# cierra TODAS las patas del vencimiento y `_sincronizar` ADOPTA cualquier 0DTE que vea.
+SOLO_CAPTURA = True                    # ACTIVADO 2026-08-20: sesión de pruebas de fills
+
 # ── IBKR (paper) ──
 IBKR_HOST = "127.0.0.1"
 IBKR_PORT = 4002                      # IB Gateway paper (live=4001; TWS 7497/7496)

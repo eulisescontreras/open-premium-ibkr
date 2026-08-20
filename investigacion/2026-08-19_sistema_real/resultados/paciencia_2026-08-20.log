@@ -1,0 +1,15 @@
+09:38:48 | OTM lejos     mny -1.78 | mid 0.420 (spread 4.8%) | COMPRA Cancelled None en 0.5s | VENTA None None en Nones | ida-vuelta None% 
+09:38:51 | ATM           mny +0.22 | mid 0.880 (spread 2.3%) | COMPRA Cancelled None en 0.5s | VENTA None None en Nones | ida-vuelta None% 
+09:38:53 | ITM leve      mny +0.78 | mid 0.870 (spread 2.3%) | COMPRA Cancelled None en 0.5s | VENTA None None en Nones | ida-vuelta None% 
+09:38:55 | ITM profundo  mny +2.78 | mid 1.365 (spread 3.7%) | COMPRA Cancelled None en 0.5s | VENTA None None en Nones | ida-vuelta None% 
+09:41:35 | OTM lejos     mny -2.10 | mid 0.450 (spread 4.4%) | COMPRA Filled 0.44 en 1.5s | VENTA FORZADO 0.47 en 121.5s | ida-vuelta 6.82% [FORZADO A MERCADO]
+09:44:05 | ATM           mny -0.10 | mid 0.920 (spread 2.2%) | COMPRA Filled 0.92 en 73.1s | VENTA FORZADO 0.8299999999999998 en 121.5s | ida-vuelta -9.78% [FORZADO A MERCADO]
+09:47:46 | ITM leve      mny +1.10 | mid 0.820 (spread 2.4%) | COMPRA NO_LLENA None en 121.4s | VENTA None None en Nones | ida-vuelta None% 
+09:50:50 | niv600 a3 m+0.9 mny +0.85 | mid 1.150 (spread 1.7%) | COMPRA RECHAZADA None en 0.5s | VENTA None None en Nones | ida-vuelta None% 
+09:50:54 | niv1000 a3 m+1.1 mny +1.15 | mid 1.495 (spread 2.0%) | COMPRA Filled 1.49 en 14.2s | VENTA FORZADO 1.32 en 60.7s | ida-vuelta -11.41% [FORZADO A MERCADO]
+09:53:11 | niv600 a3 m+0.6 mny +0.57 | mid 1.275 (spread 2.4%) | COMPRA Filled 1.28 en 41.5s | VENTA FORZADO None en 60.8s | ida-vuelta None% [FORZADO A MERCADO]
+09:55:38 | niv600 a3 m+1.4 mny +1.43 | mid 1.355 (spread 2.2%) | COMPRA Filled 1.17 en 3.0s | VENTA FORZADO 1.3900000000000001 en 60.6s | ida-vuelta 18.8% [FORZADO A MERCADO]
+09:57:07 | niv1000 a3 m+1.6 mny +1.57 | mid 1.640 (spread 2.4%) | COMPRA Filled 1.64 en 6.1s | VENTA FORZADO 1.56 en 60.6s | ida-vuelta -4.88% [FORZADO A MERCADO]
+09:58:40 | niv1500 a4 m+2.6 mny +2.57 | mid 2.400 (spread 1.7%) | COMPRA Filled 2.38 en 5.1s | VENTA FORZADO 2.48 en 60.7s | ida-vuelta 4.2% [FORZADO A MERCADO]
+10:00:11 | niv1500 a4 m+1.4 mny +1.43 | mid 1.605 (spread 1.9%) | COMPRA Filled 1.47 en 11.7s | VENTA FORZADO 1.4599999999999997 en 60.6s | ida-vuelta -0.68% [FORZADO A MERCADO]
+10:01:49 | niv3600 a4 m+21.6 mny +21.57 | mid 3.500 (spread 73.7%) | COMPRA NO_LLENA None en 60.6s | VENTA None None en Nones | ida-vuelta None% 

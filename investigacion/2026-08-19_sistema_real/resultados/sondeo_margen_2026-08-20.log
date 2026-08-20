@@ -1,0 +1,8 @@
+09:31:35 | OTM lejos     mny -2.07 | mid 0.550 spread 3.6% | Filled  | venta 0.48999999999999994 (mid 0.55)
+    IBKR: 13:31:37 PendingSubmit  || 13:31:38 Cancelled Error 10349, reqId 179: Order TIF was set to DAY based on order preset. || 13:31:38 PreSubmitted  || 13:31:41 PreSubmitted Fill 1.0@0.54 || 13:31:41 Filled  || 13:31:41 Filled Fill 1.0@0.85 || 13:31:41 Filled Fill 1.0@0.31
+09:32:03 | ATM           mny -0.07 | mid 1.030 spread 1.9% | Cancelled  | venta None (mid None)
+    IBKR: 13:32:04 PendingSubmit  || 13:32:05 Cancelled Error 10349, reqId 206: Order TIF was set to DAY based on order preset.
+09:32:15 | ITM leve      mny +1.07 | mid 0.735 spread 4.1% | PreSubmitted  | venta None (mid None)
+    IBKR: 13:32:15 PendingSubmit  || 13:32:16 Cancelled Error 10349, reqId 209: Order TIF was set to DAY based on order preset. || 13:32:17 PreSubmitted 
+09:32:26 | ITM profundo  mny +3.07 | mid 1.220 spread 6.6% | Submitted  | venta None (mid None)
+    IBKR: 13:32:26 PendingSubmit  || 13:32:27 Cancelled Error 10349, reqId 212: Order TIF was set to DAY based on order preset. || 13:32:27 PreSubmitted  || 13:32:34 Submitted 

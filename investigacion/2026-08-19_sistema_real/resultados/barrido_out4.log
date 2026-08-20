@@ -1,0 +1,14 @@
+2026-08-20 13:29:44 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=34
+════════════════════════════════════════════════════════════
+🔔 2026-08-20 13:29:45 | IBKR | IBKR conectado (paper 4002)
+════════════════════════════════════════════════════════════
+BARRIDO EXHAUSTIVO | paciencia 20s | 60 combinaciones/pasada | saldo 711.39
+
+
+═══ PASADA 1 — 13:29 ═══
+2026-08-20 13:29:50 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 764.79)
+2026-08-20 13:29:57 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 764.79)
+════════════════════════════════════════════════════════════
+🔔 2026-08-20 13:30:04 | ORDEN | COMPRA VERTICAL SPY P L=760/S=758 x1 débito<=0.01
+════════════════════════════════════════════════════════════
+  13:29:57 P a2 mny -5 -> NO_LLENA    (mid 0.020, spr 100.0%)

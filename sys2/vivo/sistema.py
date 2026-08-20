@@ -291,6 +291,11 @@ class SistemaVivo:
                 self._persistir_senal(h_dec, sen_dec, spot, pm_h, "pos_abierta")
             elif not SAL.puede_abrir(h_dec, self.hechas):
                 self._persistir_senal(h_dec, sen_dec, spot, pm_h, "limite_ops")
+            elif C.SOLO_CAPTURA:
+                # MODO SOLO CAPTURA: se registra la señal (para poder analizarla después) pero
+                # NO se abre. La captura de barras/cadena y la gestión de posiciones vivas siguen
+                # activas — lo único que se corta es la apertura.
+                self._persistir_senal(h_dec, sen_dec, spot, pm_h, "solo_captura")
             else:
                 self._abrir(hora, spot, sen_dec, pm_h, h_dec)
 

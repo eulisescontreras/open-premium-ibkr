@@ -1,0 +1,47 @@
+2026-08-20 09:31:32 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=34
+════════════════════════════════════════════════════════════
+🔔 2026-08-20 09:31:32 | IBKR | IBKR conectado (paper 4002)
+════════════════════════════════════════════════════════════
+SONDEO DE MARGEN  |  cada 30 min  |  ÓRDENES REALES  |  saldo 600.00
+
+── RONDA 09:31 ──
+Error 10349, reqId 179: Order TIF was set to DAY based on order preset.
+Canceled order: Trade(contract=Contract(secType='BAG', symbol='SPY', exchange='SMART', currency='USD', comboLegs=[ComboLeg(conId=909107601, ratio=1, action='BUY', exchange='SMART', openClose=0, shortSaleSlot=0, designatedLocation='', exemptCode=-1), ComboLeg(conId=908867856, ratio=1, action='SELL', exchange='SMART', openClose=0, shortSaleSlot=0, designatedLocation='', exemptCode=-1)]), order=LimitOrder(orderId=179, clientId=34, action='BUY', totalQuantity=1, lmtPrice=0.55), orderStatus=OrderStatus(orderId=179, status='Cancelled', filled=0.0, remaining=0.0, avgFillPrice=0.0, permId=0, parentId=0, lastFillPrice=0.0, clientId=0, whyHeld='', mktCapPrice=0.0), fills=[], log=[TradeLogEntry(time=datetime.datetime(2026, 8, 20, 13, 31, 37, 323492, tzinfo=datetime.timezone.utc), status='PendingSubmit', message='', errorCode=0), TradeLogEntry(time=datetime.datetime(2026, 8, 20, 13, 31, 38, 261697, tzinfo=datetime.timezone.utc), status='Cancelled', message='Error 10349, reqId 179: Order TIF was set to DAY based on order preset.', errorCode=10349)], advancedError='')
+2026-08-20 09:31:35 | DATA   | cadena 20260820: 22 contratos (ITM+OTM C/P) capturados y cancelados (spot 765.93)
+════════════════════════════════════════════════════════════
+🔔 2026-08-20 09:31:37 | ORDEN | COMPRA VERTICAL SPY C L=768/S=770 x1 débito<=0.55
+════════════════════════════════════════════════════════════
+  09:31:35 OTM lejos     mny -2.07  mid 0.550  -> LLENO           0.540 (-1.8%) en 5.9s
+Error 10349, reqId 201: Order TIF was set to DAY based on order preset.
+Canceled order: Trade(contract=Option(conId=908867856, symbol='SPY', lastTradeDateOrContractMonth='20260820', strike=770.0, right='C', multiplier='100', exchange='SMART', currency='USD', localSymbol='SPY   260820C00770000', tradingClass='SPY'), order=MarketOrder(orderId=201, clientId=34, action='BUY', totalQuantity=1), orderStatus=OrderStatus(orderId=201, status='Cancelled', filled=0.0, remaining=0.0, avgFillPrice=0.0, permId=0, parentId=0, lastFillPrice=0.0, clientId=0, whyHeld='', mktCapPrice=0.0), fills=[], log=[TradeLogEntry(time=datetime.datetime(2026, 8, 20, 13, 31, 46, 130073, tzinfo=datetime.timezone.utc), status='PendingSubmit', message='', errorCode=0), TradeLogEntry(time=datetime.datetime(2026, 8, 20, 13, 31, 46, 193248, tzinfo=datetime.timezone.utc), status='Cancelled', message='Error 10349, reqId 201: Order TIF was set to DAY based on order preset.', errorCode=10349)], advancedError='')
+Error 10349, reqId 203: Order TIF was set to DAY based on order preset.
+Canceled order: Trade(contract=Option(conId=909107601, symbol='SPY', lastTradeDateOrContractMonth='20260820', strike=768.0, right='C', multiplier='100', exchange='SMART', currency='USD', localSymbol='SPY   260820C00768000', tradingClass='SPY'), order=MarketOrder(orderId=203, clientId=34, action='SELL', totalQuantity=1), orderStatus=OrderStatus(orderId=203, status='Cancelled', filled=0.0, remaining=0.0, avgFillPrice=0.0, permId=0, parentId=0, lastFillPrice=0.0, clientId=0, whyHeld='', mktCapPrice=0.0), fills=[], log=[TradeLogEntry(time=datetime.datetime(2026, 8, 20, 13, 31, 54, 191555, tzinfo=datetime.timezone.utc), status='PendingSubmit', message='', errorCode=0), TradeLogEntry(time=datetime.datetime(2026, 8, 20, 13, 31, 54, 191555, tzinfo=datetime.timezone.utc), status='Cancelled', message='Error 10349, reqId 203: Order TIF was set to DAY based on order preset.', errorCode=10349)], advancedError='')
+2026-08-20 09:31:45 | DATA   | cadena 20260820: 10 contratos (ITM+OTM C/P) capturados y cancelados (spot 765.93)
+════════════════════════════════════════════════════════════
+🔔 2026-08-20 09:31:45 | RIESGO | BAG no cerró (2 pata/s viva/s) — cierre por patas al MID
+════════════════════════════════════════════════════════════
+════════════════════════════════════════════════════════════
+🔔 2026-08-20 09:31:46 | ORDEN | CIERRE MERCADO SPY C 770 x1
+════════════════════════════════════════════════════════════
+════════════════════════════════════════════════════════════
+🔔 2026-08-20 09:31:54 | ORDEN | CIERRE MERCADO SPY C 768 x1
+════════════════════════════════════════════════════════════
+       cierre: cobrado 0.490 (mid 0.550) 
+Error 10349, reqId 206: Order TIF was set to DAY based on order preset.
+Canceled order: Trade(contract=Contract(secType='BAG', symbol='SPY', exchange='SMART', currency='USD', comboLegs=[ComboLeg(conId=909107464, ratio=1, action='BUY', exchange='SMART', openClose=0, shortSaleSlot=0, designatedLocation='', exemptCode=-1), ComboLeg(conId=909107601, ratio=1, action='SELL', exchange='SMART', openClose=0, shortSaleSlot=0, designatedLocation='', exemptCode=-1)]), order=LimitOrder(orderId=206, clientId=34, action='BUY', totalQuantity=1, lmtPrice=1.03), orderStatus=OrderStatus(orderId=206, status='Cancelled', filled=0.0, remaining=0.0, avgFillPrice=0.0, permId=0, parentId=0, lastFillPrice=0.0, clientId=0, whyHeld='', mktCapPrice=0.0), fills=[], log=[TradeLogEntry(time=datetime.datetime(2026, 8, 20, 13, 32, 4, 296235, tzinfo=datetime.timezone.utc), status='PendingSubmit', message='', errorCode=0), TradeLogEntry(time=datetime.datetime(2026, 8, 20, 13, 32, 5, 741371, tzinfo=datetime.timezone.utc), status='Cancelled', message='Error 10349, reqId 206: Order TIF was set to DAY based on order preset.', errorCode=10349)], advancedError='')
+════════════════════════════════════════════════════════════
+🔔 2026-08-20 09:32:04 | ORDEN | COMPRA VERTICAL SPY C L=766/S=768 x1 débito<=1.03
+════════════════════════════════════════════════════════════
+  09:32:03 ATM           mny -0.07  mid 1.030  -> Cancelled       
+Error 10349, reqId 209: Order TIF was set to DAY based on order preset.
+Canceled order: Trade(contract=Contract(secType='BAG', symbol='SPY', exchange='SMART', currency='USD', comboLegs=[ComboLeg(conId=909118295, ratio=1, action='BUY', exchange='SMART', openClose=0, shortSaleSlot=0, designatedLocation='', exemptCode=-1), ComboLeg(conId=908869304, ratio=1, action='SELL', exchange='SMART', openClose=0, shortSaleSlot=0, designatedLocation='', exemptCode=-1)]), order=LimitOrder(orderId=209, clientId=34, action='BUY', totalQuantity=1, lmtPrice=0.74), orderStatus=OrderStatus(orderId=209, status='Cancelled', filled=0.0, remaining=0.0, avgFillPrice=0.0, permId=0, parentId=0, lastFillPrice=0.0, clientId=0, whyHeld='', mktCapPrice=0.0), fills=[], log=[TradeLogEntry(time=datetime.datetime(2026, 8, 20, 13, 32, 15, 615835, tzinfo=datetime.timezone.utc), status='PendingSubmit', message='', errorCode=0), TradeLogEntry(time=datetime.datetime(2026, 8, 20, 13, 32, 16, 215243, tzinfo=datetime.timezone.utc), status='Cancelled', message='Error 10349, reqId 209: Order TIF was set to DAY based on order preset.', errorCode=10349)], advancedError='')
+════════════════════════════════════════════════════════════
+🔔 2026-08-20 09:32:15 | ORDEN | COMPRA VERTICAL SPY P L=767/S=765 x1 débito<=0.74
+════════════════════════════════════════════════════════════
+  09:32:15 ITM leve      mny +1.07  mid 0.735  -> PreSubmitted    
+Error 10349, reqId 212: Order TIF was set to DAY based on order preset.
+Canceled order: Trade(contract=Contract(secType='BAG', symbol='SPY', exchange='SMART', currency='USD', comboLegs=[ComboLeg(conId=909118404, ratio=1, action='BUY', exchange='SMART', openClose=0, shortSaleSlot=0, designatedLocation='', exemptCode=-1), ComboLeg(conId=909118295, ratio=1, action='SELL', exchange='SMART', openClose=0, shortSaleSlot=0, designatedLocation='', exemptCode=-1)]), order=LimitOrder(orderId=212, clientId=34, action='BUY', totalQuantity=1, lmtPrice=1.22), orderStatus=OrderStatus(orderId=212, status='Cancelled', filled=0.0, remaining=0.0, avgFillPrice=0.0, permId=0, parentId=0, lastFillPrice=0.0, clientId=0, whyHeld='', mktCapPrice=0.0), fills=[], log=[TradeLogEntry(time=datetime.datetime(2026, 8, 20, 13, 32, 26, 953030, tzinfo=datetime.timezone.utc), status='PendingSubmit', message='', errorCode=0), TradeLogEntry(time=datetime.datetime(2026, 8, 20, 13, 32, 27, 316076, tzinfo=datetime.timezone.utc), status='Cancelled', message='Error 10349, reqId 212: Order TIF was set to DAY based on order preset.', errorCode=10349)], advancedError='')
+════════════════════════════════════════════════════════════
+🔔 2026-08-20 09:32:26 | ORDEN | COMPRA VERTICAL SPY P L=769/S=767 x1 débito<=1.22
+════════════════════════════════════════════════════════════
+  09:32:26 ITM profundo  mny +3.07  mid 1.220  -> Submitted       

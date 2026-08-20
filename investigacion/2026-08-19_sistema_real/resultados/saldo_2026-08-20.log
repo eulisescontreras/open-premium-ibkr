@@ -1,0 +1,44 @@
+09:45:40 saldo 588.26 | abiertas [(769.0, 'C', -1.0), (767.0, 'C', 1.0)]
+09:46:41 saldo 588.26 | abiertas [(769.0, 'C', -1.0), (767.0, 'C', 1.0)]
+09:51:42 saldo 575.50 | abiertas [(766.0, 'C', 1.0), (769.0, 'C', -1.0)]
+09:56:42 saldo 557.75 | abiertas [(768.0, 'P', 1.0), (765.0, 'P', -1.0)]
+10:01:43 saldo 569.27 | abiertas -
+10:06:43 saldo 569.27 | abiertas -
+10:11:44 saldo 569.27 | abiertas -
+10:16:44 saldo 567.31 | abiertas -
+10:21:44 saldo 552.14 | abiertas -
+10:26:45 saldo 552.14 | abiertas -
+10:31:45 saldo 549.90 | abiertas [(769.0, 'C', -1.0), (767.0, 'C', 1.0)]
+10:36:46 saldo 545.91 | abiertas [(765.0, 'P', 1.0)]
+10:41:46 saldo 532.66 | abiertas -
+10:46:47 saldo 518.01 | abiertas [(767.0, 'P', 1.0), (765.0, 'P', -1.0)]
+10:51:47 saldo 491.49 | abiertas [(767.0, 'C', -1.0), (765.0, 'C', 1.0)]
+10:57:44 saldo 735.90 | abiertas -
+11:02:45 saldo 717.66 | abiertas -
+11:07:45 saldo 666.42 | abiertas -
+11:12:45 saldo 650.26 | abiertas [(761.0, 'P', 1.0)]
+11:17:51 saldo 621.63 | abiertas -
+11:22:54 saldo 599.82 | abiertas -
+11:27:55 saldo 599.82 | abiertas -
+11:33:00 saldo 589.23 | abiertas -
+11:38:01 saldo 537.37 | abiertas [(764.0, 'C', -1.0), (761.0, 'C', 1.0)]
+11:43:01 saldo 526.47 | abiertas -
+11:48:01 saldo 519.57 | abiertas -
+11:53:04 saldo 498.34 | abiertas [(763.0, 'P', -1.0), (766.0, 'P', 1.0)]
+11:58:08 saldo 480.76 | abiertas -
+12:03:12 saldo 467.49 | abiertas -
+12:08:21 saldo 448.61 | abiertas -
+12:13:21 saldo 448.61 | abiertas -
+12:18:22 saldo 434.57 | abiertas [(763.0, 'P', 1.0)]
+12:23:22 saldo 402.41 | abiertas -
+12:28:23 saldo 396.94 | abiertas -
+12:33:28 saldo 389.20 | abiertas -
+12:38:29 saldo 374.32 | abiertas -
+12:43:30 saldo 330.39 | abiertas -
+13:29:54 saldo 711.39 | abiertas -
+13:34:55 saldo 699.70 | abiertas [(761.0, 'C', 1.0), (763.0, 'C', -1.0)]
+13:39:56 saldo 678.55 | abiertas -
+13:44:56 saldo 667.12 | abiertas -
+13:50:00 saldo 662.16 | abiertas -
+13:55:00 saldo 648.48 | abiertas [(763.0, 'P', -1.0), (765.0, 'P', 1.0)]
+14:00:01 saldo 622.72 | abiertas [(760.0, 'C', 1.0), (764.0, 'C', -1.0)]
