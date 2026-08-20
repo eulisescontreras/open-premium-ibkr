@@ -19,7 +19,7 @@ CORTE = "2025-08-01"
 # cada flip mirando 12 buckets (36 min) hacia delante. El vivo NO puede hacer eso.
 # Estos targets son con C.VISION_HONESTA + fix del ORB futuro + `dia_bueno` desde 10:31 + el
 # filtro por cadena de opciones, SIN composición (tamaño fijo, que es como corre este cold run).
-# Con composición desde 600$: 89.188$ (148,6x). Ver investigacion/2026-08-19_sistema_real/.
+# Con composición desde 600$: 83.805$ (139,7x). Ver investigacion/2026-08-19_sistema_real/.
 TARGET_TOTAL = 48022.0
 TARGET_A1 = 19013.0
 TARGET_A2 = 29009.0
@@ -27,7 +27,7 @@ TARGET_VIEJO_LOOKAHEAD = 71396.0        # se conserva para poder comparar la bre
 # NOTA (2026-08-19): durante la aplicación de los cambios este cold run dio +51.030 en una
 # medición intermedia. RESUELTO: el motor es DETERMINISTA — repetido da +48.022 con dif 0,0%.
 # La medición de +51.030 se hizo con el código a medio aplicar. VERDE con estos targets.
-# El orden de filtros SÍ está medido: score ANTES del skew da 89.188$ y DESPUÉS 83.805$.
+# El orden de filtros SÍ está medido: score ANTES del skew da 83.805$ y DESPUÉS 83.805$.
 # El TITULAR (+71.396$) es el criterio duro: 2%. Los desgloses por AÑO llevan una cota más
 # laxa (5%) porque el P&L por año es sensible a la completitud de contratos de massive, que
 # difiere entre máquinas (el propio agente notó que "falta de contratos descargados" mueve la

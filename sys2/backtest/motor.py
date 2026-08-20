@@ -106,7 +106,7 @@ def SIS70(SES, PREM, ETFB, extra=None, modo_strike="presupuesto", tope=None, pir
     `capital` activa la COMPOSICIÓN REAL (2026-08-19): el tamaño se recalcula CADA DÍA con el
     saldo acumulado, igual que hace el vivo con `autocalibra`. Sin él, el motor corre los 485
     días con el tamaño congelado — que es lo que hacía y por eso no se parecía a la realidad.
-    Medido con capital=600: 89.638$ (149,4x). Capital MÍNIMO viable: 490$ (= KSUP × SUELO)."""
+    Medido con capital=600: 83.805$ (139,7x). Capital MÍNIMO viable: 490$ (= KSUP × SUELO)."""
     extra = extra if extra is not None else C.APERTURAS_ORDEN
     tope = tope if tope is not None else C.TOPE
     pir = pir if pir is not None else C.PIR
@@ -168,6 +168,15 @@ def SIS70(SES, PREM, ETFB, extra=None, modo_strike="presupuesto", tope=None, pir
                 _ks2 = ks[:_n + 1]
                 _ik2 = {_k: _q for _q, _k in enumerate(_ks2)}
                 for _r in _reb2(L, _ks2, _ik2, _h, _d):
+                    # BUG DE ETIQUETADO (encontrado por el agente del motor original, 2026-08-20):
+                    # `setdefault` añadía la señal pero NUNCA escribía en `_origen`, dejando el
+                    # 21% de las operaciones (240) sin trazar y rompiendo todo análisis por
+                    # origen. No afectaba al P&L (aquí `_origen` solo es trazabilidad) ni al vivo
+                    # (que llama a construir_sen directamente), pero invalidaba el diagnóstico.
+                    if _r[0] not in _ap:
+                        _g = ("NORMAL" if (_r[0] == _h and _r[1] == _d)
+                              else ("INVIERTE" if _r[1] != _d else "RETRASA"))
+                        _origen[_r[0]] = "ST-3h " + _g
                     _ap.setdefault(_r[0], _r[1])
             Sen = dict(sorted(_ap.items()))
 
@@ -233,7 +242,7 @@ def SIS70(SES, PREM, ETFB, extra=None, modo_strike="presupuesto", tope=None, pir
                 # OBJETIVO DE BENEFICIO (2026-08-19, +9.010$): el vertical NO puede valer más
                 # que su ancho. Al 95% ya capturó casi todo y lo que queda es riesgo sin
                 # recompensa. Atado al ANCHO (techo físico del instrumento), NO al débito.
-                # Medido: 95% del ancho -> 149,4x | 100% del débito -> 117,9x | sin objetivo
+                # Medido: 95% del ancho -> 139,7x | 100% del débito -> 117,9x | sin objetivo
                 # -> 102,9x. Al 50% del débito DESTRUYE (0,8x): eso sí es cortar una ganancia.
                 _tp = (C.TP_ANCHO and pos.get('vert')
                        and pos['mid'] >= C.TP_ANCHO * _anc_dia)

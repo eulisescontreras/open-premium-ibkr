@@ -66,7 +66,7 @@ GREEKS_Q = 0.0
 # ═══════════════════════════════════════════════════════════════════════════════════════
 # SISTEMA HONESTO (2026-08-19) — ver investigacion/2026-08-19_sistema_real/README.md
 # Todo lo de aquí es CONFIGURABLE: poniéndolo a False/None se vuelve al comportamiento viejo.
-# Medido sobre 485 sesiones sin look-ahead: 600$ -> 89.638$ (149,4x), racha 3, drawdown -21,1%.
+# Medido sobre 485 sesiones sin look-ahead: 600$ -> 83.805$ (139,7x), racha 3, drawdown -21,1%.
 # ═══════════════════════════════════════════════════════════════════════════════════════
 
 # ── FIXES ANTI-LOOK-AHEAD (hacen BAJAR el backtest; es el precio de la honestidad) ──

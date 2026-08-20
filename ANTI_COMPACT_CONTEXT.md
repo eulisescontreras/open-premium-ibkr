@@ -121,7 +121,7 @@ contra la tanda anterior solo muestra datos vivos acumulándose, TOTAL/A1/A2 id�
   A media sesión nadie detectaría esa divergencia.
 - El **aplanado 15:50 y el cierre** siguen sin ejecutarse nunca en real.
 
-## 🏆 2026-08-19 (noche) — SISTEMA REAL SIN LOOK-AHEAD: 600$ → 89.638$ (149x). CONFIG COMPLETA
+## 🏆 2026-08-19 (noche) — SISTEMA REAL SIN LOOK-AHEAD: 600$ → 83.805$ (149x). CONFIG COMPLETA
 
 **AUTORIZACIÓN DEL USUARIO:** "puedes cambiar todo, el ancho, el monto, ORB... no me interesa si
 desarmas el sistema, siempre y cuando sean datos REALES". Y: capital máx 800$, racha máx 2-3.
@@ -132,7 +132,7 @@ capital 600$ · sizing = 18% del saldo con SUELO 140$ · parar si saldo < 3.5×s
 pausa tras 3 días rojos · stop diario 15% · MAX_TRADES 4 (subirlo EMPEORA)
 filtro por CADENA DE OPCIONES score>=2 (umbrales p25 de A1: costv<=0.195 IV<=0.150 skew>=0.031)
 objetivo de salida = 95% del ANCHO del vertical
--> 89.638$ (149,4x) · racha 3 · drawdown -21,1% · 318 verdes / 147 rojos · 0 quiebras en 7 arranques
+-> 83.805$ (139,7x) · racha 3 · drawdown -21,1% · 308 verdes / 156 rojos · 0 quiebras en 7 arranques
 ```
 Scripts: `scratchpad/barrido_{realista,compuesto,sizing,riesgo,exprimir,final,afinado,ruina,
 survival,aguante,tp,dinamico,ejecucion}.py` (todos parchean motor.py/pipeline.py por os.environ
@@ -157,17 +157,17 @@ coge el ITM MÁS PROFUNDO, que cuesta casi el ancho completo. **Con ANCHO 2 ese 
 ~200$ y NO CABE en un tope de 110-140$** -> `sin_contrato`. Medido sobre 485 sesiones:
 ```
 ancho FIJO 2 -> 413$ (1 sola operación en 485 días)   ancho FIJO 3 -> 71.348$ (118,9x)
-ancho FIJO 4 -> 89.645$ (149,4x)                      ancho AUTO   -> 89.638$ (149,4x)
+ancho FIJO 4 -> 89.645$ (139,7x)                      ancho AUTO   -> 83.805$ (139,7x)
 ```
 **El vivo llevaba días con ancho 2 + tope 110: la peor combinación posible.**
 
 ### TOPE Y CAPITAL — LOS LÍMITES (medido)
 ```
-suelo del tope:  110$ -> 88.001$ (dd -32,4%) | 140$ -> 89.638$ (dd -21,1%) <- ÓPTIMO
+suelo del tope:  110$ -> 88.001$ (dd -32,4%) | 140$ -> 83.805$ (dd -21,1%) <- ÓPTIMO
                  200$ y 250$ -> NO OPERA NUNCA (3,5x200=700 > capital 600)
 capital inicial: 490$ -> 180,8x (dd -36,0%)  <- MÍNIMO ABSOLUTO (por debajo no arranca)
                  550$ -> 163,0x (dd -18,6%)  <- MEJOR EQUILIBRIO
-                 600$ -> 149,4x (dd -21,1%)   800$ -> 112,4x (dd -24,7%)
+                 600$ -> 139,7x (dd -21,1%)   800$ -> 112,4x (dd -24,7%)
                 1000$ ->  90,2x (dd -31,1%)  1500$ ->  59,7x (dd -39,2%)
 ```
 ⚠️ **El PROFIT FINAL es el mismo (88,5-90,2k$) con cualquier capital entre 490 y 1.500$.** El
@@ -201,7 +201,7 @@ motor original CON look-ahead ........................ 72.497$ (cuenta equivalen
 + PAUSA tras 3 días rojos ............................ 49.354$ (82,3x) y racha 7 -> 3
 + SCORE DE OPCIONES (score>=2) ....................... 61.711$ (102,9x)
 + REGLA DE SUPERVIVENCIA (parar si saldo<3,5×suelo) ... igual profit, RUINA 33% -> 0%
-+ OBJETIVO 95% del ANCHO ............................. 89.638$ (149,4x)
++ OBJETIVO 95% del ANCHO ............................. 83.805$ (139,7x)
 ```
 
 ### ⚠️ LO QUE DECIDE SI ESTO ES REAL: EL COSTE DE EJECUCIÓN

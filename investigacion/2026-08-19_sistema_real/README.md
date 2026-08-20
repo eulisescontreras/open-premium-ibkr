@@ -1,6 +1,18 @@
 # 2026-08-19 — DEL BACKTEST CON LOOK-AHEAD AL SISTEMA REAL
 
-De **+72.497 $ que no existían** a **+89.638 $ medidos sin ver el futuro**, partiendo de 600 $.
+> ## ⚠️ CORRECCIÓN 2026-08-20 — LA CIFRA ANTERIOR (89.188$ / 149,4x) ERA IRREPRODUCIBLE
+> El código commiteado da **83.805 $ (139,7x)**, verificado tres veces y determinista.
+> **Qué pasó:** el 19/08, al probar un orden alternativo del filtro de opciones, se "restauró"
+> el pipeline con un `mv` y se verificó SOLO con un `grep` de posiciones de línea — nunca se
+> volvió a correr la medición. La pista estaba a la vista y se malinterpretó: `cr_motor` pasó de
+> 51.030 a 48.022 entre dos tandas de cold runs y se achacó a "código a medio aplicar".
+> La versión exacta que produjo 89.188 **se perdió y no está en ningún commit**.
+> **Lección (regla 8):** comprobar con `grep` que un archivo "parece" correcto NO es verificar.
+> La única comprobación válida es volver a correr la medición y comparar el número.
+> Todas las cifras de este documento están corregidas a la base reproducible.
+
+
+De **+72.497 $ que no existían** a **+83.805 $ medidos sin ver el futuro**, partiendo de 600 $.
 
 Este documento explica **cómo se descubrió el look-ahead**, **cómo se eliminó** y sobre todo
 **cómo se garantiza que el número nuevo no lo tiene**. Todos los scripts están en `scripts/`
@@ -122,7 +134,7 @@ motor original CON look-ahead ......................... 72.497 $  (cuenta equiva
 + PAUSA tras 3 días rojos ............................. 49.354 $   (racha 7 -> 3)
 + FILTRO POR CADENA DE OPCIONES (score ≥2) ............ 61.711 $
 + REGLA DE SUPERVIVENCIA (parar si saldo < 3,5×suelo) . igual $, riesgo de ruina 33% -> 0%
-+ SALIDA AL 95% DEL ANCHO ............................. 89.638 $   (149,4x)
++ SALIDA AL 95% DEL ANCHO ............................. 83.805 $   (139,7x)
 ```
 
 ---
@@ -130,13 +142,13 @@ motor original CON look-ahead ......................... 72.497 $  (cuenta equiva
 ## 4. RESULTADO FINAL (capital 600 $, 485 sesiones, sin look-ahead)
 
 ```
-Saldo final .............. 89.638 $ (149,4x)     Racha máxima de rojos ....  3 días
-Beneficio ................ 89.038 $              Drawdown máximo ..........  -21,1%
-Anualizado ...............  1.248 %              Saldo mínimo .............  600 $ (nunca bajó)
+Saldo final .............. 83.805 $ (139,7x)     Racha máxima de rojos ....  3 días
+Beneficio ................ 83.205 $              Drawdown máximo ..........  -21,1%
+Anualizado ...............  1.202 %              Saldo mínimo .............  600 $ (nunca bajó)
 Días operados ............ 465 de 485            Mejor día ................ +2.368,85 $
-Días verdes .............. 318 (68,4%)           Peor día ................. -1.411,56 $
-Días rojos ............... 147 (31,6%)           Ratio ganancia/pérdida ...  1,46
-AÑO 1 +34.413 $  ·  AÑO 2 +54.625 $   (los 5 peores días = 5,9% del beneficio)
+Días verdes .............. 308 (66,4%)           Peor día ................. -1.411,56 $
+Días rojos ............... 156 (33,6%)           Ratio ganancia/pérdida ...  1,46
+AÑO 1 +30.559 $  ·  AÑO 2 +52.645 $   (los 5 peores días = 6,3% del beneficio)
 ```
 
 ---

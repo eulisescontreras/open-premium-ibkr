@@ -41,7 +41,7 @@ def sizing(saldo):
 
     POR QUÉ SUSTITUYE A LA TABLA: la TABLA BAJA DE NIVEL al perder, y con tope 75$ no cabe
     NINGÚN vertical (cuestan 88-135$) -> el sistema se AUTOAPAGA. Medido con 600$: la tabla
-    opera 6 días de 485 y muere; esto opera 465 y llega a 89.638$.
+    opera 6 días de 485 y muere; esto opera 465 y llega a 83.805$.
 
     REGLA DE SUPERVIVENCIA (`SIZING_KSUP`): si el saldo no cubre K veces el suelo, NO se opera.
     Sin ella, con 200$ el sistema seguía arriesgando 140$ (el 70% de lo que queda) y la cuenta

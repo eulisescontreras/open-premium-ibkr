@@ -1,5 +1,17 @@
 # PROMPT PARA RETOMAR — estado al 2026-08-19 (fin de sesión)
 
+> ## ⚠️ CORRECCIÓN 2026-08-20 — LA CIFRA ANTERIOR (89.188$ / 149,4x) ERA IRREPRODUCIBLE
+> El código commiteado da **83.805 $ (139,7x)**, verificado tres veces y determinista.
+> **Qué pasó:** el 19/08, al probar un orden alternativo del filtro de opciones, se "restauró"
+> el pipeline con un `mv` y se verificó SOLO con un `grep` de posiciones de línea — nunca se
+> volvió a correr la medición. La pista estaba a la vista y se malinterpretó: `cr_motor` pasó de
+> 51.030 a 48.022 entre dos tandas de cold runs y se achacó a "código a medio aplicar".
+> La versión exacta que produjo 89.188 **se perdió y no está en ningún commit**.
+> **Lección (regla 8):** comprobar con `grep` que un archivo "parece" correcto NO es verificar.
+> La única comprobación válida es volver a correr la medición y comparar el número.
+> Todas las cifras de este documento están corregidas a la base reproducible.
+
+
 Pegar tal cual tras `/clear`, o dárselo a otro agente. Este documento resume **toda la sesión
 del 2026-08-19**: qué se hizo, qué se descubrió, qué se descartó y qué queda pendiente.
 
@@ -15,7 +27,7 @@ Las mediciones SIEMPRE sobre las **485 sesiones** con desglose **AÑO 1 / AÑO 2
 
 Se descubrió que **los +72.497 $ del backtest no existían** (el motor veía el futuro), se
 eliminó el look-ahead, y sobre la base honesta se encontraron mejoras reales que llevan el
-sistema a **89.188 $ desde 600 $ (148,6x)** en 2 años — todo aplicado, validado y subido.
+sistema a **83.805 $ desde 600 $ (139,7x)** en 2 años — todo aplicado, validado y subido.
 
 ---
 
@@ -71,7 +83,7 @@ sizing 18% del saldo con suelo 140 + composición real   → 48.689$
 + pausa tras 3 días rojos (racha 7→3 Y GANA +665$)      → 49.354$
 + filtro por cadena de opciones (score ≥2)              → 61.711$
 + regla de supervivencia (ruina 33% → 0%, gratis)       → igual $
-+ salida al 95% del ANCHO (+9.010$)                     → 89.638$ (149,4x)
++ salida al 95% del ANCHO (+9.010$)                     → 83.805$ (139,7x)
 ```
 
 ### 2.7 Se verificó contra los días reales
@@ -91,27 +103,27 @@ COMPRAR.** 9 de 22 señales perdidas por `sin_contrato`.
 
 ```
 capital 600$ · 485 sesiones · SIN look-ahead
-Saldo final ......... 89.188$ (148,6x)      Racha máxima ......... 3 días
-Anualizado .......... 1.248%                Drawdown máximo ...... -21,1%
+Saldo final ......... 83.805$ (139,7x)      Racha máxima ......... 3 días
+Anualizado .......... 1.202%                Drawdown máximo ...... -21,1%
 Días operados ....... 465 de 485            Saldo mínimo ......... 600$ (nunca bajó)
-Verdes .............. 316 (68%)             Mejor día ............ +2.368,85$
-Rojos ............... 148 (32%)             Peor día ............. -1.411,56$
-AÑO 1 +34.413$  ·  AÑO 2 +54.625$           Ratio gan/pérd ....... 1,46
+Verdes .............. 308 (66%)             Mejor día ............ +2.368,85$
+Rojos ............... 156 (34%)             Peor día ............. -1.411,56$
+AÑO 1 +30.559$  ·  AÑO 2 +52.645$           Ratio gan/pérd ....... 1,46
 ```
 **COLD RUNS: 11 VERDE / 1 ROJO** (`cr_validacion`, esperado: mide el aporte de reglas
 informativas y ese aporte cambia al cambiar el sistema. PENDIENTE recalibrar sus targets).
 
 **Capital mínimo: 490 $** (= `SIZING_KSUP` × `SIZING_SUELO` = 3,5 × 140). Con 450 $ NO ARRANCA.
 Mínimo prudente **550 $** (mejor drawdown: −18,6%). Con 800 $: 112x y −24,7%.
-⚠️ **El profit final es el mismo (88-90k) con cualquier capital entre 490 y 1.500 $**: el techo
+⚠️ **El profit final es el mismo (~83-90k) con cualquier capital entre 490 y 1.500 $**: el techo
 son 3 contratos (`TOPE_UNIDADES`) de ancho 4 ≈ 1.200 $ por operación. **No escala.**
 
 ---
 
 ## 4. ⚠️ LO QUE NO ESTÁ GARANTIZADO (leer antes de creerse la cifra)
 
-1. **DISTRIBUCIÓN BIMODAL.** De 16 arranques distintos: **8 llegan a 125-149x y 8 se quedan
-   CONGELADOS en 0,5-0,8x**. Cero quiebras. No hay término medio: se decide en las primeras
+1. **DISTRIBUCIÓN BIMODAL.** De 16 arranques distintos: **8 llegan a 125-149x* y 8 se quedan
+   CONGELADOS en 0,5-0,8x**. Cero quiebras. (*) MEDIDO CON LA VERSIÓN IRREPRODUCIBLE: hay que REMEDIRLO. No hay término medio: se decide en las primeras
    semanas (con 600 $ y suelo 140, cada operación arriesga el 23% de la cuenta).
 2. **IBKR RECHAZA ÓRDENES.** Medido en real (2026-08-19 15:17): `Error 201: PROJECTED POST
    EXPIRATION MARGIN DEFICIT` — **5 de 6 bloqueadas, incluso cruzando el spread**. IBKR proyecta
@@ -126,7 +138,7 @@ son 3 contratos (`TOPE_UNIDADES`) de ancho 4 ≈ 1.200 $ por operación. **No es
 
 ## 5. PENDIENTE — POR PRIORIDAD
 
-1. **🔴 A QUÉ HORA EMPIEZA IBKR A RECHAZAR.** Es la incógnita que separa "149x" de "no
+1. **🔴 A QUÉ HORA EMPIEZA IBKR A RECHAZAR.** Es la incógnita que separa "139,7x" de "no
    funciona". Lanzar órdenes de prueba desde la apertura y anotar la hora del primer rechazo.
    Script listo: `investigacion/2026-08-19_sistema_real/scripts/diag_fill.py`.
 2. **🔴 COSTE REAL DE EJECUCIÓN**: precio pedido vs conseguido en cada orden.
