@@ -1,6 +1,9 @@
 # ⏰ CHECKLIST DE ARRANQUE — MAÑANA 2026-08-21 (escrito el 20 por la tarde)
 
 > **LEER ESTO ANTES DE ARRANCAR NADA.** Detalle completo en `.claude/anti-compact-context.md`.
+> **TODAS LAS IDEAS Y OPCIONES SOBRE LA MESA** (medidas y sin medir, con cuánto puede recuperar
+> cada una y qué falta para probarla):
+> `investigacion/2026-08-20_compresion_y_fills/IDEAS_Y_OPCIONES.md`
 
 ## 🔴 0. ANTES DE ARRANCAR: `SOLO_CAPTURA` SIGUE EN `True`
 `config.py:121`. Con eso el sistema **captura pero NO ABRE POSICIONES**. Se activó el 20 para
