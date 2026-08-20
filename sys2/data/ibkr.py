@@ -107,13 +107,30 @@ class IBKR:
     #
     # ⚠️ TODO va envuelto en try/except: el tape es un dato secundario y NUNCA debe poder tumbar
     # el sistema de trading. Si falla, se registra y se sigue.
+    def _tape_signo(self, px):
+        """Agresor por la regla del quote. VALIDADO 2026-08-20: 100% de coincidencia sobre los
+        31.349 ticks reales del sistema anterior (spy_history.tape, grupo='SPY')."""
+        b, a = self._libro
+        if b is None or a is None:
+            return None
+        return "C" if px >= a else ("V" if px <= b else "N")
+
     def tape_suscribir(self):
-        """Suscribe el tape del SUBYACENTE: trades (AllLast) + libro (BidAsk). Una sola vez.
-        Los ticks se acumulan en memoria; `tape_drenar()` los saca y vacía el buffer."""
+        """Suscribe el tape del SUBYACENTE. Intenta tick-by-tick y, si no entrega ticks,
+        `tape_drenar` cae solo a RTVolume(233) — el método del sistema anterior."""
         self._tape = []
         self._libro = [None, None]           # (bid, ask) vigentes
         self._tape_seq = 0
         self._tape_err = 0
+        self._tape_vacios = 0                # minutos seguidos sin un solo tick
+        self._tape_visto = False             # ¿ya llegó el primer tick?
+        self._tape_n = 0                     # total acumulado en la sesión
+        self._tape_modo = None
+        self._tape_tk = None
+        return self._tape_tickbytick()
+
+    def _tape_tickbytick(self):
+        """Modo principal: reqTickByTickData AllLast (trades) + BidAsk (libro)."""
         try:
             t_ba = self.ib.reqTickByTickData(self._spy, "BidAsk")
             t_al = self.ib.reqTickByTickData(self._spy, "AllLast")
@@ -133,37 +150,114 @@ class IBKR:
                         px = getattr(x, "price", None)
                         if px is None:
                             continue
-                        b, a = self._libro
-                        # regla del quote (Lee-Ready simplificada): agresor por el lado tocado
-                        if b is not None and a is not None:
-                            sg = "C" if px >= a else ("V" if px <= b else "N")
-                        else:
-                            sg = None
                         self._tape_seq += 1
+                        b, a = self._libro
                         self._tape.append((x.time, self._tape_seq, float(px),
                                            float(getattr(x, "size", 0) or 0),
-                                           getattr(x, "exchange", "") or "", b, a, sg))
+                                           getattr(x, "exchange", "") or "", b, a,
+                                           self._tape_signo(px)))
                 except Exception:
                     self._tape_err += 1
 
             t_ba.updateEvent += _on_libro
             t_al.updateEvent += _on_trade
             self._tape_tk = (t_ba, t_al)
-            L.notificar("TAPE del subyacente SUSCRITO (AllLast + BidAsk)", "IBKR")
+            self._tape_modo = "tickbytick"
+            L.notificar("TAPE SUSCRITO por tick-by-tick (AllLast + BidAsk) — "
+                        "fallback a RTVolume si no llegan ticks en %d min" % C.TAPE_FALLBACK_MIN,
+                        "IBKR")
             return True
         except Exception as ex:
-            L.log("tape_suscribir(): %r — se sigue SIN tape" % ex, "WARN")
-            self._tape_tk = None
+            L.log("tape tick-by-tick falló: %r — probando RTVolume" % ex, "WARN")
+            return self._tape_rtvolume()
+
+    def _tape_rtvolume(self):
+        """FALLBACK: RTVolume (genericTick 233). Es el método con el que capturaba el sistema
+        ANTERIOR (log 2026-08-14: 'TAPE SPY: suscrito el SUBYACENTE con RTVolume(233)').
+        ⚠️ Menos fiel que tick-by-tick: RTVolume entrega el ÚLTIMO trade en cada actualización,
+        así que si dos trades caen entre dos updates se pierde uno. Se deduplica por
+        (rtTime, last, lastSize). Es un plan B, no un equivalente."""
+        try:
+            if self._tape_modo == "tickbytick":      # soltar la suscripción anterior
+                for tipo in ("AllLast", "BidAsk"):   # se cancelan por TIPO, no adivinando
+                    try:
+                        self.ib.cancelTickByTickData(self._spy, tipo)
+                    except Exception:
+                        pass
+            tk = self.ib.reqMktData(self._spy, "233", False, False)
+            self._rtv_ult = None
+
+            def _on_rtv(t):
+                try:
+                    px, sz = getattr(t, "last", None), getattr(t, "lastSize", None)
+                    b, a = getattr(t, "bid", None), getattr(t, "ask", None)
+                    if b is not None and a is not None and a > 0:
+                        self._libro = [b, a]
+                    if px is None or sz is None:
+                        return
+                    clave = (getattr(t, "rtTime", None), px, sz)
+                    if clave == self._rtv_ult:
+                        return                       # misma actualización: no es un trade nuevo
+                    self._rtv_ult = clave
+                    self._tape_seq += 1
+                    import datetime as _dt
+                    ts = getattr(t, "rtTime", None) or _dt.datetime.now()
+                    self._tape.append((ts, self._tape_seq, float(px), float(sz), "RTV",
+                                       self._libro[0], self._libro[1], self._tape_signo(px)))
+                except Exception:
+                    self._tape_err += 1
+
+            tk.updateEvent += _on_rtv
+            self._tape_tk = (tk,)
+            self._tape_modo = "rtvolume"
+            L.notificar("TAPE en modo FALLBACK RTVolume(233) — menos fiel que tick-by-tick",
+                        "RIESGO")
+            return True
+        except Exception as ex:
+            L.log("tape_rtvolume(): %r — se sigue SIN tape" % ex, "WARN")
+            self._tape_modo = None
             return False
 
     def tape_drenar(self):
-        """Saca los ticks acumulados y vacía el buffer. Devuelve [] si no hay suscripción."""
+        """Saca los ticks acumulados y vacía el buffer. Además VIGILA que estén llegando:
+        si pasan `C.TAPE_FALLBACK_MIN` minutos sin un solo tick, cae solo a RTVolume."""
         try:
             t, self._tape = self._tape, []
+            if t:
+                self._tape_n += len(t)
+                self._tape_vacios = 0
+                if not self._tape_visto:            # confirmación explícita del PRIMER tick
+                    self._tape_visto = True
+                    x = t[0]
+                    L.notificar("TAPE OK (%s): primer tick px=%.2f size=%.0f bid=%s ask=%s "
+                                "signo=%s — %d ticks en este minuto"
+                                % (self._tape_modo, x[2], x[3], x[5], x[6], x[7], len(t)), "IBKR")
+                    if x[5] is None:
+                        L.notificar("⚠️ TAPE sin BID/ASK: el signo saldrá NULL (solo volumen, "
+                                    "sin agresor). Revisar la suscripción BidAsk.", "RIESGO")
+            else:
+                self._tape_vacios += 1
+                if (C.TAPE_FALLBACK_MIN and self._tape_vacios >= C.TAPE_FALLBACK_MIN
+                        and self._tape_modo == "tickbytick"):
+                    L.notificar("TAPE: %d min seguidos SIN un solo tick por tick-by-tick "
+                                "(errores=%d) → cayendo a RTVolume"
+                                % (self._tape_vacios, self._tape_err), "RIESGO")
+                    self._tape_vacios = 0
+                    self._tape_rtvolume()
+                elif self._tape_vacios in (1, 5, 15, 30):
+                    L.log("TAPE sin ticks: %d min seguidos (modo=%s, total sesión=%d, err=%d)"
+                          % (self._tape_vacios, self._tape_modo, self._tape_n, self._tape_err),
+                          "WARN")
             return t
         except Exception as ex:
             L.log("tape_drenar(): %r" % ex, "WARN")
             return []
+
+    def tape_estado(self):
+        """Resumen para el log de cierre / diagnóstico."""
+        return {"modo": self._tape_modo, "ticks": getattr(self, "_tape_n", 0),
+                "errores": getattr(self, "_tape_err", 0),
+                "min_sin_ticks": getattr(self, "_tape_vacios", 0)}
 
     def _opt(self, expiry, strike, right):
         return Option(C.SYMBOL, expiry, strike, right, "SMART", tradingClass=C.SYMBOL)

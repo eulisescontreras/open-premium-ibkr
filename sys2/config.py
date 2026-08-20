@@ -128,6 +128,12 @@ SOLO_CAPTURA = True                    # ACTIVADO 2026-08-20: sesión de pruebas
 # auditadas las 52 bases de datos del repo).
 # Coste: ~380.000 ticks/día en el SPY (medido sobre el tape real del 2026-08-12).
 TAPE_CAPTURA = True                    # capturar el tape del subyacente (trades + bid/ask)
+# Si `reqTickByTickData` no entrega ni un tick en N minutos seguidos, se cae SOLO a RTVolume(233),
+# que es el método con el que el sistema ANTERIOR capturaba (log del 2026-08-14: "TAPE SPY:
+# suscrito el SUBYACENTE con RTVolume(233)"). Los 3 días de tape que existen salieron de
+# `reqHistoricalTicks` (descarga_tape_spy.py:44) — misma familia de permisos que tick-by-tick,
+# así que el permiso ESTÁ en esta cuenta; el fallback cubre el caso de que falle el STREAMING.
+TAPE_FALLBACK_MIN = 3                  # minutos sin ticks antes de caer a RTVolume (0 = nunca)
 
 # ── IBKR (paper) ──
 IBKR_HOST = "127.0.0.1"
