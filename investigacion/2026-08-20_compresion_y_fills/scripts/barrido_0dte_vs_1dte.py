@@ -111,15 +111,47 @@ def guardar(r):
                    r.get("estado"), r.get("motivo") or ""))
 
 
-def una(k, exp, dte, S, right, ancho, mny, pasada, saldo):
+def una(k, exp, dte, S, right, ancho, mny, pasada, saldo, single=False):
     """Una compra concreta en un vencimiento. Devuelve el registro. NO vende: solo mide si IBKR
-    ACEPTA y si LLENA. Lo que llene se cierra inmediatamente en el llamador."""
+    ACEPTA y si LLENA. Lo que llene se cierra inmediatamente en el llamador.
+
+    `single=True` compra UNA SOLA PATA (pregunta del usuario 2026-08-20: ¿el bloqueo por margen
+    es solo de spreads o también de singles?). NO HAY NI UN DATO: las 606 pruebas del día 20
+    fueron todas verticales.
+    HIPÓTESIS a contrastar: debería bloquear IGUAL o PEOR. El mensaje es "PROJECTED POST
+    EXPIRATION": IBKR simula el vencimiento, y ahí un largo ITM suelto y un vertical cuyo largo
+    acaba ITM producen el MISMO ejercicio (100 acciones ≈ 76.400$). Y el single es peor: en el
+    vertical, si el precio pasa del strike corto las dos patas se compensan y la exposición
+    queda limitada al ancho; en el single no hay nada que compense.
+    Importa porque el sistema TIENE modo SINGLE (`instrumento.elegir`) para piramidar y rodar.
+    """
     BF.EXP = exp                     # las piezas reutilizadas leen EXP del módulo
     kl = round(S - mny) if right == "C" else round(S + mny)
-    ks = kl + ancho if right == "C" else kl - ancho
+    ks = None if single else (kl + ancho if right == "C" else kl - ancho)
     r = {"fecha": FECHA, "hora": BF.ahora(), "pasada": pasada, "spot": S, "dte": dte,
-         "expiry": exp, "right": right, "ancho": ancho, "mny_obj": mny,
+         "expiry": exp, "right": right, "ancho": (0 if single else ancho), "mny_obj": mny,
          "k_long": kl, "k_short": ks, "saldo": saldo}
+    if single:
+        try:
+            cad = k.cadena(exp, S, n=8)
+            d = cad.get((right, float(kl)))
+            if not d or d.get("mid") is None:
+                r.update(estado="SIN_LIBRO")
+                return r
+            r["mid"] = round(d["mid"], 3)
+            if d.get("bid") is not None and d.get("ask") is not None and d["mid"]:
+                r["spread_pct"] = round(100.0 * (d["ask"] - d["bid"]) / d["mid"], 1)
+            BF.limpiar(k)
+            tr = k.comprar_single(exp, kl, right, d["mid"], qty=1)
+            est, seg, mot = BF.esperar(k, tr, 25)
+            r.update(estado=est, motivo=mot, segundos=seg)
+            r["log"] = " || ".join("%s %s" % (e.status, (e.message or "")[:60]) for e in tr.log)
+            if est == "Filled":
+                r["precio"] = float(tr.orderStatus.avgFillPrice or 0)
+        except Exception as ex:
+            r.update(estado="ERROR", motivo=str(ex)[:60])
+        BF.limpiar(k)
+        return r
     try:
         cad = k.cadena(exp, S, n=8)
     except Exception as ex:
@@ -181,36 +213,59 @@ def main():
                         if datetime.datetime.now().strftime("%H:%M") > HASTA:
                             break
                         par = []
-                        # PAREADO: el 0DTE y el siguiente vencimiento, seguidos. `dias_dte`
-                        # registra los DÍAS REALES: un viernes el siguiente es el LUNES (3 días).
-                        for exp, dte in ((e0, dias_dte(e0)), (e1, dias_dte(e1))):
+                        # PAREADO A TRES: 0DTE vertical, siguiente vencimiento vertical, y 0DTE
+                        # SINGLE — los tres seguidos, en segundos, para que la comparación no
+                        # dependa de la hora ni del estado del mercado.
+                        # `dias_dte` registra los DÍAS REALES: un viernes el siguiente es el
+                        # LUNES (3 días), no 1.
+                        # El SINGLE responde la otra pregunta del usuario: ¿el bloqueo por margen
+                        # es cosa de spreads o también pasa con una sola pata? NO HAY NI UN DATO.
+                        # MATRIZ COMPLETA 2x2: vencimiento (0DTE / siguiente) x tipo (vertical /
+                        # single). Responde LAS DOS preguntas y además su interacción: si el
+                        # bloqueo fuera cosa del vencimiento, las dos filas de "siguiente"
+                        # pasarían; si fuera cosa de tener DOS patas, pasarían las dos de single.
+                        casos = ((e0, dias_dte(e0), False),      # vertical 0DTE   (el de hoy)
+                                 (e1, dias_dte(e1), False),      # vertical siguiente vencimiento
+                                 (e0, dias_dte(e0), True),       # SINGLE 0DTE
+                                 (e1, dias_dte(e1), True))       # SINGLE siguiente vencimiento
+                        for exp, dte, es_single in casos:
+                            if es_single and ancho != ANCHOS[0]:
+                                continue      # el single no depende del ancho: una vez por mny
                             try:
-                                r = una(k, exp, dte, S, right, ancho, mny, pasada, saldo)
+                                r = una(k, exp, dte, S, right, ancho, mny, pasada, saldo,
+                                        single=es_single)
                             except Exception as ex:
                                 r = {"fecha": FECHA, "hora": BF.ahora(), "pasada": pasada,
-                                     "dte": dte, "expiry": exp, "right": right, "ancho": ancho,
+                                     "dte": dte, "expiry": exp, "right": right,
+                                     "ancho": (0 if es_single else ancho),
                                      "mny_obj": mny, "estado": "EXCEPCION",
                                      "motivo": str(ex)[:60], "saldo": saldo}
                             guardar(r)
                             par.append(r)
-                            # lo que haya llenado se cierra YA (un 1DTE abierto = riesgo nocturno)
+                            # lo que haya llenado se cierra YA (un contrato del dia siguiente
+                            # abierto = exposición durante toda la noche / el fin de semana)
                             if r.get("estado") == "Filled":
                                 try:
                                     k.cerrar_todo(exp)
                                 except Exception as ex:
                                     print("  ⚠️ no se pudo cerrar %s: %r" % (exp, ex), flush=True)
-                        a, b = par[0], par[1]
+                        def _et(x):
+                            return "%s%dDTE" % ("SGL " if not x.get("k_short") else "vert",
+                                                x.get("dte", 0))
+
+                        def _tx(x):
+                            m = x.get("motivo") or ""
+                            return "%s:%s%s" % (_et(x), x.get("estado"),
+                                                ("/" + m) if m else "")
+                        base = par[0]
+                        alt = [x for x in par[1:] if x.get("motivo") != "MARGEN"]
                         marca = ""
-                        if a.get("motivo") == "MARGEN" and b.get("motivo") != "MARGEN":
-                            marca = "   <<< EL %dDTE PASA Y EL 0DTE NO" % b.get("dte", 1)
-                        elif a.get("motivo") == "MARGEN" and b.get("motivo") == "MARGEN":
-                            marca = "   <-- los DOS rechazados: no es el vencimiento"
-                        print("  %s %s a%d mny%+d | 0DTE %-10s %-8s (spr %s%%) | %dDTE %-10s %-8s (spr %s%%)%s"
-                              % (a.get("hora"), right, ancho, mny,
-                                 a.get("estado"), a.get("motivo") or "", a.get("spread_pct"),
-                                 b.get("dte", 1),
-                                 b.get("estado"), b.get("motivo") or "", b.get("spread_pct"),
-                                 marca), flush=True)
+                        if base.get("motivo") == "MARGEN":
+                            marca = ("   <<< PASAN: %s" % ", ".join(_et(x) for x in alt)) if alt \
+                                else "   <-- RECHAZADAS TODAS: no es el vencimiento ni las patas"
+                        print("  %s %s a%d mny%+d | %s%s"
+                              % (base.get("hora"), right, ancho, mny,
+                                 "  ".join(_tx(x) for x in par), marca), flush=True)
             print("  -> fin de la pasada %d" % pasada, flush=True)
     except KeyboardInterrupt:
         print("\ninterrumpido", flush=True)
@@ -234,8 +289,57 @@ def main():
                           flush=True)
         except Exception:
             pass
+        resumen()
         print("\ndatos en %s (tabla `dte_cmp`)" % BD, flush=True)
         k.desconectar()
+
+
+def resumen():
+    """QUÉ OPCIÓN ES VIABLE. Se imprime SIEMPRE al terminar, incluso si se interrumpe."""
+    try:
+        c = sqlite3.connect(BD)
+        c.row_factory = sqlite3.Row
+        filas = [dict(r) for r in c.execute("select * from dte_cmp where fecha=?", (FECHA,))]
+        c.close()
+        if not filas:
+            print("\n(sin datos que resumir)", flush=True)
+            return
+        print("\n" + "=" * 96, flush=True)
+        print("¿QUÉ OPCIÓN ES VIABLE? — %d pruebas del %s" % (len(filas), FECHA), flush=True)
+        print("=" * 96, flush=True)
+        print("%-22s %6s %9s %9s %9s %9s"
+              % ("opción", "n", "%rechazo", "%fill", "spread~", "n ITM"), flush=True)
+        grupos = {}
+        for f in filas:
+            tipo = "SINGLE" if not f.get("k_short") else "vertical"
+            grupos.setdefault("%-8s %dDTE" % (tipo, f.get("dte") or 0), []).append(f)
+        for et in sorted(grupos):
+            g = grupos[et]
+            rech = sum(1 for x in g if x.get("motivo") == "MARGEN")
+            noR = [x for x in g if x.get("motivo") != "MARGEN"]
+            fill = sum(1 for x in noR if x.get("estado") == "Filled")
+            sp = [x["spread_pct"] for x in g if x.get("spread_pct") is not None]
+            itm = sum(1 for x in g if (x.get("mny_obj") or 0) > 0)
+            print("%-22s %6d %8.0f%% %8s %8s%% %9d"
+                  % (et, len(g), 100.0 * rech / len(g),
+                     ("%.0f%%" % (100.0 * fill / len(noR))) if noR else "-",
+                     ("%.1f" % (sum(sp) / len(sp))) if sp else "-", itm), flush=True)
+        print("\nSOLO ITM (mny>0), que es donde el 0DTE se bloquea por la tarde:", flush=True)
+        for et in sorted(grupos):
+            g = [x for x in grupos[et] if (x.get("mny_obj") or 0) > 0]
+            if not g:
+                continue
+            rech = sum(1 for x in g if x.get("motivo") == "MARGEN")
+            print("   %-22s n=%-4d rechazo %.0f%%" % (et, len(g), 100.0 * rech / len(g)),
+                  flush=True)
+        print("\nLECTURA: si el bloqueo fuese cosa del VENCIMIENTO, las dos filas del vencimiento",
+              flush=True)
+        print("siguiente irían a 0%. Si fuese cosa de tener DOS PATAS, irían a 0% las de SINGLE.",
+              flush=True)
+        print("Si NINGUNA baja, el bloqueo es del LARGO ITM y no lo esquiva ningún instrumento.",
+              flush=True)
+    except Exception as ex:
+        print("\nresumen(): %r" % ex, flush=True)
 
 
 if __name__ == "__main__":
