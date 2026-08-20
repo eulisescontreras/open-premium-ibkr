@@ -1,3 +1,52 @@
+# ⏰ CHECKLIST DE ARRANQUE — MAÑANA 2026-08-21 (escrito el 20 por la tarde)
+
+> **LEER ESTO ANTES DE ARRANCAR NADA.** Detalle completo en `.claude/anti-compact-context.md`.
+
+## 🔴 0. ANTES DE ARRANCAR: `SOLO_CAPTURA` SIGUE EN `True`
+`config.py:121`. Con eso el sistema **captura pero NO ABRE POSICIONES**. Se activó el 20 para
+las pruebas de fills. **Si mañana se quiere operar hay que ponerlo en `False`.** Si no se toca,
+el sistema arrancará, capturará todo y no operará — y no avisa de ello por ningún sitio.
+
+## 🔴 1. EL TAPE: verificar en los PRIMEROS 5 MINUTOS (es su primer día)
+El capturador se escribió el 20 y **la suscripción contra IBKR NO está probada** (hacía falta
+mercado abierto). Todo lo demás sí: persistencia (5.000 ticks reales, 0 pérdida), regla del
+signo (100% de coincidencia sobre 31.349 ticks reales) y `cr_schema` VERDE.
+
+**Comprobar, en este orden:**
+1. En el log del vivo debe aparecer `TAPE del subyacente SUSCRITO (AllLast + BidAsk)`.
+   Si aparece `tape_suscribir(): ... — se sigue SIN tape` → falló la suscripción (ver punto 3).
+2. A los ~5 min: `select count(*) from tape_und where fecha='2026-08-21'` debe ser **> 0**
+   (esperable ~380.000 ticks/día, o sea miles ya en los primeros minutos).
+3. Debe haber líneas `tape HH:MM: N ticks persistidos` cada minuto.
+4. Comprobar que el signo NO sale todo a NULL:
+   `select signo, count(*) from tape_und where fecha='2026-08-21' group by signo`
+   Si todo es NULL, el stream de BidAsk no está llegando y no hay agresor (solo volumen).
+
+## 🟡 2. PLAN B SI EL TAPE NO LLEGA
+`reqTickByTickData` y `RTVolume` son **permisos de datos DISTINTOS en IBKR**. Los 3 días de tape
+que existen los capturó el sistema ANTERIOR con **RTVolume (genericTick 233)** — eso está
+probado en esta cuenta; tick-by-tick **no**. Si no llegan ticks, el arreglo es cambiar
+`ibkr.tape_suscribir` a RTVolume. (Propuesto al usuario, pendiente de su OK.)
+
+## 🟡 3. VIGILAR: límite de líneas de datos y tamaño
+- El vivo ya pide `reqMktData` para **82 contratos** de la cadena cada minuto. Añadir 2 líneas de
+  tick-by-tick **puede chocar con el límite de la cuenta**. Si la cadena empieza a fallar a la vez
+  que el tape funciona, es esto. **NO VERIFICADO.**
+- **Tamaño**: ~380.000 ticks/día ≈ 40 MB/día. `sys2.db` ya pesa 168 MB → ~1 GB en un mes.
+  Decidir rotación o compresión antes de que se vuelva un problema.
+
+## 🟡 4. PENDIENTE DE HABLAR (el usuario lo pidió expresamente)
+Los resultados de **ejecución real** del día 20: el sistema pasa de 83.805 $ (139,7x) a una
+**mediana de 41.122 $ (68,5x)** y, sobre todo, **3 de 8 semillas mueren en los primeros días**
+(4 de 8 con compresión). El usuario ha dicho que estos resultados **no le gustan** y quiere
+discutirlos. NO están aplicados a nada: son una medición, no un cambio del sistema.
+
+## 🟢 5. RESCATE PENDIENTE
+Volcar a `tape_und` los 3 días de tape existentes (12, 13 y 14 de agosto), normalizando los
+tres formatos distintos. Solo el 13/08 trae bid/ask y agresor. NO HECHO.
+
+---
+
 # PROMPT PARA RETOMAR — estado al 2026-08-19 (fin de sesión)
 
 > ## ⚠️ CORRECCIÓN 2026-08-20 — LA CIFRA ANTERIOR (89.188$ / 149,4x) ERA IRREPRODUCIBLE
