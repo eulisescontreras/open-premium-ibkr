@@ -44,8 +44,24 @@ discutirlos. NO están aplicados a nada: son una medición, no un cambio del sis
 ## 🔴 5. PRUEBA NUEVA LISTA PARA LANZAR: 0DTE vs 1DTE (idea del usuario)
 
 `investigacion/2026-08-20_compresion_y_fills/scripts/barrido_0dte_vs_1dte.py`
-**Lanzarlo a partir de las 13:00** (`python barrido_0dte_vs_1dte.py 13:00`), que es cuando el
-rechazo del 0DTE ya está activo.
+**Lanzarlo EN LA APERTURA** (`python barrido_0dte_vs_1dte.py`, por defecto desde las 09:30) y
+dejarlo TODO EL DÍA, igual que el barrido del 20. Empezar por la tarde sería un error: el mapa
+del 20 dice que **antes de las 12:00 no hay ni un rechazo**, así que sin la mañana no hay curva
+horaria con la que comparar — y además el **49,7% de las operaciones del sistema son a las
+09:xx**, o sea que el fill del otro vencimiento POR LA MAÑANA es el dato que más importa.
+
+**Hace FILLS COMPLETOS: compra Y vende.** Sin vender no se mide el coste de SALIDA, que es lo
+que dispara el drawdown (-23.673$, del 21,1% al 36,9%). Usa la escalera de salida ya probada
+(mid, -25%, -50%, bid, 8 s cada escalón) y registra en qué escalón llenó.
+
+**SALDO 15.000$** (el usuario recargó el 20 por la noche). Sirve para que la cuenta aguante la
+sesión entera y para blindar la medición: si con 15.000$ IBKR sigue rechazando un débito de
+200$, es IMPOSIBLE que sea por dinero. ⚠️ Pero el barrido compra **1 contrato** con los débitos
+del sistema REAL (55-370$), no con los que cabrían en 15.000$: el saldo cambia cuánto aguanta
+la prueba, NO lo que se prueba.
+⚠️⚠️ Y si se pone `SOLO_CAPTURA=False` con 15.000$, el sistema vivo NO se parecerá a lo medido:
+el tope pasaría a ~2.700$ y `elegir_vert` compraría el ITM mucho más profundo (0-17% de fill).
+El README es explícito: *es una máquina de cuentas pequeñas, no escala*.
 
 **LA IDEA:** IBKR rechaza con `PROJECTED POST EXPIRATION MARGIN DEFICIT` — proyecta el ejercicio
 **al vencimiento de HOY**. Si el contrato vence MAÑANA, hoy no hay expiración que proyectar.

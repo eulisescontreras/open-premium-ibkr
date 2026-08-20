@@ -42,6 +42,11 @@ _EJEC = int(_os.environ.get("RL_EJEC", "0"))
 _XRECH = int(_os.environ.get("RL_XRECH", "1"))   # rechazo por margen de IBKR
 _XFILL = int(_os.environ.get("RL_XFILL", "1"))   # que no haya contrapartida
 _XSAL = int(_os.environ.get("RL_XSAL", "1"))     # coste de la venta forzada a mercado
+# PLAN B del usuario (2026-08-20): "si esto no se resuelve, enfocar los esfuerzos en las primeras
+# horas del día". No abrir a partir de esta hora, PERO con la ejecución real activa — que es lo
+# que decide: la tarde puede aportar en el papel y ser PURO COSTE cuando cuentas que la mitad de
+# sus órdenes se rechazan o no llenan.
+_NOABRE = _os.environ.get("RL_NOABRE", "")
 _SEM = int(_os.environ.get("RL_SEM", "1"))
 _COMPR = int(_os.environ.get("RL_COMPR", "0"))
 _RNG = _rnd.Random(_SEM)
@@ -106,6 +111,11 @@ N_EV = ("                    if ev and _EJEC:\n"
         "                    if ev:\n"
         "                        kl, pl_, ksh, psh = ev")
 
+# PLAN B: no abrir a partir de cierta hora (se añade a la condición de apertura, motor.py:280)
+A_ABRE = "            if (pos is None and h in Sen and hechas < C.MAX_TRADES and h < C.ABRIR_HASTA"
+N_ABRE = ("            if (pos is None and h in Sen and hechas < C.MAX_TRADES and h < C.ABRIR_HASTA\n"
+          "                    and (not _NOABRE or h < _NOABRE)")
+
 # slippage de salida al cerrar, según el débito de entrada
 A_CIERRE = "                    g = ((pos['mid'] - pos['ask']) * 100 - C.COMISION) * pos.get('nq', 1)"
 N_CIERRE = ("                    _sv = _slip_salida(pos.get('_deb', 0)) if (_EJEC and _XSAL) else 0.0\n"
@@ -124,13 +134,24 @@ V += [("z_comp_s%d" % s, "1", str(s), "8", "1", "1", "1") for s in SEMILLAS]
 V += [("y_rech_s%d" % s, "1", str(s), "0", "1", "0", "0") for s in SEM4]   # solo el rechazo
 V += [("y_fill_s%d" % s, "1", str(s), "0", "0", "1", "0") for s in SEM4]   # solo el fill
 V += [("y_sal", "1", "1", "0", "0", "0", "1")]                             # solo la salida (determinista)
+# ── PLAN B: concentrarse en las primeras horas, CON la ejecución real activa ─────────
+# En el papel cortar la tarde cuesta dinero (no abrir desde 13h = -10.978$). La pregunta es si
+# sigue costando cuando cuentas que por la tarde te rechazan y no te llenan. Se anota el corte
+# en el nombre; todas llevan RECH+FILL+SAL activos.
+V += [("w_no12_s%d" % s, "1", str(s), "0", "1", "1", "1") for s in SEM4]
+V += [("w_no13_s%d" % s, "1", str(s), "0", "1", "1", "1") for s in SEM4]
+V += [("w_no14_s%d" % s, "1", str(s), "0", "1", "1", "1") for s in SEM4]
+# ...y la mejor de ellas con la compresión encima
+V += [("w_no13c_s%d" % s, "1", str(s), "8", "1", "1", "1") for s in SEM4]
+CORTES = {"w_no12": "12:00", "w_no13": "13:00", "w_no14": "14:00", "w_no13c": "13:00"}
 
 assert not [x for x in os.listdir(os.path.dirname(MOT)) if x.endswith(".bak")], "otro barrido vivo"
 base = open(MOT, encoding="utf-8").read()
-for pat in (A_IMP, A_SEN, A_NQ, A_EV, A_CIERRE):
+for pat in (A_IMP, A_SEN, A_NQ, A_EV, A_ABRE, A_CIERRE):
     assert base.count(pat) == 1, "patrón no único: %r" % pat[:55]
 txt = (base.replace(A_IMP, N_IMP).replace(A_SEN, N_SEN).replace(A_NQ, N_NQ)
-       .replace(A_EV, N_EV).replace(A_CIERRE, N_CIERRE))
+       .replace(A_EV, N_EV).replace(A_ABRE, N_ABRE).replace(A_CIERRE, N_CIERRE))
+assert txt.count("not _NOABRE or h < _NOABRE") == 1, "corte horario NO aplicado"
 for chk in ("def _p_rech(h, mny):", "IBKR rechaza: la señal se PIERDE",
             "_sv = _slip_salida(pos.get('_deb', 0))", "'_deb': (pl_ - psh) * 100"):
     assert txt.count(chk) == 1, "parche NO aplicado: %r" % chk[:40]
@@ -148,8 +169,9 @@ try:
                 and (xr, xf, xs) == ("1", "1", "1")):
             print("ya corrida, se salta: %s" % nombre, flush=True)
             continue
+        corte = CORTES.get(nombre.rsplit("_s", 1)[0], "")     # w_no13_s2 -> "13:00"
         env = dict(os.environ, RL_EJEC=ejec, RL_SEM=sem, RL_COMPR=compr,
-                   RL_XRECH=xr, RL_XFILL=xf, RL_XSAL=xs)
+                   RL_XRECH=xr, RL_XFILL=xf, RL_XSAL=xs, RL_NOABRE=corte)
         p = subprocess.Popen([sys.executable, HIJO, os.path.join(OUT, nombre + ".json")],
                              cwd=RAIZ, env=env, stdout=subprocess.PIPE,
                              stderr=subprocess.PIPE, text=True)
@@ -208,7 +230,11 @@ if ctrl:
                                              else "!! DESVIADO, NO usar estas cifras !!"))
 print("=" * 96)
 for et, pref in (("EJECUCIÓN REAL (sin compresión)", "z_real_s"),
-                 ("EJECUCIÓN REAL + COMPRESIÓN d8", "z_comp_s")):
+                 ("EJECUCIÓN REAL + COMPRESIÓN d8", "z_comp_s"),
+                 ("PLAN B: real + NO ABRIR desde las 12:00", "w_no12_s"),
+                 ("PLAN B: real + NO ABRIR desde las 13:00", "w_no13_s"),
+                 ("PLAN B: real + NO ABRIR desde las 14:00", "w_no14_s"),
+                 ("PLAN B: real + no abrir 13:00 + COMPRESIÓN", "w_no13c_s")):
     M = [carga(pref + str(s)) for s in SEMILLAS]
     M = [x for x in M if x]
     if not M:

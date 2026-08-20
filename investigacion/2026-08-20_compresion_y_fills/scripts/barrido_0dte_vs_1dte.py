@@ -42,7 +42,11 @@ C.IBKR_CLIENT_ID = 34
 import barrido_fills_total as BF
 from sys2.data.ibkr import IBKR
 
-DESDE = sys.argv[1] if len(sys.argv) > 1 and ":" in sys.argv[1] else "13:00"
+# TODO EL DÍA, como el barrido del 20. Empezar por la tarde sería un error: el mapa del día 20
+# dice que ANTES DE LAS 12:00 NO HAY NI UN RECHAZO, así que sin la mañana no hay curva horaria
+# con la que comparar. Y sobre todo: el 49,7% de las operaciones del sistema son a las 09:xx —
+# el fill del otro vencimiento POR LA MAÑANA es el dato que más importa.
+DESDE = sys.argv[1] if len(sys.argv) > 1 and ":" in sys.argv[1] else "09:30"
 HASTA = "15:45"
 # el ITM es donde IBKR rechaza; los OTM van de CONTROL (nunca se rechazan: si aquí saliera
 # rechazo, el problema no sería el vencimiento y habría que parar y mirar otra cosa).
@@ -89,7 +93,17 @@ def _bd():
         id integer primary key autoincrement, fecha text, hora text, pasada int, spot real,
         dte int, expiry text, right text, ancho real, mny_obj real, k_long real, k_short real,
         mid real, spread_pct real, estado text, motivo text, precio real, segundos real,
-        saldo real, log text)""")
+        saldo real, log text,
+        venta_estado text, venta_precio real, venta_seg real, venta_mid real, forzado int,
+        ida_vuelta_usd real, slip_venta_pct real)""")
+    # por si la tabla ya existía de una versión anterior sin columnas de venta
+    for col, tipo in (("venta_estado", "text"), ("venta_precio", "real"), ("venta_seg", "real"),
+                      ("venta_mid", "real"), ("forzado", "int"), ("ida_vuelta_usd", "real"),
+                      ("slip_venta_pct", "real")):
+        try:
+            c.execute("alter table dte_cmp add column %s %s" % (col, tipo))
+        except Exception:
+            pass
     c.execute("create index if not exists ix_dte on dte_cmp(fecha,hora)")
     c.commit()
     return c
@@ -99,7 +113,8 @@ def guardar(r):
     c = _bd()
     cols = ["fecha", "hora", "pasada", "spot", "dte", "expiry", "right", "ancho", "mny_obj",
             "k_long", "k_short", "mid", "spread_pct", "estado", "motivo", "precio", "segundos",
-            "saldo", "log"]
+            "saldo", "log", "venta_estado", "venta_precio", "venta_seg", "venta_mid", "forzado",
+            "ida_vuelta_usd", "slip_venta_pct"]
     c.execute("insert into dte_cmp (%s) values (%s)" % (",".join(cols), ",".join(["?"] * len(cols))),
               [r.get(x) for x in cols])
     c.commit()
@@ -109,6 +124,34 @@ def guardar(r):
                 % (r.get("hora"), r.get("pasada"), r.get("dte"), r.get("right"), r.get("ancho"),
                    r.get("mny_obj"), (r.get("mid") or 0) * 100, r.get("spread_pct"),
                    r.get("estado"), r.get("motivo") or ""))
+
+
+def vender_single(k, exp, kl, right, mid_obj, bid):
+    """Escalera de salida para UNA pata. Mismo criterio que `BF.vender` para el vertical: el
+    sistema real cierra con `cerrar_todo(espera=8)`, así que la pregunta útil no es "¿llena si
+    espero?" sino "¿a qué PRECIO llena en 8 s?". No existía equivalente para single en el repo.
+    Termina SIEMPRE a mercado si nada llenó: nunca se deja una pata viva."""
+    from ib_insync import LimitOrder
+    t0 = time.time()
+    logs = []
+    semi = max(0.02, (mid_obj - bid)) if (bid is not None and bid < mid_obj) else max(0.02, mid_obj * 0.05)
+    for etiq, px in (("mid", mid_obj), ("-50%", mid_obj - semi * 0.5), ("bid", mid_obj - semi)):
+        if px <= 0.01:
+            continue
+        c = k._opt(exp, float(kl), right)
+        k.ib.qualifyContracts(c)
+        tr = k.ib.placeOrder(c, LimitOrder("SELL", 1, round(px, 2)))
+        est, seg, mot = BF.esperar(k, tr, 8)
+        logs.append("%s@%.2f:%s" % (etiq, px, est))
+        if est == "Filled":
+            return ("Filled@" + etiq), float(tr.orderStatus.avgFillPrice or 0), \
+                round(time.time() - t0, 1), 0, " || ".join(logs)
+        BF.limpiar(k)
+    tr = k.cerrar_single(exp, kl, right, qty=1, a_mercado=True)      # nunca dejar la pata viva
+    est, seg, mot = BF.esperar(k, tr, 15)
+    return ("FORZADO" if est == "Filled" else est), \
+        (float(tr.orderStatus.avgFillPrice or 0) if est == "Filled" else None), \
+        round(time.time() - t0, 1), 1, " || ".join(logs)
 
 
 def una(k, exp, dte, S, right, ancho, mny, pasada, saldo, single=False):
@@ -148,6 +191,19 @@ def una(k, exp, dte, S, right, ancho, mny, pasada, saldo, single=False):
             r["log"] = " || ".join("%s %s" % (e.status, (e.message or "")[:60]) for e in tr.log)
             if est == "Filled":
                 r["precio"] = float(tr.orderStatus.avgFillPrice or 0)
+                # IDA Y VUELTA COMPLETA: sin vender no se mide el coste de SALIDA, que es lo que
+                # dispara el drawdown (-23.673$ del 21,1% al 36,9%). Si el otro vencimiento se
+                # vende peor, habríamos cambiado un problema por otro sin enterarnos.
+                k.ib.sleep(1)
+                c2 = k.cadena(exp, S, n=4).get((right, float(kl))) or d
+                m2 = c2.get("mid") or d["mid"]
+                vest, vpre, vseg, forz, vlog = vender_single(k, exp, kl, right, m2, c2.get("bid"))
+                r.update(venta_estado=vest, venta_precio=vpre, venta_seg=vseg,
+                         venta_mid=round(m2, 3), forzado=forz)
+                if vpre is not None:
+                    r["ida_vuelta_usd"] = round((vpre - r["precio"]) * 100, 2)
+                    if m2:
+                        r["slip_venta_pct"] = round(100.0 * (vpre - m2) / abs(m2), 2)
         except Exception as ex:
             r.update(estado="ERROR", motivo=str(ex)[:60])
         BF.limpiar(k)
@@ -177,6 +233,23 @@ def una(k, exp, dte, S, right, ancho, mny, pasada, saldo, single=False):
         r["log"] = " || ".join("%s %s" % (e.status, (e.message or "")[:60]) for e in tr.log)
         if est == "Filled":
             r["precio"] = float(tr.orderStatus.avgFillPrice or 0)
+            # IDA Y VUELTA COMPLETA con la escalera YA PROBADA del barrido del 20 (regla 9):
+            # baja por escalones (mid del combo, -25%, -50%, bid, bid-1) con 8 s cada uno, que es
+            # lo que espera el sistema real, y registra EN QUÉ ESCALÓN llenó. Ese es el descuento
+            # verdadero. El 20 de agosto: 139 de 139 ventas acabaron forzadas a mercado.
+            k.ib.sleep(1)
+            cad2 = k.cadena(exp, S, n=8)
+            d2l = cad2.get((right, float(kl))) or dl
+            d2s = cad2.get((right, float(ks))) or ds
+            mid2 = (d2l["mid"] or 0) - (d2s["mid"] or 0)
+            bid2 = (d2l.get("bid") or 0) - (d2s.get("ask") or 0)
+            vest, vpre, vseg, vmot, forz, vlog = BF.vender(k, right, kl, ks, mid2, bid2)
+            r.update(venta_estado=vest, venta_precio=vpre, venta_seg=vseg,
+                     venta_mid=round(mid2, 3), forzado=forz)
+            if vpre is not None:
+                r["ida_vuelta_usd"] = round((vpre - r["precio"]) * 100, 2)
+                if mid2:
+                    r["slip_venta_pct"] = round(100.0 * (vpre - mid2) / abs(mid2), 2)
     except Exception as ex:
         r.update(estado="ERROR", motivo=str(ex)[:60])
     BF.limpiar(k)
@@ -242,13 +315,19 @@ def main():
                                      "motivo": str(ex)[:60], "saldo": saldo}
                             guardar(r)
                             par.append(r)
-                            # lo que haya llenado se cierra YA (un contrato del dia siguiente
-                            # abierto = exposición durante toda la noche / el fin de semana)
-                            if r.get("estado") == "Filled":
+                            # RED DE SEGURIDAD: `una()` ya vende, pero si la venta no llenó hay
+                            # que cerrar igual. Un contrato del vencimiento siguiente que se
+                            # quede abierto es exposición TODA LA NOCHE (o el fin de semana).
+                            vok = str(r.get("venta_estado") or "")
+                            if r.get("estado") == "Filled" and not (
+                                    vok.startswith("Filled") or vok == "FORZADO"):
                                 try:
                                     k.cerrar_todo(exp)
+                                    print("  ⚠️ venta no llenó (%s) -> cerrado a mercado" % vok,
+                                          flush=True)
                                 except Exception as ex:
-                                    print("  ⚠️ no se pudo cerrar %s: %r" % (exp, ex), flush=True)
+                                    print("  ⚠️ NO SE PUDO CERRAR %s: %r — REVISAR" % (exp, ex),
+                                          flush=True)
                         def _et(x):
                             return "%s%dDTE" % ("SGL " if not x.get("k_short") else "vert",
                                                 x.get("dte", 0))
@@ -324,6 +403,23 @@ def resumen():
                   % (et, len(g), 100.0 * rech / len(g),
                      ("%.0f%%" % (100.0 * fill / len(noR))) if noR else "-",
                      ("%.1f" % (sum(sp) / len(sp))) if sp else "-", itm), flush=True)
+        print("\nCOSTE DE EJECUCIÓN (ida y vuelta REAL) — el 20/08 fue -2,12$ y 139 de 139", flush=True)
+        print("ventas acabaron FORZADAS a mercado. Aquí se ve si el otro vencimiento es mejor o peor:",
+              flush=True)
+        print("%-22s %6s %11s %11s %10s" % ("opción", "n ops", "ida-vuelta~", "slip venta~",
+                                            "%forzadas"), flush=True)
+        for et in sorted(grupos):
+            g = [x for x in grupos[et] if x.get("ida_vuelta_usd") is not None]
+            if not g:
+                print("%-22s %6s %11s %11s %10s" % (et, 0, "-", "-", "-"), flush=True)
+                continue
+            iv = sum(x["ida_vuelta_usd"] for x in g) / len(g)
+            sv = [x["slip_venta_pct"] for x in g if x.get("slip_venta_pct") is not None]
+            fz = sum(1 for x in g if x.get("forzado"))
+            print("%-22s %6d %+10.2f$ %10s%% %9.0f%%"
+                  % (et, len(g), iv, ("%.2f" % (sum(sv) / len(sv))) if sv else "-",
+                     100.0 * fz / len(g)), flush=True)
+
         print("\nSOLO ITM (mny>0), que es donde el 0DTE se bloquea por la tarde:", flush=True)
         for et in sorted(grupos):
             g = [x for x in grupos[et] if (x.get("mny_obj") or 0) > 0]
