@@ -1,0 +1,22 @@
+ya corrida, se salta: z_real_s1
+ya corrida, se salta: z_real_s2
+ya corrida, se salta: z_real_s3
+ya corrida, se salta: z_real_s4
+ya corrida, se salta: z_real_s5
+ya corrida, se salta: z_real_s6
+ya corrida, se salta: z_real_s7
+ya corrida, se salta: z_real_s8
+ya corrida, se salta: z_comp_s1
+ya corrida, se salta: z_comp_s2
+ya corrida, se salta: z_comp_s3
+ya corrida, se salta: z_comp_s4
+ya corrida, se salta: z_comp_s5
+ya corrida, se salta: z_comp_s6
+ya corrida, se salta: z_comp_s7
+ya corrida, se salta: z_comp_s8
+
+════════════════════════════════════════════════════════════════════════════
+BARRIDO INTERRUMPIDO A PROPOSITO POR EL USUARIO (2026-08-20 ~17:28)
+No hay resultados: se corto antes de que terminara ninguna de las 16 corridas.
+motor.py quedo parcheado al matar el proceso (el `finally` no llego a correr) y
+se restauro A MANO desde motor.py.xr.bak -> verificado identico a HEAD.
