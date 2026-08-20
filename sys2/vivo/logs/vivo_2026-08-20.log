@@ -2592,3 +2592,1062 @@
 2026-08-20 14:04:06 | DATA   | cadena persistida 2026-08-20 14:04: 82 filas (fuente=live)
 === NOTIF === 2026-08-20 14:04:07 | ORDEN | COMPRA VERTICAL SPY P L=762/S=759 x1 débito<=0.14
 2026-08-20 14:04:29 | DATA   | cadena 20260820: 14 contratos (ITM+OTM C/P) capturados y cancelados (spot 764.05)
+=== NOTIF === 2026-08-20 14:04:56 | RIESGO | BAG no cerró (2 pata/s viva/s) — cierre por patas al MID
+=== NOTIF === 2026-08-20 14:04:56 | ORDEN | CIERRE MERCADO SPY P 759 x1
+2026-08-20 14:05:01 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+=== NOTIF === 2026-08-20 14:05:01 | IBKR | IBKR conectado (paper 4002)
+2026-08-20 14:05:01 | DATA   | IBKR desconectado
+2026-08-20 14:05:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+=== NOTIF === 2026-08-20 14:05:06 | ORDEN | CIERRE MERCADO SPY P 762 x1
+2026-08-20 14:05:06 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 764.10)
+2026-08-20 14:05:06 | DATA   | cadena persistida 2026-08-20 14:05: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 14:05:06 | RIESGO | SYNC 14:05: IBKR tiene 1 pata(s) 0DTE y el sistema se creía PLANO — adoptando
+=== NOTIF === 2026-08-20 14:05:06 | RIESGO | ⚠️ 1 pata(s) 0DTE abiertas en IBKR SIN operación abierta en la BD — no se reconstruye; revisar y cerrar a mano
+=== NOTIF === 2026-08-20 14:05:16 | ORDEN | COMPRA VERTICAL SPY P L=762/S=758 x1 débito<=0.15
+=== NOTIF === 2026-08-20 14:05:41 | ORDEN | COMPRA VERTICAL SPY C L=760/S=762 x1 débito<=1.90
+2026-08-20 14:05:58 | DATA   | cadena 20260820: 14 contratos (ITM+OTM C/P) capturados y cancelados (spot 764.05)
+=== NOTIF === 2026-08-20 14:06:01 | RIESGO | BAG no cerró (2 pata/s viva/s) — cierre por patas al MID
+2026-08-20 14:06:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+=== NOTIF === 2026-08-20 14:06:01 | ORDEN | CIERRE MERCADO SPY C 762 x1
+2026-08-20 14:06:06 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.86)
+2026-08-20 14:06:06 | DATA   | cadena persistida 2026-08-20 14:06: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 14:06:06 | RIESGO | SYNC 14:06: IBKR tiene 1 pata(s) 0DTE y el sistema se creía PLANO — adoptando
+=== NOTIF === 2026-08-20 14:06:06 | RIESGO | ⚠️ 1 pata(s) 0DTE abiertas en IBKR SIN operación abierta en la BD — no se reconstruye; revisar y cerrar a mano
+=== NOTIF === 2026-08-20 14:06:06 | ARRANQUE | RECALIBRA 14:06: saldo=591 nivel 6->5 tope 110->90 unidades 1->1 (ancho FIJO 2)
+=== NOTIF === 2026-08-20 14:06:10 | ORDEN | CIERRE MERCADO SPY C 760 x1
+=== NOTIF === 2026-08-20 14:06:20 | ORDEN | COMPRA VERTICAL SPY C L=759/S=761 x1 débito<=1.86
+=== NOTIF === 2026-08-20 14:06:45 | ORDEN | COMPRA VERTICAL SPY C L=759/S=762 x1 débito<=2.85
+2026-08-20 14:07:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:07:06 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.80)
+2026-08-20 14:07:06 | DATA   | cadena persistida 2026-08-20 14:07: 82 filas (fuente=live)
+2026-08-20 14:07:12 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.80)
+=== NOTIF === 2026-08-20 14:07:18 | ORDEN | COMPRA VERTICAL SPY P L=769/S=766 x1 débito<=2.91
+=== NOTIF === 2026-08-20 14:07:43 | ORDEN | COMPRA VERTICAL SPY C L=759/S=763 x1 débito<=3.51
+2026-08-20 14:08:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:08:06 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.69)
+2026-08-20 14:08:06 | DATA   | cadena persistida 2026-08-20 14:08: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 14:08:09 | ORDEN | COMPRA VERTICAL SPY P L=769/S=765 x1 débito<=3.69
+2026-08-20 14:08:36 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.69)
+2026-08-20 14:08:43 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.69)
+=== NOTIF === 2026-08-20 14:08:49 | ORDEN | COMPRA VERTICAL SPY P L=759/S=757 x1 débito<=0.02
+2026-08-20 14:09:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:09:05 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.63)
+2026-08-20 14:09:05 | DATA   | cadena persistida 2026-08-20 14:09: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 14:09:14 | ORDEN | COMPRA VERTICAL SPY P L=759/S=756 x1 débito<=0.02
+=== NOTIF === 2026-08-20 14:09:38 | ORDEN | COMPRA VERTICAL SPY P L=759/S=755 x1 débito<=0.02
+2026-08-20 14:10:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:10:01 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+=== NOTIF === 2026-08-20 14:10:03 | ORDEN | COMPRA VERTICAL SPY P L=761/S=759 x1 débito<=0.10
+=== NOTIF === 2026-08-20 14:10:04 | IBKR | IBKR conectado (paper 4002)
+2026-08-20 14:10:05 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.73)
+2026-08-20 14:10:05 | DATA   | cadena persistida 2026-08-20 14:10: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 14:10:05 | RIESGO | SYNC 14:10: IBKR tiene 2 pata(s) 0DTE y el sistema se creía PLANO — adoptando
+=== NOTIF === 2026-08-20 14:10:05 | RIESGO | ⚠️ 2 pata(s) 0DTE abiertas en IBKR SIN operación abierta en la BD — no se reconstruye; revisar y cerrar a mano
+2026-08-20 14:10:06 | DATA   | IBKR desconectado
+2026-08-20 14:10:09 | DATA   | cadena 20260820: 14 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.69)
+=== NOTIF === 2026-08-20 14:10:12 | RIESGO | BAG no cerró (2 pata/s viva/s) — cierre por patas al MID
+=== NOTIF === 2026-08-20 14:10:12 | ORDEN | CIERRE MERCADO SPY P 759 x1
+=== NOTIF === 2026-08-20 14:10:20 | ORDEN | CIERRE MERCADO SPY P 761 x1
+=== NOTIF === 2026-08-20 14:10:31 | ORDEN | COMPRA VERTICAL SPY P L=761/S=758 x1 débito<=0.13
+=== NOTIF === 2026-08-20 14:10:56 | ORDEN | COMPRA VERTICAL SPY P L=761/S=757 x1 débito<=0.16
+2026-08-20 14:11:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:11:05 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.41)
+2026-08-20 14:11:05 | DATA   | cadena persistida 2026-08-20 14:11: 82 filas (fuente=live)
+2026-08-20 14:11:18 | DATA   | cadena 20260820: 14 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.69)
+=== NOTIF === 2026-08-20 14:11:22 | RIESGO | BAG no cerró (2 pata/s viva/s) — cierre por patas al MID
+=== NOTIF === 2026-08-20 14:11:22 | ORDEN | CIERRE MERCADO SPY P 757 x1
+=== NOTIF === 2026-08-20 14:11:30 | ORDEN | CIERRE MERCADO SPY P 761 x1
+2026-08-20 14:11:43 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.41)
+2026-08-20 14:11:51 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.41)
+=== NOTIF === 2026-08-20 14:11:57 | ORDEN | COMPRA VERTICAL SPY P L=761/S=759 x1 débito<=0.10
+2026-08-20 14:12:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:12:05 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.53)
+2026-08-20 14:12:05 | DATA   | cadena persistida 2026-08-20 14:12: 82 filas (fuente=live)
+2026-08-20 14:12:20 | DATA   | cadena 20260820: 14 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.41)
+=== NOTIF === 2026-08-20 14:12:24 | RIESGO | BAG no cerró (2 pata/s viva/s) — cierre por patas al MID
+=== NOTIF === 2026-08-20 14:12:24 | ORDEN | CIERRE MERCADO SPY P 759 x1
+=== NOTIF === 2026-08-20 14:12:32 | ORDEN | CIERRE MERCADO SPY P 761 x1
+=== NOTIF === 2026-08-20 14:12:40 | RIESGO | BAG no cerró (1 pata/s viva/s) — cierre por patas a MERCADO (último recurso)
+=== NOTIF === 2026-08-20 14:12:40 | ORDEN | CIERRE MERCADO SPY P 761 x1
+=== NOTIF === 2026-08-20 14:12:53 | ORDEN | COMPRA VERTICAL SPY P L=761/S=758 x1 débito<=0.11
+2026-08-20 14:13:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:13:04 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.57)
+2026-08-20 14:13:04 | DATA   | cadena persistida 2026-08-20 14:13: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 14:13:17 | ORDEN | COMPRA VERTICAL SPY P L=761/S=757 x1 débito<=0.12
+=== NOTIF === 2026-08-20 14:13:42 | ORDEN | COMPRA VERTICAL SPY C L=761/S=763 x1 débito<=1.62
+2026-08-20 14:13:57 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+=== NOTIF === 2026-08-20 14:13:58 | IBKR | IBKR conectado (paper 4002)
+2026-08-20 14:13:58 | DATA   | IBKR desconectado
+2026-08-20 14:14:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:14:04 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.61)
+2026-08-20 14:14:04 | DATA   | cadena persistida 2026-08-20 14:14: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 14:14:07 | ORDEN | COMPRA VERTICAL SPY C L=760/S=763 x1 débito<=2.58
+2026-08-20 14:14:20 | DATA   | cadena 20260820: 14 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.41)
+=== NOTIF === 2026-08-20 14:14:24 | RIESGO | BAG no cerró (2 pata/s viva/s) — cierre por patas al MID
+=== NOTIF === 2026-08-20 14:14:24 | ORDEN | CIERRE MERCADO SPY C 763 x1
+=== NOTIF === 2026-08-20 14:14:32 | ORDEN | CIERRE MERCADO SPY C 760 x1
+=== NOTIF === 2026-08-20 14:14:43 | ORDEN | COMPRA VERTICAL SPY C L=759/S=761 x1 débito<=1.88
+2026-08-20 14:15:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:15:10 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.61)
+2026-08-20 14:15:10 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.58)
+2026-08-20 14:15:10 | DATA   | cadena persistida 2026-08-20 14:15: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 14:15:11 | ARRANQUE | RECALIBRA 14:15: saldo=1557 nivel 5->10 tope 90->250 unidades 1->1 (ancho FIJO 2)
+2026-08-20 14:15:16 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=36
+=== NOTIF === 2026-08-20 14:15:19 | IBKR | IBKR conectado (paper 4002)
+2026-08-20 14:15:20 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.58)
+2026-08-20 14:15:21 | DATA   | IBKR desconectado
+=== NOTIF === 2026-08-20 14:15:26 | ORDEN | COMPRA VERTICAL SPY C L=760/S=763 x1 débito<=2.52
+=== NOTIF === 2026-08-20 14:15:31 | ORDEN | COMPRA VERTICAL SPY C L=760/S=764 x1 débito<=3.05
+=== NOTIF === 2026-08-20 14:15:35 | ORDEN | COMPRA VERTICAL SPY C L=759/S=761 x1 débito<=1.89
+=== NOTIF === 2026-08-20 14:15:40 | ORDEN | COMPRA VERTICAL SPY C L=759/S=762 x1 débito<=2.76
+=== NOTIF === 2026-08-20 14:15:45 | ORDEN | COMPRA VERTICAL SPY C L=759/S=763 x1 débito<=3.50
+2026-08-20 14:15:46 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+=== NOTIF === 2026-08-20 14:15:47 | IBKR | IBKR conectado (paper 4002)
+2026-08-20 14:15:47 | DATA   | IBKR desconectado
+2026-08-20 14:15:52 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.58)
+2026-08-20 14:16:00 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.58)
+2026-08-20 14:16:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:16:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.46)
+2026-08-20 14:16:07 | DATA   | cadena persistida 2026-08-20 14:16: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 14:16:07 | ARRANQUE | RECALIBRA 14:16: saldo=805 nivel 10->7 tope 250->140 unidades 1->1 (ancho FIJO 2)
+2026-08-20 14:16:08 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.58)
+2026-08-20 14:16:17 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.46)
+=== NOTIF === 2026-08-20 14:16:23 | ORDEN | COMPRA VERTICAL SPY P L=758/S=755 x1 débito<=0.02
+=== NOTIF === 2026-08-20 14:16:48 | ORDEN | COMPRA VERTICAL SPY P L=760/S=758 x1 débito<=0.07
+2026-08-20 14:17:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:17:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.23)
+2026-08-20 14:17:07 | DATA   | cadena persistida 2026-08-20 14:17: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 14:17:13 | ORDEN | COMPRA VERTICAL SPY P L=760/S=757 x1 débito<=0.08
+=== NOTIF === 2026-08-20 14:17:37 | ORDEN | COMPRA VERTICAL SPY P L=760/S=756 x1 débito<=0.09
+2026-08-20 14:18:01 | DATA   | cadena 20260820: 14 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.46)
+2026-08-20 14:18:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+=== NOTIF === 2026-08-20 14:18:05 | RIESGO | BAG no cerró (2 pata/s viva/s) — cierre por patas al MID
+=== NOTIF === 2026-08-20 14:18:06 | ORDEN | CIERRE MERCADO SPY P 756 x1
+2026-08-20 14:18:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.38)
+2026-08-20 14:18:07 | DATA   | cadena persistida 2026-08-20 14:18: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 14:18:07 | RIESGO | SYNC 14:18: IBKR tiene 2 pata(s) 0DTE y el sistema se creía PLANO — adoptando
+=== NOTIF === 2026-08-20 14:18:07 | RIESGO | ⚠️ 2 pata(s) 0DTE abiertas en IBKR SIN operación abierta en la BD — no se reconstruye; revisar y cerrar a mano
+=== NOTIF === 2026-08-20 14:18:14 | ORDEN | CIERRE MERCADO SPY P 760 x1
+=== NOTIF === 2026-08-20 14:18:25 | ORDEN | COMPRA VERTICAL SPY P L=761/S=759 x1 débito<=0.11
+2026-08-20 14:18:31 | DATA   | cadena 20260820: 14 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.46)
+=== NOTIF === 2026-08-20 14:18:59 | RIESGO | BAG no cerró (2 pata/s viva/s) — cierre por patas al MID
+=== NOTIF === 2026-08-20 14:18:59 | ORDEN | CIERRE MERCADO SPY P 759 x1
+2026-08-20 14:19:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:19:06 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.54)
+2026-08-20 14:19:06 | DATA   | cadena persistida 2026-08-20 14:19: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 14:19:06 | RIESGO | SYNC 14:19: IBKR tiene 1 pata(s) 0DTE y el sistema se creía PLANO — adoptando
+=== NOTIF === 2026-08-20 14:19:06 | RIESGO | ⚠️ 1 pata(s) 0DTE abiertas en IBKR SIN operación abierta en la BD — no se reconstruye; revisar y cerrar a mano
+=== NOTIF === 2026-08-20 14:19:06 | ARRANQUE | RECALIBRA 14:19: saldo=796 nivel 7->6 tope 140->110 unidades 1->1 (ancho FIJO 2)
+=== NOTIF === 2026-08-20 14:19:08 | ORDEN | CIERRE MERCADO SPY P 761 x1
+=== NOTIF === 2026-08-20 14:19:19 | ORDEN | COMPRA VERTICAL SPY P L=761/S=758 x1 débito<=0.10
+2026-08-20 14:19:24 | DATA   | cadena 20260820: 14 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.46)
+=== NOTIF === 2026-08-20 14:19:27 | RIESGO | BAG no cerró (2 pata/s viva/s) — cierre por patas al MID
+=== NOTIF === 2026-08-20 14:19:27 | ORDEN | CIERRE MERCADO SPY P 758 x1
+=== NOTIF === 2026-08-20 14:19:35 | ORDEN | CIERRE MERCADO SPY P 761 x1
+2026-08-20 14:19:48 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.54)
+2026-08-20 14:19:56 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.54)
+2026-08-20 14:20:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+=== NOTIF === 2026-08-20 14:20:02 | ORDEN | COMPRA VERTICAL SPY P L=762/S=758 x1 débito<=0.20
+2026-08-20 14:20:06 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.68)
+2026-08-20 14:20:06 | DATA   | cadena persistida 2026-08-20 14:20: 82 filas (fuente=live)
+2026-08-20 14:20:11 | DATA   | cadena 20260820: 14 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.54)
+=== NOTIF === 2026-08-20 14:20:14 | RIESGO | BAG no cerró (2 pata/s viva/s) — cierre por patas al MID
+=== NOTIF === 2026-08-20 14:20:14 | ORDEN | CIERRE MERCADO SPY P 758 x1
+=== NOTIF === 2026-08-20 14:20:22 | ORDEN | CIERRE MERCADO SPY P 762 x1
+=== NOTIF === 2026-08-20 14:20:33 | ORDEN | COMPRA VERTICAL SPY C L=761/S=763 x1 débito<=1.70
+=== NOTIF === 2026-08-20 14:20:38 | ORDEN | COMPRA VERTICAL SPY C L=760/S=762 x1 débito<=1.83
+=== NOTIF === 2026-08-20 14:20:43 | ORDEN | COMPRA VERTICAL SPY C L=760/S=763 x1 débito<=2.67
+=== NOTIF === 2026-08-20 14:20:48 | ORDEN | COMPRA VERTICAL SPY C L=759/S=761 x1 débito<=1.91
+2026-08-20 14:21:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:21:06 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.88)
+2026-08-20 14:21:06 | DATA   | cadena persistida 2026-08-20 14:21: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 14:21:12 | ORDEN | COMPRA VERTICAL SPY C L=759/S=762 x1 débito<=2.84
+2026-08-20 14:21:20 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.88)
+2026-08-20 14:21:27 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.88)
+=== NOTIF === 2026-08-20 14:21:33 | ORDEN | COMPRA VERTICAL SPY C L=759/S=763 x1 débito<=3.60
+=== NOTIF === 2026-08-20 14:21:38 | ORDEN | COMPRA VERTICAL SPY P L=769/S=765 x1 débito<=3.75
+2026-08-20 14:21:45 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.88)
+2026-08-20 14:21:52 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.88)
+=== NOTIF === 2026-08-20 14:21:59 | ORDEN | COMPRA VERTICAL SPY P L=759/S=757 x1 débito<=0.02
+2026-08-20 14:22:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:22:06 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.83)
+2026-08-20 14:22:06 | DATA   | cadena persistida 2026-08-20 14:22: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 14:22:23 | ORDEN | COMPRA VERTICAL SPY P L=759/S=756 x1 débito<=0.02
+=== NOTIF === 2026-08-20 14:22:48 | ORDEN | COMPRA VERTICAL SPY P L=759/S=755 x1 débito<=0.02
+2026-08-20 14:23:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:23:05 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.75)
+2026-08-20 14:23:05 | DATA   | cadena persistida 2026-08-20 14:23: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 14:23:12 | ORDEN | COMPRA VERTICAL SPY P L=761/S=759 x1 débito<=0.06
+=== NOTIF === 2026-08-20 14:23:37 | ORDEN | COMPRA VERTICAL SPY P L=761/S=758 x1 débito<=0.07
+2026-08-20 14:24:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+=== NOTIF === 2026-08-20 14:24:02 | ORDEN | COMPRA VERTICAL SPY P L=761/S=757 x1 débito<=0.08
+2026-08-20 14:24:05 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.76)
+2026-08-20 14:24:05 | DATA   | cadena persistida 2026-08-20 14:24: 82 filas (fuente=live)
+2026-08-20 14:24:29 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.76)
+2026-08-20 14:24:37 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.76)
+=== NOTIF === 2026-08-20 14:24:43 | ORDEN | COMPRA VERTICAL SPY P L=762/S=760 x1 débito<=0.14
+2026-08-20 14:25:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:25:05 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.62)
+2026-08-20 14:25:05 | DATA   | cadena persistida 2026-08-20 14:25: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 14:25:08 | ORDEN | COMPRA VERTICAL SPY P L=762/S=759 x1 débito<=0.19
+2026-08-20 14:25:16 | DATA   | cadena 20260820: 14 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.76)
+=== NOTIF === 2026-08-20 14:25:44 | RIESGO | BAG no cerró (2 pata/s viva/s) — cierre por patas al MID
+=== NOTIF === 2026-08-20 14:25:44 | ORDEN | CIERRE MERCADO SPY P 759 x1
+=== NOTIF === 2026-08-20 14:25:52 | ORDEN | CIERRE MERCADO SPY P 762 x1
+2026-08-20 14:26:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+=== NOTIF === 2026-08-20 14:26:03 | ORDEN | COMPRA VERTICAL SPY P L=762/S=758 x1 débito<=0.22
+2026-08-20 14:26:05 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.54)
+2026-08-20 14:26:05 | DATA   | cadena persistida 2026-08-20 14:26: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 14:26:05 | RIESGO | SYNC 14:26: IBKR tiene 2 pata(s) 0DTE y el sistema se creía PLANO — adoptando
+=== NOTIF === 2026-08-20 14:26:05 | RIESGO | ⚠️ 2 pata(s) 0DTE abiertas en IBKR SIN operación abierta en la BD — no se reconstruye; revisar y cerrar a mano
+2026-08-20 14:26:09 | DATA   | cadena 20260820: 14 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.76)
+=== NOTIF === 2026-08-20 14:26:12 | RIESGO | BAG no cerró (2 pata/s viva/s) — cierre por patas al MID
+=== NOTIF === 2026-08-20 14:26:12 | ORDEN | CIERRE MERCADO SPY P 758 x1
+=== NOTIF === 2026-08-20 14:26:20 | ORDEN | CIERRE MERCADO SPY P 762 x1
+=== NOTIF === 2026-08-20 14:26:31 | ORDEN | COMPRA VERTICAL SPY C L=761/S=763 x1 débito<=1.65
+=== NOTIF === 2026-08-20 14:26:36 | ORDEN | COMPRA VERTICAL SPY C L=760/S=762 x1 débito<=1.83
+=== NOTIF === 2026-08-20 14:26:41 | ORDEN | COMPRA VERTICAL SPY C L=760/S=763 x1 débito<=2.58
+2026-08-20 14:26:48 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.54)
+2026-08-20 14:26:55 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.54)
+2026-08-20 14:27:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+=== NOTIF === 2026-08-20 14:27:01 | ORDEN | COMPRA VERTICAL SPY C L=760/S=764 x1 débito<=3.15
+2026-08-20 14:27:04 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.51)
+2026-08-20 14:27:04 | DATA   | cadena persistida 2026-08-20 14:27: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 14:27:07 | ORDEN | COMPRA VERTICAL SPY C L=759/S=761 x1 débito<=1.93
+=== NOTIF === 2026-08-20 14:27:32 | ORDEN | COMPRA VERTICAL SPY C L=759/S=762 x1 débito<=2.82
+=== NOTIF === 2026-08-20 14:27:37 | ORDEN | COMPRA VERTICAL SPY C L=759/S=763 x1 débito<=3.58
+2026-08-20 14:27:44 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.51)
+2026-08-20 14:27:51 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.51)
+=== NOTIF === 2026-08-20 14:27:57 | ORDEN | COMPRA VERTICAL SPY P L=759/S=757 x1 débito<=0.01
+2026-08-20 14:28:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:28:04 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.52)
+2026-08-20 14:28:04 | DATA   | cadena persistida 2026-08-20 14:28: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 14:28:22 | ORDEN | COMPRA VERTICAL SPY P L=759/S=756 x1 débito<=0.02
+=== NOTIF === 2026-08-20 14:28:47 | ORDEN | COMPRA VERTICAL SPY P L=759/S=755 x1 débito<=0.02
+2026-08-20 14:29:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:29:09 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.59)
+2026-08-20 14:29:09 | DATA   | cadena persistida 2026-08-20 14:29: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 14:29:12 | ORDEN | COMPRA VERTICAL SPY P L=761/S=759 x1 débito<=0.07
+2026-08-20 14:29:27 | DATA   | cadena 20260820: 14 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.51)
+=== NOTIF === 2026-08-20 14:29:55 | RIESGO | BAG no cerró (2 pata/s viva/s) — cierre por patas al MID
+=== NOTIF === 2026-08-20 14:29:55 | ORDEN | CIERRE MERCADO SPY P 759 x1
+=== NOTIF === 2026-08-20 14:30:03 | ORDEN | CIERRE MERCADO SPY P 761 x1
+2026-08-20 14:30:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:30:09 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.56)
+2026-08-20 14:30:09 | DATA   | cadena persistida 2026-08-20 14:30: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 14:30:14 | ORDEN | COMPRA VERTICAL SPY P L=761/S=758 x1 débito<=0.08
+2026-08-20 14:30:29 | DATA   | cadena 20260820: 14 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.51)
+=== NOTIF === 2026-08-20 14:30:33 | RIESGO | BAG no cerró (2 pata/s viva/s) — cierre por patas al MID
+=== NOTIF === 2026-08-20 14:30:33 | ORDEN | CIERRE MERCADO SPY P 758 x1
+=== NOTIF === 2026-08-20 14:30:41 | ORDEN | CIERRE MERCADO SPY P 761 x1
+=== NOTIF === 2026-08-20 14:30:52 | ORDEN | COMPRA VERTICAL SPY P L=761/S=757 x1 débito<=0.09
+2026-08-20 14:31:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:31:09 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.50)
+2026-08-20 14:31:09 | DATA   | cadena persistida 2026-08-20 14:31: 82 filas (fuente=live)
+2026-08-20 14:31:19 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.50)
+2026-08-20 14:31:26 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.50)
+=== NOTIF === 2026-08-20 14:31:32 | ORDEN | COMPRA VERTICAL SPY P L=762/S=760 x1 débito<=0.15
+=== NOTIF === 2026-08-20 14:31:57 | ORDEN | COMPRA VERTICAL SPY P L=762/S=759 x1 débito<=0.19
+2026-08-20 14:32:01 | DATA   | cadena 20260820: 14 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.50)
+2026-08-20 14:32:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:32:09 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.52)
+2026-08-20 14:32:09 | DATA   | cadena persistida 2026-08-20 14:32: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 14:32:09 | RIESGO | SYNC 14:32: IBKR tiene 2 pata(s) 0DTE y el sistema se creía PLANO — adoptando
+=== NOTIF === 2026-08-20 14:32:09 | RIESGO | ⚠️ 2 pata(s) 0DTE abiertas en IBKR SIN operación abierta en la BD — no se reconstruye; revisar y cerrar a mano
+=== NOTIF === 2026-08-20 14:32:28 | RIESGO | BAG no cerró (2 pata/s viva/s) — cierre por patas al MID
+=== NOTIF === 2026-08-20 14:32:28 | ORDEN | CIERRE MERCADO SPY P 759 x1
+=== NOTIF === 2026-08-20 14:32:36 | ORDEN | CIERRE MERCADO SPY P 762 x1
+=== NOTIF === 2026-08-20 14:32:47 | ORDEN | COMPRA VERTICAL SPY P L=762/S=758 x1 débito<=0.20
+2026-08-20 14:33:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:33:08 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.43)
+2026-08-20 14:33:08 | DATA   | cadena persistida 2026-08-20 14:33: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 14:33:12 | ORDEN | COMPRA VERTICAL SPY P L=762/S=760 x1 débito<=0.17
+=== NOTIF === 2026-08-20 14:33:37 | ORDEN | COMPRA VERTICAL SPY P L=762/S=759 x1 débito<=0.21
+=== NOTIF === 2026-08-20 14:34:01 | ORDEN | COMPRA VERTICAL SPY P L=762/S=758 x1 débito<=0.24
+2026-08-20 14:34:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:34:07 | DATA   | cadena 20260820: 14 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.50)
+2026-08-20 14:34:08 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.29)
+2026-08-20 14:34:08 | DATA   | cadena persistida 2026-08-20 14:34: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 14:34:08 | RIESGO | SYNC 14:34: IBKR tiene 2 pata(s) 0DTE y el sistema se creía PLANO — adoptando
+=== NOTIF === 2026-08-20 14:34:08 | RIESGO | ⚠️ 2 pata(s) 0DTE abiertas en IBKR SIN operación abierta en la BD — no se reconstruye; revisar y cerrar a mano
+=== NOTIF === 2026-08-20 14:34:12 | RIESGO | BAG no cerró (2 pata/s viva/s) — cierre por patas al MID
+=== NOTIF === 2026-08-20 14:34:12 | ORDEN | CIERRE MERCADO SPY P 758 x1
+=== NOTIF === 2026-08-20 14:34:20 | ORDEN | CIERRE MERCADO SPY P 762 x1
+2026-08-20 14:34:28 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=36
+=== NOTIF === 2026-08-20 14:34:31 | IBKR | IBKR conectado (paper 4002)
+2026-08-20 14:34:33 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.29)
+2026-08-20 14:34:33 | DATA   | IBKR desconectado
+2026-08-20 14:34:40 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.29)
+=== NOTIF === 2026-08-20 14:34:46 | ORDEN | COMPRA VERTICAL SPY P L=763/S=761 x1 débito<=0.41
+=== NOTIF === 2026-08-20 14:34:51 | ORDEN | COMPRA VERTICAL SPY P L=763/S=760 x1 débito<=0.47
+=== NOTIF === 2026-08-20 14:34:56 | ORDEN | COMPRA VERTICAL SPY P L=763/S=759 x1 débito<=0.50
+=== NOTIF === 2026-08-20 14:35:01 | ORDEN | COMPRA VERTICAL SPY C L=761/S=763 x1 débito<=1.60
+2026-08-20 14:35:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+=== NOTIF === 2026-08-20 14:35:06 | ORDEN | COMPRA VERTICAL SPY C L=760/S=762 x1 débito<=1.82
+2026-08-20 14:35:08 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.32)
+2026-08-20 14:35:08 | DATA   | cadena persistida 2026-08-20 14:35: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 14:35:12 | ORDEN | COMPRA VERTICAL SPY C L=760/S=763 x1 débito<=2.58
+2026-08-20 14:35:19 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.32)
+2026-08-20 14:35:26 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.32)
+2026-08-20 14:35:34 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.32)
+2026-08-20 14:35:41 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.32)
+=== NOTIF === 2026-08-20 14:35:47 | ORDEN | COMPRA VERTICAL SPY C L=759/S=761 x1 débito<=1.94
+2026-08-20 14:36:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:36:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.37)
+2026-08-20 14:36:07 | DATA   | cadena persistida 2026-08-20 14:36: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 14:36:13 | ORDEN | COMPRA VERTICAL SPY P L=767/S=765 x1 débito<=1.89
+=== NOTIF === 2026-08-20 14:36:18 | ORDEN | COMPRA VERTICAL SPY C L=759/S=762 x1 débito<=2.81
+=== NOTIF === 2026-08-20 14:36:23 | ORDEN | COMPRA VERTICAL SPY P L=767/S=764 x1 débito<=2.63
+=== NOTIF === 2026-08-20 14:36:28 | ORDEN | COMPRA VERTICAL SPY C L=759/S=763 x1 débito<=3.57
+=== NOTIF === 2026-08-20 14:36:33 | ORDEN | COMPRA VERTICAL SPY P L=767/S=763 x1 débito<=3.10
+2026-08-20 14:36:40 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.37)
+=== NOTIF === 2026-08-20 14:36:46 | ORDEN | COMPRA VERTICAL SPY C L=758/S=760 x1 débito<=1.95
+2026-08-20 14:37:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:37:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.60)
+2026-08-20 14:37:07 | DATA   | cadena persistida 2026-08-20 14:37: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 14:37:11 | ORDEN | COMPRA VERTICAL SPY C L=758/S=761 x1 débito<=2.88
+=== NOTIF === 2026-08-20 14:37:36 | ORDEN | COMPRA VERTICAL SPY C L=758/S=762 x1 débito<=3.83
+2026-08-20 14:37:43 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.60)
+2026-08-20 14:37:50 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.60)
+=== NOTIF === 2026-08-20 14:37:56 | ORDEN | COMPRA VERTICAL SPY P L=759/S=757 x1 débito<=0.01
+2026-08-20 14:38:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:38:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.55)
+2026-08-20 14:38:07 | DATA   | cadena persistida 2026-08-20 14:38: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 14:38:21 | ORDEN | COMPRA VERTICAL SPY P L=759/S=756 x1 débito<=0.02
+2026-08-20 14:38:25 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=36
+=== NOTIF === 2026-08-20 14:38:25 | IBKR | IBKR conectado (paper 4002)
+2026-08-20 14:38:26 | DATA   | IBKR desconectado
+2026-08-20 14:38:43 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+=== NOTIF === 2026-08-20 14:38:43 | IBKR | IBKR conectado (paper 4002)
+2026-08-20 14:38:44 | DATA   | IBKR desconectado
+=== NOTIF === 2026-08-20 14:38:46 | ORDEN | COMPRA VERTICAL SPY P L=759/S=755 x1 débito<=0.02
+2026-08-20 14:39:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:39:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.54)
+2026-08-20 14:39:07 | DATA   | cadena persistida 2026-08-20 14:39: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 14:39:07 | ARRANQUE | RECALIBRA 14:39: saldo=2258 nivel 6->11 tope 110->320 unidades 1->1 (ancho FIJO 2)
+=== NOTIF === 2026-08-20 14:39:12 | ORDEN | COMPRA VERTICAL SPY P L=761/S=759 x1 débito<=0.06
+2026-08-20 14:39:16 | DATA   | cadena 20260820: 14 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.60)
+=== NOTIF === 2026-08-20 14:39:44 | RIESGO | BAG no cerró (2 pata/s viva/s) — cierre por patas al MID
+=== NOTIF === 2026-08-20 14:39:44 | ORDEN | CIERRE MERCADO SPY P 759 x1
+=== NOTIF === 2026-08-20 14:39:52 | ORDEN | CIERRE MERCADO SPY P 761 x1
+2026-08-20 14:40:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+=== NOTIF === 2026-08-20 14:40:03 | ORDEN | COMPRA VERTICAL SPY P L=761/S=758 x1 débito<=0.06
+2026-08-20 14:40:06 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.42)
+2026-08-20 14:40:06 | DATA   | cadena persistida 2026-08-20 14:40: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 14:40:06 | ARRANQUE | RECALIBRA 14:40: saldo=1356 nivel 11->9 tope 320->210 unidades 1->1 (ancho FIJO 2)
+=== NOTIF === 2026-08-20 14:40:28 | ORDEN | COMPRA VERTICAL SPY P L=761/S=757 x1 débito<=0.08
+2026-08-20 14:40:55 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.42)
+2026-08-20 14:41:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:41:03 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.42)
+2026-08-20 14:41:08 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.32)
+2026-08-20 14:41:08 | DATA   | cadena persistida 2026-08-20 14:41: 82 filas (fuente=live)
+2026-08-20 14:41:12 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.32)
+2026-08-20 14:41:20 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.32)
+=== NOTIF === 2026-08-20 14:41:26 | ORDEN | COMPRA VERTICAL SPY P L=761/S=758 x1 débito<=0.08
+=== NOTIF === 2026-08-20 14:41:51 | ORDEN | COMPRA VERTICAL SPY P L=761/S=757 x1 débito<=0.09
+2026-08-20 14:42:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:42:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.33)
+2026-08-20 14:42:07 | DATA   | cadena persistida 2026-08-20 14:42: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 14:42:15 | ORDEN | COMPRA VERTICAL SPY P L=762/S=760 x1 débito<=0.17
+2026-08-20 14:42:24 | DATA   | cadena 20260820: 14 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.32)
+=== NOTIF === 2026-08-20 14:42:27 | RIESGO | BAG no cerró (2 pata/s viva/s) — cierre por patas al MID
+=== NOTIF === 2026-08-20 14:42:28 | ORDEN | CIERRE MERCADO SPY P 760 x1
+=== NOTIF === 2026-08-20 14:42:36 | ORDEN | CIERRE MERCADO SPY P 762 x1
+=== NOTIF === 2026-08-20 14:42:46 | ORDEN | COMPRA VERTICAL SPY P L=762/S=759 x1 débito<=0.15
+2026-08-20 14:43:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:43:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.50)
+2026-08-20 14:43:07 | DATA   | cadena persistida 2026-08-20 14:43: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 14:43:11 | ORDEN | COMPRA VERTICAL SPY P L=762/S=758 x1 débito<=0.16
+2026-08-20 14:43:32 | DATA   | cadena 20260820: 14 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.32)
+=== NOTIF === 2026-08-20 14:43:36 | RIESGO | BAG no cerró (2 pata/s viva/s) — cierre por patas al MID
+=== NOTIF === 2026-08-20 14:43:36 | ORDEN | CIERRE MERCADO SPY P 758 x1
+2026-08-20 14:43:44 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+=== NOTIF === 2026-08-20 14:43:44 | IBKR | IBKR conectado (paper 4002)
+2026-08-20 14:43:44 | DATA   | IBKR desconectado
+=== NOTIF === 2026-08-20 14:43:44 | ORDEN | CIERRE MERCADO SPY P 762 x1
+=== NOTIF === 2026-08-20 14:43:55 | ORDEN | COMPRA VERTICAL SPY C L=761/S=763 x1 débito<=1.67
+2026-08-20 14:44:02 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.50)
+2026-08-20 14:44:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:44:09 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.54)
+2026-08-20 14:44:09 | DATA   | cadena persistida 2026-08-20 14:44: 82 filas (fuente=live)
+2026-08-20 14:44:11 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.50)
+2026-08-20 14:44:20 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.54)
+2026-08-20 14:44:27 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.54)
+2026-08-20 14:44:35 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.54)
+2026-08-20 14:44:42 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.54)
+=== NOTIF === 2026-08-20 14:44:48 | ORDEN | COMPRA VERTICAL SPY C L=761/S=763 x1 débito<=1.66
+=== NOTIF === 2026-08-20 14:44:53 | ORDEN | COMPRA VERTICAL SPY C L=760/S=762 x1 débito<=1.84
+=== NOTIF === 2026-08-20 14:44:58 | ORDEN | COMPRA VERTICAL SPY C L=760/S=763 x1 débito<=2.62
+=== NOTIF === 2026-08-20 14:45:03 | ORDEN | COMPRA VERTICAL SPY C L=759/S=761 x1 débito<=2.00
+2026-08-20 14:45:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:45:09 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.55)
+2026-08-20 14:45:09 | DATA   | cadena persistida 2026-08-20 14:45: 82 filas (fuente=live)
+2026-08-20 14:45:22 | DATA   | cadena 20260820: 14 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.54)
+=== NOTIF === 2026-08-20 14:45:25 | RIESGO | BAG no cerró (2 pata/s viva/s) — cierre por patas al MID
+=== NOTIF === 2026-08-20 14:45:25 | ORDEN | CIERRE MERCADO SPY C 761 x1
+=== NOTIF === 2026-08-20 14:45:33 | ORDEN | CIERRE MERCADO SPY C 759 x1
+=== NOTIF === 2026-08-20 14:45:44 | ORDEN | COMPRA VERTICAL SPY C L=759/S=762 x1 débito<=2.85
+=== NOTIF === 2026-08-20 14:45:49 | ORDEN | COMPRA VERTICAL SPY C L=759/S=763 x1 débito<=3.62
+2026-08-20 14:45:56 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.55)
+2026-08-20 14:46:03 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.55)
+2026-08-20 14:46:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:46:11 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.53)
+2026-08-20 14:46:11 | DATA   | cadena persistida 2026-08-20 14:46: 82 filas (fuente=live)
+2026-08-20 14:46:12 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.55)
+2026-08-20 14:46:21 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.53)
+2026-08-20 14:46:28 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.53)
+2026-08-20 14:46:36 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.53)
+2026-08-20 14:46:43 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.53)
+2026-08-20 14:46:51 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.53)
+2026-08-20 14:46:58 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.53)
+2026-08-20 14:47:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:47:06 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.53)
+2026-08-20 14:47:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.48)
+2026-08-20 14:47:07 | DATA   | cadena persistida 2026-08-20 14:47: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 14:47:15 | ORDEN | COMPRA VERTICAL SPY P L=761/S=759 x1 débito<=0.06
+=== NOTIF === 2026-08-20 14:47:40 | ORDEN | COMPRA VERTICAL SPY P L=761/S=758 x1 débito<=0.06
+2026-08-20 14:48:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+=== NOTIF === 2026-08-20 14:48:04 | ORDEN | COMPRA VERTICAL SPY P L=761/S=757 x1 débito<=0.06
+2026-08-20 14:48:06 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.68)
+2026-08-20 14:48:06 | DATA   | cadena persistida 2026-08-20 14:48: 82 filas (fuente=live)
+2026-08-20 14:48:19 | DATA   | cadena 20260820: 14 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.53)
+=== NOTIF === 2026-08-20 14:48:23 | RIESGO | BAG no cerró (2 pata/s viva/s) — cierre por patas al MID
+=== NOTIF === 2026-08-20 14:48:23 | ORDEN | CIERRE MERCADO SPY P 757 x1
+=== NOTIF === 2026-08-20 14:48:31 | ORDEN | CIERRE MERCADO SPY P 761 x1
+=== NOTIF === 2026-08-20 14:48:42 | ORDEN | COMPRA VERTICAL SPY C L=760/S=762 x1 débito<=1.89
+2026-08-20 14:48:44 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+=== NOTIF === 2026-08-20 14:48:45 | IBKR | IBKR conectado (paper 4002)
+2026-08-20 14:48:45 | DATA   | IBKR desconectado
+=== NOTIF === 2026-08-20 14:48:47 | ORDEN | COMPRA VERTICAL SPY C L=759/S=761 x1 débito<=1.95
+2026-08-20 14:49:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:49:06 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.79)
+2026-08-20 14:49:06 | DATA   | cadena persistida 2026-08-20 14:49: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 14:49:11 | ORDEN | COMPRA VERTICAL SPY C L=759/S=762 x1 débito<=2.88
+2026-08-20 14:49:19 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.79)
+=== NOTIF === 2026-08-20 14:49:25 | ORDEN | COMPRA VERTICAL SPY P L=769/S=766 x1 débito<=2.98
+=== NOTIF === 2026-08-20 14:49:49 | ORDEN | COMPRA VERTICAL SPY C L=759/S=763 x1 débito<=3.68
+=== NOTIF === 2026-08-20 14:49:54 | ORDEN | COMPRA VERTICAL SPY P L=769/S=765 x1 débito<=3.81
+2026-08-20 14:50:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:50:01 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.79)
+2026-08-20 14:50:08 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.71)
+2026-08-20 14:50:08 | DATA   | cadena persistida 2026-08-20 14:50: 82 filas (fuente=live)
+2026-08-20 14:50:10 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.79)
+2026-08-20 14:50:19 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.71)
+2026-08-20 14:50:26 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.71)
+2026-08-20 14:50:34 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.71)
+2026-08-20 14:50:41 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.71)
+2026-08-20 14:50:49 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.71)
+2026-08-20 14:50:56 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.71)
+=== NOTIF === 2026-08-20 14:51:02 | ORDEN | COMPRA VERTICAL SPY P L=761/S=759 x1 débito<=0.04
+2026-08-20 14:51:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:51:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.59)
+2026-08-20 14:51:07 | DATA   | cadena persistida 2026-08-20 14:51: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 14:51:27 | ORDEN | COMPRA VERTICAL SPY P L=761/S=758 x1 débito<=0.05
+=== NOTIF === 2026-08-20 14:51:51 | ORDEN | COMPRA VERTICAL SPY P L=761/S=757 x1 débito<=0.05
+2026-08-20 14:52:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:52:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.67)
+2026-08-20 14:52:07 | DATA   | cadena persistida 2026-08-20 14:52: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 14:52:16 | ORDEN | COMPRA VERTICAL SPY P L=762/S=760 x1 débito<=0.10
+=== NOTIF === 2026-08-20 14:52:40 | ORDEN | COMPRA VERTICAL SPY P L=762/S=759 x1 débito<=0.11
+2026-08-20 14:53:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+=== NOTIF === 2026-08-20 14:53:05 | ORDEN | COMPRA VERTICAL SPY P L=762/S=758 x1 débito<=0.12
+2026-08-20 14:53:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.64)
+2026-08-20 14:53:07 | DATA   | cadena persistida 2026-08-20 14:53: 82 filas (fuente=live)
+2026-08-20 14:53:32 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.64)
+2026-08-20 14:53:39 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.64)
+2026-08-20 14:53:45 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-20 14:53:47 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.64)
+=== NOTIF === 2026-08-20 14:53:48 | IBKR | IBKR conectado (paper 4002)
+2026-08-20 14:53:50 | DATA   | IBKR desconectado
+2026-08-20 14:53:54 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.64)
+=== NOTIF === 2026-08-20 14:54:00 | ORDEN | COMPRA VERTICAL SPY P L=763/S=760 x1 débito<=0.33
+2026-08-20 14:54:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+=== NOTIF === 2026-08-20 14:54:06 | ORDEN | COMPRA VERTICAL SPY P L=763/S=759 x1 débito<=0.33
+2026-08-20 14:54:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.55)
+2026-08-20 14:54:07 | DATA   | cadena persistida 2026-08-20 14:54: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 14:54:12 | ORDEN | COMPRA VERTICAL SPY C L=761/S=763 x1 débito<=1.70
+=== NOTIF === 2026-08-20 14:54:17 | ORDEN | COMPRA VERTICAL SPY C L=760/S=762 x1 débito<=1.88
+=== NOTIF === 2026-08-20 14:54:22 | ORDEN | COMPRA VERTICAL SPY C L=760/S=763 x1 débito<=2.69
+=== NOTIF === 2026-08-20 14:54:26 | ORDEN | COMPRA VERTICAL SPY C L=759/S=761 x1 débito<=1.90
+2026-08-20 14:54:53 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.55)
+2026-08-20 14:55:01 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.55)
+2026-08-20 14:55:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:55:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.61)
+2026-08-20 14:55:07 | DATA   | cadena persistida 2026-08-20 14:55: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 14:55:07 | ORDEN | COMPRA VERTICAL SPY C L=759/S=762 x1 débito<=2.87
+=== NOTIF === 2026-08-20 14:55:13 | ORDEN | COMPRA VERTICAL SPY P L=769/S=766 x1 débito<=2.96
+=== NOTIF === 2026-08-20 14:55:38 | ORDEN | COMPRA VERTICAL SPY C L=759/S=763 x1 débito<=3.70
+=== NOTIF === 2026-08-20 14:55:43 | ORDEN | COMPRA VERTICAL SPY P L=769/S=765 x1 débito<=3.84
+2026-08-20 14:55:50 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.61)
+2026-08-20 14:55:57 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.61)
+2026-08-20 14:56:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:56:04 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.61)
+2026-08-20 14:56:10 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.60)
+2026-08-20 14:56:10 | DATA   | cadena persistida 2026-08-20 14:56: 82 filas (fuente=live)
+2026-08-20 14:56:14 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.60)
+2026-08-20 14:56:22 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.60)
+2026-08-20 14:56:29 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.60)
+2026-08-20 14:56:37 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.60)
+2026-08-20 14:56:44 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.60)
+=== NOTIF === 2026-08-20 14:56:50 | ORDEN | COMPRA VERTICAL SPY P L=761/S=759 x1 débito<=0.03
+2026-08-20 14:57:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:57:04 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.55)
+2026-08-20 14:57:04 | DATA   | cadena persistida 2026-08-20 14:57: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 14:57:15 | ORDEN | COMPRA VERTICAL SPY P L=761/S=758 x1 débito<=0.04
+=== NOTIF === 2026-08-20 14:57:39 | ORDEN | COMPRA VERTICAL SPY P L=761/S=757 x1 débito<=0.04
+2026-08-20 14:58:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:58:04 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.48)
+2026-08-20 14:58:04 | DATA   | cadena persistida 2026-08-20 14:58: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 14:58:06 | ORDEN | COMPRA VERTICAL SPY P L=762/S=760 x1 débito<=0.11
+=== NOTIF === 2026-08-20 14:58:30 | ORDEN | COMPRA VERTICAL SPY P L=762/S=759 x1 débito<=0.13
+2026-08-20 14:58:50 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+=== NOTIF === 2026-08-20 14:58:51 | IBKR | IBKR conectado (paper 4002)
+2026-08-20 14:58:51 | DATA   | IBKR desconectado
+=== NOTIF === 2026-08-20 14:58:55 | ORDEN | COMPRA VERTICAL SPY P L=762/S=758 x1 débito<=0.15
+2026-08-20 14:59:00 | DATA   | cadena 20260820: 14 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.60)
+=== NOTIF === 2026-08-20 14:59:03 | RIESGO | BAG no cerró (2 pata/s viva/s) — cierre por patas al MID
+=== NOTIF === 2026-08-20 14:59:03 | ORDEN | CIERRE MERCADO SPY P 758 x1
+2026-08-20 14:59:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:59:09 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.46)
+2026-08-20 14:59:09 | DATA   | cadena persistida 2026-08-20 14:59: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 14:59:09 | RIESGO | SYNC 14:59: IBKR tiene 1 pata(s) 0DTE y el sistema se creía PLANO — adoptando
+=== NOTIF === 2026-08-20 14:59:09 | RIESGO | ⚠️ 1 pata(s) 0DTE abiertas en IBKR SIN operación abierta en la BD — no se reconstruye; revisar y cerrar a mano
+=== NOTIF === 2026-08-20 14:59:12 | ORDEN | CIERRE MERCADO SPY P 762 x1
+2026-08-20 14:59:25 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.46)
+2026-08-20 14:59:32 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.46)
+=== NOTIF === 2026-08-20 14:59:38 | ORDEN | COMPRA VERTICAL SPY P L=762/S=760 x1 débito<=0.13
+=== NOTIF === 2026-08-20 15:00:04 | ORDEN | COMPRA VERTICAL SPY P L=762/S=759 x1 débito<=0.17
+2026-08-20 15:00:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:00:09 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.24)
+2026-08-20 15:00:09 | DATA   | cadena persistida 2026-08-20 15:00: 82 filas (fuente=live)
+2026-08-20 15:00:27 | DATA   | cadena 20260820: 14 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.46)
+=== NOTIF === 2026-08-20 15:00:55 | RIESGO | BAG no cerró (2 pata/s viva/s) — cierre por patas al MID
+=== NOTIF === 2026-08-20 15:00:55 | ORDEN | CIERRE MERCADO SPY P 759 x1
+=== NOTIF === 2026-08-20 15:01:03 | ORDEN | CIERRE MERCADO SPY P 762 x1
+2026-08-20 15:01:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:01:09 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.27)
+2026-08-20 15:01:09 | DATA   | cadena persistida 2026-08-20 15:01: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 15:01:14 | ORDEN | COMPRA VERTICAL SPY P L=762/S=758 x1 débito<=0.15
+=== NOTIF === 2026-08-20 15:01:39 | ORDEN | COMPRA VERTICAL SPY P L=763/S=761 x1 débito<=0.36
+=== NOTIF === 2026-08-20 15:01:44 | ORDEN | COMPRA VERTICAL SPY P L=763/S=760 x1 débito<=0.39
+=== NOTIF === 2026-08-20 15:01:49 | ORDEN | COMPRA VERTICAL SPY P L=763/S=759 x1 débito<=0.42
+2026-08-20 15:01:56 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.27)
+=== NOTIF === 2026-08-20 15:02:01 | ORDEN | COMPRA VERTICAL SPY C L=762/S=764 x1 débito<=1.16
+2026-08-20 15:02:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+=== NOTIF === 2026-08-20 15:02:07 | ORDEN | COMPRA VERTICAL SPY P L=764/S=762 x1 débito<=0.84
+2026-08-20 15:02:08 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.22)
+2026-08-20 15:02:08 | DATA   | cadena persistida 2026-08-20 15:02: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 15:02:12 | ORDEN | COMPRA VERTICAL SPY C L=762/S=765 x1 débito<=1.34
+=== NOTIF === 2026-08-20 15:02:17 | ORDEN | COMPRA VERTICAL SPY P L=764/S=761 x1 débito<=0.96
+=== NOTIF === 2026-08-20 15:02:22 | ORDEN | COMPRA VERTICAL SPY C L=762/S=766 x1 débito<=1.40
+=== NOTIF === 2026-08-20 15:02:27 | ORDEN | COMPRA VERTICAL SPY P L=764/S=760 x1 débito<=0.98
+2026-08-20 15:02:34 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.22)
+=== NOTIF === 2026-08-20 15:02:40 | ORDEN | COMPRA VERTICAL SPY C L=761/S=763 x1 débito<=1.62
+=== NOTIF === 2026-08-20 15:02:45 | ORDEN | COMPRA VERTICAL SPY C L=760/S=762 x1 débito<=1.82
+=== NOTIF === 2026-08-20 15:02:50 | ORDEN | COMPRA VERTICAL SPY C L=760/S=763 x1 débito<=2.57
+=== NOTIF === 2026-08-20 15:02:55 | ORDEN | COMPRA VERTICAL SPY C L=759/S=761 x1 débito<=1.90
+2026-08-20 15:03:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:03:08 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.37)
+2026-08-20 15:03:08 | DATA   | cadena persistida 2026-08-20 15:03: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 15:03:19 | ORDEN | COMPRA VERTICAL SPY C L=759/S=762 x1 débito<=2.88
+=== NOTIF === 2026-08-20 15:03:24 | ORDEN | COMPRA VERTICAL SPY C L=759/S=763 x1 débito<=3.61
+2026-08-20 15:03:31 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.37)
+2026-08-20 15:03:39 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.37)
+=== NOTIF === 2026-08-20 15:03:45 | ORDEN | COMPRA VERTICAL SPY C L=758/S=760 x1 débito<=1.98
+2026-08-20 15:03:51 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+=== NOTIF === 2026-08-20 15:03:52 | IBKR | IBKR conectado (paper 4002)
+2026-08-20 15:03:52 | DATA   | IBKR desconectado
+2026-08-20 15:04:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:04:08 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.32)
+2026-08-20 15:04:08 | DATA   | cadena persistida 2026-08-20 15:04: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 15:04:11 | ORDEN | COMPRA VERTICAL SPY C L=758/S=761 x1 débito<=2.96
+=== NOTIF === 2026-08-20 15:04:35 | ORDEN | COMPRA VERTICAL SPY C L=758/S=762 x1 débito<=3.81
+2026-08-20 15:04:43 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.32)
+2026-08-20 15:04:50 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.32)
+2026-08-20 15:04:58 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.32)
+2026-08-20 15:05:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:05:05 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.32)
+2026-08-20 15:05:10 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.42)
+2026-08-20 15:05:10 | DATA   | cadena persistida 2026-08-20 15:05: 82 filas (fuente=live)
+2026-08-20 15:05:14 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.42)
+2026-08-20 15:05:22 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.42)
+2026-08-20 15:05:30 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.42)
+2026-08-20 15:05:37 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.42)
+=== NOTIF === 2026-08-20 15:05:43 | ORDEN | COMPRA VERTICAL SPY P L=760/S=758 x1 débito<=0.02
+2026-08-20 15:06:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:06:05 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.52)
+2026-08-20 15:06:05 | DATA   | cadena persistida 2026-08-20 15:06: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 15:06:05 | RIESGO | SYNC 15:06: IBKR tiene 2 pata(s) 0DTE y el sistema se creía PLANO — adoptando
+=== NOTIF === 2026-08-20 15:06:05 | RIESGO | ⚠️ 2 pata(s) 0DTE abiertas en IBKR SIN operación abierta en la BD — no se reconstruye; revisar y cerrar a mano
+2026-08-20 15:06:06 | DATA   | cadena 20260820: 14 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.42)
+=== NOTIF === 2026-08-20 15:06:18 | RIESGO | BAG no cerró (2 pata/s viva/s) — cierre por patas al MID
+=== NOTIF === 2026-08-20 15:06:18 | ORDEN | CIERRE MERCADO SPY P 758 x1
+=== NOTIF === 2026-08-20 15:06:26 | ORDEN | CIERRE MERCADO SPY P 760 x1
+=== NOTIF === 2026-08-20 15:06:34 | RIESGO | BAG no cerró (1 pata/s viva/s) — cierre por patas a MERCADO (último recurso)
+=== NOTIF === 2026-08-20 15:06:34 | ORDEN | CIERRE MERCADO SPY P 760 x1
+=== NOTIF === 2026-08-20 15:06:47 | ORDEN | COMPRA VERTICAL SPY P L=760/S=757 x1 débito<=0.01
+2026-08-20 15:07:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:07:05 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.59)
+2026-08-20 15:07:05 | DATA   | cadena persistida 2026-08-20 15:07: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 15:07:11 | ORDEN | COMPRA VERTICAL SPY P L=760/S=756 x1 débito<=0.01
+=== NOTIF === 2026-08-20 15:07:36 | ORDEN | COMPRA VERTICAL SPY P L=761/S=759 x1 débito<=0.04
+2026-08-20 15:07:44 | DATA   | cadena 20260820: 14 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.42)
+2026-08-20 15:08:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:08:04 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.62)
+2026-08-20 15:08:04 | DATA   | cadena persistida 2026-08-20 15:08: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 15:08:05 | RIESGO | SYNC 15:08: IBKR tiene 2 pata(s) 0DTE y el sistema se creía PLANO — adoptando
+=== NOTIF === 2026-08-20 15:08:05 | RIESGO | ⚠️ 2 pata(s) 0DTE abiertas en IBKR SIN operación abierta en la BD — no se reconstruye; revisar y cerrar a mano
+=== NOTIF === 2026-08-20 15:08:12 | RIESGO | BAG no cerró (2 pata/s viva/s) — cierre por patas al MID
+=== NOTIF === 2026-08-20 15:08:12 | ORDEN | CIERRE MERCADO SPY P 759 x1
+=== NOTIF === 2026-08-20 15:08:20 | ORDEN | CIERRE MERCADO SPY P 761 x1
+=== NOTIF === 2026-08-20 15:08:31 | ORDEN | COMPRA VERTICAL SPY P L=761/S=758 x1 débito<=0.03
+2026-08-20 15:08:52 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+=== NOTIF === 2026-08-20 15:08:52 | IBKR | IBKR conectado (paper 4002)
+2026-08-20 15:08:52 | DATA   | IBKR desconectado
+=== NOTIF === 2026-08-20 15:08:55 | ORDEN | COMPRA VERTICAL SPY P L=761/S=757 x1 débito<=0.03
+2026-08-20 15:09:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:09:04 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.62)
+2026-08-20 15:09:04 | DATA   | cadena persistida 2026-08-20 15:09: 82 filas (fuente=live)
+2026-08-20 15:09:22 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.62)
+2026-08-20 15:09:30 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.62)
+2026-08-20 15:09:37 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.62)
+2026-08-20 15:09:45 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.62)
+2026-08-20 15:09:52 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.62)
+2026-08-20 15:09:59 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.62)
+2026-08-20 15:10:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+=== NOTIF === 2026-08-20 15:10:06 | ORDEN | COMPRA VERTICAL SPY P L=763/S=759 x1 débito<=0.27
+2026-08-20 15:10:09 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.62)
+2026-08-20 15:10:09 | DATA   | cadena persistida 2026-08-20 15:10: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 15:10:13 | ORDEN | COMPRA VERTICAL SPY C L=762/S=764 x1 débito<=1.37
+=== NOTIF === 2026-08-20 15:10:18 | ORDEN | COMPRA VERTICAL SPY C L=761/S=763 x1 débito<=1.76
+=== NOTIF === 2026-08-20 15:10:23 | ORDEN | COMPRA VERTICAL SPY C L=761/S=764 x1 débito<=2.30
+=== NOTIF === 2026-08-20 15:10:28 | ORDEN | COMPRA VERTICAL SPY C L=760/S=762 x1 débito<=1.89
+=== NOTIF === 2026-08-20 15:10:33 | ORDEN | COMPRA VERTICAL SPY C L=760/S=763 x1 débito<=2.69
+2026-08-20 15:10:40 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.62)
+2026-08-20 15:10:47 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.62)
+=== NOTIF === 2026-08-20 15:10:53 | ORDEN | COMPRA VERTICAL SPY C L=760/S=764 x1 débito<=3.25
+=== NOTIF === 2026-08-20 15:10:58 | ORDEN | COMPRA VERTICAL SPY C L=759/S=761 x1 débito<=1.98
+2026-08-20 15:11:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:11:09 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.50)
+2026-08-20 15:11:09 | DATA   | cadena persistida 2026-08-20 15:11: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 15:11:22 | ORDEN | COMPRA VERTICAL SPY C L=759/S=762 x1 débito<=2.92
+=== NOTIF === 2026-08-20 15:11:28 | ORDEN | COMPRA VERTICAL SPY C L=759/S=763 x1 débito<=3.69
+2026-08-20 15:11:35 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.50)
+2026-08-20 15:11:42 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.50)
+2026-08-20 15:11:50 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.50)
+2026-08-20 15:11:57 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.50)
+2026-08-20 15:12:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:12:04 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.50)
+2026-08-20 15:12:11 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.47)
+2026-08-20 15:12:11 | DATA   | cadena persistida 2026-08-20 15:12: 82 filas (fuente=live)
+2026-08-20 15:12:13 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.50)
+2026-08-20 15:12:22 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.47)
+2026-08-20 15:12:29 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.47)
+2026-08-20 15:12:37 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.47)
+2026-08-20 15:12:44 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.47)
+2026-08-20 15:12:51 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.47)
+2026-08-20 15:12:59 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.47)
+2026-08-20 15:13:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:13:08 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.44)
+2026-08-20 15:13:08 | DATA   | cadena persistida 2026-08-20 15:13: 82 filas (fuente=live)
+2026-08-20 15:13:08 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.47)
+2026-08-20 15:13:17 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.44)
+=== NOTIF === 2026-08-20 15:13:23 | ORDEN | COMPRA VERTICAL SPY P L=761/S=759 x1 débito<=0.03
+=== NOTIF === 2026-08-20 15:13:48 | ORDEN | COMPRA VERTICAL SPY P L=761/S=758 x1 débito<=0.03
+2026-08-20 15:13:52 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+=== NOTIF === 2026-08-20 15:13:53 | IBKR | IBKR conectado (paper 4002)
+2026-08-20 15:13:53 | DATA   | IBKR desconectado
+2026-08-20 15:14:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:14:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.57)
+2026-08-20 15:14:07 | DATA   | cadena persistida 2026-08-20 15:14: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 15:14:13 | ORDEN | COMPRA VERTICAL SPY P L=761/S=757 x1 débito<=0.03
+2026-08-20 15:14:26 | DATA   | cadena 20260820: 14 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.44)
+=== NOTIF === 2026-08-20 15:14:29 | RIESGO | BAG no cerró (2 pata/s viva/s) — cierre por patas al MID
+=== NOTIF === 2026-08-20 15:14:29 | ORDEN | CIERRE MERCADO SPY P 757 x1
+=== NOTIF === 2026-08-20 15:14:37 | ORDEN | CIERRE MERCADO SPY P 761 x1
+=== NOTIF === 2026-08-20 15:14:48 | ORDEN | COMPRA VERTICAL SPY P L=762/S=760 x1 débito<=0.08
+2026-08-20 15:14:52 | DATA   | cadena 20260820: 14 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.44)
+2026-08-20 15:15:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:15:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.54)
+2026-08-20 15:15:07 | DATA   | cadena persistida 2026-08-20 15:15: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 15:15:07 | RIESGO | SYNC 15:15: IBKR tiene 2 pata(s) 0DTE y el sistema se creía PLANO — adoptando
+=== NOTIF === 2026-08-20 15:15:07 | RIESGO | ⚠️ 2 pata(s) 0DTE abiertas en IBKR SIN operación abierta en la BD — no se reconstruye; revisar y cerrar a mano
+=== NOTIF === 2026-08-20 15:15:20 | RIESGO | BAG no cerró (2 pata/s viva/s) — cierre por patas al MID
+=== NOTIF === 2026-08-20 15:15:20 | ORDEN | CIERRE MERCADO SPY P 760 x1
+=== NOTIF === 2026-08-20 15:15:28 | ORDEN | CIERRE MERCADO SPY P 762 x1
+=== NOTIF === 2026-08-20 15:15:39 | ORDEN | COMPRA VERTICAL SPY P L=762/S=759 x1 débito<=0.06
+2026-08-20 15:16:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+=== NOTIF === 2026-08-20 15:16:04 | ORDEN | COMPRA VERTICAL SPY P L=762/S=758 x1 débito<=0.06
+2026-08-20 15:16:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.73)
+2026-08-20 15:16:07 | DATA   | cadena persistida 2026-08-20 15:16: 82 filas (fuente=live)
+2026-08-20 15:16:31 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.73)
+2026-08-20 15:16:38 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.73)
+=== NOTIF === 2026-08-20 15:16:44 | ORDEN | COMPRA VERTICAL SPY P L=764/S=762 x1 débito<=0.55
+=== NOTIF === 2026-08-20 15:16:49 | ORDEN | COMPRA VERTICAL SPY P L=764/S=761 x1 débito<=0.59
+=== NOTIF === 2026-08-20 15:16:54 | ORDEN | COMPRA VERTICAL SPY P L=764/S=760 x1 débito<=0.65
+=== NOTIF === 2026-08-20 15:16:59 | ORDEN | COMPRA VERTICAL SPY C L=762/S=764 x1 débito<=1.39
+2026-08-20 15:17:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+=== NOTIF === 2026-08-20 15:17:05 | ORDEN | COMPRA VERTICAL SPY C L=761/S=763 x1 débito<=1.80
+2026-08-20 15:17:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.64)
+2026-08-20 15:17:07 | DATA   | cadena persistida 2026-08-20 15:17: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 15:17:11 | ORDEN | COMPRA VERTICAL SPY C L=761/S=764 x1 débito<=2.33
+2026-08-20 15:17:18 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.64)
+2026-08-20 15:17:25 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.64)
+2026-08-20 15:17:33 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.64)
+2026-08-20 15:17:40 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.64)
+=== NOTIF === 2026-08-20 15:17:46 | ORDEN | COMPRA VERTICAL SPY C L=760/S=762 x1 débito<=1.93
+=== NOTIF === 2026-08-20 15:17:51 | ORDEN | COMPRA VERTICAL SPY P L=768/S=766 x1 débito<=1.97
+2026-08-20 15:18:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:18:06 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.45)
+2026-08-20 15:18:06 | DATA   | cadena persistida 2026-08-20 15:18: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 15:18:16 | ORDEN | COMPRA VERTICAL SPY C L=760/S=763 x1 débito<=2.73
+=== NOTIF === 2026-08-20 15:18:20 | ORDEN | COMPRA VERTICAL SPY P L=768/S=765 x1 débito<=2.93
+=== NOTIF === 2026-08-20 15:18:25 | ORDEN | COMPRA VERTICAL SPY C L=760/S=764 x1 débito<=3.28
+=== NOTIF === 2026-08-20 15:18:30 | ORDEN | COMPRA VERTICAL SPY P L=768/S=764 x1 débito<=3.71
+2026-08-20 15:18:37 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.45)
+=== NOTIF === 2026-08-20 15:18:43 | ORDEN | COMPRA VERTICAL SPY C L=758/S=760 x1 débito<=1.96
+2026-08-20 15:18:53 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+=== NOTIF === 2026-08-20 15:18:54 | IBKR | IBKR conectado (paper 4002)
+2026-08-20 15:18:54 | DATA   | IBKR desconectado
+2026-08-20 15:19:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:19:06 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.47)
+2026-08-20 15:19:06 | DATA   | cadena persistida 2026-08-20 15:19: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 15:19:09 | ORDEN | COMPRA VERTICAL SPY C L=758/S=761 x1 débito<=3.00
+2026-08-20 15:19:36 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.47)
+2026-08-20 15:19:44 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.47)
+2026-08-20 15:19:51 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.47)
+2026-08-20 15:19:58 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.47)
+2026-08-20 15:20:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:20:06 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.47)
+2026-08-20 15:20:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.34)
+2026-08-20 15:20:07 | DATA   | cadena persistida 2026-08-20 15:20: 82 filas (fuente=live)
+2026-08-20 15:20:17 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.34)
+2026-08-20 15:20:24 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.34)
+2026-08-20 15:20:31 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.34)
+2026-08-20 15:20:39 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.34)
+2026-08-20 15:20:46 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.34)
+2026-08-20 15:20:54 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.34)
+2026-08-20 15:21:01 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.34)
+2026-08-20 15:21:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:21:09 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.25)
+2026-08-20 15:21:09 | DATA   | cadena persistida 2026-08-20 15:21: 82 filas (fuente=live)
+2026-08-20 15:21:10 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.34)
+2026-08-20 15:21:19 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.25)
+=== NOTIF === 2026-08-20 15:21:25 | ORDEN | COMPRA VERTICAL SPY P L=761/S=759 x1 débito<=0.02
+=== NOTIF === 2026-08-20 15:21:50 | ORDEN | COMPRA VERTICAL SPY P L=761/S=758 x1 débito<=0.02
+2026-08-20 15:22:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:22:09 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.33)
+2026-08-20 15:22:09 | DATA   | cadena persistida 2026-08-20 15:22: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 15:22:14 | ORDEN | COMPRA VERTICAL SPY P L=761/S=757 x1 débito<=0.02
+=== NOTIF === 2026-08-20 15:22:39 | ORDEN | COMPRA VERTICAL SPY P L=762/S=760 x1 débito<=0.07
+2026-08-20 15:23:02 | DATA   | cadena 20260820: 14 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.25)
+2026-08-20 15:23:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+=== NOTIF === 2026-08-20 15:23:05 | RIESGO | BAG no cerró (2 pata/s viva/s) — cierre por patas al MID
+=== NOTIF === 2026-08-20 15:23:06 | ORDEN | CIERRE MERCADO SPY P 760 x1
+2026-08-20 15:23:09 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.50)
+2026-08-20 15:23:09 | DATA   | cadena persistida 2026-08-20 15:23: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 15:23:09 | RIESGO | SYNC 15:23: IBKR tiene 1 pata(s) 0DTE y el sistema se creía PLANO — adoptando
+=== NOTIF === 2026-08-20 15:23:09 | RIESGO | ⚠️ 1 pata(s) 0DTE abiertas en IBKR SIN operación abierta en la BD — no se reconstruye; revisar y cerrar a mano
+=== NOTIF === 2026-08-20 15:23:14 | ORDEN | CIERRE MERCADO SPY P 762 x1
+=== NOTIF === 2026-08-20 15:23:24 | ORDEN | COMPRA VERTICAL SPY P L=762/S=759 x1 débito<=0.06
+=== NOTIF === 2026-08-20 15:23:49 | ORDEN | COMPRA VERTICAL SPY P L=762/S=758 x1 débito<=0.06
+2026-08-20 15:23:54 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+=== NOTIF === 2026-08-20 15:23:55 | IBKR | IBKR conectado (paper 4002)
+2026-08-20 15:23:55 | DATA   | IBKR desconectado
+2026-08-20 15:24:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:24:08 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.58)
+2026-08-20 15:24:08 | DATA   | cadena persistida 2026-08-20 15:24: 82 filas (fuente=live)
+2026-08-20 15:24:16 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.58)
+2026-08-20 15:24:23 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.58)
+=== NOTIF === 2026-08-20 15:24:29 | ORDEN | COMPRA VERTICAL SPY P L=764/S=762 x1 débito<=0.58
+=== NOTIF === 2026-08-20 15:24:34 | ORDEN | COMPRA VERTICAL SPY P L=764/S=761 x1 débito<=0.62
+=== NOTIF === 2026-08-20 15:24:39 | ORDEN | COMPRA VERTICAL SPY P L=764/S=760 x1 débito<=0.66
+=== NOTIF === 2026-08-20 15:24:44 | ORDEN | COMPRA VERTICAL SPY C L=762/S=764 x1 débito<=1.41
+=== NOTIF === 2026-08-20 15:24:48 | ORDEN | COMPRA VERTICAL SPY C L=761/S=763 x1 débito<=1.79
+=== NOTIF === 2026-08-20 15:24:53 | ORDEN | COMPRA VERTICAL SPY C L=761/S=764 x1 débito<=2.37
+2026-08-20 15:25:00 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.58)
+2026-08-20 15:25:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:25:08 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.58)
+2026-08-20 15:25:10 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.65)
+2026-08-20 15:25:10 | DATA   | cadena persistida 2026-08-20 15:25: 82 filas (fuente=live)
+2026-08-20 15:25:19 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.65)
+2026-08-20 15:25:26 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.65)
+=== NOTIF === 2026-08-20 15:25:32 | ORDEN | COMPRA VERTICAL SPY C L=760/S=762 x1 débito<=1.95
+=== NOTIF === 2026-08-20 15:25:37 | ORDEN | COMPRA VERTICAL SPY C L=760/S=763 x1 débito<=2.79
+=== NOTIF === 2026-08-20 15:25:42 | ORDEN | COMPRA VERTICAL SPY C L=760/S=764 x1 débito<=3.38
+=== NOTIF === 2026-08-20 15:25:47 | ORDEN | COMPRA VERTICAL SPY C L=759/S=761 x1 débito<=1.98
+2026-08-20 15:26:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:26:05 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.66)
+2026-08-20 15:26:05 | DATA   | cadena persistida 2026-08-20 15:26: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 15:26:11 | ORDEN | COMPRA VERTICAL SPY C L=759/S=762 x1 débito<=2.98
+=== NOTIF === 2026-08-20 15:26:16 | ORDEN | COMPRA VERTICAL SPY C L=759/S=763 x1 débito<=3.81
+2026-08-20 15:26:23 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.66)
+2026-08-20 15:26:31 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.66)
+2026-08-20 15:26:38 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.66)
+2026-08-20 15:26:45 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.66)
+2026-08-20 15:26:53 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.66)
+2026-08-20 15:27:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:27:00 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.66)
+2026-08-20 15:27:06 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.64)
+2026-08-20 15:27:06 | DATA   | cadena persistida 2026-08-20 15:27: 82 filas (fuente=live)
+2026-08-20 15:27:08 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.66)
+2026-08-20 15:27:18 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.64)
+2026-08-20 15:27:25 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.64)
+2026-08-20 15:27:33 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.64)
+2026-08-20 15:27:40 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.64)
+2026-08-20 15:27:47 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.64)
+2026-08-20 15:27:55 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.64)
+2026-08-20 15:28:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:28:02 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.64)
+2026-08-20 15:28:08 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.56)
+2026-08-20 15:28:08 | DATA   | cadena persistida 2026-08-20 15:28: 82 filas (fuente=live)
+2026-08-20 15:28:10 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.64)
+2026-08-20 15:28:20 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.56)
+=== NOTIF === 2026-08-20 15:28:26 | ORDEN | COMPRA VERTICAL SPY P L=762/S=760 x1 débito<=0.06
+=== NOTIF === 2026-08-20 15:28:50 | ORDEN | COMPRA VERTICAL SPY P L=762/S=759 x1 débito<=0.06
+2026-08-20 15:28:55 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+=== NOTIF === 2026-08-20 15:28:55 | IBKR | IBKR conectado (paper 4002)
+2026-08-20 15:28:55 | DATA   | IBKR desconectado
+2026-08-20 15:29:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:29:04 | DATA   | cadena 20260820: 14 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.56)
+2026-08-20 15:29:08 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.54)
+2026-08-20 15:29:08 | DATA   | cadena persistida 2026-08-20 15:29: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 15:29:08 | RIESGO | SYNC 15:29: IBKR tiene 2 pata(s) 0DTE y el sistema se creía PLANO — adoptando
+=== NOTIF === 2026-08-20 15:29:08 | RIESGO | ⚠️ 2 pata(s) 0DTE abiertas en IBKR SIN operación abierta en la BD — no se reconstruye; revisar y cerrar a mano
+=== NOTIF === 2026-08-20 15:29:33 | RIESGO | BAG no cerró (2 pata/s viva/s) — cierre por patas al MID
+=== NOTIF === 2026-08-20 15:29:33 | ORDEN | CIERRE MERCADO SPY P 759 x1
+=== NOTIF === 2026-08-20 15:29:41 | ORDEN | CIERRE MERCADO SPY P 762 x1
+=== NOTIF === 2026-08-20 15:29:52 | ORDEN | COMPRA VERTICAL SPY P L=762/S=758 x1 débito<=0.05
+2026-08-20 15:30:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:30:08 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.49)
+2026-08-20 15:30:08 | DATA   | cadena persistida 2026-08-20 15:30: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 15:30:16 | ORDEN | COMPRA VERTICAL SPY C L=761/S=763 x1 débito<=1.74
+=== NOTIF === 2026-08-20 15:30:21 | ORDEN | COMPRA VERTICAL SPY C L=760/S=762 x1 débito<=1.95
+=== NOTIF === 2026-08-20 15:30:26 | ORDEN | COMPRA VERTICAL SPY C L=760/S=763 x1 débito<=2.76
+2026-08-20 15:30:33 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.49)
+2026-08-20 15:30:41 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.49)
+=== NOTIF === 2026-08-20 15:30:47 | ORDEN | COMPRA VERTICAL SPY C L=759/S=763 x1 débito<=3.75
+=== NOTIF === 2026-08-20 15:30:52 | ORDEN | COMPRA VERTICAL SPY C L=758/S=760 x1 débito<=2.01
+2026-08-20 15:31:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:31:08 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.33)
+2026-08-20 15:31:08 | DATA   | cadena persistida 2026-08-20 15:31: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 15:31:16 | ORDEN | COMPRA VERTICAL SPY C L=758/S=761 x1 débito<=3.00
+=== NOTIF === 2026-08-20 15:31:41 | ORDEN | COMPRA VERTICAL SPY C L=758/S=762 x1 débito<=3.94
+2026-08-20 15:31:48 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.33)
+2026-08-20 15:31:55 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.33)
+2026-08-20 15:32:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:32:03 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.33)
+2026-08-20 15:32:09 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.27)
+2026-08-20 15:32:09 | DATA   | cadena persistida 2026-08-20 15:32: 82 filas (fuente=live)
+2026-08-20 15:32:11 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.33)
+2026-08-20 15:32:20 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.27)
+2026-08-20 15:32:28 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.27)
+2026-08-20 15:32:35 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.27)
+2026-08-20 15:32:42 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.27)
+2026-08-20 15:32:50 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.27)
+2026-08-20 15:32:57 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.27)
+2026-08-20 15:33:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:33:05 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.27)
+2026-08-20 15:33:11 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.32)
+2026-08-20 15:33:11 | DATA   | cadena persistida 2026-08-20 15:33: 82 filas (fuente=live)
+2026-08-20 15:33:14 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.27)
+2026-08-20 15:33:22 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.32)
+2026-08-20 15:33:30 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.32)
+2026-08-20 15:33:37 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.32)
+2026-08-20 15:33:44 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.32)
+2026-08-20 15:33:52 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.32)
+2026-08-20 15:33:55 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+=== NOTIF === 2026-08-20 15:33:58 | IBKR | IBKR conectado (paper 4002)
+2026-08-20 15:33:59 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.32)
+2026-08-20 15:34:00 | DATA   | IBKR desconectado
+2026-08-20 15:34:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:34:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.20)
+2026-08-20 15:34:07 | DATA   | cadena persistida 2026-08-20 15:34: 82 filas (fuente=live)
+2026-08-20 15:34:07 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.32)
+2026-08-20 15:34:17 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.20)
+=== NOTIF === 2026-08-20 15:34:23 | ORDEN | COMPRA VERTICAL SPY P L=762/S=760 x1 débito<=0.09
+=== NOTIF === 2026-08-20 15:34:49 | ORDEN | COMPRA VERTICAL SPY P L=762/S=759 x1 débito<=0.10
+2026-08-20 15:35:00 | DATA   | cadena 20260820: 14 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.20)
+2026-08-20 15:35:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:35:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.19)
+2026-08-20 15:35:07 | DATA   | cadena persistida 2026-08-20 15:35: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 15:35:07 | RIESGO | SYNC 15:35: IBKR tiene 2 pata(s) 0DTE y el sistema se creía PLANO — adoptando
+=== NOTIF === 2026-08-20 15:35:07 | RIESGO | ⚠️ 2 pata(s) 0DTE abiertas en IBKR SIN operación abierta en la BD — no se reconstruye; revisar y cerrar a mano
+=== NOTIF === 2026-08-20 15:35:28 | RIESGO | BAG no cerró (2 pata/s viva/s) — cierre por patas al MID
+=== NOTIF === 2026-08-20 15:35:28 | ORDEN | CIERRE MERCADO SPY P 759 x1
+=== NOTIF === 2026-08-20 15:35:36 | ORDEN | CIERRE MERCADO SPY P 762 x1
+=== NOTIF === 2026-08-20 15:35:47 | ORDEN | COMPRA VERTICAL SPY P L=762/S=758 x1 débito<=0.08
+2026-08-20 15:36:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:36:06 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.29)
+2026-08-20 15:36:06 | DATA   | cadena persistida 2026-08-20 15:36: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 15:36:13 | ORDEN | COMPRA VERTICAL SPY P L=763/S=761 x1 débito<=0.27
+=== NOTIF === 2026-08-20 15:36:18 | ORDEN | COMPRA VERTICAL SPY P L=763/S=760 x1 débito<=0.30
+=== NOTIF === 2026-08-20 15:36:23 | ORDEN | COMPRA VERTICAL SPY P L=763/S=759 x1 débito<=0.29
+2026-08-20 15:36:30 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.29)
+=== NOTIF === 2026-08-20 15:36:30 | RIESGO | BAG no cerró (2 pata/s viva/s) — cierre por patas al MID
+=== NOTIF === 2026-08-20 15:36:33 | ORDEN | CIERRE MERCADO SPY P 758 x1
+=== NOTIF === 2026-08-20 15:36:41 | ORDEN | CIERRE MERCADO SPY P 762 x1
+2026-08-20 15:36:54 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.29)
+2026-08-20 15:37:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:37:02 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.29)
+2026-08-20 15:37:08 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.49)
+2026-08-20 15:37:08 | DATA   | cadena persistida 2026-08-20 15:37: 82 filas (fuente=live)
+2026-08-20 15:37:10 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.29)
+2026-08-20 15:37:19 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.49)
+2026-08-20 15:37:27 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.49)
+2026-08-20 15:37:34 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.49)
+=== NOTIF === 2026-08-20 15:37:40 | ORDEN | COMPRA VERTICAL SPY C L=761/S=763 x1 débito<=1.79
+=== NOTIF === 2026-08-20 15:37:45 | ORDEN | COMPRA VERTICAL SPY C L=760/S=762 x1 débito<=1.97
+=== NOTIF === 2026-08-20 15:37:50 | ORDEN | COMPRA VERTICAL SPY C L=760/S=763 x1 débito<=2.79
+=== NOTIF === 2026-08-20 15:37:55 | ORDEN | COMPRA VERTICAL SPY C L=759/S=761 x1 débito<=1.98
+2026-08-20 15:38:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:38:08 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.35)
+2026-08-20 15:38:08 | DATA   | cadena persistida 2026-08-20 15:38: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 15:38:19 | ORDEN | COMPRA VERTICAL SPY C L=759/S=762 x1 débito<=2.94
+=== NOTIF === 2026-08-20 15:38:24 | ORDEN | COMPRA VERTICAL SPY C L=759/S=763 x1 débito<=3.73
+2026-08-20 15:38:31 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.35)
+2026-08-20 15:38:39 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.35)
+=== NOTIF === 2026-08-20 15:38:45 | ORDEN | COMPRA VERTICAL SPY C L=758/S=760 x1 débito<=2.00
+2026-08-20 15:39:00 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+=== NOTIF === 2026-08-20 15:39:01 | IBKR | IBKR conectado (paper 4002)
+2026-08-20 15:39:01 | DATA   | IBKR desconectado
+2026-08-20 15:39:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:39:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.53)
+2026-08-20 15:39:07 | DATA   | cadena persistida 2026-08-20 15:39: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 15:39:10 | ORDEN | COMPRA VERTICAL SPY C L=758/S=761 x1 débito<=2.94
+2026-08-20 15:39:37 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.53)
+2026-08-20 15:39:44 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.53)
+2026-08-20 15:39:52 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.53)
+2026-08-20 15:39:59 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.53)
+2026-08-20 15:40:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:40:06 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.53)
+2026-08-20 15:40:09 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.50)
+2026-08-20 15:40:09 | DATA   | cadena persistida 2026-08-20 15:40: 82 filas (fuente=live)
+2026-08-20 15:40:18 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.50)
+2026-08-20 15:40:25 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.50)
+2026-08-20 15:40:32 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.50)
+2026-08-20 15:40:40 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.50)
+2026-08-20 15:40:47 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.50)
+2026-08-20 15:40:54 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.50)
+2026-08-20 15:41:02 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.50)
+2026-08-20 15:41:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:41:10 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.41)
+2026-08-20 15:41:10 | DATA   | cadena persistida 2026-08-20 15:41: 82 filas (fuente=live)
+2026-08-20 15:41:10 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.50)
+2026-08-20 15:41:20 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.41)
+2026-08-20 15:41:27 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.41)
+2026-08-20 15:41:35 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.41)
+2026-08-20 15:41:42 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.41)
+2026-08-20 15:41:50 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.41)
+2026-08-20 15:41:57 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.41)
+2026-08-20 15:42:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:42:05 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.41)
+2026-08-20 15:42:06 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.39)
+2026-08-20 15:42:06 | DATA   | cadena persistida 2026-08-20 15:42: 82 filas (fuente=live)
+2026-08-20 15:42:16 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.39)
+2026-08-20 15:42:23 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.39)
+=== NOTIF === 2026-08-20 15:42:29 | ORDEN | COMPRA VERTICAL SPY P L=762/S=759 x1 débito<=0.05
+=== NOTIF === 2026-08-20 15:42:54 | ORDEN | COMPRA VERTICAL SPY P L=762/S=758 x1 débito<=0.06
+2026-08-20 15:43:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:43:06 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.23)
+2026-08-20 15:43:06 | DATA   | cadena persistida 2026-08-20 15:43: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 15:43:18 | ORDEN | COMPRA VERTICAL SPY C L=763/S=765 x1 débito<=0.51
+=== NOTIF === 2026-08-20 15:43:23 | ORDEN | COMPRA VERTICAL SPY P L=763/S=761 x1 débito<=0.26
+=== NOTIF === 2026-08-20 15:43:28 | ORDEN | COMPRA VERTICAL SPY C L=763/S=766 x1 débito<=0.52
+=== NOTIF === 2026-08-20 15:43:33 | ORDEN | COMPRA VERTICAL SPY P L=763/S=760 x1 débito<=0.27
+2026-08-20 15:43:40 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.23)
+2026-08-20 15:43:47 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.23)
+2026-08-20 15:43:55 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.23)
+2026-08-20 15:44:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:44:01 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-20 15:44:02 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.23)
+=== NOTIF === 2026-08-20 15:44:05 | IBKR | IBKR conectado (paper 4002)
+2026-08-20 15:44:07 | DATA   | IBKR desconectado
+2026-08-20 15:44:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.13)
+2026-08-20 15:44:07 | DATA   | cadena persistida 2026-08-20 15:44: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 15:44:10 | ORDEN | COMPRA VERTICAL SPY P L=764/S=762 x1 débito<=0.94
+=== NOTIF === 2026-08-20 15:44:15 | ORDEN | COMPRA VERTICAL SPY C L=762/S=765 x1 débito<=1.10
+=== NOTIF === 2026-08-20 15:44:19 | ORDEN | COMPRA VERTICAL SPY P L=764/S=761 x1 débito<=1.07
+=== NOTIF === 2026-08-20 15:44:24 | ORDEN | COMPRA VERTICAL SPY C L=762/S=766 x1 débito<=1.11
+=== NOTIF === 2026-08-20 15:44:29 | ORDEN | COMPRA VERTICAL SPY P L=764/S=760 x1 débito<=1.10
+=== NOTIF === 2026-08-20 15:44:34 | ORDEN | COMPRA VERTICAL SPY C L=761/S=763 x1 débito<=1.62
+2026-08-20 15:44:42 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.13)
+2026-08-20 15:44:49 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.13)
+2026-08-20 15:44:56 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.13)
+2026-08-20 15:45:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:45:04 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.13)
+2026-08-20 15:45:09 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.10)
+2026-08-20 15:45:09 | DATA   | cadena persistida 2026-08-20 15:45: 82 filas (fuente=live)
+2026-08-20 15:45:13 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.10)
+2026-08-20 15:45:21 | DATA   | cadena 20260820: 98 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.10)
+=== NOTIF === 2026-08-20 15:45:27 | ORDEN | COMPRA VERTICAL SPY C L=760/S=762 x1 débito<=1.93
+=== NOTIF === 2026-08-20 15:45:32 | ORDEN | COMPRA VERTICAL SPY C L=760/S=763 x1 débito<=2.59
+=== NOTIF === 2026-08-20 15:45:37 | ORDEN | COMPRA VERTICAL SPY C L=759/S=761 x1 débito<=2.00
+=== NOTIF === 2026-08-20 15:46:01 | ORDEN | COMPRA VERTICAL SPY C L=759/S=762 x1 débito<=2.88
+2026-08-20 15:46:03 | DATA   | IBKR desconectado
+2026-08-20 15:46:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:46:09 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.01)
+2026-08-20 15:46:09 | DATA   | cadena persistida 2026-08-20 15:46: 82 filas (fuente=live)
+2026-08-20 15:47:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:47:09 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 762.84)
+2026-08-20 15:47:09 | DATA   | cadena persistida 2026-08-20 15:47: 82 filas (fuente=live)
+2026-08-20 15:48:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:48:08 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 762.99)
+2026-08-20 15:48:08 | DATA   | cadena persistida 2026-08-20 15:48: 82 filas (fuente=live)
+2026-08-20 15:49:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:49:07 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-20 15:49:08 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.08)
+2026-08-20 15:49:08 | DATA   | cadena persistida 2026-08-20 15:49: 82 filas (fuente=live)
+=== NOTIF === 2026-08-20 15:49:11 | IBKR | IBKR conectado (paper 4002)
+2026-08-20 15:49:11 | DATA   | IBKR desconectado
+2026-08-20 15:50:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:50:08 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.37)
+2026-08-20 15:50:08 | DATA   | cadena persistida 2026-08-20 15:50: 82 filas (fuente=live)
+2026-08-20 15:51:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:51:08 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.25)
+2026-08-20 15:51:08 | DATA   | cadena persistida 2026-08-20 15:51: 82 filas (fuente=live)
+2026-08-20 15:52:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:52:08 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.36)
+2026-08-20 15:52:08 | DATA   | cadena persistida 2026-08-20 15:52: 82 filas (fuente=live)
+2026-08-20 15:53:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:53:08 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.39)
+2026-08-20 15:53:08 | DATA   | cadena persistida 2026-08-20 15:53: 82 filas (fuente=live)
+2026-08-20 15:54:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:54:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.23)
+2026-08-20 15:54:07 | DATA   | cadena persistida 2026-08-20 15:54: 82 filas (fuente=live)
+2026-08-20 15:54:11 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+=== NOTIF === 2026-08-20 15:54:11 | IBKR | IBKR conectado (paper 4002)
+2026-08-20 15:54:12 | DATA   | IBKR desconectado
+2026-08-20 15:55:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:55:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 762.91)
+2026-08-20 15:55:07 | DATA   | cadena persistida 2026-08-20 15:55: 82 filas (fuente=live)
+2026-08-20 15:56:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:56:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 762.49)
+2026-08-20 15:56:07 | DATA   | cadena persistida 2026-08-20 15:56: 82 filas (fuente=live)
+2026-08-20 15:57:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:57:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 762.38)
+2026-08-20 15:57:07 | DATA   | cadena persistida 2026-08-20 15:57: 82 filas (fuente=live)
+2026-08-20 15:58:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:58:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 762.25)
+2026-08-20 15:58:07 | DATA   | cadena persistida 2026-08-20 15:58: 82 filas (fuente=live)
+2026-08-20 15:59:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:59:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 762.49)
+2026-08-20 15:59:07 | DATA   | cadena persistida 2026-08-20 15:59: 82 filas (fuente=live)
+2026-08-20 15:59:12 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+=== NOTIF === 2026-08-20 15:59:12 | IBKR | IBKR conectado (paper 4002)
+2026-08-20 15:59:13 | DATA   | IBKR desconectado
+=== NOTIF === 2026-08-20 16:00:02 | FIN | Cierre de mercado — fin de sesión
+2026-08-20 16:00:02 | DATA   | IBKR desconectado
+2026-08-20 16:04:13 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+=== NOTIF === 2026-08-20 16:04:13 | IBKR | IBKR conectado (paper 4002)
+2026-08-20 16:04:13 | DATA   | IBKR desconectado
+2026-08-20 16:09:13 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+=== NOTIF === 2026-08-20 16:09:14 | IBKR | IBKR conectado (paper 4002)
+2026-08-20 16:09:14 | DATA   | IBKR desconectado
+2026-08-20 16:14:14 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+=== NOTIF === 2026-08-20 16:14:15 | IBKR | IBKR conectado (paper 4002)
+2026-08-20 16:14:15 | DATA   | IBKR desconectado
+2026-08-20 16:19:15 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-20 16:24:17 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-20 16:29:19 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-20 16:34:21 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35

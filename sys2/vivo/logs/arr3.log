@@ -1,0 +1,617 @@
+════════════════════════════════════════════════════════════
+🔔 2026-08-20 13:29:32 | ARRANQUE | ARRANQUE del sistema vivo — 2026-08-20 (0DTE 20260820)
+════════════════════════════════════════════════════════════
+2026-08-20 13:29:32 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=17
+════════════════════════════════════════════════════════════
+🔔 2026-08-20 13:29:32 | IBKR | IBKR conectado (paper 4002)
+════════════════════════════════════════════════════════════
+════════════════════════════════════════════════════════════
+🔔 2026-08-20 13:29:32 | ARRANQUE | Autocalibra: saldo=711 nivel=6 ancho=2 tope=110 unidades=1
+════════════════════════════════════════════════════════════
+════════════════════════════════════════════════════════════
+🔔 2026-08-20 13:29:32 | ARRANQUE | BACKFILL de arranque (SPY premarket + ETF + día anterior)
+════════════════════════════════════════════════════════════
+2026-08-20 13:29:32 | DATA   | backfill SPY 2 D 1 min useRTH=False
+2026-08-20 13:29:34 | DATA   | backfill SPY: 1291 barras persistidas (fecha 2026-08-20)
+2026-08-20 13:29:35 | DATA   | backfill DIA: 36 barras
+2026-08-20 13:29:36 | DATA   | backfill TLT: 36 barras
+2026-08-20 13:29:36 | DATA   | día anterior (2026-08-19, cierres RTH): cierre=769.18 máx=772.23 mín=768.29
+2026-08-20 13:29:36 | DATA   | día anterior (cierres RTH): max=772.23 min=768.29 cierre=769.18
+════════════════════════════════════════════════════════════
+🔔 2026-08-20 13:29:36 | ARRANQUE | Sistema EN MARCHA — esperando barras (todo activo)
+════════════════════════════════════════════════════════════
+2026-08-20 13:29:36 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 13:29:40 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 764.79)
+2026-08-20 13:29:40 | DATA   | cadena persistida 2026-08-20 13:29: 82 filas (fuente=live)
+2026-08-20 13:30:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 13:30:05 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 764.78)
+2026-08-20 13:30:05 | DATA   | cadena persistida 2026-08-20 13:30: 82 filas (fuente=live)
+2026-08-20 13:31:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 13:31:05 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 764.72)
+2026-08-20 13:31:05 | DATA   | cadena persistida 2026-08-20 13:31: 82 filas (fuente=live)
+2026-08-20 13:32:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 13:32:05 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 764.85)
+2026-08-20 13:32:05 | DATA   | cadena persistida 2026-08-20 13:32: 82 filas (fuente=live)
+2026-08-20 13:33:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 13:33:05 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 764.74)
+2026-08-20 13:33:05 | DATA   | cadena persistida 2026-08-20 13:33: 82 filas (fuente=live)
+2026-08-20 13:34:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 13:34:05 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 764.71)
+2026-08-20 13:34:05 | DATA   | cadena persistida 2026-08-20 13:34: 82 filas (fuente=live)
+2026-08-20 13:35:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 13:35:04 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 764.61)
+2026-08-20 13:35:04 | DATA   | cadena persistida 2026-08-20 13:35: 82 filas (fuente=live)
+════════════════════════════════════════════════════════════
+🔔 2026-08-20 13:35:04 | RIESGO | SYNC 13:35: IBKR tiene 1 pata(s) 0DTE y el sistema se creía PLANO — adoptando
+════════════════════════════════════════════════════════════
+════════════════════════════════════════════════════════════
+🔔 2026-08-20 13:35:04 | RIESGO | ⚠️ 1 pata(s) 0DTE abiertas en IBKR SIN operación abierta en la BD — no se reconstruye; revisar y cerrar a mano
+════════════════════════════════════════════════════════════
+2026-08-20 13:36:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 13:36:04 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 764.65)
+2026-08-20 13:36:04 | DATA   | cadena persistida 2026-08-20 13:36: 82 filas (fuente=live)
+2026-08-20 13:37:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 13:37:09 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 764.57)
+2026-08-20 13:37:09 | DATA   | cadena persistida 2026-08-20 13:37: 82 filas (fuente=live)
+2026-08-20 13:38:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 13:38:08 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 764.43)
+2026-08-20 13:38:08 | DATA   | cadena persistida 2026-08-20 13:38: 82 filas (fuente=live)
+2026-08-20 13:39:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 13:39:08 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 764.50)
+2026-08-20 13:39:08 | DATA   | cadena persistida 2026-08-20 13:39: 82 filas (fuente=live)
+2026-08-20 13:40:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 13:40:08 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 764.48)
+2026-08-20 13:40:08 | DATA   | cadena persistida 2026-08-20 13:40: 82 filas (fuente=live)
+2026-08-20 13:41:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 13:41:08 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 764.37)
+2026-08-20 13:41:08 | DATA   | cadena persistida 2026-08-20 13:41: 82 filas (fuente=live)
+2026-08-20 13:42:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 13:42:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 764.31)
+2026-08-20 13:42:07 | DATA   | cadena persistida 2026-08-20 13:42: 82 filas (fuente=live)
+2026-08-20 13:43:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 13:43:09 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 764.35)
+2026-08-20 13:43:09 | DATA   | cadena persistida 2026-08-20 13:43: 82 filas (fuente=live)
+2026-08-20 13:44:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 13:44:08 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 764.29)
+2026-08-20 13:44:08 | DATA   | cadena persistida 2026-08-20 13:44: 82 filas (fuente=live)
+2026-08-20 13:45:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 13:45:08 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 764.45)
+2026-08-20 13:45:08 | DATA   | cadena persistida 2026-08-20 13:45: 82 filas (fuente=live)
+2026-08-20 13:46:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 13:46:14 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 764.58)
+2026-08-20 13:46:14 | DATA   | cadena persistida 2026-08-20 13:46: 82 filas (fuente=live)
+2026-08-20 13:47:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 13:47:09 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 764.66)
+2026-08-20 13:47:09 | DATA   | cadena persistida 2026-08-20 13:47: 82 filas (fuente=live)
+2026-08-20 13:48:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 13:48:09 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 764.72)
+2026-08-20 13:48:09 | DATA   | cadena persistida 2026-08-20 13:48: 82 filas (fuente=live)
+════════════════════════════════════════════════════════════
+🔔 2026-08-20 13:48:09 | RIESGO | SYNC 13:48: IBKR tiene 2 pata(s) 0DTE y el sistema se creía PLANO — adoptando
+════════════════════════════════════════════════════════════
+════════════════════════════════════════════════════════════
+🔔 2026-08-20 13:48:09 | RIESGO | ⚠️ 2 pata(s) 0DTE abiertas en IBKR SIN operación abierta en la BD — no se reconstruye; revisar y cerrar a mano
+════════════════════════════════════════════════════════════
+2026-08-20 13:49:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 13:49:09 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 764.75)
+2026-08-20 13:49:09 | DATA   | cadena persistida 2026-08-20 13:49: 82 filas (fuente=live)
+2026-08-20 13:50:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 13:50:08 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 764.72)
+2026-08-20 13:50:08 | DATA   | cadena persistida 2026-08-20 13:50: 82 filas (fuente=live)
+2026-08-20 13:51:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 13:51:08 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 764.95)
+2026-08-20 13:51:08 | DATA   | cadena persistida 2026-08-20 13:51: 82 filas (fuente=live)
+2026-08-20 13:52:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 13:52:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 764.91)
+2026-08-20 13:52:07 | DATA   | cadena persistida 2026-08-20 13:52: 82 filas (fuente=live)
+2026-08-20 13:53:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 13:53:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 764.82)
+2026-08-20 13:53:07 | DATA   | cadena persistida 2026-08-20 13:53: 82 filas (fuente=live)
+2026-08-20 13:54:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 13:54:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 764.84)
+2026-08-20 13:54:07 | DATA   | cadena persistida 2026-08-20 13:54: 82 filas (fuente=live)
+2026-08-20 13:55:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 13:55:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 764.77)
+2026-08-20 13:55:07 | DATA   | cadena persistida 2026-08-20 13:55: 82 filas (fuente=live)
+════════════════════════════════════════════════════════════
+🔔 2026-08-20 13:55:07 | RIESGO | SYNC 13:55: IBKR tiene 1 pata(s) 0DTE y el sistema se creía PLANO — adoptando
+════════════════════════════════════════════════════════════
+════════════════════════════════════════════════════════════
+🔔 2026-08-20 13:55:07 | RIESGO | ⚠️ 1 pata(s) 0DTE abiertas en IBKR SIN operación abierta en la BD — no se reconstruye; revisar y cerrar a mano
+════════════════════════════════════════════════════════════
+2026-08-20 13:56:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 13:56:06 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 764.74)
+2026-08-20 13:56:06 | DATA   | cadena persistida 2026-08-20 13:56: 82 filas (fuente=live)
+2026-08-20 13:57:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 13:57:08 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 764.79)
+2026-08-20 13:57:08 | DATA   | cadena persistida 2026-08-20 13:57: 82 filas (fuente=live)
+2026-08-20 13:58:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 13:58:08 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 764.81)
+2026-08-20 13:58:08 | DATA   | cadena persistida 2026-08-20 13:58: 82 filas (fuente=live)
+2026-08-20 13:59:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 13:59:08 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 764.68)
+2026-08-20 13:59:08 | DATA   | cadena persistida 2026-08-20 13:59: 82 filas (fuente=live)
+2026-08-20 14:00:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:00:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 764.54)
+2026-08-20 14:00:07 | DATA   | cadena persistida 2026-08-20 14:00: 82 filas (fuente=live)
+════════════════════════════════════════════════════════════
+🔔 2026-08-20 14:00:07 | RIESGO | SYNC 14:00: IBKR tiene 1 pata(s) 0DTE y el sistema se creía PLANO — adoptando
+════════════════════════════════════════════════════════════
+════════════════════════════════════════════════════════════
+🔔 2026-08-20 14:00:07 | RIESGO | ⚠️ 1 pata(s) 0DTE abiertas en IBKR SIN operación abierta en la BD — no se reconstruye; revisar y cerrar a mano
+════════════════════════════════════════════════════════════
+2026-08-20 14:01:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:01:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 764.36)
+2026-08-20 14:01:07 | DATA   | cadena persistida 2026-08-20 14:01: 82 filas (fuente=live)
+2026-08-20 14:02:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:02:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 764.27)
+2026-08-20 14:02:07 | DATA   | cadena persistida 2026-08-20 14:02: 82 filas (fuente=live)
+2026-08-20 14:03:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:03:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 764.05)
+2026-08-20 14:03:07 | DATA   | cadena persistida 2026-08-20 14:03: 82 filas (fuente=live)
+════════════════════════════════════════════════════════════
+🔔 2026-08-20 14:03:07 | RIESGO | SYNC 14:03: IBKR tiene 2 pata(s) 0DTE y el sistema se creía PLANO — adoptando
+════════════════════════════════════════════════════════════
+════════════════════════════════════════════════════════════
+🔔 2026-08-20 14:03:07 | RIESGO | ⚠️ 2 pata(s) 0DTE abiertas en IBKR SIN operación abierta en la BD — no se reconstruye; revisar y cerrar a mano
+════════════════════════════════════════════════════════════
+2026-08-20 14:04:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:04:06 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 764.11)
+2026-08-20 14:04:06 | DATA   | cadena persistida 2026-08-20 14:04: 82 filas (fuente=live)
+2026-08-20 14:05:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:05:06 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 764.10)
+2026-08-20 14:05:06 | DATA   | cadena persistida 2026-08-20 14:05: 82 filas (fuente=live)
+════════════════════════════════════════════════════════════
+🔔 2026-08-20 14:05:06 | RIESGO | SYNC 14:05: IBKR tiene 1 pata(s) 0DTE y el sistema se creía PLANO — adoptando
+════════════════════════════════════════════════════════════
+════════════════════════════════════════════════════════════
+🔔 2026-08-20 14:05:06 | RIESGO | ⚠️ 1 pata(s) 0DTE abiertas en IBKR SIN operación abierta en la BD — no se reconstruye; revisar y cerrar a mano
+════════════════════════════════════════════════════════════
+2026-08-20 14:06:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:06:06 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.86)
+2026-08-20 14:06:06 | DATA   | cadena persistida 2026-08-20 14:06: 82 filas (fuente=live)
+════════════════════════════════════════════════════════════
+🔔 2026-08-20 14:06:06 | RIESGO | SYNC 14:06: IBKR tiene 1 pata(s) 0DTE y el sistema se creía PLANO — adoptando
+════════════════════════════════════════════════════════════
+════════════════════════════════════════════════════════════
+🔔 2026-08-20 14:06:06 | RIESGO | ⚠️ 1 pata(s) 0DTE abiertas en IBKR SIN operación abierta en la BD — no se reconstruye; revisar y cerrar a mano
+════════════════════════════════════════════════════════════
+════════════════════════════════════════════════════════════
+🔔 2026-08-20 14:06:06 | ARRANQUE | RECALIBRA 14:06: saldo=591 nivel 6->5 tope 110->90 unidades 1->1 (ancho FIJO 2)
+════════════════════════════════════════════════════════════
+2026-08-20 14:07:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:07:06 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.80)
+2026-08-20 14:07:06 | DATA   | cadena persistida 2026-08-20 14:07: 82 filas (fuente=live)
+2026-08-20 14:08:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:08:06 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.69)
+2026-08-20 14:08:06 | DATA   | cadena persistida 2026-08-20 14:08: 82 filas (fuente=live)
+2026-08-20 14:09:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:09:05 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.63)
+2026-08-20 14:09:05 | DATA   | cadena persistida 2026-08-20 14:09: 82 filas (fuente=live)
+2026-08-20 14:10:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:10:05 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.73)
+2026-08-20 14:10:05 | DATA   | cadena persistida 2026-08-20 14:10: 82 filas (fuente=live)
+════════════════════════════════════════════════════════════
+🔔 2026-08-20 14:10:05 | RIESGO | SYNC 14:10: IBKR tiene 2 pata(s) 0DTE y el sistema se creía PLANO — adoptando
+════════════════════════════════════════════════════════════
+════════════════════════════════════════════════════════════
+🔔 2026-08-20 14:10:05 | RIESGO | ⚠️ 2 pata(s) 0DTE abiertas en IBKR SIN operación abierta en la BD — no se reconstruye; revisar y cerrar a mano
+════════════════════════════════════════════════════════════
+2026-08-20 14:11:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:11:05 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.41)
+2026-08-20 14:11:05 | DATA   | cadena persistida 2026-08-20 14:11: 82 filas (fuente=live)
+2026-08-20 14:12:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:12:05 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.53)
+2026-08-20 14:12:05 | DATA   | cadena persistida 2026-08-20 14:12: 82 filas (fuente=live)
+2026-08-20 14:13:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:13:04 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.57)
+2026-08-20 14:13:04 | DATA   | cadena persistida 2026-08-20 14:13: 82 filas (fuente=live)
+2026-08-20 14:14:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:14:04 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.61)
+2026-08-20 14:14:04 | DATA   | cadena persistida 2026-08-20 14:14: 82 filas (fuente=live)
+2026-08-20 14:15:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:15:10 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.58)
+2026-08-20 14:15:10 | DATA   | cadena persistida 2026-08-20 14:15: 82 filas (fuente=live)
+════════════════════════════════════════════════════════════
+🔔 2026-08-20 14:15:11 | ARRANQUE | RECALIBRA 14:15: saldo=1557 nivel 5->10 tope 90->250 unidades 1->1 (ancho FIJO 2)
+════════════════════════════════════════════════════════════
+2026-08-20 14:16:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:16:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.46)
+2026-08-20 14:16:07 | DATA   | cadena persistida 2026-08-20 14:16: 82 filas (fuente=live)
+════════════════════════════════════════════════════════════
+🔔 2026-08-20 14:16:07 | ARRANQUE | RECALIBRA 14:16: saldo=805 nivel 10->7 tope 250->140 unidades 1->1 (ancho FIJO 2)
+════════════════════════════════════════════════════════════
+2026-08-20 14:17:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:17:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.23)
+2026-08-20 14:17:07 | DATA   | cadena persistida 2026-08-20 14:17: 82 filas (fuente=live)
+2026-08-20 14:18:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:18:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.38)
+2026-08-20 14:18:07 | DATA   | cadena persistida 2026-08-20 14:18: 82 filas (fuente=live)
+════════════════════════════════════════════════════════════
+🔔 2026-08-20 14:18:07 | RIESGO | SYNC 14:18: IBKR tiene 2 pata(s) 0DTE y el sistema se creía PLANO — adoptando
+════════════════════════════════════════════════════════════
+════════════════════════════════════════════════════════════
+🔔 2026-08-20 14:18:07 | RIESGO | ⚠️ 2 pata(s) 0DTE abiertas en IBKR SIN operación abierta en la BD — no se reconstruye; revisar y cerrar a mano
+════════════════════════════════════════════════════════════
+2026-08-20 14:19:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:19:06 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.54)
+2026-08-20 14:19:06 | DATA   | cadena persistida 2026-08-20 14:19: 82 filas (fuente=live)
+════════════════════════════════════════════════════════════
+🔔 2026-08-20 14:19:06 | RIESGO | SYNC 14:19: IBKR tiene 1 pata(s) 0DTE y el sistema se creía PLANO — adoptando
+════════════════════════════════════════════════════════════
+════════════════════════════════════════════════════════════
+🔔 2026-08-20 14:19:06 | RIESGO | ⚠️ 1 pata(s) 0DTE abiertas en IBKR SIN operación abierta en la BD — no se reconstruye; revisar y cerrar a mano
+════════════════════════════════════════════════════════════
+════════════════════════════════════════════════════════════
+🔔 2026-08-20 14:19:06 | ARRANQUE | RECALIBRA 14:19: saldo=796 nivel 7->6 tope 140->110 unidades 1->1 (ancho FIJO 2)
+════════════════════════════════════════════════════════════
+2026-08-20 14:20:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:20:06 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.68)
+2026-08-20 14:20:06 | DATA   | cadena persistida 2026-08-20 14:20: 82 filas (fuente=live)
+2026-08-20 14:21:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:21:06 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.88)
+2026-08-20 14:21:06 | DATA   | cadena persistida 2026-08-20 14:21: 82 filas (fuente=live)
+2026-08-20 14:22:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:22:06 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.83)
+2026-08-20 14:22:06 | DATA   | cadena persistida 2026-08-20 14:22: 82 filas (fuente=live)
+2026-08-20 14:23:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:23:05 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.75)
+2026-08-20 14:23:05 | DATA   | cadena persistida 2026-08-20 14:23: 82 filas (fuente=live)
+2026-08-20 14:24:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:24:05 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.76)
+2026-08-20 14:24:05 | DATA   | cadena persistida 2026-08-20 14:24: 82 filas (fuente=live)
+2026-08-20 14:25:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:25:05 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.62)
+2026-08-20 14:25:05 | DATA   | cadena persistida 2026-08-20 14:25: 82 filas (fuente=live)
+2026-08-20 14:26:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:26:05 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.54)
+2026-08-20 14:26:05 | DATA   | cadena persistida 2026-08-20 14:26: 82 filas (fuente=live)
+════════════════════════════════════════════════════════════
+🔔 2026-08-20 14:26:05 | RIESGO | SYNC 14:26: IBKR tiene 2 pata(s) 0DTE y el sistema se creía PLANO — adoptando
+════════════════════════════════════════════════════════════
+════════════════════════════════════════════════════════════
+🔔 2026-08-20 14:26:05 | RIESGO | ⚠️ 2 pata(s) 0DTE abiertas en IBKR SIN operación abierta en la BD — no se reconstruye; revisar y cerrar a mano
+════════════════════════════════════════════════════════════
+2026-08-20 14:27:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:27:04 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.51)
+2026-08-20 14:27:04 | DATA   | cadena persistida 2026-08-20 14:27: 82 filas (fuente=live)
+2026-08-20 14:28:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:28:04 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.52)
+2026-08-20 14:28:04 | DATA   | cadena persistida 2026-08-20 14:28: 82 filas (fuente=live)
+2026-08-20 14:29:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:29:09 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.59)
+2026-08-20 14:29:09 | DATA   | cadena persistida 2026-08-20 14:29: 82 filas (fuente=live)
+2026-08-20 14:30:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:30:09 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.56)
+2026-08-20 14:30:09 | DATA   | cadena persistida 2026-08-20 14:30: 82 filas (fuente=live)
+2026-08-20 14:31:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:31:09 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.50)
+2026-08-20 14:31:09 | DATA   | cadena persistida 2026-08-20 14:31: 82 filas (fuente=live)
+2026-08-20 14:32:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:32:09 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.52)
+2026-08-20 14:32:09 | DATA   | cadena persistida 2026-08-20 14:32: 82 filas (fuente=live)
+════════════════════════════════════════════════════════════
+🔔 2026-08-20 14:32:09 | RIESGO | SYNC 14:32: IBKR tiene 2 pata(s) 0DTE y el sistema se creía PLANO — adoptando
+════════════════════════════════════════════════════════════
+════════════════════════════════════════════════════════════
+🔔 2026-08-20 14:32:09 | RIESGO | ⚠️ 2 pata(s) 0DTE abiertas en IBKR SIN operación abierta en la BD — no se reconstruye; revisar y cerrar a mano
+════════════════════════════════════════════════════════════
+2026-08-20 14:33:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:33:08 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.43)
+2026-08-20 14:33:08 | DATA   | cadena persistida 2026-08-20 14:33: 82 filas (fuente=live)
+2026-08-20 14:34:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:34:08 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.29)
+2026-08-20 14:34:08 | DATA   | cadena persistida 2026-08-20 14:34: 82 filas (fuente=live)
+════════════════════════════════════════════════════════════
+🔔 2026-08-20 14:34:08 | RIESGO | SYNC 14:34: IBKR tiene 2 pata(s) 0DTE y el sistema se creía PLANO — adoptando
+════════════════════════════════════════════════════════════
+════════════════════════════════════════════════════════════
+🔔 2026-08-20 14:34:08 | RIESGO | ⚠️ 2 pata(s) 0DTE abiertas en IBKR SIN operación abierta en la BD — no se reconstruye; revisar y cerrar a mano
+════════════════════════════════════════════════════════════
+2026-08-20 14:35:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:35:08 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.32)
+2026-08-20 14:35:08 | DATA   | cadena persistida 2026-08-20 14:35: 82 filas (fuente=live)
+2026-08-20 14:36:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:36:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.37)
+2026-08-20 14:36:07 | DATA   | cadena persistida 2026-08-20 14:36: 82 filas (fuente=live)
+2026-08-20 14:37:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:37:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.60)
+2026-08-20 14:37:07 | DATA   | cadena persistida 2026-08-20 14:37: 82 filas (fuente=live)
+2026-08-20 14:38:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:38:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.55)
+2026-08-20 14:38:07 | DATA   | cadena persistida 2026-08-20 14:38: 82 filas (fuente=live)
+2026-08-20 14:39:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:39:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.54)
+2026-08-20 14:39:07 | DATA   | cadena persistida 2026-08-20 14:39: 82 filas (fuente=live)
+════════════════════════════════════════════════════════════
+🔔 2026-08-20 14:39:07 | ARRANQUE | RECALIBRA 14:39: saldo=2258 nivel 6->11 tope 110->320 unidades 1->1 (ancho FIJO 2)
+════════════════════════════════════════════════════════════
+2026-08-20 14:40:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:40:06 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.42)
+2026-08-20 14:40:06 | DATA   | cadena persistida 2026-08-20 14:40: 82 filas (fuente=live)
+════════════════════════════════════════════════════════════
+🔔 2026-08-20 14:40:06 | ARRANQUE | RECALIBRA 14:40: saldo=1356 nivel 11->9 tope 320->210 unidades 1->1 (ancho FIJO 2)
+════════════════════════════════════════════════════════════
+2026-08-20 14:41:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:41:08 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.32)
+2026-08-20 14:41:08 | DATA   | cadena persistida 2026-08-20 14:41: 82 filas (fuente=live)
+2026-08-20 14:42:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:42:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.33)
+2026-08-20 14:42:07 | DATA   | cadena persistida 2026-08-20 14:42: 82 filas (fuente=live)
+2026-08-20 14:43:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:43:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.50)
+2026-08-20 14:43:07 | DATA   | cadena persistida 2026-08-20 14:43: 82 filas (fuente=live)
+2026-08-20 14:44:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:44:09 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.54)
+2026-08-20 14:44:09 | DATA   | cadena persistida 2026-08-20 14:44: 82 filas (fuente=live)
+2026-08-20 14:45:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:45:09 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.55)
+2026-08-20 14:45:09 | DATA   | cadena persistida 2026-08-20 14:45: 82 filas (fuente=live)
+2026-08-20 14:46:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:46:11 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.53)
+2026-08-20 14:46:11 | DATA   | cadena persistida 2026-08-20 14:46: 82 filas (fuente=live)
+2026-08-20 14:47:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:47:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.48)
+2026-08-20 14:47:07 | DATA   | cadena persistida 2026-08-20 14:47: 82 filas (fuente=live)
+2026-08-20 14:48:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:48:06 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.68)
+2026-08-20 14:48:06 | DATA   | cadena persistida 2026-08-20 14:48: 82 filas (fuente=live)
+2026-08-20 14:49:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:49:06 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.79)
+2026-08-20 14:49:06 | DATA   | cadena persistida 2026-08-20 14:49: 82 filas (fuente=live)
+2026-08-20 14:50:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:50:08 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.71)
+2026-08-20 14:50:08 | DATA   | cadena persistida 2026-08-20 14:50: 82 filas (fuente=live)
+2026-08-20 14:51:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:51:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.59)
+2026-08-20 14:51:07 | DATA   | cadena persistida 2026-08-20 14:51: 82 filas (fuente=live)
+2026-08-20 14:52:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:52:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.67)
+2026-08-20 14:52:07 | DATA   | cadena persistida 2026-08-20 14:52: 82 filas (fuente=live)
+2026-08-20 14:53:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:53:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.64)
+2026-08-20 14:53:07 | DATA   | cadena persistida 2026-08-20 14:53: 82 filas (fuente=live)
+2026-08-20 14:54:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:54:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.55)
+2026-08-20 14:54:07 | DATA   | cadena persistida 2026-08-20 14:54: 82 filas (fuente=live)
+2026-08-20 14:55:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:55:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.61)
+2026-08-20 14:55:07 | DATA   | cadena persistida 2026-08-20 14:55: 82 filas (fuente=live)
+2026-08-20 14:56:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:56:10 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.60)
+2026-08-20 14:56:10 | DATA   | cadena persistida 2026-08-20 14:56: 82 filas (fuente=live)
+2026-08-20 14:57:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:57:04 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.55)
+2026-08-20 14:57:04 | DATA   | cadena persistida 2026-08-20 14:57: 82 filas (fuente=live)
+2026-08-20 14:58:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:58:04 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.48)
+2026-08-20 14:58:04 | DATA   | cadena persistida 2026-08-20 14:58: 82 filas (fuente=live)
+2026-08-20 14:59:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 14:59:09 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.46)
+2026-08-20 14:59:09 | DATA   | cadena persistida 2026-08-20 14:59: 82 filas (fuente=live)
+════════════════════════════════════════════════════════════
+🔔 2026-08-20 14:59:09 | RIESGO | SYNC 14:59: IBKR tiene 1 pata(s) 0DTE y el sistema se creía PLANO — adoptando
+════════════════════════════════════════════════════════════
+════════════════════════════════════════════════════════════
+🔔 2026-08-20 14:59:09 | RIESGO | ⚠️ 1 pata(s) 0DTE abiertas en IBKR SIN operación abierta en la BD — no se reconstruye; revisar y cerrar a mano
+════════════════════════════════════════════════════════════
+2026-08-20 15:00:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:00:09 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.24)
+2026-08-20 15:00:09 | DATA   | cadena persistida 2026-08-20 15:00: 82 filas (fuente=live)
+2026-08-20 15:01:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:01:09 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.27)
+2026-08-20 15:01:09 | DATA   | cadena persistida 2026-08-20 15:01: 82 filas (fuente=live)
+2026-08-20 15:02:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:02:08 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.22)
+2026-08-20 15:02:08 | DATA   | cadena persistida 2026-08-20 15:02: 82 filas (fuente=live)
+2026-08-20 15:03:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:03:08 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.37)
+2026-08-20 15:03:08 | DATA   | cadena persistida 2026-08-20 15:03: 82 filas (fuente=live)
+2026-08-20 15:04:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:04:08 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.32)
+2026-08-20 15:04:08 | DATA   | cadena persistida 2026-08-20 15:04: 82 filas (fuente=live)
+2026-08-20 15:05:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:05:10 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.42)
+2026-08-20 15:05:10 | DATA   | cadena persistida 2026-08-20 15:05: 82 filas (fuente=live)
+2026-08-20 15:06:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:06:05 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.52)
+2026-08-20 15:06:05 | DATA   | cadena persistida 2026-08-20 15:06: 82 filas (fuente=live)
+════════════════════════════════════════════════════════════
+🔔 2026-08-20 15:06:05 | RIESGO | SYNC 15:06: IBKR tiene 2 pata(s) 0DTE y el sistema se creía PLANO — adoptando
+════════════════════════════════════════════════════════════
+════════════════════════════════════════════════════════════
+🔔 2026-08-20 15:06:05 | RIESGO | ⚠️ 2 pata(s) 0DTE abiertas en IBKR SIN operación abierta en la BD — no se reconstruye; revisar y cerrar a mano
+════════════════════════════════════════════════════════════
+2026-08-20 15:07:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:07:05 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.59)
+2026-08-20 15:07:05 | DATA   | cadena persistida 2026-08-20 15:07: 82 filas (fuente=live)
+2026-08-20 15:08:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:08:04 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.62)
+2026-08-20 15:08:04 | DATA   | cadena persistida 2026-08-20 15:08: 82 filas (fuente=live)
+════════════════════════════════════════════════════════════
+🔔 2026-08-20 15:08:05 | RIESGO | SYNC 15:08: IBKR tiene 2 pata(s) 0DTE y el sistema se creía PLANO — adoptando
+════════════════════════════════════════════════════════════
+════════════════════════════════════════════════════════════
+🔔 2026-08-20 15:08:05 | RIESGO | ⚠️ 2 pata(s) 0DTE abiertas en IBKR SIN operación abierta en la BD — no se reconstruye; revisar y cerrar a mano
+════════════════════════════════════════════════════════════
+2026-08-20 15:09:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:09:04 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.62)
+2026-08-20 15:09:04 | DATA   | cadena persistida 2026-08-20 15:09: 82 filas (fuente=live)
+2026-08-20 15:10:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:10:09 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.62)
+2026-08-20 15:10:09 | DATA   | cadena persistida 2026-08-20 15:10: 82 filas (fuente=live)
+2026-08-20 15:11:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:11:09 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.50)
+2026-08-20 15:11:09 | DATA   | cadena persistida 2026-08-20 15:11: 82 filas (fuente=live)
+2026-08-20 15:12:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:12:11 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.47)
+2026-08-20 15:12:11 | DATA   | cadena persistida 2026-08-20 15:12: 82 filas (fuente=live)
+2026-08-20 15:13:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:13:08 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.44)
+2026-08-20 15:13:08 | DATA   | cadena persistida 2026-08-20 15:13: 82 filas (fuente=live)
+2026-08-20 15:14:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:14:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.57)
+2026-08-20 15:14:07 | DATA   | cadena persistida 2026-08-20 15:14: 82 filas (fuente=live)
+2026-08-20 15:15:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:15:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.54)
+2026-08-20 15:15:07 | DATA   | cadena persistida 2026-08-20 15:15: 82 filas (fuente=live)
+════════════════════════════════════════════════════════════
+🔔 2026-08-20 15:15:07 | RIESGO | SYNC 15:15: IBKR tiene 2 pata(s) 0DTE y el sistema se creía PLANO — adoptando
+════════════════════════════════════════════════════════════
+════════════════════════════════════════════════════════════
+🔔 2026-08-20 15:15:07 | RIESGO | ⚠️ 2 pata(s) 0DTE abiertas en IBKR SIN operación abierta en la BD — no se reconstruye; revisar y cerrar a mano
+════════════════════════════════════════════════════════════
+2026-08-20 15:16:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:16:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.73)
+2026-08-20 15:16:07 | DATA   | cadena persistida 2026-08-20 15:16: 82 filas (fuente=live)
+2026-08-20 15:17:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:17:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.64)
+2026-08-20 15:17:07 | DATA   | cadena persistida 2026-08-20 15:17: 82 filas (fuente=live)
+2026-08-20 15:18:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:18:06 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.45)
+2026-08-20 15:18:06 | DATA   | cadena persistida 2026-08-20 15:18: 82 filas (fuente=live)
+2026-08-20 15:19:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:19:06 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.47)
+2026-08-20 15:19:06 | DATA   | cadena persistida 2026-08-20 15:19: 82 filas (fuente=live)
+2026-08-20 15:20:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:20:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.34)
+2026-08-20 15:20:07 | DATA   | cadena persistida 2026-08-20 15:20: 82 filas (fuente=live)
+2026-08-20 15:21:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:21:09 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.25)
+2026-08-20 15:21:09 | DATA   | cadena persistida 2026-08-20 15:21: 82 filas (fuente=live)
+2026-08-20 15:22:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:22:09 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.33)
+2026-08-20 15:22:09 | DATA   | cadena persistida 2026-08-20 15:22: 82 filas (fuente=live)
+2026-08-20 15:23:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:23:09 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.50)
+2026-08-20 15:23:09 | DATA   | cadena persistida 2026-08-20 15:23: 82 filas (fuente=live)
+════════════════════════════════════════════════════════════
+🔔 2026-08-20 15:23:09 | RIESGO | SYNC 15:23: IBKR tiene 1 pata(s) 0DTE y el sistema se creía PLANO — adoptando
+════════════════════════════════════════════════════════════
+════════════════════════════════════════════════════════════
+🔔 2026-08-20 15:23:09 | RIESGO | ⚠️ 1 pata(s) 0DTE abiertas en IBKR SIN operación abierta en la BD — no se reconstruye; revisar y cerrar a mano
+════════════════════════════════════════════════════════════
+2026-08-20 15:24:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:24:08 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.58)
+2026-08-20 15:24:08 | DATA   | cadena persistida 2026-08-20 15:24: 82 filas (fuente=live)
+2026-08-20 15:25:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:25:10 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.65)
+2026-08-20 15:25:10 | DATA   | cadena persistida 2026-08-20 15:25: 82 filas (fuente=live)
+2026-08-20 15:26:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:26:05 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.66)
+2026-08-20 15:26:05 | DATA   | cadena persistida 2026-08-20 15:26: 82 filas (fuente=live)
+2026-08-20 15:27:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:27:06 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.64)
+2026-08-20 15:27:06 | DATA   | cadena persistida 2026-08-20 15:27: 82 filas (fuente=live)
+2026-08-20 15:28:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:28:08 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.56)
+2026-08-20 15:28:08 | DATA   | cadena persistida 2026-08-20 15:28: 82 filas (fuente=live)
+2026-08-20 15:29:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:29:08 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.54)
+2026-08-20 15:29:08 | DATA   | cadena persistida 2026-08-20 15:29: 82 filas (fuente=live)
+════════════════════════════════════════════════════════════
+🔔 2026-08-20 15:29:08 | RIESGO | SYNC 15:29: IBKR tiene 2 pata(s) 0DTE y el sistema se creía PLANO — adoptando
+════════════════════════════════════════════════════════════
+════════════════════════════════════════════════════════════
+🔔 2026-08-20 15:29:08 | RIESGO | ⚠️ 2 pata(s) 0DTE abiertas en IBKR SIN operación abierta en la BD — no se reconstruye; revisar y cerrar a mano
+════════════════════════════════════════════════════════════
+2026-08-20 15:30:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:30:08 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.49)
+2026-08-20 15:30:08 | DATA   | cadena persistida 2026-08-20 15:30: 82 filas (fuente=live)
+2026-08-20 15:31:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:31:08 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.33)
+2026-08-20 15:31:08 | DATA   | cadena persistida 2026-08-20 15:31: 82 filas (fuente=live)
+2026-08-20 15:32:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:32:09 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.27)
+2026-08-20 15:32:09 | DATA   | cadena persistida 2026-08-20 15:32: 82 filas (fuente=live)
+2026-08-20 15:33:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:33:11 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.32)
+2026-08-20 15:33:11 | DATA   | cadena persistida 2026-08-20 15:33: 82 filas (fuente=live)
+2026-08-20 15:34:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:34:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.20)
+2026-08-20 15:34:07 | DATA   | cadena persistida 2026-08-20 15:34: 82 filas (fuente=live)
+2026-08-20 15:35:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:35:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.19)
+2026-08-20 15:35:07 | DATA   | cadena persistida 2026-08-20 15:35: 82 filas (fuente=live)
+════════════════════════════════════════════════════════════
+🔔 2026-08-20 15:35:07 | RIESGO | SYNC 15:35: IBKR tiene 2 pata(s) 0DTE y el sistema se creía PLANO — adoptando
+════════════════════════════════════════════════════════════
+════════════════════════════════════════════════════════════
+🔔 2026-08-20 15:35:07 | RIESGO | ⚠️ 2 pata(s) 0DTE abiertas en IBKR SIN operación abierta en la BD — no se reconstruye; revisar y cerrar a mano
+════════════════════════════════════════════════════════════
+2026-08-20 15:36:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:36:06 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.29)
+2026-08-20 15:36:06 | DATA   | cadena persistida 2026-08-20 15:36: 82 filas (fuente=live)
+2026-08-20 15:37:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:37:08 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.49)
+2026-08-20 15:37:08 | DATA   | cadena persistida 2026-08-20 15:37: 82 filas (fuente=live)
+2026-08-20 15:38:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:38:08 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.35)
+2026-08-20 15:38:08 | DATA   | cadena persistida 2026-08-20 15:38: 82 filas (fuente=live)
+2026-08-20 15:39:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:39:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.53)
+2026-08-20 15:39:07 | DATA   | cadena persistida 2026-08-20 15:39: 82 filas (fuente=live)
+2026-08-20 15:40:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:40:09 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.50)
+2026-08-20 15:40:09 | DATA   | cadena persistida 2026-08-20 15:40: 82 filas (fuente=live)
+2026-08-20 15:41:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:41:10 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.41)
+2026-08-20 15:41:10 | DATA   | cadena persistida 2026-08-20 15:41: 82 filas (fuente=live)
+2026-08-20 15:42:00 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:42:06 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.39)
+2026-08-20 15:42:06 | DATA   | cadena persistida 2026-08-20 15:42: 82 filas (fuente=live)
+2026-08-20 15:43:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:43:06 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.23)
+2026-08-20 15:43:06 | DATA   | cadena persistida 2026-08-20 15:43: 82 filas (fuente=live)
+2026-08-20 15:44:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:44:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.13)
+2026-08-20 15:44:07 | DATA   | cadena persistida 2026-08-20 15:44: 82 filas (fuente=live)
+2026-08-20 15:45:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:45:09 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.10)
+2026-08-20 15:45:09 | DATA   | cadena persistida 2026-08-20 15:45: 82 filas (fuente=live)
+2026-08-20 15:46:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:46:09 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.01)
+2026-08-20 15:46:09 | DATA   | cadena persistida 2026-08-20 15:46: 82 filas (fuente=live)
+2026-08-20 15:47:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:47:09 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 762.84)
+2026-08-20 15:47:09 | DATA   | cadena persistida 2026-08-20 15:47: 82 filas (fuente=live)
+2026-08-20 15:48:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:48:08 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 762.99)
+2026-08-20 15:48:08 | DATA   | cadena persistida 2026-08-20 15:48: 82 filas (fuente=live)
+2026-08-20 15:49:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:49:08 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.08)
+2026-08-20 15:49:08 | DATA   | cadena persistida 2026-08-20 15:49: 82 filas (fuente=live)
+2026-08-20 15:50:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:50:08 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.37)
+2026-08-20 15:50:08 | DATA   | cadena persistida 2026-08-20 15:50: 82 filas (fuente=live)
+2026-08-20 15:51:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:51:08 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.25)
+2026-08-20 15:51:08 | DATA   | cadena persistida 2026-08-20 15:51: 82 filas (fuente=live)
+2026-08-20 15:52:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:52:08 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.36)
+2026-08-20 15:52:08 | DATA   | cadena persistida 2026-08-20 15:52: 82 filas (fuente=live)
+2026-08-20 15:53:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:53:08 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.39)
+2026-08-20 15:53:08 | DATA   | cadena persistida 2026-08-20 15:53: 82 filas (fuente=live)
+2026-08-20 15:54:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:54:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 763.23)
+2026-08-20 15:54:07 | DATA   | cadena persistida 2026-08-20 15:54: 82 filas (fuente=live)
+2026-08-20 15:55:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:55:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 762.91)
+2026-08-20 15:55:07 | DATA   | cadena persistida 2026-08-20 15:55: 82 filas (fuente=live)
+2026-08-20 15:56:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:56:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 762.49)
+2026-08-20 15:56:07 | DATA   | cadena persistida 2026-08-20 15:56: 82 filas (fuente=live)
+2026-08-20 15:57:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:57:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 762.38)
+2026-08-20 15:57:07 | DATA   | cadena persistida 2026-08-20 15:57: 82 filas (fuente=live)
+2026-08-20 15:58:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:58:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 762.25)
+2026-08-20 15:58:07 | DATA   | cadena persistida 2026-08-20 15:58: 82 filas (fuente=live)
+2026-08-20 15:59:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-20 15:59:07 | DATA   | cadena 20260820: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 762.49)
+2026-08-20 15:59:07 | DATA   | cadena persistida 2026-08-20 15:59: 82 filas (fuente=live)
+════════════════════════════════════════════════════════════
+🔔 2026-08-20 16:00:02 | FIN | Cierre de mercado — fin de sesión
+════════════════════════════════════════════════════════════
+2026-08-20 16:00:02 | DATA   | IBKR desconectado

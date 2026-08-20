@@ -114,10 +114,23 @@ CREATE TABLE IF NOT EXISTS movimientos (   -- ingresos/retiros de capital (MANUA
 );
 
 -- ═════════════════════ RESCATE / INVESTIGACION FUTURA ═════════════════
-CREATE TABLE IF NOT EXISTS tape_und (      -- tape firmado del subyacente (spy_tape_und.db) -> signo del flujo
-  fecha TEXT, ts TEXT, price REAL, size REAL, exch TEXT, signo TEXT,
-  PRIMARY KEY (fecha, ts, price, size, exch)
+-- TAPE DEL SUBYACENTE (2026-08-20: la tabla existía desde el diseño pero NADIE escribía en ella
+-- — 0 filas; el capturador no se había implementado nunca. `cr_schema` pasaba en verde porque
+-- comprueba que la tabla EXISTE, no que tenga datos).
+--   `seq`: discriminador dentro del mismo segundo. Sin él la PK (fecha,ts,price,size,exch)
+--   descarta en silencio los trades idénticos del mismo segundo — MEDIDO sobre el tape real del
+--   2026-08-12: 4.491 de 380.778 ticks (1,2%). Y NO es pérdida aleatoria: los ticks idénticos
+--   en el mismo segundo son ejecuciones TROCEADAS de una orden grande, justo la señal a estudiar.
+--   `bid`/`ask`: el libro EN EL MOMENTO del trade. Se guardan para poder RECLASIFICAR el signo
+--   más adelante: si solo se guarda `signo` y la regla de clasificación resulta estar mal, el
+--   dato es irrecuperable. Se guarda el hecho, no la interpretación.
+--   `signo`: 'C' compra agresora (price >= ask) | 'V' venta (price <= bid) | 'N' dentro del spread.
+CREATE TABLE IF NOT EXISTS tape_und (
+  fecha TEXT, ts TEXT, seq INTEGER, price REAL, size REAL, exch TEXT,
+  bid REAL, ask REAL, signo TEXT,
+  PRIMARY KEY (fecha, ts, seq)
 );
+CREATE INDEX IF NOT EXISTS ix_tape_fecha ON tape_und(fecha, ts);
 
 CREATE TABLE IF NOT EXISTS premium_mix (   -- bid/ask reconstruido (spy_prem_mix_*/synth) por dia
   fecha TEXT, hora TEXT, expiry TEXT, strike REAL, right TEXT,

@@ -39,6 +39,35 @@ def guardar_cadena(con, fecha, hora, expiry, cadena):
     return len(filas)
 
 
+def guardar_tape(con, fecha, ticks):
+    """Persiste el tape del SUBYACENTE en `tape_und`. `ticks` viene de ibkr.tape_drenar():
+    [(time, seq, price, size, exch, bid, ask, signo)].
+
+    AÑADIDO 2026-08-20: la tabla existía desde el diseño pero nadie escribía en ella (0 filas
+    verificadas en sys2.db y sus 7 copias) — seis sesiones de vivo sin capturar tape.
+
+    `ts` se guarda como 'HH:MM:SS.mmm' (hora ET, con milisegundos) igual que hacía el sistema
+    anterior en spy_history.tape. `seq` desempata dentro del mismo instante: sin él la PK
+    descarta en silencio los trades idénticos del mismo segundo, y MEDIDO sobre el tape real
+    del 2026-08-12 eso son 4.491 de 380.778 ticks (1,2%) — que además NO son aleatorios, son
+    ejecuciones troceadas de órdenes grandes.
+    """
+    filas = []
+    for t in ticks:
+        try:
+            ts, seq, px, sz, exch, bid, ask, sg = t
+            hh = ts.strftime("%H:%M:%S.") + ("%03d" % (ts.microsecond // 1000)) \
+                if hasattr(ts, "strftime") else str(ts)
+            filas.append({"fecha": fecha, "ts": hh, "seq": seq, "price": px, "size": sz,
+                          "exch": exch, "bid": bid, "ask": ask, "signo": sg})
+        except Exception as ex:
+            L.log("guardar_tape: tick descartado %r (%r)" % (t, ex), "WARN")
+    if filas:
+        repo.insertar(con, "tape_und", filas)
+        con.commit()
+    return len(filas)
+
+
 def bars_de_bd(con, fecha):
     """Lee las barras 1-min del día (desde 04:00) como [(hora,high,low,close)] para el núcleo."""
     return [(h, hi, lo, cl) for h, hi, lo, cl in con.execute(

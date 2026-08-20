@@ -42,3 +42,31 @@
 13:50:00 saldo 662.16 | abiertas -
 13:55:00 saldo 648.48 | abiertas [(763.0, 'P', -1.0), (765.0, 'P', 1.0)]
 14:00:01 saldo 622.72 | abiertas [(760.0, 'C', 1.0), (764.0, 'C', -1.0)]
+14:05:01 saldo 601.27 | abiertas [(762.0, 'P', 1.0)]
+14:10:06 saldo 588.60 | abiertas [(761.0, 'P', 1.0), (759.0, 'P', -1.0)]
+14:13:58 saldo 574.86 | abiertas -
+14:15:47 saldo 805.23 | abiertas -
+14:38:44 saldo 2257.87 | abiertas -
+14:43:44 saldo 1347.17 | abiertas [(762.0, 'P', 1.0)]
+14:48:45 saldo 1319.20 | abiertas -
+14:53:50 saldo 1319.20 | abiertas -
+14:58:51 saldo 1319.20 | abiertas -
+15:03:52 saldo 1308.09 | abiertas -
+15:08:52 saldo 1297.81 | abiertas -
+15:13:53 saldo 1297.81 | abiertas -
+15:18:54 saldo 1286.89 | abiertas -
+15:23:55 saldo 1281.28 | abiertas -
+15:28:55 saldo 1281.28 | abiertas -
+15:34:00 saldo 1276.32 | abiertas -
+15:39:01 saldo 1264.88 | abiertas -
+15:44:07 saldo 1264.88 | abiertas -
+15:49:11 saldo 1264.88 | abiertas -
+15:54:12 saldo 1264.88 | abiertas -
+15:59:13 saldo 1264.88 | abiertas -
+16:04:13 saldo 1264.88 | abiertas -
+16:09:14 saldo 1264.88 | abiertas -
+16:14:15 saldo 1264.88 | abiertas -
+16:19:17 ERROR [WinError 1225] The remote computer refused the network connection
+16:24:19 ERROR [WinError 1225] The remote computer refused the network connection
+16:29:21 ERROR [WinError 1225] The remote computer refused the network connection
+16:34:23 ERROR [WinError 1225] The remote computer refused the network connection

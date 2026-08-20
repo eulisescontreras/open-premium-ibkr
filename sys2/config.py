@@ -120,6 +120,15 @@ VERIF_PLANA = "15:59"                 # verificar posición plana antes de 16:00
 # cierra TODAS las patas del vencimiento y `_sincronizar` ADOPTA cualquier 0DTE que vea.
 SOLO_CAPTURA = True                    # ACTIVADO 2026-08-20: sesión de pruebas de fills
 
+# ── TAPE DEL SUBYACENTE (2026-08-20) ──
+# La tabla `tape_und` existía en el esquema desde el diseño pero NADIE escribía en ella: 0 filas
+# en sys2.db y en sus 7 copias de seguridad. `cr_schema` pasaba en VERDE porque comprueba que la
+# tabla EXISTE, no que tenga datos -> seis sesiones de vivo (16-20 ago) sin capturar ni un tick.
+# El único tape del subyacente del proyecto son 3 días del sistema ANTERIOR (12, 13 y 14 de ago,
+# auditadas las 52 bases de datos del repo).
+# Coste: ~380.000 ticks/día en el SPY (medido sobre el tape real del 2026-08-12).
+TAPE_CAPTURA = True                    # capturar el tape del subyacente (trades + bid/ask)
+
 # ── IBKR (paper) ──
 IBKR_HOST = "127.0.0.1"
 IBKR_PORT = 4002                      # IB Gateway paper (live=4001; TWS 7497/7496)

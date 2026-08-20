@@ -95,6 +95,76 @@ class IBKR:
         return {"cierre": b.close, "maximo": b.high, "minimo": b.low}
 
     # ─────────────────────────── cadena de opciones ───────────────────────────
+    # ─────────────────────────── tape del subyacente ───────────────────────────
+    # AÑADIDO 2026-08-20. La tabla `tape_und` existía en el esquema desde el diseño pero NADIE
+    # escribía en ella (0 filas, verificado en sys2.db y en sus 7 copias). `cr_schema` pasaba en
+    # verde porque comprueba que la tabla EXISTE, no que tenga datos: seis sesiones de vivo
+    # (16-20 ago) sin capturar nada. El sistema ANTERIOR sí lo hacía (spy_history.tape,
+    # grupo='SPY'), y de ahí se copia el formato: precio, tamaño, BID/ASK del momento y agresor.
+    #
+    # Se guarda el bid/ask además del signo para poder RECLASIFICAR después: si solo se guardara
+    # el agresor y la regla resultara estar mal, el dato sería irrecuperable.
+    #
+    # ⚠️ TODO va envuelto en try/except: el tape es un dato secundario y NUNCA debe poder tumbar
+    # el sistema de trading. Si falla, se registra y se sigue.
+    def tape_suscribir(self):
+        """Suscribe el tape del SUBYACENTE: trades (AllLast) + libro (BidAsk). Una sola vez.
+        Los ticks se acumulan en memoria; `tape_drenar()` los saca y vacía el buffer."""
+        self._tape = []
+        self._libro = [None, None]           # (bid, ask) vigentes
+        self._tape_seq = 0
+        self._tape_err = 0
+        try:
+            t_ba = self.ib.reqTickByTickData(self._spy, "BidAsk")
+            t_al = self.ib.reqTickByTickData(self._spy, "AllLast")
+
+            def _on_libro(tk):
+                try:
+                    for x in (tk.tickByTicks or []):
+                        b, a = getattr(x, "bidPrice", None), getattr(x, "askPrice", None)
+                        if b is not None and a is not None and a > 0:
+                            self._libro = [b, a]
+                except Exception:
+                    self._tape_err += 1
+
+            def _on_trade(tk):
+                try:
+                    for x in (tk.tickByTicks or []):
+                        px = getattr(x, "price", None)
+                        if px is None:
+                            continue
+                        b, a = self._libro
+                        # regla del quote (Lee-Ready simplificada): agresor por el lado tocado
+                        if b is not None and a is not None:
+                            sg = "C" if px >= a else ("V" if px <= b else "N")
+                        else:
+                            sg = None
+                        self._tape_seq += 1
+                        self._tape.append((x.time, self._tape_seq, float(px),
+                                           float(getattr(x, "size", 0) or 0),
+                                           getattr(x, "exchange", "") or "", b, a, sg))
+                except Exception:
+                    self._tape_err += 1
+
+            t_ba.updateEvent += _on_libro
+            t_al.updateEvent += _on_trade
+            self._tape_tk = (t_ba, t_al)
+            L.notificar("TAPE del subyacente SUSCRITO (AllLast + BidAsk)", "IBKR")
+            return True
+        except Exception as ex:
+            L.log("tape_suscribir(): %r — se sigue SIN tape" % ex, "WARN")
+            self._tape_tk = None
+            return False
+
+    def tape_drenar(self):
+        """Saca los ticks acumulados y vacía el buffer. Devuelve [] si no hay suscripción."""
+        try:
+            t, self._tape = self._tape, []
+            return t
+        except Exception as ex:
+            L.log("tape_drenar(): %r" % ex, "WARN")
+            return []
+
     def _opt(self, expiry, strike, right):
         return Option(C.SYMBOL, expiry, strike, right, "SMART", tradingClass=C.SYMBOL)
 

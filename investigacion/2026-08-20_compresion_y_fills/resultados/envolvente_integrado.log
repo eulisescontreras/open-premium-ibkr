@@ -1,0 +1,55 @@
+lanzado e_real_base    pct=REAL compr=0  tramos=-
+lanzado e_real_d8      pct=REAL compr=8  tramos=-
+lanzado e_real_int     pct=REAL compr=8  tramos=14:00:-1.0
+lanzado e_10_base      pct=10   compr=0  tramos=-
+lanzado e_10_d8        pct=10   compr=8  tramos=-
+lanzado e_10_int       pct=10   compr=8  tramos=14:00:-1.0
+lanzado e_25_base      pct=25   compr=0  tramos=-
+lanzado e_25_d8        pct=25   compr=8  tramos=-
+lanzado e_25_int       pct=25   compr=8  tramos=14:00:-1.0
+lanzado e_50_base      pct=50   compr=0  tramos=-
+lanzado e_50_d8        pct=50   compr=8  tramos=-
+lanzado e_50_int       pct=50   compr=8  tramos=14:00:-1.0
+lanzado e_75_base      pct=75   compr=0  tramos=-
+lanzado e_75_d8        pct=75   compr=8  tramos=-
+lanzado e_75_int       pct=75   compr=8  tramos=14:00:-1.0
+lanzado e_90_base      pct=90   compr=0  tramos=-
+lanzado e_90_d8        pct=90   compr=8  tramos=-
+lanzado e_90_int       pct=90   compr=8  tramos=14:00:-1.0
+
+-- 18 corridas --
+
+e_real_base    OK saldo 83805
+e_real_d8      OK saldo 97631
+e_real_int     OK saldo 92179
+e_10_base      OK saldo 439
+e_10_d8        OK saldo 439
+e_10_int       OK saldo 439
+e_25_base      OK saldo 56310
+e_25_d8        OK saldo 64392
+e_25_int       OK saldo 64257
+e_50_base      OK saldo 59158
+e_50_d8        OK saldo 63635
+e_50_int       OK saldo 63249
+e_75_base      OK saldo 420
+e_75_d8        OK saldo 420
+e_75_int       OK saldo 420
+e_90_base      OK saldo 429
+e_90_d8        OK saldo 429
+e_90_int       OK saldo 400
+
+tiempo: 0.0 min
+[motor.py e instrumento.py RESTAURADOS]
+
+================================================================================================
+ENVOLVENTE x CONFIGURACIÓN — saldo final (drawdown / racha / verdes-rojos / mínimo)
+================================================================================================
+régimen                            BASE            + COMPRESIÓN d8                  INTEGRADO
+precios reales       83805$    21% r3 308/156       97631$    29% r3 313/154       92179$    35% r3 309/153
+p10                  439$         MUERE         439$         MUERE         439$         MUERE
+p25                56310$    28% r3 294/162       64392$    27% r3 298/159       64257$    31% r3 296/159
+p50                59158$    22% r3 289/168       63635$    26% r3 286/170       63249$    26% r3 289/167
+p75                  420$         MUERE         420$         MUERE         420$         MUERE
+p90                  429$         MUERE         429$         MUERE         400$         MUERE
+
+✓ todos los controles replican las cifras publicadas

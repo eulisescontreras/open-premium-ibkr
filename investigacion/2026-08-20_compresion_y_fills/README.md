@@ -1,5 +1,50 @@
 # 2026-08-20 — LA COMPRESIÓN DEL ST-3 (+13.826 $) Y EL MAPA REAL DE FILLS
 
+> ## ⚠️ CORRECCIONES DE LA MISMA TARDE (sesión de 14:00-15:30) — LEER ANTES QUE NADA
+>
+> **1. «Hoy, en toda la sesión, NI UNO SOLO» (rechazo de margen) es FALSO.**
+> La tabla `barrido` de `fills_reales.db` registra **45 rechazos por MARGEN el 2026-08-20**.
+>
+> **2. El pendiente #1 está RESUELTO: no es la hora sola ni el ITM solo, es una FRONTERA MÓVIL.**
+> ```
+> % RECHAZO POR MARGEN — hora x moneyness   (n entre paréntesis)
+> hora      -5      -3      -2      -1      +0      +1      +2      +3      +4      +5
+> 10:xx   0%(8)   0%(9)     -     0%(9)   0%(3)   0%(5)   0%(4)     -       -     0%(3)
+> 11:xx  0%(16)  0%(13)     -    0%(12)   0%(3)   0%(3)   0%(7)   0%(8)     -    0%(10)
+> 12:xx  0%(13)  0%(15)   0%(7)  0%(13)   0%(9)   0%(4)  60%(5)  50%(8) 100%(4) 33%(9)
+> 13:xx  0%(15)  0%(15)  0%(15)   0%(9)   0%(4)     -    33%(3)  40%(5)  38%(8) 38%(13)
+> 14:xx  0%(16)  0%(27)  0%(23)  22%(9) 100%(3)     -    67%(3)  86%(7) 85%(20) 55%(31)
+> 15:xx    -      0%(3)   0%(6)  17%(6) 100%(6) 100%(6) 100%(3) 100%(6) 86%(7)  50%(6)
+> ```
+> Antes de las 12:00 no se rechaza NADA · desde las 12:00 cae el ITM (>=+2) · desde las 14:00 la
+> frontera baja hasta ATM · **el OTM (<=-2) no se rechaza NUNCA**.
+> El SALDO queda descartado como causa: a las 15:16 IBKR rechazó un débito de 55 $ con 1.298 $
+> en caja (4,2 %). *(Durante la tarde se sostuvo por error la hipótesis contraria — "es el saldo,
+> no la hora" — a partir de datos que solo llegaban hasta las 14:07. Era prematura.)*
+>
+> **3. «`elegir_vert` compra el ITM más profundo... que cae en +10/+20 donde el fill es 0 de 41»
+> es FALSO** como descripción de lo que el sistema hace de verdad.
+> Volcado de las 1.168 operaciones reales del backtest (`dump_moneyness_ops.py`):
+> ```
+> mny 0,5-1,5  12,8%  ·  1,5-2,5  32,5%  ·  2,5-3,5  35,3%   <- el 80,6% aquí
+> mny 3,5-4,5  11,0%  ·  4,5-6,5   6,8%  ·  6,5-10,5  1,5%   <- solo el 1,5% pasa de 6,5
+> ```
+> Y por hora: el **49,7 % de las operaciones son a las 09:xx**, donde el rechazo medido es 0 %;
+> solo el 17,5 % cae a partir de las 13:00. El cuello de botella es real pero **mucho menor**
+> de lo que dice la Parte 2. Cota de ejecutabilidad por fill: **46,8 %** de las operaciones.
+>
+> **4. Coste medido de respetar la frontera** (`barrido_mny_horario.py`, control = 83.805 $ exacto):
+> ```
+> tope FIJO mny<=2 todo el día      38.832 $   -53,7%
+> OTM solo desde las 14:00          79.394 $    -5,3%   <- replica el "-7%" del README del 19
+> mny<=1 desde las 12:00            71.780 $   -14,3%   <- mover el corte a las 12 TRIPLICA el coste
+> ```
+>
+> **5. Las tres formulaciones nuevas de la observación del usuario sobre el ST-3 NO se sostienen**
+> (ver "LO QUE SE MIDIÓ Y NO DIO NADA", ampliado al final). La compresión ya validada
+> (+13.826 $) sigue en pie: es el uso de la planitud que SÍ funciona.
+
+
 Dos investigaciones independientes del mismo día. La primera sale **entera de una observación
 del usuario mirando el gráfico**; la segunda de lanzar 255 órdenes reales contra IBKR.
 
@@ -119,6 +164,56 @@ La eficiencia beneficio/drawdown EMPEORA. Y ese drawdown **no está repartido**:
   46,4% y 49,4% con base 47,4%. "La línea avanza y el precio no" -> 47,2%. Nada.
 - **Línea plana como filtro de ENTRADA** (no operar en tramos planos): **-7.289 $**.
 - **Tramos planos cortos como tiempo muerto**: cierto pero irrelevante (-3% de recorrido).
+
+### AMPLIACIÓN DE LA MISMA TARDE — tres formulaciones más del usuario, las tres REFUTADAS
+
+El usuario aportó, con dos fotos del gráfico, tres usos nuevos de la planitud. Ninguno aguanta.
+Todas las cifras con el CONTROL reproduciendo 83.805 $ exacto.
+
+**(a) «Cuando la planicie TERMINA, el precio coge impulso HACIA donde dice el ST»**
+`test_ruptura.py`, 56.214 buckets. Objetivo = avance CON SIGNO a favor del ST (el valor absoluto
+mediría "se movió", que ya se sabe). Base +0,0653 ATR a 12 buckets.
+```
+NO rompe (línea quieta)  39.049  +0,0664      ROMPE (cualquiera)  17.165  +0,0628
+```
+Idénticos y ambos = la base. Por longitud del tramo previo no hay monotonía y los años se
+contradicen (`plana 21+`: A1 -0,1131 / A2 +0,1241). Separando flip de avance, tampoco.
+**Control de la trampa mecánica** (con d=1 la línea sube *porque* el precio subió — el efecto
+podría ser momentum trivial): fijando el movimiento propio del bucket, en **4 de 5 quintiles
+romper es PEOR que no romper**.
+**Y no es cuestión de colas**: `>=+1ATR / <=-1ATR` da 32,7%/30,1% en la base y 31,9%/29,9%,
+32,1%/30,8%, 34,1%/29,6% en todos los grupos. Las colas son las mismas en todas partes.
+
+**(b) «El impulso se agota cuando la línea se aplana; mientras hay impulso, no está plana»**
+Si fuera cierto, el avance a favor debería CRECER con la actividad de la línea. Sale al revés:
+```
+escal (de 12 buckets previos, cuántos movieron la línea):
+  0 -> +0,1646   1-2 -> +0,1007   3-4 -> +0,0092   5-6 -> +0,0228
+  7-8 -> +0,0982   9-10 -> -0,0255   11-12 -> +0,0300
+```
+El máximo está con la línea CONGELADA, no activa. (Y ni eso: A1 +0,2697 / A2 +0,0653.)
+
+**(c) SALIR cuando la línea se aplana** — `barrido_salida_plana.py`. **Destruye el sistema:**
+```
+plana>=8 y 6min abierta  46.676$   ·  plana>=8  37.315$  ·  plana>=6  12.925$
+plana>=12    486$ (MUERE)          ·  plana>=4     430$ (MUERE)
+```
+Misma familia que "objetivo al 50% del débito" (479 $) y "tiempo máximo" (464 $): **el sistema
+gana porque el vertical SATURA en el ancho; cualquier corte previo mata esa cola.**
+
+**(d) Descartar FALSOS FLIPS exigiendo planitud previa** — `barrido_falsos_flips.py`:
+```
+plana>=3  79.541$ (-4.264)  ·  plana>=5  75.134$ (-8.671)  ·  plana>=8  65.356$ (-18.449)
+```
+Monótono a peor: **los flips que nacen con la línea activa también son rentables.**
+
+> ⚠️ **ERROR DE MÉTODO NUEVO (costó una tanda entera).** El primer intento de (d) filtraba `Sen`
+> justo tras `construir_sen` y daba **0 días distintos** en todas las variantes. No era "la regla
+> no aporta": `motor.py:160` **DESCARTA todas las señales de origen "ST-3"** y las REGENERA con
+> `_reb2` (visión honesta) marcándolas "ST-3h ...". Se estaba filtrando algo que el motor tira 9
+> líneas después. Punto de inyección correcto: **después de `motor.py:181`**.
+> **REGLA: "0 días distintos" NO es un resultado — es sospecha de parche mal colocado.**
+> Los barridos nuevos lo marcan con un aviso explícito.
 
 ---
 

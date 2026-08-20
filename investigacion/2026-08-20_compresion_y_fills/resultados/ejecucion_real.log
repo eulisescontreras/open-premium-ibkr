@@ -1,0 +1,48 @@
+-- 17 corridas (1 control + 8 semillas x 2) --
+
+z_control      OK 485 dias  saldo 83805
+z_real_s1      OK 485 dias  saldo 412
+z_real_s2      OK 485 dias  saldo 39595
+z_real_s3      OK 485 dias  saldo 48220
+z_real_s4      OK 485 dias  saldo 414
+z_real_s5      OK 485 dias  saldo 41386
+z_real_s6      OK 485 dias  saldo 466
+z_real_s7      OK 485 dias  saldo 45612
+z_real_s8      OK 485 dias  saldo 41122
+z_comp_s1      OK 485 dias  saldo 348
+z_comp_s2      OK 485 dias  saldo 46410
+z_comp_s3      OK 485 dias  saldo 454
+z_comp_s4      OK 485 dias  saldo 454
+z_comp_s5      OK 485 dias  saldo 52754
+z_comp_s6      OK 485 dias  saldo 466
+z_comp_s7      OK 485 dias  saldo 48735
+z_comp_s8      OK 485 dias  saldo 49462
+
+tiempo: 4.7 min
+[motor.py RESTAURADO]
+
+================================================================================================
+CONTROL z_control = 83805$  OK (replica 83.805$)
+================================================================================================
+
+EJECUCIÓN REAL (sin compresión)   (8 semillas)
+   saldo    mediana    41122$   min      412$   max    48220$   (68.5x mediana)
+   drawdown       mediana     36.6%   min     18.2%   max     49.4%
+   racha          mediana      3.0   min      1.0   max      3.0
+   verdes         mediana    251.0   min      0.0   max    254.0
+   rojos          mediana    157.0   min      2.0   max    166.0
+   días operados  mediana    405.0   min      2.0   max    413.0
+   saldo mínimo   mediana    600.0$   min    412.3$   max    600.0$
+   AÑO1 mediana +11228$   AÑO2 mediana +29294$
+   vs BASE (83.805$): -42683$ (-50.9%)  |  días operados 464 -> 405
+
+EJECUCIÓN REAL + COMPRESIÓN d8   (8 semillas)
+   saldo    mediana    46410$   min      348$   max    52754$   (77.3x mediana)
+   drawdown       mediana     39.4%   min     22.3%   max     44.5%
+   racha          mediana      3.0   min      1.0   max      3.0
+   verdes         mediana    245.0   min      0.0   max    262.0
+   rojos          mediana    150.0   min      2.0   max    158.0
+   días operados  mediana    403.0   min      2.0   max    414.0
+   saldo mínimo   mediana    506.5$   min    347.8$   max    600.0$
+   AÑO1 mediana +6940$   AÑO2 mediana +30309$
+   vs BASE (83.805$): -37395$ (-44.6%)  |  días operados 464 -> 403

@@ -1,0 +1,25 @@
+lanzado x_base   mny_max=SIN RESTRICCIÓN
+lanzado x_m15    mny_max=1.5
+lanzado x_m2     mny_max=2.0
+lanzado x_m3     mny_max=3.0
+lanzado x_m4     mny_max=4.0
+lanzado x_m6     mny_max=6.0
+
+-- 6 en paralelo --
+
+x_base   mny<=0    OK 485 dias  saldo 83805
+x_m15    mny<=1.5  OK 485 dias  saldo 26726
+x_m2     mny<=2.0  OK 485 dias  saldo 38832
+x_m3     mny<=3.0  OK 485 dias  saldo 62193
+x_m4     mny<=4.0  OK 485 dias  saldo 65628
+x_m6     mny<=6.0  OK 485 dias  saldo 80535
+
+tiempo: 5.1 min
+
+CONTROL x_base = 83805$ (esperado 83.805$ sin HUMO)
+  x_m15        26726$     -57079$ vs control
+  x_m2         38832$     -44973$ vs control
+  x_m3         62193$     -21611$ vs control
+  x_m4         65628$     -18176$ vs control
+  x_m6         80535$      -3269$ vs control
+[instrumento.py RESTAURADO]

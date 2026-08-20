@@ -65,6 +65,13 @@ class SistemaVivo:
         L.notificar("ARRANQUE del sistema vivo — %s (0DTE %s)" % (self.fecha, self.expiry), "ARRANQUE")
         self.ib.conectar()
 
+        # TAPE del subyacente (2026-08-20): se suscribe UNA vez al arrancar y se drena cada
+        # minuto en `paso()`. Va aparte del resto porque es un stream por callback, no una
+        # consulta por minuto. Si falla, `tape_suscribir` devuelve False y el sistema sigue:
+        # el tape es un dato de investigación, NUNCA debe poder tumbar el trading.
+        if C.TAPE_CAPTURA:
+            self.ib.tape_suscribir()
+
         # autocalibración por saldo real
         saldo = self.ib.saldo()
         self._saldo = saldo or 0.0            # cache: el panel usa la BD, NO consulta IBKR
@@ -235,6 +242,16 @@ class SistemaVivo:
             CAP.guardar_cadena(self.con, self.fecha, hora, self.expiry, cad)
         except Exception as ex:
             L.log("captura cadena %s: %r" % (hora, ex), "WARN")
+
+        # 1b) drenar el TAPE del subyacente acumulado en este minuto (nunca debe romper el paso)
+        if C.TAPE_CAPTURA:
+            try:
+                ticks = self.ib.tape_drenar()
+                if ticks:
+                    n = CAP.guardar_tape(self.con, self.fecha, ticks)
+                    L.log("tape %s: %d ticks persistidos" % (hora, n), "DATA")
+            except Exception as ex:
+                L.log("captura tape %s: %r" % (hora, ex), "WARN")
 
         bars = CAP.bars_de_bd(self.con, self.fecha)
         cl_ = {h: cl for h, _, _, cl in bars if "09:30" <= h <= "16:00"}

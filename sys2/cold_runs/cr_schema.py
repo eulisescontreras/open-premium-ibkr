@@ -18,6 +18,12 @@ COLS_CRITICAS = {
     "fills": {"parcial", "lleno"},
     "operaciones": {"n_op_dia", "razon_salida", "nivel", "unidades"},
     "contexto_dia": {"mov_DIA", "mov_TLT", "efic60", "dia_bueno"},
+    # AÑADIDO 2026-08-20: `tape_und` existía y este cold run pasaba en VERDE, pero la tabla
+    # estaba VACÍA — comprobaba que existiese, no que sirviera. Seis sesiones sin capturar tape.
+    # `seq` evita que la PK descarte trades idénticos del mismo segundo (1,2% medido sobre el
+    # tape real del 12/08, y son ejecuciones troceadas de órdenes grandes, no ruido).
+    # `bid`/`ask` permiten RECLASIFICAR el agresor si la regla del signo resulta estar mal.
+    "tape_und": {"seq", "bid", "ask", "signo", "price", "size", "exch"},
 }
 
 
