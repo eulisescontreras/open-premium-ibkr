@@ -1,0 +1,4 @@
+Rearmar la BD:
+  cat massive_premium_1dte.db.zip.part_* > massive_premium_1dte.db.zip
+  unzip massive_premium_1dte.db.zip
+Contiene: massive_premium_1dte.db (20128 contratos OK, ~2 anios 1DTE, snapshot).
