@@ -167,6 +167,78 @@ Y "no abrir desde las 14h" (78.339$) sale casi igual que "OTM desde las 14h" (79
 igual lo que se haga por la tarde**. El valor de la investigación de fills no fue cambiar el
 sistema, fue saber que el número bueno no era alcanzable.
 
+## 🗓️ SESIÓN 2026-08-21 — EL VENCIMIENTO SIGUIENTE (1DTE)
+
+**DATOS NUEVOS** (los subió el usuario): `data_1dte/massive_premium_1dte.db` (782 MB, zip partido
+en `data_1dte/`). 5.727.319 filas · 20.328 contratos · **482 días** (el 0DTE tiene 485) ·
+2024-08-19→2026-08-12. DTE real: 1 → 78,0 % | 3 → 17,9 % (viernes) | 2 y 4 → 4,1 % (festivos).
+
+### RESULTADOS (controles replicando exacto: 83.805 y 74.556)
+```
+0DTE sin score (referencia)  74.556$  dd 21,1%  461 días
+1DTE TODO EL DÍA                428$  MUERE     3 días   <- se apaga por supervivencia
+híbrido 1DTE desde 11:00     97.657$  dd 39,8%  474 días  +31,0%
+híbrido desde 12:00          78.112$  dd 30,6%            +4,8%
+híbrido desde 13:00          73.537$  dd 25,2%            -1,4%
+híbrido desde 14:00          66.813$  dd 19,7%           -10,4%   <- el único que BAJA el dd
+```
+El **drawdown del 39,8 % es del ARRANQUE**, no de la madurez: el fondo es el 2024-08-26 con la
+cuenta en **555 $** (sexto día). Pero eso es peor de lo que parece: **555 $ está a 65 $ del umbral
+de apagado (490 $)**, o sea que el h11 pasa más cerca de morir en el arranque que la base.
+
+### EL MECANISMO — POR QUÉ MUERE EL 1DTE PURO (medido, no supuesto)
+```
+% de sesiones en que el vertical ALCANZA...   0DTE     1DTE
+  el 70% del ancho                           73,6%    58,4%
+  el 95% (EL OBJETIVO DEL SISTEMA)           44,1%     4,8%   <- NUEVE veces menos
+  el 100%                                    32,7%     1,7%
+```
+`TP_ANCHO=0.95` está calibrado para un instrumento que **se muere el mismo día**. Con 1DTE el
+objetivo casi nunca se dispara → las operaciones se arrastran al cierre sin cobrar la saturación.
+**PREDICCIÓN a contrastar:** el objetivo equivalente para 1DTE es el que se dispare ~44 % de las
+veces = **≈75 % del ancho**. (Barrido en curso.)
+
+### TRES HIPÓTESIS MÍAS QUE LOS DATOS TUMBARON
+1. *"El 1DTE es más caro y no cabe en el tope"* → **FALSO**. El débito del VERTICAL es igual o
+   MENOR (mny+2 a2: 117 $ contra 140 $): el valor temporal **se cancela entre las dos patas**.
+   Los contratos sueltos sí son 2,36x más caros, el spread no.
+2. *"El aporte del viernes se explica por el régimen de mercado"* → **NO**: sobrevive al control
+   por rango (dif +88,3 $/día controlada vs +85,0 sin controlar).
+3. *"Filtrar por régimen mejorará"* → **NO, EMPEORA** monótonamente: p40 −2.439 $, p60 −6.058 $,
+   p80 −15.383 $. **Y contradice el análisis marginal**, que decía que esos días aportaban −2,2
+   $/día. La causa es la COMPOSICIÓN: al no operar un día, el saldo crece menos y TODAS las
+   operaciones siguientes son más pequeñas. **En este sistema ningún análisis marginal por día
+   predice el efecto de un filtro: hay que correrlo entero.**
+
+### LÍMITE DURO — DÍA Y DTE ESTÁN CONFUNDIDOS
+Solo hay **1 vencimiento por sesión** en los 482 días: lunes {1} · martes {1,2} · miércoles {1,2}
+· jueves {1,4} · **viernes {3,4}**. El DTE lo determina el día de la semana, así que "efecto
+viernes" y "efecto 3DTE" **nunca varían por separado**. No se arregla con más análisis: hay que
+descargar 2DTE/3DTE entre semana (ver IDEAS_Y_OPCIONES.md).
+Reparto del aporte: lunes +82 · martes +201 · miércoles +7.900 · jueves +3.802 · **viernes
++11.115** (el 99 % está en mié/jue/vie).
+
+### FILLS EN VIVO (2026-08-21, hasta las 10:02) — AVISO PARA EL HÍBRIDO
+```
+              n   filled   MARGEN   spread~
+SINGLE 0DTE  10   9 (90%)     0      1,9%
+SINGLE 3DTE  10   8 (80%)     0      1,4%
+vert   0DTE  19  11 (58%)     0      4,4%
+vert   3DTE  18   4 (22%)     0      4,8%   <- llena la MITAD
+```
+El vertical del vencimiento siguiente **llena el 22 %** con spread parecido: no es que sea caro de
+cruzar, es que **no hay contrapartida** (volumen 4-7x menor, medido sobre los 2 años).
+Y un hallazgo aparte: **los SINGLES llenan mucho mejor que los verticales** (80-90 % vs 22-58 %) y
+con la mitad de spread — un vertical exige que alguien cruce LAS DOS PATAS a la vez.
+⚠️ Cero rechazos por margen hasta las 10:02, que es lo ESPERADO (el bloqueo empieza a las 12:00).
+
+### TAPE — FUNCIONANDO DESDE HOY
+Primer día de captura. 65.740 ticks a las 10:03, con bid/ask y signo poblados.
+⚠️ **BUG CORREGIDO EN CALIENTE**: se guardaba en **UTC** (el resto del sistema usa ET). Arreglado
+en `captura._hora_et` con `zoneinfo` (no offset fijo: validado también contra un caso de
+INVIERNO, UTC-5) y migrados 18.271 ticks con `sys2/db/migrar_tape_utc.py`. No daba ningún error:
+precios y signos eran correctos, solo el reloj estaba 4 horas adelantado.
+
 ## PENDIENTES POR PRIORIDAD
 1. 🔴 **Cerrar el punto anterior con la ventana 15:00-15:45 medida con saldo ALTO** (cuenta
    recargada a 1.556 $ a las 14:15). Si no hay rechazos, la hora queda descartada como causa.

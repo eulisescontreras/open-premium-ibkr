@@ -1,0 +1,44 @@
+lanzado d0_base        corte=(0DTE) score_off=0
+lanzado d0_sin_score   corte=(0DTE) score_off=1
+lanzado d1_todo        corte=00:00  score_off=1
+lanzado h11            corte=11:00  score_off=1
+lanzado h12            corte=12:00  score_off=1
+lanzado h13            corte=13:00  score_off=1
+lanzado h14            corte=14:00  score_off=1
+
+-- 7 corridas --
+
+d0_base        OK 485 dias  saldo 83805  (score=2 corte=-) 
+d0_sin_score   OK 485 dias  saldo 74556  (score=0 corte=-) 
+d1_todo        OK 482 dias  saldo 428  (score=0 corte=00:00) | [1DTE] corte=00:00  minutos 0DTE=0  minutos siguiente-venc=194355  dias=482
+h11            OK 485 dias  saldo 97657  (score=0 corte=11:00) | [1DTE] corte=11:00  minutos 0DTE=43144  minutos siguiente-venc=150979  dias=485
+h12            OK 485 dias  saldo 78112  (score=0 corte=12:00) | [1DTE] corte=12:00  minutos 0DTE=72215  minutos siguiente-venc=122063  dias=485
+h13            OK 485 dias  saldo 73537  (score=0 corte=13:00) | [1DTE] corte=13:00  minutos 0DTE=101304  minutos siguiente-venc=93143  dias=485
+h14            OK 485 dias  saldo 66813  (score=0 corte=14:00) | [1DTE] corte=14:00  minutos 0DTE=130157  minutos siguiente-venc=64453  dias=485
+
+tiempo: 3.4 min
+[motor.py RESTAURADO]
+
+========================================================================================================
+0DTE vs VENCIMIENTO SIGUIENTE — 485/482 sesiones, capital 600$, TODOS sin score salvo el control
+========================================================================================================
+                                    saldo    mult   drawdn  racha  verde   rojo  dias op      AÑO 1      AÑO 2
+0DTE + score (CONTROL)             83805$  139.7x    21.1%      3    308    156      464     +30559     +52645
+0DTE sin score (referencia)        74556$  124.3x    21.1%      3    290    171      461     +26780     +47177
+1DTE TODO EL DIA                     428$    0.7x    28.7%      3      0      3        3       -172         +0
+hibrido: 1DTE desde 11:00          97657$  162.8x    39.8%      3    334    140      474     +42490     +54567
+hibrido: 1DTE desde 12:00          78112$  130.2x    30.6%      3    303    162      465     +34967     +42545
+hibrido: 1DTE desde 13:00          73537$  122.6x    25.2%      3    297    167      464     +30439     +42498
+hibrido: 1DTE desde 14:00          66813$  111.4x    19.7%      3    298    168      466     +24875     +41338
+
+✓ los controles reproducen la base
+
+COMPARACIÓN LIMPIA (todo SIN score, misma vara de medir):
+   1DTE TODO EL DIA                     428$     -74128$  (-99.4%) vs 0DTE sin score
+   hibrido: 1DTE desde 11:00          97657$     +23101$  (+31.0%) vs 0DTE sin score
+   hibrido: 1DTE desde 12:00          78112$      +3555$  (+4.8%) vs 0DTE sin score
+   hibrido: 1DTE desde 13:00          73537$      -1019$  (-1.4%) vs 0DTE sin score
+   hibrido: 1DTE desde 14:00          66813$      -7743$  (-10.4%) vs 0DTE sin score
+
+⚠️ 83.805$ es CONTROL TÉCNICO, no expectativa: con la ejecución real medida el sistema
+   vale ~41.000$. Lo que importa aquí es la comparación RELATIVA entre vencimientos.

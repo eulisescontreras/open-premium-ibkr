@@ -1,0 +1,29 @@
+lanzado d0_base          dte=0 score_off=0 (0DTE)
+lanzado d0_sin_score     dte=0 score_off=1 (0DTE)
+lanzado d1_sin_score     dte=1 score_off=1 massive_premium_1dte.db
+lanzado d1_score_viejo   dte=1 score_off=0 massive_premium_1dte.db
+
+-- 4 en paralelo --
+
+d0_base          OK 485 dias  saldo 83805  (score=2)
+d0_sin_score     OK 485 dias  saldo 74556  (score=0)
+d1_sin_score     OK 0 dias  saldo 600  (score=0)
+d1_score_viejo   OK 0 dias  saldo 600  (score=2)
+
+tiempo: 6.9 min
+[motor.py RESTAURADO]
+
+========================================================================================================
+¿AGUANTA EL SISTEMA CON EL VENCIMIENTO SIGUIENTE? — 485/482 sesiones, capital 600$
+========================================================================================================
+                                  saldo    mult   drawdn  racha  verde   rojo  dias op      AÑO 1      AÑO 2
+0DTE + score (CONTROL)           83805$  139.7x    21.1%      3    308    156      464     +30559     +52645
+0DTE sin score                   74556$  124.3x    21.1%      3    290    171      461     +26780     +47177
+Traceback (most recent call last):
+  File "C:\Users\eulis\proyectos\open-premium-ibkr\investigacion\2026-08-20_compresion_y_fills\scripts\barrido_1dte_motor.py", line 187, in <module>
+    s, dd, ra, v, r, mn, a1, a2, op = met(D)
+                                      ^^^^^^
+  File "C:\Users\eulis\proyectos\open-premium-ibkr\investigacion\2026-08-20_compresion_y_fills\scripts\barrido_1dte_motor.py", line 169, in met
+    co = f[len(f) // 2]
+         ~^^^^^^^^^^^^^
+IndexError: list index out of range

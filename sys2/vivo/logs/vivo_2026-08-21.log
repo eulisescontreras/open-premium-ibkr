@@ -1,0 +1,573 @@
+2026-08-21 00:01:15 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 00:06:44 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 00:11:46 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 00:16:48 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 00:22:11 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 00:27:13 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 00:32:15 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 00:37:21 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 00:42:23 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 00:47:25 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 00:52:33 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 00:57:36 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 01:02:38 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 01:07:43 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 01:12:45 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 01:17:47 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 01:22:57 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 01:27:59 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 01:33:01 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 01:38:11 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 01:43:13 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 01:48:15 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 01:53:48 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 01:58:50 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 02:03:52 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 02:08:58 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 02:14:00 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 02:19:02 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 02:24:07 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 02:29:09 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 02:34:11 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 02:39:17 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 02:44:21 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 02:49:23 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 02:54:40 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 02:59:42 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 03:04:44 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 03:09:46 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 03:15:15 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 03:20:17 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 03:25:19 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 03:30:30 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 03:35:32 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 03:40:34 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 03:45:40 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 03:50:42 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 03:55:44 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 04:00:51 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 04:05:53 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 04:10:55 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 04:16:05 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 04:21:07 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 04:26:09 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 04:31:20 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 04:36:22 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 04:41:24 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 04:46:29 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 04:51:31 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 04:56:33 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 05:01:52 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 05:06:54 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 05:11:56 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 05:17:05 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 05:22:07 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 05:27:09 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 05:32:19 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 05:37:21 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 05:42:24 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 05:47:32 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 05:52:34 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 05:57:37 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 06:02:39 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 06:07:47 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 06:12:49 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 06:17:52 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 06:23:01 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 06:28:03 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 06:33:05 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 06:38:14 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 06:43:16 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 06:48:18 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 06:53:24 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 06:58:26 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 07:03:28 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 07:08:36 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 07:13:38 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 07:18:40 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 07:23:45 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 07:28:47 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 07:33:49 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 07:38:54 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 07:43:56 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 07:48:58 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 07:54:10 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 07:59:12 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 08:04:14 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 08:09:40 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 08:14:42 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 08:19:44 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 08:25:03 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 08:30:05 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 08:35:07 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+2026-08-21 08:37:34 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=36
+=== NOTIF === 2026-08-21 08:37:35 | IBKR | IBKR conectado (paper 4002)
+2026-08-21 08:37:35 | DATA   | IBKR desconectado
+2026-08-21 08:37:56 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=34
+=== NOTIF === 2026-08-21 08:37:57 | IBKR | IBKR conectado (paper 4002)
+=== NOTIF === 2026-08-21 08:39:40 | ARRANQUE | ARRANQUE del sistema vivo — 2026-08-21 (0DTE 20260821)
+2026-08-21 08:39:40 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=17
+=== NOTIF === 2026-08-21 08:39:40 | IBKR | IBKR conectado (paper 4002)
+=== NOTIF === 2026-08-21 08:39:40 | IBKR | TAPE SUSCRITO por tick-by-tick (AllLast + BidAsk) — fallback a RTVolume si no llegan ticks en 3 min
+=== NOTIF === 2026-08-21 08:39:41 | ARRANQUE | Autocalibra: saldo=14994 nivel=17 ancho=4 tope=320 unidades=3
+=== NOTIF === 2026-08-21 08:39:41 | ARRANQUE | BACKFILL de arranque (SPY premarket + ETF + día anterior)
+2026-08-21 08:39:41 | DATA   | backfill SPY 2 D 1 min useRTH=False
+2026-08-21 08:39:42 | DATA   | backfill SPY: 1001 barras persistidas (fecha 2026-08-21)
+2026-08-21 08:39:43 | DATA   | backfill DIA: 0 barras
+2026-08-21 08:39:44 | DATA   | backfill TLT: 0 barras
+2026-08-21 08:39:44 | DATA   | día anterior (2026-08-20, cierres RTH): cierre=762.78 máx=768.14 mín=762.25
+2026-08-21 08:39:44 | DATA   | día anterior (cierres RTH): max=768.14 min=762.25 cierre=762.78
+=== NOTIF === 2026-08-21 08:39:44 | ARRANQUE | Sistema EN MARCHA — esperando barras (todo activo)
+2026-08-21 08:40:09 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+=== NOTIF === 2026-08-21 08:40:09 | IBKR | IBKR conectado (paper 4002)
+2026-08-21 08:40:10 | DATA   | IBKR desconectado
+2026-08-21 08:45:10 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+=== NOTIF === 2026-08-21 08:45:10 | IBKR | IBKR conectado (paper 4002)
+2026-08-21 08:45:10 | DATA   | IBKR desconectado
+2026-08-21 08:50:10 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+=== NOTIF === 2026-08-21 08:50:11 | IBKR | IBKR conectado (paper 4002)
+2026-08-21 08:50:11 | DATA   | IBKR desconectado
+2026-08-21 08:55:11 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+=== NOTIF === 2026-08-21 08:55:11 | IBKR | IBKR conectado (paper 4002)
+2026-08-21 08:55:11 | DATA   | IBKR desconectado
+2026-08-21 09:00:11 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+=== NOTIF === 2026-08-21 09:00:12 | IBKR | IBKR conectado (paper 4002)
+2026-08-21 09:00:12 | DATA   | IBKR desconectado
+2026-08-21 09:05:12 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+=== NOTIF === 2026-08-21 09:05:12 | IBKR | IBKR conectado (paper 4002)
+2026-08-21 09:05:12 | DATA   | IBKR desconectado
+2026-08-21 09:10:12 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+=== NOTIF === 2026-08-21 09:10:13 | IBKR | IBKR conectado (paper 4002)
+2026-08-21 09:10:13 | DATA   | IBKR desconectado
+2026-08-21 09:15:13 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+=== NOTIF === 2026-08-21 09:15:13 | IBKR | IBKR conectado (paper 4002)
+2026-08-21 09:15:13 | DATA   | IBKR desconectado
+2026-08-21 09:20:13 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+=== NOTIF === 2026-08-21 09:20:13 | IBKR | IBKR conectado (paper 4002)
+2026-08-21 09:20:13 | DATA   | IBKR desconectado
+2026-08-21 09:25:13 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+=== NOTIF === 2026-08-21 09:25:14 | IBKR | IBKR conectado (paper 4002)
+2026-08-21 09:25:14 | DATA   | IBKR desconectado
+2026-08-21 09:30:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-21 09:30:09 | DATA   | cadena 20260821: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+2026-08-21 09:30:09 | DATA   | cadena persistida 2026-08-21 09:30: 82 filas (fuente=live)
+=== NOTIF === 2026-08-21 09:30:09 | IBKR | TAPE OK (tickbytick): primer tick px=766.40 size=1 bid=766.36 ask=766.41 signo=N — 11004 ticks en este minuto
+2026-08-21 09:30:09 | DATA   | tape 09:30: 11004 ticks persistidos
+2026-08-21 09:30:14 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+=== NOTIF === 2026-08-21 09:30:14 | IBKR | IBKR conectado (paper 4002)
+2026-08-21 09:30:15 | DATA   | IBKR desconectado
+2026-08-21 09:30:31 | DATA   | cadena 20260821: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 09:30:32 | ORDEN | COMPRA VERTICAL SPY C L=763/S=765 x1 débito<=1.44
+2026-08-21 09:30:42 | DATA   | cadena 20260821: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 09:30:46 | RIESGO | BAG no cerró (2 pata/s viva/s) — cierre por patas al MID
+=== NOTIF === 2026-08-21 09:30:46 | ORDEN | CIERRE MERCADO SPY C 765 x1
+=== NOTIF === 2026-08-21 09:30:55 | ORDEN | CIERRE MERCADO SPY C 763 x1
+2026-08-21 09:31:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-21 09:31:06 | DATA   | cadena 20260824: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 09:31:08 | ORDEN | COMPRA VERTICAL SPY C L=763/S=765 x1 débito<=1.29
+2026-08-21 09:31:09 | DATA   | cadena 20260821: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 765.39)
+2026-08-21 09:31:09 | DATA   | cadena persistida 2026-08-21 09:31: 82 filas (fuente=live)
+2026-08-21 09:31:09 | DATA   | tape 09:31: 3080 ticks persistidos
+2026-08-21 09:31:38 | DATA   | cadena 20260821: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 09:31:39 | ORDEN | COMPRA SINGLE SPY C 763 x1 <=2.95
+2026-08-21 09:31:48 | DATA   | cadena 20260821: 18 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+2026-08-21 09:31:54 | DATA   | cadena 20260824: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 09:31:55 | ORDEN | COMPRA SINGLE SPY C 763 x1 <=3.95
+2026-08-21 09:32:00 | DATA   | cadena 20260824: 18 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+2026-08-21 09:32:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-21 09:32:08 | DATA   | cadena 20260821: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 09:32:09 | ORDEN | COMPRA VERTICAL SPY P L=769/S=767 x1 débito<=1.58
+2026-08-21 09:32:11 | DATA   | cadena 20260821: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 765.33)
+2026-08-21 09:32:11 | DATA   | cadena persistida 2026-08-21 09:32: 82 filas (fuente=live)
+2026-08-21 09:32:11 | DATA   | tape 09:32: 1948 ticks persistidos
+2026-08-21 09:32:39 | DATA   | cadena 20260824: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 09:32:40 | ORDEN | COMPRA VERTICAL SPY P L=769/S=767 x1 débito<=1.32
+2026-08-21 09:33:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-21 09:33:05 | DATA   | cadena 20260821: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 765.20)
+2026-08-21 09:33:05 | DATA   | cadena persistida 2026-08-21 09:33: 82 filas (fuente=live)
+2026-08-21 09:33:05 | DATA   | tape 09:33: 2239 ticks persistidos
+2026-08-21 09:33:11 | DATA   | cadena 20260821: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 09:33:12 | ORDEN | COMPRA SINGLE SPY P 769 x1 <=4.34
+2026-08-21 09:33:19 | DATA   | cadena 20260821: 18 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 09:33:45 | ARRANQUE | ARRANQUE del sistema vivo — 2026-08-21 (0DTE 20260821)
+2026-08-21 09:33:45 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=17
+=== NOTIF === 2026-08-21 09:33:45 | IBKR | IBKR conectado (paper 4002)
+=== NOTIF === 2026-08-21 09:33:45 | IBKR | TAPE SUSCRITO por tick-by-tick (AllLast + BidAsk) — fallback a RTVolume si no llegan ticks en 3 min
+=== NOTIF === 2026-08-21 09:33:46 | ARRANQUE | Autocalibra: saldo=14967 nivel=17 ancho=4 tope=320 unidades=3
+=== NOTIF === 2026-08-21 09:33:46 | ARRANQUE | BACKFILL de arranque (SPY premarket + ETF + día anterior)
+2026-08-21 09:33:46 | DATA   | backfill SPY 2 D 1 min useRTH=False
+2026-08-21 09:33:46 | DATA   | backfill SPY: 1055 barras persistidas (fecha 2026-08-21)
+2026-08-21 09:33:46 | DATA   | backfill DIA: 4 barras
+2026-08-21 09:33:47 | DATA   | backfill TLT: 4 barras
+2026-08-21 09:33:47 | DATA   | día anterior (2026-08-20, cierres RTH): cierre=762.78 máx=768.14 mín=762.25
+2026-08-21 09:33:47 | DATA   | día anterior (cierres RTH): max=768.14 min=762.25 cierre=762.78
+=== NOTIF === 2026-08-21 09:33:47 | RIESGO | ⚠️ 1 pata(s) 0DTE abiertas en IBKR SIN operación abierta en la BD — no se reconstruye; revisar y cerrar a mano
+=== NOTIF === 2026-08-21 09:33:47 | ARRANQUE | Sistema EN MARCHA — esperando barras (todo activo)
+2026-08-21 09:33:47 | DATA   | backfill SPY 120 S 1 min useRTH=False
+=== NOTIF === 2026-08-21 09:33:49 | ORDEN | CIERRE SPY P 769 x1 MERCADO
+2026-08-21 09:33:51 | DATA   | cadena 20260821: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 765.12)
+2026-08-21 09:33:51 | DATA   | cadena persistida 2026-08-21 09:33: 82 filas (fuente=live)
+=== NOTIF === 2026-08-21 09:33:51 | IBKR | TAPE OK (tickbytick): primer tick px=764.99 size=2 bid=764.96 ask=764.98 signo=C — 105 ticks en este minuto
+2026-08-21 09:33:51 | DATA   | tape 09:33: 105 ticks persistidos
+2026-08-21 09:33:54 | DATA   | cadena 20260824: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+2026-08-21 09:33:59 | DATA   | cadena 20260821: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 09:34:00 | ORDEN | COMPRA VERTICAL SPY C L=763/S=767 x1 débito<=2.09
+2026-08-21 09:34:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-21 09:34:06 | DATA   | cadena 20260821: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 764.99)
+2026-08-21 09:34:06 | DATA   | cadena persistida 2026-08-21 09:34: 82 filas (fuente=live)
+2026-08-21 09:34:06 | DATA   | tape 09:34: 348 ticks persistidos
+2026-08-21 09:34:06 | SENAL  | señal 09:33 P (gap_fade) -> solo_captura
+2026-08-21 09:34:30 | DATA   | cadena 20260824: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 09:34:32 | ORDEN | COMPRA VERTICAL SPY C L=763/S=767 x1 débito<=2.25
+2026-08-21 09:34:58 | DATA   | cadena 20260824: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+2026-08-21 09:35:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+=== NOTIF === 2026-08-21 09:35:02 | RIESGO | BAG no cerró (2 pata/s viva/s) — cierre por patas al MID
+=== NOTIF === 2026-08-21 09:35:02 | ORDEN | CIERRE MERCADO SPY C 767 x1
+2026-08-21 09:35:06 | DATA   | cadena 20260821: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 764.86)
+2026-08-21 09:35:06 | DATA   | cadena persistida 2026-08-21 09:35: 82 filas (fuente=live)
+2026-08-21 09:35:06 | DATA   | tape 09:35: 1707 ticks persistidos
+=== NOTIF === 2026-08-21 09:35:11 | ORDEN | CIERRE MERCADO SPY C 763 x1
+2026-08-21 09:35:15 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+=== NOTIF === 2026-08-21 09:35:15 | IBKR | IBKR conectado (paper 4002)
+2026-08-21 09:35:15 | DATA   | IBKR desconectado
+=== NOTIF === 2026-08-21 09:35:19 | RIESGO | BAG no cerró (1 pata/s viva/s) — cierre por patas a MERCADO (último recurso)
+=== NOTIF === 2026-08-21 09:35:19 | ORDEN | CIERRE MERCADO SPY C 763 x1
+2026-08-21 09:35:32 | DATA   | cadena 20260821: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 09:35:33 | ORDEN | COMPRA VERTICAL SPY P L=769/S=765 x1 débito<=2.92
+2026-08-21 09:36:00 | DATA   | cadena 20260821: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+2026-08-21 09:36:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+=== NOTIF === 2026-08-21 09:36:04 | RIESGO | BAG no cerró (2 pata/s viva/s) — cierre por patas al MID
+=== NOTIF === 2026-08-21 09:36:04 | ORDEN | CIERRE MERCADO SPY P 765 x1
+2026-08-21 09:36:06 | DATA   | cadena 20260821: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 764.82)
+2026-08-21 09:36:06 | DATA   | cadena persistida 2026-08-21 09:36: 82 filas (fuente=live)
+2026-08-21 09:36:06 | DATA   | tape 09:36: 2732 ticks persistidos
+=== NOTIF === 2026-08-21 09:36:06 | RIESGO | SYNC 09:36: IBKR tiene 1 pata(s) 0DTE y el sistema se creía PLANO — adoptando
+=== NOTIF === 2026-08-21 09:36:06 | RIESGO | ⚠️ 1 pata(s) 0DTE abiertas en IBKR SIN operación abierta en la BD — no se reconstruye; revisar y cerrar a mano
+2026-08-21 09:36:06 | SENAL  | señal 09:35 C (v1) -> solo_captura
+=== NOTIF === 2026-08-21 09:36:12 | ORDEN | CIERRE MERCADO SPY P 769 x1
+2026-08-21 09:36:23 | DATA   | cadena 20260824: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 09:36:25 | ORDEN | COMPRA VERTICAL SPY P L=769/S=765 x1 débito<=2.44
+2026-08-21 09:36:38 | DATA   | cadena 20260824: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 09:36:42 | RIESGO | BAG no cerró (2 pata/s viva/s) — cierre por patas al MID
+=== NOTIF === 2026-08-21 09:36:42 | ORDEN | CIERRE MERCADO SPY P 765 x1
+=== NOTIF === 2026-08-21 09:36:50 | ORDEN | CIERRE MERCADO SPY P 769 x1
+2026-08-21 09:37:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-21 09:37:01 | DATA   | cadena 20260821: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 09:37:03 | ORDEN | COMPRA VERTICAL SPY C L=762/S=764 x1 débito<=1.49
+2026-08-21 09:37:06 | DATA   | cadena 20260821: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 764.92)
+2026-08-21 09:37:06 | DATA   | cadena persistida 2026-08-21 09:37: 82 filas (fuente=live)
+2026-08-21 09:37:06 | DATA   | tape 09:37: 2023 ticks persistidos
+2026-08-21 09:37:19 | DATA   | cadena 20260821: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 09:37:23 | RIESGO | BAG no cerró (2 pata/s viva/s) — cierre por patas al MID
+=== NOTIF === 2026-08-21 09:37:23 | ORDEN | CIERRE MERCADO SPY C 764 x1
+=== NOTIF === 2026-08-21 09:37:31 | ORDEN | CIERRE MERCADO SPY C 762 x1
+2026-08-21 09:37:42 | DATA   | cadena 20260824: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 09:37:44 | ORDEN | COMPRA VERTICAL SPY C L=762/S=764 x1 débito<=1.36
+2026-08-21 09:38:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-21 09:38:06 | DATA   | cadena 20260821: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 765.15)
+2026-08-21 09:38:06 | DATA   | cadena persistida 2026-08-21 09:38: 82 filas (fuente=live)
+2026-08-21 09:38:06 | DATA   | tape 09:38: 2939 ticks persistidos
+2026-08-21 09:38:14 | DATA   | cadena 20260821: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 09:38:15 | ORDEN | COMPRA SINGLE SPY C 762 x1 <=3.48
+2026-08-21 09:38:20 | DATA   | cadena 20260821: 18 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+2026-08-21 09:38:50 | DATA   | cadena 20260824: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 09:38:52 | ORDEN | COMPRA SINGLE SPY C 762 x1 <=4.39
+2026-08-21 09:38:57 | DATA   | cadena 20260824: 18 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+2026-08-21 09:39:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-21 09:39:06 | DATA   | cadena 20260821: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 765.02)
+2026-08-21 09:39:06 | DATA   | cadena persistida 2026-08-21 09:39: 82 filas (fuente=live)
+2026-08-21 09:39:06 | DATA   | tape 09:39: 1883 ticks persistidos
+=== NOTIF === 2026-08-21 09:39:27 | ORDEN | CIERRE SPY C 762 x1 MERCADO
+2026-08-21 09:39:31 | DATA   | cadena 20260821: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 09:39:33 | ORDEN | COMPRA VERTICAL SPY P L=770/S=768 x1 débito<=1.78
+2026-08-21 09:40:01 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-21 09:40:03 | DATA   | cadena 20260824: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 09:40:04 | ORDEN | COMPRA VERTICAL SPY P L=770/S=768 x1 débito<=1.46
+2026-08-21 09:40:07 | DATA   | cadena 20260821: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 765.09)
+2026-08-21 09:40:07 | DATA   | cadena persistida 2026-08-21 09:40: 82 filas (fuente=live)
+2026-08-21 09:40:07 | DATA   | tape 09:40: 2541 ticks persistidos
+2026-08-21 09:40:15 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+=== NOTIF === 2026-08-21 09:40:16 | IBKR | IBKR conectado (paper 4002)
+2026-08-21 09:40:16 | DATA   | IBKR desconectado
+2026-08-21 09:40:34 | DATA   | cadena 20260821: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 09:40:36 | ORDEN | COMPRA SINGLE SPY P 770 x1 <=5.01
+2026-08-21 09:41:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-21 09:41:07 | DATA   | cadena 20260824: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+2026-08-21 09:41:08 | DATA   | cadena 20260821: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 765.06)
+2026-08-21 09:41:08 | DATA   | cadena persistida 2026-08-21 09:41: 82 filas (fuente=live)
+2026-08-21 09:41:08 | DATA   | tape 09:41: 2246 ticks persistidos
+=== NOTIF === 2026-08-21 09:41:10 | ORDEN | COMPRA SINGLE SPY P 770 x1 <=5.43
+2026-08-21 09:41:15 | DATA   | cadena 20260824: 18 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 09:41:45 | ORDEN | CIERRE SPY P 770 x1 MERCADO
+2026-08-21 09:41:50 | DATA   | cadena 20260821: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 09:41:51 | ORDEN | COMPRA VERTICAL SPY C L=762/S=766 x1 débito<=2.70
+2026-08-21 09:42:00 | DATA   | cadena 20260821: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+2026-08-21 09:42:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+=== NOTIF === 2026-08-21 09:42:04 | RIESGO | BAG no cerró (3 pata/s viva/s) — cierre por patas al MID
+=== NOTIF === 2026-08-21 09:42:04 | ORDEN | CIERRE MERCADO SPY C 766 x1
+2026-08-21 09:42:07 | DATA   | cadena 20260821: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 765.07)
+2026-08-21 09:42:07 | DATA   | cadena persistida 2026-08-21 09:42: 82 filas (fuente=live)
+2026-08-21 09:42:07 | DATA   | tape 09:42: 1599 ticks persistidos
+=== NOTIF === 2026-08-21 09:42:07 | RIESGO | SYNC 09:42: IBKR tiene 3 pata(s) 0DTE y el sistema se creía PLANO — adoptando
+=== NOTIF === 2026-08-21 09:42:07 | RIESGO | ⚠️ 3 pata(s) 0DTE abiertas en IBKR SIN operación abierta en la BD — no se reconstruye; revisar y cerrar a mano
+=== NOTIF === 2026-08-21 09:42:12 | ORDEN | CIERRE MERCADO SPY P 770 x1
+=== NOTIF === 2026-08-21 09:42:21 | ORDEN | CIERRE MERCADO SPY C 762 x1
+2026-08-21 09:42:32 | DATA   | cadena 20260824: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 09:42:33 | ORDEN | COMPRA VERTICAL SPY C L=762/S=766 x1 débito<=2.56
+2026-08-21 09:42:56 | DATA   | cadena 20260824: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 09:43:00 | RIESGO | BAG no cerró (2 pata/s viva/s) — cierre por patas al MID
+=== NOTIF === 2026-08-21 09:43:01 | ORDEN | CIERRE MERCADO SPY C 766 x1
+2026-08-21 09:43:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-21 09:43:07 | DATA   | cadena 20260821: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 765.02)
+2026-08-21 09:43:07 | DATA   | cadena persistida 2026-08-21 09:43: 82 filas (fuente=live)
+2026-08-21 09:43:07 | DATA   | tape 09:43: 1449 ticks persistidos
+=== NOTIF === 2026-08-21 09:43:10 | ORDEN | CIERRE MERCADO SPY C 762 x1
+=== NOTIF === 2026-08-21 09:43:18 | RIESGO | BAG no cerró (1 pata/s viva/s) — cierre por patas a MERCADO (último recurso)
+=== NOTIF === 2026-08-21 09:43:18 | ORDEN | CIERRE MERCADO SPY C 762 x1
+2026-08-21 09:43:31 | DATA   | cadena 20260821: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 09:43:32 | ORDEN | COMPRA VERTICAL SPY P L=770/S=766 x1 débito<=3.31
+2026-08-21 09:44:02 | DATA   | cadena 20260824: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+2026-08-21 09:44:02 | DATA   | backfill SPY 120 S 1 min useRTH=False
+=== NOTIF === 2026-08-21 09:44:04 | ORDEN | COMPRA VERTICAL SPY P L=770/S=766 x1 débito<=2.71
+2026-08-21 09:44:08 | DATA   | cadena 20260821: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 764.83)
+2026-08-21 09:44:08 | DATA   | cadena persistida 2026-08-21 09:44: 82 filas (fuente=live)
+2026-08-21 09:44:08 | DATA   | tape 09:44: 1522 ticks persistidos
+2026-08-21 09:44:34 | DATA   | cadena 20260821: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 09:44:35 | ORDEN | COMPRA VERTICAL SPY C L=761/S=763 x1 débito<=1.68
+2026-08-21 09:45:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-21 09:45:05 | DATA   | cadena 20260824: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 09:45:08 | ORDEN | COMPRA VERTICAL SPY C L=761/S=763 x1 débito<=1.52
+2026-08-21 09:45:08 | DATA   | cadena 20260821: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 765.16)
+2026-08-21 09:45:08 | DATA   | cadena persistida 2026-08-21 09:45: 82 filas (fuente=live)
+2026-08-21 09:45:08 | DATA   | tape 09:45: 2446 ticks persistidos
+2026-08-21 09:45:16 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+=== NOTIF === 2026-08-21 09:45:16 | IBKR | IBKR conectado (paper 4002)
+2026-08-21 09:45:16 | DATA   | IBKR desconectado
+2026-08-21 09:45:38 | DATA   | cadena 20260821: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 09:45:39 | ORDEN | COMPRA SINGLE SPY C 761 x1 <=4.56
+2026-08-21 09:45:44 | DATA   | cadena 20260821: 18 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+2026-08-21 09:45:49 | DATA   | cadena 20260824: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 09:45:50 | ORDEN | COMPRA SINGLE SPY C 761 x1 <=5.36
+2026-08-21 09:45:56 | DATA   | cadena 20260824: 18 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+2026-08-21 09:46:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-21 09:46:08 | DATA   | cadena 20260821: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 765.14)
+2026-08-21 09:46:08 | DATA   | cadena persistida 2026-08-21 09:46: 82 filas (fuente=live)
+2026-08-21 09:46:08 | DATA   | tape 09:46: 1609 ticks persistidos
+=== NOTIF === 2026-08-21 09:46:28 | ORDEN | CIERRE SPY C 761 x1 MERCADO
+2026-08-21 09:46:32 | DATA   | cadena 20260821: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 09:46:33 | ORDEN | COMPRA VERTICAL SPY P L=771/S=769 x1 débito<=1.95
+2026-08-21 09:47:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-21 09:47:03 | DATA   | cadena 20260824: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 09:47:05 | ORDEN | COMPRA VERTICAL SPY P L=771/S=769 x1 débito<=1.61
+2026-08-21 09:47:08 | DATA   | cadena 20260821: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 765.21)
+2026-08-21 09:47:08 | DATA   | cadena persistida 2026-08-21 09:47: 82 filas (fuente=live)
+2026-08-21 09:47:08 | DATA   | tape 09:47: 1403 ticks persistidos
+2026-08-21 09:47:36 | DATA   | cadena 20260821: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 09:47:37 | ORDEN | COMPRA SINGLE SPY P 771 x1 <=6.12
+2026-08-21 09:48:03 | DATA   | cadena 20260821: 18 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+2026-08-21 09:48:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-21 09:48:09 | DATA   | cadena 20260821: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 764.98)
+2026-08-21 09:48:09 | DATA   | cadena persistida 2026-08-21 09:48: 82 filas (fuente=live)
+2026-08-21 09:48:09 | DATA   | tape 09:48: 1599 ticks persistidos
+=== NOTIF === 2026-08-21 09:48:09 | RIESGO | SYNC 09:48: IBKR tiene 1 pata(s) 0DTE y el sistema se creía PLANO — adoptando
+=== NOTIF === 2026-08-21 09:48:09 | RIESGO | ⚠️ 1 pata(s) 0DTE abiertas en IBKR SIN operación abierta en la BD — no se reconstruye; revisar y cerrar a mano
+2026-08-21 09:48:30 | DATA   | cadena 20260824: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 09:48:31 | ORDEN | COMPRA SINGLE SPY P 771 x1 <=6.32
+2026-08-21 09:49:01 | DATA   | cadena 20260821: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 09:49:03 | ORDEN | COMPRA VERTICAL SPY C L=761/S=765 x1 débito<=2.91
+2026-08-21 09:49:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-21 09:49:08 | DATA   | cadena 20260821: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 764.75)
+2026-08-21 09:49:08 | DATA   | cadena persistida 2026-08-21 09:49: 82 filas (fuente=live)
+2026-08-21 09:49:08 | DATA   | tape 09:49: 1287 ticks persistidos
+2026-08-21 09:49:33 | DATA   | cadena 20260824: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 09:49:34 | ORDEN | COMPRA VERTICAL SPY C L=761/S=765 x1 débito<=2.72
+2026-08-21 09:50:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-21 09:50:05 | DATA   | cadena 20260821: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 09:50:06 | ORDEN | COMPRA VERTICAL SPY P L=771/S=767 x1 débito<=3.68
+2026-08-21 09:50:09 | DATA   | cadena 20260821: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 764.96)
+2026-08-21 09:50:09 | DATA   | cadena persistida 2026-08-21 09:50: 82 filas (fuente=live)
+2026-08-21 09:50:09 | DATA   | tape 09:50: 1798 ticks persistidos
+2026-08-21 09:50:16 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+=== NOTIF === 2026-08-21 09:50:17 | IBKR | IBKR conectado (paper 4002)
+2026-08-21 09:50:17 | DATA   | IBKR desconectado
+2026-08-21 09:50:29 | DATA   | cadena 20260821: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 09:50:33 | RIESGO | BAG no cerró (2 pata/s viva/s) — cierre por patas al MID
+=== NOTIF === 2026-08-21 09:50:33 | ORDEN | CIERRE MERCADO SPY P 767 x1
+=== NOTIF === 2026-08-21 09:50:41 | ORDEN | CIERRE MERCADO SPY P 771 x1
+2026-08-21 09:50:53 | DATA   | cadena 20260824: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 09:50:54 | ORDEN | COMPRA VERTICAL SPY P L=771/S=767 x1 débito<=3.02
+2026-08-21 09:51:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-21 09:51:09 | DATA   | cadena 20260821: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 765.04)
+2026-08-21 09:51:09 | DATA   | cadena persistida 2026-08-21 09:51: 82 filas (fuente=live)
+2026-08-21 09:51:09 | DATA   | tape 09:51: 1328 ticks persistidos
+2026-08-21 09:51:24 | DATA   | cadena 20260821: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 09:51:26 | ORDEN | COMPRA VERTICAL SPY C L=764/S=766 x1 débito<=1.06
+2026-08-21 09:51:37 | DATA   | cadena 20260821: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 09:51:41 | RIESGO | BAG no cerró (2 pata/s viva/s) — cierre por patas al MID
+=== NOTIF === 2026-08-21 09:51:41 | ORDEN | CIERRE MERCADO SPY C 766 x1
+=== NOTIF === 2026-08-21 09:51:49 | ORDEN | CIERRE MERCADO SPY C 764 x1
+2026-08-21 09:52:00 | DATA   | cadena 20260824: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 09:52:02 | ORDEN | COMPRA VERTICAL SPY C L=764/S=766 x1 débito<=1.09
+2026-08-21 09:52:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-21 09:52:09 | DATA   | cadena 20260821: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 764.78)
+2026-08-21 09:52:09 | DATA   | cadena persistida 2026-08-21 09:52: 82 filas (fuente=live)
+2026-08-21 09:52:09 | DATA   | tape 09:52: 1185 ticks persistidos
+2026-08-21 09:52:24 | DATA   | cadena 20260824: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 09:52:28 | RIESGO | BAG no cerró (2 pata/s viva/s) — cierre por patas al MID
+=== NOTIF === 2026-08-21 09:52:28 | ORDEN | CIERRE MERCADO SPY C 766 x1
+=== NOTIF === 2026-08-21 09:52:36 | ORDEN | CIERRE MERCADO SPY C 764 x1
+2026-08-21 09:52:47 | DATA   | cadena 20260821: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 09:52:48 | ORDEN | COMPRA SINGLE SPY C 764 x1 <=1.66
+2026-08-21 09:52:53 | DATA   | cadena 20260821: 18 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+2026-08-21 09:53:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-21 09:53:08 | DATA   | cadena 20260821: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 764.53)
+2026-08-21 09:53:08 | DATA   | cadena persistida 2026-08-21 09:53: 82 filas (fuente=live)
+2026-08-21 09:53:08 | DATA   | tape 09:53: 1492 ticks persistidos
+=== NOTIF === 2026-08-21 09:53:08 | RIESGO | SYNC 09:53: IBKR tiene 1 pata(s) 0DTE y el sistema se creía PLANO — adoptando
+=== NOTIF === 2026-08-21 09:53:08 | RIESGO | ⚠️ 1 pata(s) 0DTE abiertas en IBKR SIN operación abierta en la BD — no se reconstruye; revisar y cerrar a mano
+2026-08-21 09:53:14 | DATA   | cadena 20260824: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 09:53:15 | ORDEN | COMPRA SINGLE SPY C 764 x1 <=2.65
+2026-08-21 09:53:21 | DATA   | cadena 20260824: 18 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+2026-08-21 09:53:26 | DATA   | cadena 20260821: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 09:53:27 | ORDEN | COMPRA VERTICAL SPY P L=768/S=766 x1 débito<=1.58
+2026-08-21 09:53:40 | DATA   | cadena 20260821: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 09:53:44 | RIESGO | BAG no cerró (2 pata/s viva/s) — cierre por patas al MID
+=== NOTIF === 2026-08-21 09:53:44 | ORDEN | CIERRE MERCADO SPY P 766 x1
+=== NOTIF === 2026-08-21 09:53:52 | ORDEN | CIERRE MERCADO SPY P 768 x1
+2026-08-21 09:54:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-21 09:54:04 | DATA   | cadena 20260824: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 09:54:05 | ORDEN | COMPRA VERTICAL SPY P L=768/S=766 x1 débito<=1.29
+2026-08-21 09:54:09 | DATA   | cadena 20260821: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 764.44)
+2026-08-21 09:54:09 | DATA   | cadena persistida 2026-08-21 09:54: 82 filas (fuente=live)
+2026-08-21 09:54:09 | DATA   | tape 09:54: 1773 ticks persistidos
+2026-08-21 09:54:35 | DATA   | cadena 20260821: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 09:54:36 | ORDEN | COMPRA SINGLE SPY P 768 x1 <=3.90
+2026-08-21 09:54:41 | DATA   | cadena 20260821: 18 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+2026-08-21 09:55:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-21 09:55:09 | DATA   | cadena 20260821: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 764.42)
+2026-08-21 09:55:09 | DATA   | cadena persistida 2026-08-21 09:55: 82 filas (fuente=live)
+2026-08-21 09:55:09 | DATA   | tape 09:55: 1380 ticks persistidos
+=== NOTIF === 2026-08-21 09:55:09 | RIESGO | SYNC 09:55: IBKR tiene 1 pata(s) 0DTE y el sistema se creía PLANO — adoptando
+=== NOTIF === 2026-08-21 09:55:09 | RIESGO | ⚠️ 1 pata(s) 0DTE abiertas en IBKR SIN operación abierta en la BD — no se reconstruye; revisar y cerrar a mano
+=== NOTIF === 2026-08-21 09:55:12 | ORDEN | CIERRE SPY P 768 x1 MERCADO
+2026-08-21 09:55:17 | DATA   | cadena 20260824: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+2026-08-21 09:55:17 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+=== NOTIF === 2026-08-21 09:55:18 | ORDEN | COMPRA SINGLE SPY P 768 x1 <=4.22
+=== NOTIF === 2026-08-21 09:55:19 | IBKR | IBKR conectado (paper 4002)
+2026-08-21 09:55:19 | DATA   | IBKR desconectado
+2026-08-21 09:55:23 | DATA   | cadena 20260824: 18 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 09:55:53 | ORDEN | CIERRE SPY P 768 x1 MERCADO
+2026-08-21 09:55:57 | DATA   | cadena 20260821: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 09:55:59 | ORDEN | COMPRA VERTICAL SPY C L=764/S=768 x1 débito<=1.32
+2026-08-21 09:56:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-21 09:56:08 | DATA   | cadena 20260821: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 764.42)
+2026-08-21 09:56:08 | DATA   | cadena persistida 2026-08-21 09:56: 82 filas (fuente=live)
+2026-08-21 09:56:08 | DATA   | tape 09:56: 1249 ticks persistidos
+=== NOTIF === 2026-08-21 09:56:08 | RIESGO | SYNC 09:56: IBKR tiene 2 pata(s) 0DTE y el sistema se creía PLANO — adoptando
+=== NOTIF === 2026-08-21 09:56:08 | RIESGO | ⚠️ 2 pata(s) 0DTE abiertas en IBKR SIN operación abierta en la BD — no se reconstruye; revisar y cerrar a mano
+2026-08-21 09:56:13 | DATA   | cadena 20260821: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 09:56:17 | RIESGO | BAG no cerró (2 pata/s viva/s) — cierre por patas al MID
+=== NOTIF === 2026-08-21 09:56:17 | ORDEN | CIERRE MERCADO SPY C 768 x1
+=== NOTIF === 2026-08-21 09:56:25 | ORDEN | CIERRE MERCADO SPY C 764 x1
+2026-08-21 09:56:36 | DATA   | cadena 20260824: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 09:56:37 | ORDEN | COMPRA VERTICAL SPY C L=764/S=768 x1 débito<=1.80
+2026-08-21 09:57:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-21 09:57:08 | DATA   | cadena 20260821: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+2026-08-21 09:57:09 | DATA   | cadena 20260821: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 764.71)
+2026-08-21 09:57:09 | DATA   | cadena persistida 2026-08-21 09:57: 82 filas (fuente=live)
+2026-08-21 09:57:09 | DATA   | tape 09:57: 1103 ticks persistidos
+=== NOTIF === 2026-08-21 09:57:09 | ORDEN | COMPRA VERTICAL SPY P L=768/S=764 x1 débito<=2.59
+2026-08-21 09:57:21 | DATA   | cadena 20260821: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 09:57:25 | RIESGO | BAG no cerró (2 pata/s viva/s) — cierre por patas al MID
+=== NOTIF === 2026-08-21 09:57:25 | ORDEN | CIERRE MERCADO SPY P 764 x1
+=== NOTIF === 2026-08-21 09:57:33 | ORDEN | CIERRE MERCADO SPY P 768 x1
+2026-08-21 09:57:44 | DATA   | cadena 20260824: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 09:57:46 | ORDEN | COMPRA VERTICAL SPY P L=768/S=764 x1 débito<=2.23
+2026-08-21 09:58:04 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-21 09:58:08 | DATA   | cadena 20260821: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 764.57)
+2026-08-21 09:58:08 | DATA   | cadena persistida 2026-08-21 09:58: 82 filas (fuente=live)
+2026-08-21 09:58:08 | DATA   | tape 09:58: 1004 ticks persistidos
+2026-08-21 09:58:16 | DATA   | cadena 20260821: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 09:58:17 | ORDEN | COMPRA VERTICAL SPY C L=765/S=767 x1 débito<=0.60
+2026-08-21 09:58:48 | DATA   | cadena 20260824: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 09:58:49 | ORDEN | COMPRA VERTICAL SPY C L=765/S=767 x1 débito<=0.87
+2026-08-21 09:59:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-21 09:59:08 | DATA   | cadena 20260821: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 764.46)
+2026-08-21 09:59:08 | DATA   | cadena persistida 2026-08-21 09:59: 82 filas (fuente=live)
+2026-08-21 09:59:08 | DATA   | tape 09:59: 1198 ticks persistidos
+2026-08-21 09:59:19 | DATA   | cadena 20260821: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 09:59:21 | ORDEN | COMPRA SINGLE SPY C 765 x1 <=0.98
+2026-08-21 09:59:26 | DATA   | cadena 20260821: 18 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+2026-08-21 09:59:31 | DATA   | cadena 20260824: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 09:59:33 | ORDEN | COMPRA SINGLE SPY C 765 x1 <=2.13
+2026-08-21 09:59:37 | DATA   | cadena 20260824: 18 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 09:59:58 | ORDEN | CIERRE SPY C 765 x1 MERCADO
+2026-08-21 10:00:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-21 10:00:08 | DATA   | cadena 20260821: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 764.51)
+2026-08-21 10:00:08 | DATA   | cadena persistida 2026-08-21 10:00: 82 filas (fuente=live)
+2026-08-21 10:00:08 | DATA   | tape 10:00: 1061 ticks persistidos
+=== NOTIF === 2026-08-21 10:00:15 | RIESGO | BAG no cerró (1 pata/s viva/s) — cierre por patas al MID
+=== NOTIF === 2026-08-21 10:00:15 | ORDEN | CIERRE MERCADO SPY C 765 x1
+2026-08-21 10:00:19 | DATA   | IBKR conectando a 127.0.0.1:4002 clientId=35
+=== NOTIF === 2026-08-21 10:00:19 | IBKR | IBKR conectado (paper 4002)
+2026-08-21 10:00:19 | DATA   | IBKR desconectado
+2026-08-21 10:00:26 | DATA   | cadena 20260821: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 10:00:28 | ORDEN | COMPRA VERTICAL SPY P L=767/S=765 x1 débito<=1.32
+2026-08-21 10:00:55 | DATA   | cadena 20260821: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 10:01:00 | RIESGO | BAG no cerró (2 pata/s viva/s) — cierre por patas al MID
+=== NOTIF === 2026-08-21 10:01:00 | ORDEN | CIERRE MERCADO SPY P 765 x1
+2026-08-21 10:01:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-21 10:01:07 | DATA   | cadena 20260821: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 764.84)
+2026-08-21 10:01:07 | DATA   | cadena persistida 2026-08-21 10:01: 82 filas (fuente=live)
+2026-08-21 10:01:07 | DATA   | tape 10:01: 1210 ticks persistidos
+=== NOTIF === 2026-08-21 10:01:08 | RIESGO | SYNC 10:01: IBKR tiene 1 pata(s) 0DTE y el sistema se creía PLANO — adoptando
+=== NOTIF === 2026-08-21 10:01:08 | RIESGO | ⚠️ 1 pata(s) 0DTE abiertas en IBKR SIN operación abierta en la BD — no se reconstruye; revisar y cerrar a mano
+=== NOTIF === 2026-08-21 10:01:09 | ORDEN | CIERRE MERCADO SPY P 767 x1
+2026-08-21 10:01:20 | DATA   | cadena 20260824: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 10:01:21 | ORDEN | COMPRA VERTICAL SPY P L=767/S=765 x1 débito<=1.06
+2026-08-21 10:01:52 | DATA   | cadena 20260821: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 10:01:53 | ORDEN | COMPRA SINGLE SPY P 767 x1 <=2.54
+2026-08-21 10:01:58 | DATA   | cadena 20260821: 18 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+2026-08-21 10:02:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-21 10:02:03 | DATA   | cadena 20260824: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 10:02:05 | ORDEN | COMPRA SINGLE SPY P 767 x1 <=3.35
+2026-08-21 10:02:08 | DATA   | cadena 20260821: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 764.81)
+2026-08-21 10:02:08 | DATA   | cadena persistida 2026-08-21 10:02: 82 filas (fuente=live)
+2026-08-21 10:02:08 | DATA   | tape 10:02: 1184 ticks persistidos
+2026-08-21 10:02:10 | DATA   | cadena 20260824: 18 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+2026-08-21 10:02:26 | DATA   | cadena 20260821: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 10:02:28 | ORDEN | COMPRA VERTICAL SPY C L=765/S=769 x1 débito<=0.90
+2026-08-21 10:02:57 | DATA   | cadena 20260821: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 10:03:01 | RIESGO | BAG no cerró (2 pata/s viva/s) — cierre por patas al MID
+=== NOTIF === 2026-08-21 10:03:01 | ORDEN | CIERRE MERCADO SPY C 769 x1
+2026-08-21 10:03:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-21 10:03:08 | DATA   | cadena 20260821: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 764.57)
+2026-08-21 10:03:08 | DATA   | cadena persistida 2026-08-21 10:03: 82 filas (fuente=live)
+2026-08-21 10:03:08 | DATA   | tape 10:03: 1066 ticks persistidos
+=== NOTIF === 2026-08-21 10:03:08 | RIESGO | SYNC 10:03: IBKR tiene 1 pata(s) 0DTE y el sistema se creía PLANO — adoptando
+=== NOTIF === 2026-08-21 10:03:08 | RIESGO | ⚠️ 1 pata(s) 0DTE abiertas en IBKR SIN operación abierta en la BD — no se reconstruye; revisar y cerrar a mano
+=== NOTIF === 2026-08-21 10:03:09 | ORDEN | CIERRE MERCADO SPY C 765 x1
+2026-08-21 10:03:21 | DATA   | cadena 20260824: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 10:03:22 | ORDEN | COMPRA VERTICAL SPY C L=765/S=769 x1 débito<=1.52
+2026-08-21 10:03:32 | DATA   | cadena 20260824: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 10:03:36 | RIESGO | BAG no cerró (2 pata/s viva/s) — cierre por patas al MID
+=== NOTIF === 2026-08-21 10:03:36 | ORDEN | CIERRE MERCADO SPY C 769 x1
+=== NOTIF === 2026-08-21 10:03:44 | ORDEN | CIERRE MERCADO SPY C 765 x1
+2026-08-21 10:03:55 | DATA   | cadena 20260821: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 10:03:57 | ORDEN | COMPRA VERTICAL SPY P L=767/S=763 x1 débito<=2.05
+2026-08-21 10:04:03 | DATA   | backfill SPY 120 S 1 min useRTH=False
+2026-08-21 10:04:07 | DATA   | cadena 20260821: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+2026-08-21 10:04:08 | DATA   | cadena 20260821: 82 contratos (ITM+OTM C/P) capturados y cancelados (spot 764.70)
+2026-08-21 10:04:08 | DATA   | cadena persistida 2026-08-21 10:04: 82 filas (fuente=live)
+2026-08-21 10:04:08 | DATA   | tape 10:04: 1047 ticks persistidos
+=== NOTIF === 2026-08-21 10:04:08 | RIESGO | SYNC 10:04: IBKR tiene 2 pata(s) 0DTE y el sistema se creía PLANO — adoptando
+=== NOTIF === 2026-08-21 10:04:08 | RIESGO | ⚠️ 2 pata(s) 0DTE abiertas en IBKR SIN operación abierta en la BD — no se reconstruye; revisar y cerrar a mano
+=== NOTIF === 2026-08-21 10:04:13 | RIESGO | BAG no cerró (2 pata/s viva/s) — cierre por patas al MID
+=== NOTIF === 2026-08-21 10:04:13 | ORDEN | CIERRE MERCADO SPY P 763 x1
+=== NOTIF === 2026-08-21 10:04:21 | ORDEN | CIERRE MERCADO SPY P 767 x1
+2026-08-21 10:04:32 | DATA   | cadena 20260824: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 10:04:34 | ORDEN | COMPRA VERTICAL SPY P L=767/S=763 x1 débito<=1.82
+2026-08-21 10:04:46 | DATA   | cadena 20260824: 34 contratos (ITM+OTM C/P) capturados y cancelados (spot 766.02)
+=== NOTIF === 2026-08-21 10:04:50 | RIESGO | BAG no cerró (2 pata/s viva/s) — cierre por patas al MID
+=== NOTIF === 2026-08-21 10:04:50 | ORDEN | CIERRE MERCADO SPY P 763 x1
+=== NOTIF === 2026-08-21 10:04:58 | ORDEN | CIERRE MERCADO SPY P 767 x1

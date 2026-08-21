@@ -1,0 +1,33 @@
+lanzado h11            corte=11:00  score_off=1 rango_p=0
+lanzado g_p40          corte=11:00  score_off=1 rango_p=40
+lanzado g_p60          corte=11:00  score_off=1 rango_p=60
+lanzado g_p80          corte=11:00  score_off=1 rango_p=80
+
+-- 4 corridas --
+
+h11            OK 485 dias  saldo 97657  (score=0 corte=11:00) | [1DTE] corte=11:00  minutos 0DTE=43144  minutos siguiente-venc=150979  dias=485
+g_p40          OK 485 dias  saldo 95218  (score=0 corte=11:00) | [1DTE] corte=11:00  minutos 0DTE=103527  minutos siguiente-venc=91202  dias=485
+g_p60          OK 485 dias  saldo 91599  (score=0 corte=11:00) | [1DTE] corte=11:00  minutos 0DTE=139246  minutos siguiente-venc=55466  dias=485
+g_p80          OK 485 dias  saldo 82274  (score=0 corte=11:00) | [1DTE] corte=11:00  minutos 0DTE=166960  minutos siguiente-venc=28047  dias=485
+
+tiempo: 8.4 min
+[motor.py RESTAURADO]
+
+========================================================================================================
+0DTE vs VENCIMIENTO SIGUIENTE — 485/482 sesiones, capital 600$, TODOS sin score salvo el control
+========================================================================================================
+                                    saldo    mult   drawdn  racha  verde   rojo  dias op      AÑO 1      AÑO 2
+h11 SIN filtro (CONTROL)           97657$  162.8x    39.8%      3    334    140      474     +42490     +54567
+h11 + rango_am >= p40              95218$  158.7x    39.8%      3    318    153      471     +41209     +53408
+h11 + rango_am >= p60              91599$  152.7x    31.4%      3    304    159      463     +39003     +51996
+h11 + rango_am >= p80              82274$  137.1x    32.3%      3    293    170      463     +31738     +49937
+
+✓ los controles reproducen la base
+
+COMPARACIÓN LIMPIA (todo SIN score, misma vara de medir):
+   h11 + rango_am >= p40              95218$      -2440$  (-2.5%) vs 0DTE sin score
+   h11 + rango_am >= p60              91599$      -6058$  (-6.2%) vs 0DTE sin score
+   h11 + rango_am >= p80              82274$     -15383$  (-15.8%) vs 0DTE sin score
+
+⚠️ 83.805$ es CONTROL TÉCNICO, no expectativa: con la ejecución real medida el sistema
+   vale ~41.000$. Lo que importa aquí es la comparación RELATIVA entre vencimientos.

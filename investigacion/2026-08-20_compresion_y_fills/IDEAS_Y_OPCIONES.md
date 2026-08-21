@@ -186,6 +186,54 @@ Pregunta original: ¿hay relación entre órdenes entrantes, ST-3 y movimiento d
 
 ---
 
+---
+
+## 📥 DATOS QUE HAY QUE DESCARGAR — 2DTE y 3DTE ENTRE SEMANA  ⭐ BLOQUEA UNA PREGUNTA CLAVE
+
+**RECORDATORIO PARA EL USUARIO: esto hay que bajarlo.** Sin ello hay una pregunta que NO SE PUEDE
+responder con ninguna cantidad de análisis.
+
+**EL PROBLEMA (verificado el 2026-08-21).** El híbrido "0DTE hasta las 11:00, luego el siguiente
+vencimiento" da **97.657 $ frente a 74.556 $** de la base sin score (+31,0 %), y al mirar dónde
+aporta sale esto:
+```
+día        n     h11      base      aporte
+lunes     90   +17.233  +17.151       +82     <- no aporta NADA
+martes   102   +14.951  +14.750      +201     <- tampoco
+miércoles100   +23.701  +15.801    +7.900
+jueves    97   +21.663  +17.861    +3.802
+VIERNES   96   +19.509   +8.394   +11.115     <- el que MÁS aporta
+```
+El 99 % del aporte está en miércoles, jueves y viernes.
+
+**PERO NO SE PUEDE SABER POR QUÉ**, y no es falta de análisis: es que los datos no lo permiten.
+```
+vencimientos distintos por sesión: 1, en los 482 días (NINGUNO tiene dos)
+DTE por día de la semana:
+  lunes {1:90} · martes {1:100, 2:2} · miércoles {1:94, 2:6} · jueves {1:90, 4:5} · VIERNES {3:87, 4:8}
+```
+**El DTE está determinado por el día de la semana.** El viernes es el único que compra a 3 días.
+Así que "efecto viernes" y "efecto 3DTE" están **CONFUNDIDOS POR CONSTRUCCIÓN**: nunca varían por
+separado. Es una variable confundida perfecta — no se arregla con más estadística ni con más
+sesiones, solo consiguiendo datos donde los dos factores varíen de forma independiente.
+
+**QUÉ HAY QUE DESCARGAR:** para cada sesión de lunes a jueves, el contrato que vence **2 y 3 días
+después** (p.ej. un martes, el que vence el jueves y el que vence el viernes). Mismo formato que
+`data_1dte/massive_premium_1dte.db` (tabla `aggs`: ticker, fecha, ts, ohlc, volume, vwap).
+
+**QUÉ RESPONDERÍA:** si el 3DTE entre semana reproduce el aporte del viernes, **el mecanismo es
+el VENCIMIENTO** (más días = más margen para que la reversión ocurra antes de que el contrato
+muera) y la regla sería *"compra a 3 días"*, aplicable toda la semana. Si NO lo reproduce, el
+efecto es del viernes como tal y hay que buscar la causa en otra parte.
+Es HIPÓTESIS con base mecánica: el sistema es de REVERSIÓN, y el tiempo hasta el vencimiento es
+justo lo que le da margen para revertir.
+
+**⚠️ El paralelo de ayer:** lo de "hora vs saldo" en el rechazo de IBKR era el mismo tipo de
+problema, y solo se resolvió porque el usuario **recargó la cuenta a media sesión** y rompió la
+correlación por accidente. Aquí no habrá accidente que valga: hay que bajar los datos.
+
+---
+
 ## DESCARTADO (medido, no repetir)
 
 | idea | resultado |

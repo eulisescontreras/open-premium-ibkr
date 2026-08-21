@@ -6,8 +6,32 @@ MISMOS campos con que se validó el backtest, pero desde IBKR (frontera de datos
 
 ⚠️ Requiere IBKR. Se valida en paper. Logs exhaustivos.
 """
+
+from zoneinfo import ZoneInfo
+
 from sys2.db import repo
 from sys2.vivo import log as L
+
+_ET = ZoneInfo("America/New_York")     # mismo huso que motor.py:29 y greeks.py:23
+
+
+def _hora_et(ts):
+    """'HH:MM:SS.mmm' en hora de NUEVA YORK.
+
+    BUG CORREGIDO 2026-08-21 (primer día de captura): `ib_insync` entrega el instante del tick
+    en UTC y esto hacía `strftime` DIRECTO, así que el tape se guardaba en UTC mientras el resto
+    del sistema (`bars.hora`, `premium.hora`) usa ET. El tape no habría cuadrado al cruzarlo con
+    las velas — que es justo para lo que se captura. No daba NINGÚN error: precios, tamaños y
+    signos eran correctos; solo el reloj estaba 4 horas adelantado.
+    Se usa `zoneinfo`, NO un offset fijo: el desfase es -4 en verano y -5 en invierno.
+    """
+    if not hasattr(ts, "strftime"):
+        return str(ts)
+    if ts.tzinfo is None:                      # naive (p. ej. el fallback RTVolume): ya es local
+        d = ts
+    else:
+        d = ts.astimezone(_ET)
+    return d.strftime("%H:%M:%S.") + ("%03d" % (d.microsecond // 1000))
 
 
 def guardar_barra_spy(con, fecha, hora, o, hi, lo, cl, vol, vwap=None):
@@ -56,8 +80,7 @@ def guardar_tape(con, fecha, ticks):
     for t in ticks:
         try:
             ts, seq, px, sz, exch, bid, ask, sg = t
-            hh = ts.strftime("%H:%M:%S.") + ("%03d" % (ts.microsecond // 1000)) \
-                if hasattr(ts, "strftime") else str(ts)
+            hh = _hora_et(ts)
             filas.append({"fecha": fecha, "ts": hh, "seq": seq, "price": px, "size": sz,
                           "exch": exch, "bid": bid, "ask": ask, "signo": sg})
         except Exception as ex:
